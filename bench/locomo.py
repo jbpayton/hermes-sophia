@@ -179,6 +179,7 @@ def main():
              "judge_prompt": "Mem0 J (aae5989)", "embed": args.embed, "decider": args.decider,
              "night_model": args.night_model if args.mode == "sophia-night" else None,
              "inject_chars": args.inject_chars, "graph_hops": args.graph_hops,
+             "inject_top": args.inject_top, "recall_k": max(args.recall_k, args.inject_top),
              "convs": sorted({r["conv"] for r in res.rows}), "limit_per_conv": args.limit}
     write_summary(RESULTS / f"{name}.summary.json", setup, summary)
     print(json.dumps(summary, indent=1))

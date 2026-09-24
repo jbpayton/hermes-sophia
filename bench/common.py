@@ -42,6 +42,8 @@ def add_model_args(ap) -> None:
     ap.add_argument("--night-model", default="qwen35-9b")
     ap.add_argument("--inject-chars", type=int, default=6000, help="size of Sophia's injected block")
     ap.add_argument("--graph-hops", type=int, default=1)
+    ap.add_argument("--inject-top", type=int, default=10, help="how deep in the ranking injection may draw from")
+    ap.add_argument("--recall-k", type=int, default=20)
     ap.add_argument("--tag", default="", help="suffix for the results file")
     ap.add_argument("--yield-to", default="qwen/qwen3.8-27b",
                     help="pause while this LM Studio model is generating (someone's chat); '' to never pause")
@@ -93,7 +95,8 @@ def memory_config(args, **identity) -> Dict[str, Any]:
     cfg = copy.deepcopy(DEFAULTS)
     cfg.update(lmstudio_url=args.url, embed_model=args.embed, embed_api=args.api, decider_model=args.decider,
                decider_api=args.api, sleep_model=args.night_model, sleep_api=args.api,
-               inject_chars=args.inject_chars, graph_hops=args.graph_hops, embed_timeout=60.0, decider_timeout=60.0,
+               inject_chars=args.inject_chars, graph_hops=args.graph_hops, inject_top=args.inject_top,
+               recall_k=max(args.recall_k, args.inject_top), embed_timeout=60.0, decider_timeout=60.0,
                sleep_call_timeout=600.0, **identity)
     cfg["sleep_guard_models"] = [args.night_model]
     cfg["lms_cli"] = os.path.expanduser(cfg["lms_cli"])

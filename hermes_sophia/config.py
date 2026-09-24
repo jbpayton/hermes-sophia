@@ -40,6 +40,7 @@ DEFAULTS: Dict[str, Any] = {
     # recall
     "recall_k": 20,
     "gate_top": 10,
+    "inject_top": 10,                 # injection may draw from this deep in the ranking (the gate sees gate_top)
     "skip_gate": 0.82,
     "gate_threshold": 0.5,
     "gate_permutations": 1,
@@ -114,6 +115,8 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
      {"when": _ADVANCED}),
     ("recall_k", "Candidates fetched per recall", {"when": _ADVANCED}),
     ("gate_top", "Candidates the gate looks at", {"when": _ADVANCED}),
+    ("inject_top", "How deep in the ranking injection may draw from (still bounded by the relative floor and the "
+                   "size cap)", {"when": _ADVANCED}),
     ("junk_floor", "Candidates below this cosine are never shown to the gate", {"when": _ADVANCED}),
     ("inject_chars", "Size cap for the injected memory block (characters)", {"when": _ADVANCED}),
     ("inject_relative_floor", "Only inject items within this similarity of the top item", {"when": _ADVANCED}),

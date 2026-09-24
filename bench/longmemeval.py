@@ -156,7 +156,8 @@ def main():
              "reader": args.reader, "judge": args.judge, "judge_prompts": "official evaluate_qa.py (9e0b455)",
              "embed": args.embed, "decider": args.decider,
              "night_model": args.night_model if args.mode == "sophia-night" else None,
-             "inject_chars": args.inject_chars, "graph_hops": args.graph_hops}
+             "inject_chars": args.inject_chars, "graph_hops": args.graph_hops,
+             "inject_top": args.inject_top, "recall_k": max(args.recall_k, args.inject_top)}
     write_summary(RESULTS / f"{name}.summary.json", setup, summary)
     print(json.dumps(summary, indent=1))
 

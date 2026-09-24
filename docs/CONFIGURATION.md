@@ -102,6 +102,7 @@ hermes sophia sleep --model M [--url U --api openai]
 |---|---|---|
 | `recall_k` | 20 | Number of candidates fetched |
 | `gate_top` | 10 | Number of candidates the gate looks at |
+| `inject_top` | 10 | How deep in the ranking injection may draw from. It is still bounded by `inject_relative_floor` and `inject_chars` |
 | `skip_gate` | 0.82 | At or above this top-1 cosine, inject without asking the decider (measured; see `research/embed_thresholds.py`) |
 | `gate_threshold` | 0.5 | Decider probability needed to inject |
 | `gate_permutations` | 1 | Option orders averaged per gate decision. With 2, both orders are averaged, cancelling position bias at twice the cost |

@@ -298,7 +298,7 @@ class Recall:
                 except (DeciderError, Exception) as ex:
                     e.set_degraded("decider", str(ex))
                     gate = "degraded"
-        chosen = self.select(top) if passed else []
+        chosen = self.select(items[:max(cfg["inject_top"], 1)]) if passed else []
         text = self.format(chosen, cfg["inject_chars"]) if chosen else ""
         info.update({"gate": gate, "passed": passed, "n": len(chosen),
                      "ms": round((time.perf_counter() - t0) * 1000)})
