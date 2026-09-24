@@ -1,0 +1,616 @@
+{
+ "model": "qwen/qwen3.8-27b",
+ "mode": "sophia-responses",
+ "results": [
+  {
+   "sample": 1,
+   "name": "encyclopedia",
+   "latency_ms": 30063.34289512597,
+   "out_tokens": 1671,
+   "parse_ok": true,
+   "schema_ok": true,
+   "n": 18,
+   "verbatim_exact": 18,
+   "verbatim_normalized": 18,
+   "empty_object": 0,
+   "no_topics": 0,
+   "triples": [
+    {
+     "subject": "Voyager 1",
+     "verb": "is a",
+     "object": "space probe",
+     "source_text": "Voyager 1 is a space probe",
+     "topics": [
+      "Space Exploration",
+      "Voyager Program",
+      "Astronomy"
+     ]
+    },
+    {
+     "subject": "Voyager 1",
+     "verb": "was launched by",
+     "object": "NASA",
+     "source_text": "Voyager 1 is a space probe launched by NASA",
+     "topics": [
+      "Space Exploration",
+      "Voyager Program",
+      "NASA Missions"
+     ]
+    },
+    {
+     "subject": "Voyager 1",
+     "verb": "was launched on",
+     "object": "September 5, 1977",
+     "source_text": "Voyager 1 is a space probe launched by NASA on September 5, 1977",
+     "topics": [
+      "Space Exploration",
+      "Voyager Program",
+      "Mission Timeline"
+     ]
+    },
+    {
+     "subject": "Voyager 1",
+     "verb": "was part of",
+     "object": "the Voyager program",
+     "source_text": "as part of the Voyager program",
+     "topics": [
+      "Space Exploration",
+      "Voyager Program",
+      "Mission Objectives"
+     ]
+    },
+    {
+     "subject": "the Voyager program",
+     "verb": "aims to study",
+     "object": "the outer Solar System",
+     "source_text": "to study the outer Solar System",
+     "topics": [
+      "Space Exploration",
+      "Voyager Program",
+      "Planetary Science"
+     ]
+    },
+    {
+     "subject": "Voyager 1",
+     "verb": "was built at",
+     "object": "the Jet Propulsion Laboratory in Pasadena, California",
+     "source_text": "It was built at the Jet Propulsion Laboratory in Pasadena, California",
+     "topics": [
+      "Spacecraft Engineering",
+      "NASA Facilities",
+      "Voyager Program"
+     ]
+    },
+    {
+     "subject": "Voyager 1",
+     "verb": "made a flyby of",
+     "object": "Jupiter",
+     "source_text": "The probe made a flyby of Jupiter",
+     "topics": [
+      "Planetary Flybys",
+      "Jupiter Exploration",
+      "Voyager Program"
+     ]
+    },
+    {
+     "subject": "Voyager 1",
+     "verb": "made a flyby of Jupiter in",
+     "object": "March 1979",
+     "source_text": "The probe made a flyby of Jupiter in March 1979",
+     "topics": [
+      "Planetary Flybys",
+      "Jupiter Exploration",
+      "Mission Timeline"
+     ]
+    },
+    {
+     "subject": "Voyager 1",
+     "verb": "made a flyby of",
+     "object": "Saturn",
+     "source_text": "and of Saturn",
+     "topics": [
+      "Planetary Flybys",
+      "Saturn Exploration",
+      "Voyager Program"
+     ]
+    },
+    {
+     "subject": "Voyager 1",
+     "verb": "made a flyby of Saturn in",
+     "object": "November 1980",
+     "source_text": "and of Saturn in November 1980",
+     "topics": [
+      "Planetary Flybys",
+      "Saturn Exploration",
+      "Mission Timeline"
+     ]
+    },
+    {
+     "subject": "Voyager 1",
+     "verb": "returned",
+     "object": "the first detailed images of their moons",
+     "source_text": "returning the first detailed images of their moons",
+     "topics": [
+      "Planetary Science",
+      "Astronomical Imaging",
+      "Voyager Program"
+     ]
+    },
+    {
+     "subject": "Voyager 1",
+     "verb": "became the first human-made object to enter",
+     "object": "interstellar space",
+     "source_text": "In August 2012 Voyager 1 became the first human-made object to enter interstellar space",
+     "topics": [
+      "Interstellar Space",
+      "Space Exploration Milestones",
+      "Voyager Program"
+     ]
+    },
+    {
+     "subject": "Voyager 1",
+     "verb": "entered interstellar space in",
+     "object": "August 2012",
+     "source_text": "In August 2012 Voyager 1 became the first human-made object to enter interstellar space",
+     "topics": [
+      "Interstellar Space",
+      "Mission Timeline",
+      "Space Exploration Milestones"
+     ]
+    },
+    {
+     "subject": "Voyager 1",
+     "verb": "power comes from",
+     "object": "three radioisotope thermoelectric generators",
+     "source_text": "Its power comes from three radioisotope thermoelectric generators",
+     "topics": [
+      "Spacecraft Power Systems",
+      "Nuclear Power in Space",
+      "Voyager Program"
+     ]
+    },
+    {
+     "subject": "three radioisotope thermoelectric generators",
+     "verb": "are expected to keep at least one instrument running until about",
+     "object": "2025",
+     "source_text": "which are expected to keep at least one instrument running until about 2025",
+     "topics": [
+      "Spacecraft Power Systems",
+      "Mission Lifespan",
+      "Voyager Program"
+     ]
+    },
+    {
+     "subject": "Voyager 1",
+     "verb": "carries",
+     "object": "the Golden Record",
+     "source_text": "The spacecraft carries the Golden Record",
+     "topics": [
+      "Interstellar Communication",
+      "Voyager Program",
+      "Cultural Artifacts in Space"
+     ]
+    },
+    {
+     "subject": "the Golden Record",
+     "verb": "is a",
+     "object": "phonograph record",
+     "source_text": "a phonograph record",
+     "topics": [
+      "Interstellar Communication",
+      "Cultural Artifacts in Space",
+      "Voyager Program"
+     ]
+    },
+    {
+     "subject": "the Golden Record",
+     "verb": "was curated by",
+     "object": "a committee chaired by Carl Sagan",
+     "source_text": "curated by a committee chaired by Carl Sagan",
+     "topics": [
+      "Interstellar Communication",
+      "Cultural Artifacts in Space",
+      "Scientific Contributions"
+     ]
+    }
+   ],
+   "raw": "```json\n{\n  \"triples\": [\n    {\n      \"subject\": \"Voyager 1\",\n      \"verb\": \"is a\",\n      \"object\": \"space probe\",\n      \"source_text\": \"Voyager 1 is a space probe\",\n      \"topics\": [\n        \"Space Exploration\",\n        \"Voyager Program\",\n        \"Astronomy\"\n      ]\n    },\n    {\n      \"subject\": \"Voyager 1\",\n      \"verb\": \"was launched by\",\n      \"object\": \"NASA\",\n      \"source_text\": \"Voyager 1 is a space probe launched by NASA\",\n      \"topics\": [\n        \"Space Exploration\",\n        \"Voyager Program\",\n        \"NASA Missions\"\n      ]\n    },\n    {\n      \"subject\": \"Voyager 1\",\n      \"verb\": \"was launched on\",\n      \"object\": \"September 5, 1977\",\n      \"source_text\": \"Voyager 1 is a space probe launched by NASA on September 5, 1977\",\n      \"topics\": [\n        \"Space Exploration\",\n        \"Voyager Program\",\n        \"Mission Timeline\"\n      ]\n    },\n    {\n      \"subject\": \"Voyager 1\",\n      \"verb\": \"was part of\",\n      \"object\": \"the Voyager program\",\n      \"source_text\": \"as part of the Voyager program\",\n      \"topics\": [\n        \"Space Exploration\",\n        \"Voyager Program\",\n        \"Mission Objectives\"\n      ]\n    },\n    {\n      \"subject\": \"the Voyager program\",\n      \"verb\": \"aims to study\",\n      \"object\": \"the outer Solar System\",\n      \"source_text\": \"to study the outer Solar System\",\n      \"topics\": [\n        \"Space Exploration\",\n        \"Voyager Program\",\n        \"Planetary Science\"\n      ]\n    },\n    {\n      \"subject\": \"Voyager 1\",\n      \"verb\": \"was built at\",\n      \"object\": \"the Jet Propulsion Laboratory in Pasadena, California\",\n      \"source_text\": \"It was built at the Jet Propulsion Laboratory in Pasadena, California\",\n      \"topics\": [\n        \"Spacecraft Engineering\",\n        \"NASA Facilities\",\n        \"Voyager Program\"\n      ]\n    },\n    {\n      \"subject\": \"Voyager 1\",\n      \"verb\": \"made a flyby of\",\n      \"object\": \"Jupiter\",\n      \"source_text\": \"The probe made a flyby of Jupiter\",\n      \"topics\": [\n        \"Planetary Flybys\",\n        \"Jupiter Exploration\",\n        \"Voyager Program\"\n      ]\n    },\n    {\n      \"subject\": \"Voyager 1\",\n      \"verb\": \"made a flyby of Jupiter in\",\n      \"object\": \"March 1979\",\n      \"source_text\": \"The probe made a flyby of Jupiter in March 1979\",\n      \"topics\": [\n        \"Planetary Flybys\",\n        \"Jupiter Exploration\",\n        \"Mission Timeline\"\n      ]\n    },\n    {\n      \"subject\": \"Voyager 1\",\n      \"verb\": \"made a flyby of\",\n      \"object\": \"Saturn\",\n      \"source_text\": \"and of Saturn\",\n      \"topics\": [\n        \"Planetary Flybys\",\n        \"Saturn Exploration\",\n        \"Voyager Program\"\n      ]\n    },\n    {\n      \"subject\": \"Voyager 1\",\n      \"verb\": \"made a flyby of Saturn in\",\n      \"object\": \"November 1980\",\n      \"source_text\": \"and of Saturn in November 1980\",\n      \"topics\": [\n        \"Planetary Flybys\",\n        \"Saturn Exploration\",\n        \"Mission Timeline\"\n      ]\n    },\n    {\n      \"subject\": \"Voyager 1\",\n      \"verb\": \"returned\",\n      \"object\": \"the first detailed images of their moons\",\n      \"source_text\": \"returning the first detailed images of their moons\",\n      \"topics\": [\n        \"Planetary Science\",\n        \"Astronomical Imaging\",\n        \"Voyager Program\"\n      ]\n    },\n    {\n      \"subject\": \"Voyager 1\",\n      \"verb\": \"became the first human-made object to enter\",\n      \"object\": \"interstellar space\",\n      \"source_text\": \"In August 2012 Voyager 1 became the first human-made object to enter interstellar space\",\n      \"topics\": [\n        \"Interstellar Space\",\n        \"Space Exploration Milestones\",\n        \"Voyager Program\"\n      ]\n    },\n    {\n      \"subject\": \"Voyager 1\",\n      \"verb\": \"entered interstellar space in\",\n      \"object\": \"August 2012\",\n      \"source_text\": \"In August 2012 Voyager 1 became the first human-made object to enter interstellar space\",\n      \"topics\": [\n        \"Interstellar Space\",\n        \"Mission Timeline\",\n        \"Space Exploration Milestones\"\n      ]\n    },\n    {\n      \"subject\": \"Voyager 1\",\n      \"verb\": \"power comes from\",\n      \"object\": \"three radioisotope thermoelectric generators\",\n      \"source_text\": \"Its power comes from three radioisotope thermoelectric generators\",\n      \"topics\": [\n        \"Spacecraft Power Systems\",\n        \"Nuclear Power in Space\",\n        \"Voyager Program\"\n      ]\n    },\n    {\n      \"subject\": \"three radioisotope thermoelectric generators\",\n      \"verb\": \"are expected to keep at least one instrument running until about\",\n      \"object\": \"2025\",\n      \"source_text\": \"which are expected to keep at least one instrument running until about 2025\",\n      \"topics\": [\n        \"Spacecraft Power Systems\",\n        \"Mission Lifespan\",\n        \"Voyager Program\"\n      ]\n    },\n    {\n      \"subject\": \"Voyager 1\",\n      \"verb\": \"carries\",\n      \"object\": \"the Golden Record\",\n      \"source_text\": \"The spacecraft carries the Golden Record\",\n      \"topics\": [\n        \"Interstellar Communication\",\n        \"Voyager Program\",\n        \"Cultural Artifacts in Space\"\n      ]\n    },\n    {\n      \"subject\": \"the Golden Record\",\n      \"verb\": \"is a\",\n      \"object\": \"phonograph record\",\n      \"source_text\": \"a phonograph record\",\n      \"topics\": [\n        \"Interstellar Communication\",\n        \"Cultural Artifacts in Space\",\n        \"Voyager Program\"\n      ]\n    },\n    {\n      \"subject\": \"the Golden Record\",\n      \"verb\": \"was curated by\",\n      \"object\": \"a committee chaired by Carl Sagan\",\n      \"source_text\": \"curated by a committee chaired by Carl Sagan\",\n      \"topics\": [\n        \"Interstellar Communication\",\n        \"Cultural Artifacts in Space\",\n        \"Scientific Contributions\"\n      ]\n    }\n  ]\n}\n```"
+  },
+  {
+   "sample": 2,
+   "name": "conversation",
+   "latency_ms": 14262.988846050575,
+   "out_tokens": 778,
+   "parse_ok": true,
+   "schema_ok": true,
+   "n": 12,
+   "verbatim_exact": 12,
+   "verbatim_normalized": 12,
+   "empty_object": 0,
+   "no_topics": 0,
+   "triples": [
+    {
+     "subject": "Joey",
+     "verb": "booked a trip to",
+     "object": "Yosemite",
+     "source_text": "I finally booked the Yosemite trip",
+     "topics": [
+      "Travel Plans",
+      "Vacation"
+     ]
+    },
+    {
+     "subject": "Joey",
+     "verb": "scheduled the trip for",
+     "object": "the second week of May",
+     "source_text": "booked the Yosemite trip for the second week of May",
+     "topics": [
+      "Travel Plans",
+      "Schedule"
+     ]
+    },
+    {
+     "subject": "Sam",
+     "verb": "is coming on the trip to",
+     "object": "Yosemite",
+     "source_text": "Sam is coming too",
+     "topics": [
+      "Travel Companions",
+      "Social Plans"
+     ]
+    },
+    {
+     "subject": "Joey",
+     "verb": "plans to try",
+     "object": "Half Dome",
+     "source_text": "we're going to try Half Dome",
+     "topics": [
+      "Hiking Plans",
+      "Travel Activities"
+     ]
+    },
+    {
+     "subject": "Joey",
+     "verb": "is bringing",
+     "object": "Fujifilm X-T5",
+     "source_text": "I'm bringing the Fujifilm X-T5 this time",
+     "topics": [
+      "Equipment",
+      "Photography Gear"
+     ]
+    },
+    {
+     "subject": "Joey",
+     "verb": "is not bringing",
+     "object": "Sony camera",
+     "source_text": "instead of the Sony",
+     "topics": [
+      "Equipment",
+      "Photography Gear"
+     ]
+    },
+    {
+     "subject": "Joey",
+     "verb": "found too heavy",
+     "object": "Sony camera",
+     "source_text": "the Sony was too heavy on the last hike",
+     "topics": [
+      "Equipment Preferences",
+      "Photography Gear"
+     ]
+    },
+    {
+     "subject": "Joey",
+     "verb": "is staying at",
+     "object": "Curry Village",
+     "source_text": "we're doing Curry Village again anyway",
+     "topics": [
+      "Accommodation",
+      "Travel Logistics"
+     ]
+    },
+    {
+     "subject": "Joey",
+     "verb": "chose Curry Village because it is",
+     "object": "cheap",
+     "source_text": "because it's cheap",
+     "topics": [
+      "Accommodation",
+      "Budget"
+     ]
+    },
+    {
+     "subject": "Joey",
+     "verb": "plans to drive from",
+     "object": "San Jose",
+     "source_text": "drive up from San Jose",
+     "topics": [
+      "Travel Logistics",
+      "Transportation"
+     ]
+    },
+    {
+     "subject": "Joey",
+     "verb": "plans to arrive on",
+     "object": "Thursday night",
+     "source_text": "on the Thursday night",
+     "topics": [
+      "Travel Logistics",
+      "Schedule"
+     ]
+    },
+    {
+     "subject": "Joey",
+     "verb": "mentioned previously that",
+     "object": "Curry Village was noisy",
+     "source_text": "Last time you mentioned Curry Village was noisy",
+     "topics": [
+      "Accommodation",
+      "Past Experience"
+     ]
+    }
+   ],
+   "raw": "{\n  \"triples\": [\n    {\n      \"subject\": \"Joey\",\n      \"verb\": \"booked a trip to\",\n      \"object\": \"Yosemite\",\n      \"source_text\": \"I finally booked the Yosemite trip\",\n      \"topics\": [\"Travel Plans\", \"Vacation\"]\n    },\n    {\n      \"subject\": \"Joey\",\n      \"verb\": \"scheduled the trip for\",\n      \"object\": \"the second week of May\",\n      \"source_text\": \"booked the Yosemite trip for the second week of May\",\n      \"topics\": [\"Travel Plans\", \"Schedule\"]\n    },\n    {\n      \"subject\": \"Sam\",\n      \"verb\": \"is coming on the trip to\",\n      \"object\": \"Yosemite\",\n      \"source_text\": \"Sam is coming too\",\n      \"topics\": [\"Travel Companions\", \"Social Plans\"]\n    },\n    {\n      \"subject\": \"Joey\",\n      \"verb\": \"plans to try\",\n      \"object\": \"Half Dome\",\n      \"source_text\": \"we're going to try Half Dome\",\n      \"topics\": [\"Hiking Plans\", \"Travel Activities\"]\n    },\n    {\n      \"subject\": \"Joey\",\n      \"verb\": \"is bringing\",\n      \"object\": \"Fujifilm X-T5\",\n      \"source_text\": \"I'm bringing the Fujifilm X-T5 this time\",\n      \"topics\": [\"Equipment\", \"Photography Gear\"]\n    },\n    {\n      \"subject\": \"Joey\",\n      \"verb\": \"is not bringing\",\n      \"object\": \"Sony camera\",\n      \"source_text\": \"instead of the Sony\",\n      \"topics\": [\"Equipment\", \"Photography Gear\"]\n    },\n    {\n      \"subject\": \"Joey\",\n      \"verb\": \"found too heavy\",\n      \"object\": \"Sony camera\",\n      \"source_text\": \"the Sony was too heavy on the last hike\",\n      \"topics\": [\"Equipment Preferences\", \"Photography Gear\"]\n    },\n    {\n      \"subject\": \"Joey\",\n      \"verb\": \"is staying at\",\n      \"object\": \"Curry Village\",\n      \"source_text\": \"we're doing Curry Village again anyway\",\n      \"topics\": [\"Accommodation\", \"Travel Logistics\"]\n    },\n    {\n      \"subject\": \"Joey\",\n      \"verb\": \"chose Curry Village because it is\",\n      \"object\": \"cheap\",\n      \"source_text\": \"because it's cheap\",\n      \"topics\": [\"Accommodation\", \"Budget\"]\n    },\n    {\n      \"subject\": \"Joey\",\n      \"verb\": \"plans to drive from\",\n      \"object\": \"San Jose\",\n      \"source_text\": \"drive up from San Jose\",\n      \"topics\": [\"Travel Logistics\", \"Transportation\"]\n    },\n    {\n      \"subject\": \"Joey\",\n      \"verb\": \"plans to arrive on\",\n      \"object\": \"Thursday night\",\n      \"source_text\": \"on the Thursday night\",\n      \"topics\": [\"Travel Logistics\", \"Schedule\"]\n    },\n    {\n      \"subject\": \"Joey\",\n      \"verb\": \"mentioned previously that\",\n      \"object\": \"Curry Village was noisy\",\n      \"source_text\": \"Last time you mentioned Curry Village was noisy\",\n      \"topics\": [\"Accommodation\", \"Past Experience\"]\n    }\n  ]\n}"
+  },
+  {
+   "sample": 3,
+   "name": "procedural",
+   "latency_ms": 11117.395523935556,
+   "out_tokens": 615,
+   "parse_ok": true,
+   "schema_ok": true,
+   "n": 6,
+   "verbatim_exact": 6,
+   "verbatim_normalized": 6,
+   "empty_object": 0,
+   "no_topics": 0,
+   "triples": [
+    {
+     "subject": "nginx logs rotation process",
+     "verb": "requires stopping the service with",
+     "object": "`systemctl stop nginx`",
+     "source_text": "To rotate the nginx logs on the web host, first stop the service with `systemctl stop nginx`.",
+     "topics": [
+      "Nginx Log Rotation",
+      "System Administration",
+      "Service Management"
+     ]
+    },
+    {
+     "subject": "nginx logs rotation process",
+     "verb": "requires archiving current logs with",
+     "object": "`tar -czf /backup/nginx-logs-$(date +%F).tar.gz /var/log/nginx`",
+     "source_text": "Then archive the current logs: `tar -czf /backup/nginx-logs-$(date +%F).tar.gz /var/log/nginx`.",
+     "topics": [
+      "Nginx Log Rotation",
+      "Data Archiving",
+      "System Administration"
+     ]
+    },
+    {
+     "subject": "nginx logs rotation process",
+     "verb": "requires clearing the log directory with",
+     "object": "`rm /var/log/nginx/*.log`",
+     "source_text": "After the archive is written, clear the log directory with `rm /var/log/nginx/*.log`",
+     "topics": [
+      "Nginx Log Rotation",
+      "File System Management",
+      "System Administration"
+     ]
+    },
+    {
+     "subject": "nginx logs rotation process",
+     "verb": "requires starting the service again using",
+     "object": "`systemctl start nginx`",
+     "source_text": "and start the service again using `systemctl start nginx`.",
+     "topics": [
+      "Nginx Log Rotation",
+      "Service Management",
+      "System Administration"
+     ]
+    },
+    {
+     "subject": "nginx logs rotation process",
+     "verb": "can be verified with",
+     "object": "`systemctl status nginx`",
+     "source_text": "You can verify it came back with `systemctl status nginx`.",
+     "topics": [
+      "Nginx Log Rotation",
+      "Service Monitoring",
+      "System Administration"
+     ]
+    },
+    {
+     "subject": "archive directory",
+     "verb": "is pruned weekly by",
+     "object": "the retention script",
+     "source_text": "Do not delete the archive directory; the retention script prunes it weekly.",
+     "topics": [
+      "Log Retention Policy",
+      "Data Management",
+      "System Administration"
+     ]
+    }
+   ],
+   "raw": "{\n  \"triples\": [\n    {\n      \"subject\": \"nginx logs rotation process\",\n      \"verb\": \"requires stopping the service with\",\n      \"object\": \"`systemctl stop nginx`\",\n      \"source_text\": \"To rotate the nginx logs on the web host, first stop the service with `systemctl stop nginx`.\",\n      \"topics\": [\n        \"Nginx Log Rotation\",\n        \"System Administration\",\n        \"Service Management\"\n      ]\n    },\n    {\n      \"subject\": \"nginx logs rotation process\",\n      \"verb\": \"requires archiving current logs with\",\n      \"object\": \"`tar -czf /backup/nginx-logs-$(date +%F).tar.gz /var/log/nginx`\",\n      \"source_text\": \"Then archive the current logs: `tar -czf /backup/nginx-logs-$(date +%F).tar.gz /var/log/nginx`.\",\n      \"topics\": [\n        \"Nginx Log Rotation\",\n        \"Data Archiving\",\n        \"System Administration\"\n      ]\n    },\n    {\n      \"subject\": \"nginx logs rotation process\",\n      \"verb\": \"requires clearing the log directory with\",\n      \"object\": \"`rm /var/log/nginx/*.log`\",\n      \"source_text\": \"After the archive is written, clear the log directory with `rm /var/log/nginx/*.log`\",\n      \"topics\": [\n        \"Nginx Log Rotation\",\n        \"File System Management\",\n        \"System Administration\"\n      ]\n    },\n    {\n      \"subject\": \"nginx logs rotation process\",\n      \"verb\": \"requires starting the service again using\",\n      \"object\": \"`systemctl start nginx`\",\n      \"source_text\": \"and start the service again using `systemctl start nginx`.\",\n      \"topics\": [\n        \"Nginx Log Rotation\",\n        \"Service Management\",\n        \"System Administration\"\n      ]\n    },\n    {\n      \"subject\": \"nginx logs rotation process\",\n      \"verb\": \"can be verified with\",\n      \"object\": \"`systemctl status nginx`\",\n      \"source_text\": \"You can verify it came back with `systemctl status nginx`.\",\n      \"topics\": [\n        \"Nginx Log Rotation\",\n        \"Service Monitoring\",\n        \"System Administration\"\n      ]\n    },\n    {\n      \"subject\": \"archive directory\",\n      \"verb\": \"is pruned weekly by\",\n      \"object\": \"the retention script\",\n      \"source_text\": \"Do not delete the archive directory; the retention script prunes it weekly.\",\n      \"topics\": [\n        \"Log Retention Policy\",\n        \"Data Management\",\n        \"System Administration\"\n      ]\n    }\n  ]\n}"
+  },
+  {
+   "sample": 4,
+   "name": "web-chunk-with-noise",
+   "latency_ms": 10644.206929951906,
+   "out_tokens": 607,
+   "parse_ok": true,
+   "schema_ok": true,
+   "n": 6,
+   "verbatim_exact": 6,
+   "verbatim_normalized": 6,
+   "empty_object": 0,
+   "no_topics": 0,
+   "triples": [
+    {
+     "subject": "Hatsune Miku",
+     "verb": "is a",
+     "object": "Vocaloid software voicebank",
+     "source_text": "Hatsune Miku is a Vocaloid software voicebank",
+     "topics": [
+      "Virtual Singer Development",
+      "Vocaloid Technology",
+      "Japanese Digital Entertainment"
+     ]
+    },
+    {
+     "subject": "Hatsune Miku",
+     "verb": "was developed by",
+     "object": "Crypton Future Media",
+     "source_text": "Hatsune Miku is a Vocaloid software voicebank developed by Crypton Future Media",
+     "topics": [
+      "Virtual Singer Development",
+      "Software Development",
+      "Japanese Digital Entertainment"
+     ]
+    },
+    {
+     "subject": "Hatsune Miku",
+     "verb": "was released on",
+     "object": "August 31, 2007",
+     "source_text": "Hatsune Miku is a Vocaloid software voicebank developed by Crypton Future Media and released on August 31, 2007",
+     "topics": [
+      "Vocaloid Release History",
+      "Virtual Singer Development",
+      "Japanese Digital Entertainment"
+     ]
+    },
+    {
+     "subject": "Hatsune Miku",
+     "verb": "voice is sampled from",
+     "object": "Japanese voice actress Saki Fujita",
+     "source_text": "Her voice is sampled from Japanese voice actress Saki Fujita",
+     "topics": [
+      "Voice Actress Information",
+      "Virtual Singer Development",
+      "Vocaloid Technology"
+     ]
+    },
+    {
+     "subject": "Hatsune Miku",
+     "verb": "is built on",
+     "object": "the Yamaha Vocaloid 2 engine",
+     "source_text": "The software is built on the Yamaha Vocaloid 2 engine",
+     "topics": [
+      "Vocaloid Technology",
+      "Software Architecture",
+      "Virtual Singer Development"
+     ]
+    },
+    {
+     "subject": "Hatsune Miku",
+     "verb": "has performed as",
+     "object": "an animated projection at live concerts since 2009",
+     "source_text": "Miku has performed as an animated projection at live concerts since 2009",
+     "topics": [
+      "Virtual Concerts",
+      "Virtual Singer Development",
+      "Japanese Digital Entertainment"
+     ]
+    }
+   ],
+   "raw": "```json\n{\n  \"triples\": [\n    {\n      \"subject\": \"Hatsune Miku\",\n      \"verb\": \"is a\",\n      \"object\": \"Vocaloid software voicebank\",\n      \"source_text\": \"Hatsune Miku is a Vocaloid software voicebank\",\n      \"topics\": [\n        \"Virtual Singer Development\",\n        \"Vocaloid Technology\",\n        \"Japanese Digital Entertainment\"\n      ]\n    },\n    {\n      \"subject\": \"Hatsune Miku\",\n      \"verb\": \"was developed by\",\n      \"object\": \"Crypton Future Media\",\n      \"source_text\": \"Hatsune Miku is a Vocaloid software voicebank developed by Crypton Future Media\",\n      \"topics\": [\n        \"Virtual Singer Development\",\n        \"Software Development\",\n        \"Japanese Digital Entertainment\"\n      ]\n    },\n    {\n      \"subject\": \"Hatsune Miku\",\n      \"verb\": \"was released on\",\n      \"object\": \"August 31, 2007\",\n      \"source_text\": \"Hatsune Miku is a Vocaloid software voicebank developed by Crypton Future Media and released on August 31, 2007\",\n      \"topics\": [\n        \"Vocaloid Release History\",\n        \"Virtual Singer Development\",\n        \"Japanese Digital Entertainment\"\n      ]\n    },\n    {\n      \"subject\": \"Hatsune Miku\",\n      \"verb\": \"voice is sampled from\",\n      \"object\": \"Japanese voice actress Saki Fujita\",\n      \"source_text\": \"Her voice is sampled from Japanese voice actress Saki Fujita\",\n      \"topics\": [\n        \"Voice Actress Information\",\n        \"Virtual Singer Development\",\n        \"Vocaloid Technology\"\n      ]\n    },\n    {\n      \"subject\": \"Hatsune Miku\",\n      \"verb\": \"is built on\",\n      \"object\": \"the Yamaha Vocaloid 2 engine\",\n      \"source_text\": \"The software is built on the Yamaha Vocaloid 2 engine\",\n      \"topics\": [\n        \"Vocaloid Technology\",\n        \"Software Architecture\",\n        \"Virtual Singer Development\"\n      ]\n    },\n    {\n      \"subject\": \"Hatsune Miku\",\n      \"verb\": \"has performed as\",\n      \"object\": \"an animated projection at live concerts since 2009\",\n      \"source_text\": \"Miku has performed as an animated projection at live concerts since 2009\",\n      \"topics\": [\n        \"Virtual Concerts\",\n        \"Virtual Singer Development\",\n        \"Japanese Digital Entertainment\"\n      ]\n    }\n  ]\n}\n```"
+  },
+  {
+   "sample": 5,
+   "name": "personal-note",
+   "latency_ms": 11742.653785971925,
+   "out_tokens": 649,
+   "parse_ok": true,
+   "schema_ok": true,
+   "n": 8,
+   "verbatim_exact": 8,
+   "verbatim_normalized": 8,
+   "empty_object": 0,
+   "no_topics": 0,
+   "triples": [
+    {
+     "subject": "Dr. Alvarez",
+     "verb": "moved her clinic to",
+     "object": "240 Willow Street in Mountain View",
+     "source_text": "Dr. Alvarez moved her clinic to 240 Willow Street in Mountain View",
+     "topics": [
+      "Medical Clinic Relocation",
+      "Healthcare Logistics"
+     ]
+    },
+    {
+     "subject": "the follow-up appointment",
+     "verb": "is scheduled for",
+     "object": "October 14 at 9:30",
+     "source_text": "the follow-up appointment is on October 14 at 9:30",
+     "topics": [
+      "Medical Appointment Scheduling",
+      "Healthcare Logistics"
+     ]
+    },
+    {
+     "subject": "the patient",
+     "verb": "must bring",
+     "object": "the MRI results from the Stanford imaging center",
+     "source_text": "Bring the MRI results from the Stanford imaging center",
+     "topics": [
+      "Medical Documentation",
+      "Healthcare Logistics"
+     ]
+    },
+    {
+     "subject": "Insurance",
+     "verb": "changed to",
+     "object": "Blue Shield",
+     "source_text": "Insurance changed to Blue Shield in September",
+     "topics": [
+      "Insurance Administration",
+      "Healthcare Logistics"
+     ]
+    },
+    {
+     "subject": "Insurance",
+     "verb": "changed in",
+     "object": "September",
+     "source_text": "Insurance changed to Blue Shield in September",
+     "topics": [
+      "Insurance Administration",
+      "Healthcare Logistics"
+     ]
+    },
+    {
+     "subject": "the old card",
+     "verb": "is no longer valid",
+     "object": "unknown",
+     "source_text": "so the old card is no longer valid",
+     "topics": [
+      "Insurance Administration",
+      "Healthcare Logistics"
+     ]
+    },
+    {
+     "subject": "Mom's birthday",
+     "verb": "is on",
+     "object": "October 20",
+     "source_text": "Mom's birthday is October 20",
+     "topics": [
+      "Family Celebrations",
+      "Personal Reminders"
+     ]
+    },
+    {
+     "subject": "Mom",
+     "verb": "wants",
+     "object": "the blue ceramic teapot from the shop on Castro Street",
+     "source_text": "she said she wants the blue ceramic teapot from the shop on Castro Street",
+     "topics": [
+      "Gift Preferences",
+      "Family Celebrations"
+     ]
+    }
+   ],
+   "raw": "```json\n{\n  \"triples\": [\n    {\n      \"subject\": \"Dr. Alvarez\",\n      \"verb\": \"moved her clinic to\",\n      \"object\": \"240 Willow Street in Mountain View\",\n      \"source_text\": \"Dr. Alvarez moved her clinic to 240 Willow Street in Mountain View\",\n      \"topics\": [\n        \"Medical Clinic Relocation\",\n        \"Healthcare Logistics\"\n      ]\n    },\n    {\n      \"subject\": \"the follow-up appointment\",\n      \"verb\": \"is scheduled for\",\n      \"object\": \"October 14 at 9:30\",\n      \"source_text\": \"the follow-up appointment is on October 14 at 9:30\",\n      \"topics\": [\n        \"Medical Appointment Scheduling\",\n        \"Healthcare Logistics\"\n      ]\n    },\n    {\n      \"subject\": \"the patient\",\n      \"verb\": \"must bring\",\n      \"object\": \"the MRI results from the Stanford imaging center\",\n      \"source_text\": \"Bring the MRI results from the Stanford imaging center\",\n      \"topics\": [\n        \"Medical Documentation\",\n        \"Healthcare Logistics\"\n      ]\n    },\n    {\n      \"subject\": \"Insurance\",\n      \"verb\": \"changed to\",\n      \"object\": \"Blue Shield\",\n      \"source_text\": \"Insurance changed to Blue Shield in September\",\n      \"topics\": [\n        \"Insurance Administration\",\n        \"Healthcare Logistics\"\n      ]\n    },\n    {\n      \"subject\": \"Insurance\",\n      \"verb\": \"changed in\",\n      \"object\": \"September\",\n      \"source_text\": \"Insurance changed to Blue Shield in September\",\n      \"topics\": [\n        \"Insurance Administration\",\n        \"Healthcare Logistics\"\n      ]\n    },\n    {\n      \"subject\": \"the old card\",\n      \"verb\": \"is no longer valid\",\n      \"object\": \"unknown\",\n      \"source_text\": \"so the old card is no longer valid\",\n      \"topics\": [\n        \"Insurance Administration\",\n        \"Healthcare Logistics\"\n      ]\n    },\n    {\n      \"subject\": \"Mom's birthday\",\n      \"verb\": \"is on\",\n      \"object\": \"October 20\",\n      \"source_text\": \"Mom's birthday is October 20\",\n      \"topics\": [\n        \"Family Celebrations\",\n        \"Personal Reminders\"\n      ]\n    },\n    {\n      \"subject\": \"Mom\",\n      \"verb\": \"wants\",\n      \"object\": \"the blue ceramic teapot from the shop on Castro Street\",\n      \"source_text\": \"she said she wants the blue ceramic teapot from the shop on Castro Street\",\n      \"topics\": [\n        \"Gift Preferences\",\n        \"Family Celebrations\"\n      ]\n    }\n  ]\n}\n```"
+  }
+ ]
+}

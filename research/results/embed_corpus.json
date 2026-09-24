@@ -1,0 +1,785 @@
+[
+ {
+  "doc": "encyclopedia",
+  "subject": "Voyager 1",
+  "verb": "is a space probe launched by",
+  "object": "NASA",
+  "sentence": "Voyager 1 is a space probe launched by NASA on September 5, 1977, as part of the Voyager program to study the outer Solar System.",
+  "topics": [
+   "space exploration",
+   "NASA missions"
+  ]
+ },
+ {
+  "doc": "encyclopedia",
+  "subject": "Voyager 1",
+  "verb": "was launched on",
+  "object": "September 5, 1977",
+  "sentence": "Voyager 1 is a space probe launched by NASA on September 5, 1977, as part of the Voyager program to study the outer Solar System.",
+  "topics": [
+   "space exploration",
+   "NASA missions"
+  ]
+ },
+ {
+  "doc": "encyclopedia",
+  "subject": "Voyager 1",
+  "verb": "was launched as part of the",
+  "object": "Voyager program",
+  "sentence": "Voyager 1 is a space probe launched by NASA on September 5, 1977, as part of the Voyager program to study the outer Solar System.",
+  "topics": [
+   "space exploration",
+   "NASA missions"
+  ]
+ },
+ {
+  "doc": "encyclopedia",
+  "subject": "Voyager 1",
+  "verb": "was built at the",
+  "object": "Jet Propulsion Laboratory in Pasadena, California",
+  "sentence": "It was built at the Jet Propulsion Laboratory in Pasadena, California.",
+  "topics": [
+   "space exploration",
+   "NASA missions"
+  ]
+ },
+ {
+  "doc": "encyclopedia",
+  "subject": "Voyager 1",
+  "verb": "made a flyby of",
+  "object": "Jupiter",
+  "sentence": "The probe made a flyby of Jupiter in March 1979 and of Saturn in November 1980, returning the first detailed images of their moons.",
+  "topics": [
+   "space exploration",
+   "planetary flybys"
+  ]
+ },
+ {
+  "doc": "encyclopedia",
+  "subject": "Voyager 1",
+  "verb": "made a flyby of",
+  "object": "Saturn",
+  "sentence": "The probe made a flyby of Jupiter in March 1979 and of Saturn in November 1980, returning the first detailed images of their moons.",
+  "topics": [
+   "space exploration",
+   "planetary flybys"
+  ]
+ },
+ {
+  "doc": "encyclopedia",
+  "subject": "Voyager 1",
+  "verb": "returned the first detailed images of moons of",
+  "object": "Jupiter and Saturn",
+  "sentence": "The probe made a flyby of Jupiter in March 1979 and of Saturn in November 1980, returning the first detailed images of their moons.",
+  "topics": [
+   "space exploration",
+   "planetary flybys"
+  ]
+ },
+ {
+  "doc": "encyclopedia",
+  "subject": "Voyager 1",
+  "verb": "became the first human-made object to enter",
+  "object": "interstellar space",
+  "sentence": "In August 2012 Voyager 1 became the first human-made object to enter interstellar space.",
+  "topics": [
+   "space exploration",
+   "NASA missions"
+  ]
+ },
+ {
+  "doc": "encyclopedia",
+  "subject": "Voyager 1",
+  "verb": "entered interstellar space in",
+  "object": "August 2012",
+  "sentence": "In August 2012 Voyager 1 became the first human-made object to enter interstellar space.",
+  "topics": [
+   "space exploration",
+   "NASA missions"
+  ]
+ },
+ {
+  "doc": "encyclopedia",
+  "subject": "Voyager 1",
+  "verb": "gets its power from three",
+  "object": "radioisotope thermoelectric generators",
+  "sentence": "Its power comes from three radioisotope thermoelectric generators, which are expected to keep at least one instrument running until about 2025.",
+  "topics": [
+   "space exploration",
+   "NASA missions"
+  ]
+ },
+ {
+  "doc": "encyclopedia",
+  "subject": "The radioisotope thermoelectric generators on Voyager 1",
+  "verb": "are expected to keep at least one instrument running until about",
+  "object": "2025",
+  "sentence": "Its power comes from three radioisotope thermoelectric generators, which are expected to keep at least one instrument running until about 2025.",
+  "topics": [
+   "space exploration",
+   "NASA missions"
+  ]
+ },
+ {
+  "doc": "encyclopedia",
+  "subject": "Voyager 1",
+  "verb": "carries the",
+  "object": "Golden Record",
+  "sentence": "The spacecraft carries the Golden Record, a phonograph record curated by a committee chaired by Carl Sagan.",
+  "topics": [
+   "space exploration",
+   "NASA missions"
+  ]
+ },
+ {
+  "doc": "encyclopedia",
+  "subject": "The Golden Record on Voyager 1",
+  "verb": "was curated by a committee chaired by",
+  "object": "Carl Sagan",
+  "sentence": "The spacecraft carries the Golden Record, a phonograph record curated by a committee chaired by Carl Sagan.",
+  "topics": [
+   "space exploration",
+   "NASA missions"
+  ]
+ },
+ {
+  "doc": "conversation",
+  "subject": "Joey",
+  "verb": "booked trip to",
+  "object": "Yosemite for second week of May",
+  "sentence": "SPEAKER:Joey|I finally booked the Yosemite trip for the second week of May. Sam is coming too, and we're going to try Half Dome if the cables are up. I'm bringing the Fujifilm X-T5 this time instead of the Sony, the Sony was too heavy on the last hike.",
+  "topics": [
+   "travel planning"
+  ]
+ },
+ {
+  "doc": "conversation",
+  "subject": "Sam",
+  "verb": "is coming with",
+  "object": "Joey on Yosemite trip",
+  "sentence": "SPEAKER:Joey|I finally booked the Yosemite trip for the second week of May. Sam is coming too, and we're going to try Half Dome if the cables are up. I'm bringing the Fujifilm X-T5 this time instead of the Sony, the Sony was too heavy on the last hike.",
+  "topics": [
+   "travel planning"
+  ]
+ },
+ {
+  "doc": "conversation",
+  "subject": "Joey",
+  "verb": "plans to hike",
+  "object": "Half Dome if cables are up",
+  "sentence": "SPEAKER:Joey|I finally booked the Yosemite trip for the second week of May. Sam is coming too, and we're going to try Half Dome if the cables are up. I'm bringing the Fujifilm X-T5 this time instead of the Sony, the Sony was too heavy on the last hike.",
+  "topics": [
+   "travel planning"
+  ]
+ },
+ {
+  "doc": "conversation",
+  "subject": "Joey",
+  "verb": "brings",
+  "object": "Fujifilm X-T5 camera",
+  "sentence": "SPEAKER:Joey|I finally booked the Yosemite trip for the second week of May. Sam is coming too, and we're going to try Half Dome if the cables are up. I'm bringing the Fujifilm X-T5 this time instead of the Sony, the Sony was too heavy on the last hike.",
+  "topics": [
+   "photography equipment"
+  ]
+ },
+ {
+  "doc": "conversation",
+  "subject": "Joey",
+  "verb": "switched from",
+  "object": "Sony camera due to weight",
+  "sentence": "SPEAKER:Joey|I finally booked the Yosemite trip for the second week of May. Sam is coming too, and we're going to try Half Dome if the cables are up. I'm bringing the Fujifilm X-T5 this time instead of the Sony, the Sony was too heavy on the last hike.",
+  "topics": [
+   "photography equipment"
+  ]
+ },
+ {
+  "doc": "conversation",
+  "subject": "Sophia",
+  "verb": "asks about accommodation location for",
+  "object": "Yosemite trip",
+  "sentence": "SPEAKER:Sophia|That sounds great. Did you decide where you're staying? Last time you mentioned Curry Village was noisy.",
+  "topics": [
+   "travel planning"
+  ]
+ },
+ {
+  "doc": "conversation",
+  "subject": "Sophia",
+  "verb": "recalls Curry Village was noisy",
+  "object": "last time",
+  "sentence": "SPEAKER:Sophia|That sounds great. Did you decide where you're staying? Last time you mentioned Curry Village was noisy.",
+  "topics": [
+   "accommodation choices"
+  ]
+ },
+ {
+  "doc": "conversation",
+  "subject": "Joey",
+  "verb": "stays at",
+  "object": "Curry Village again because it is cheap",
+  "sentence": "SPEAKER:Joey|Yeah, we're doing Curry Village again anyway because it's cheap, but I want to drive up from San Jose on the Thursday night so we get a full first day.",
+  "topics": [
+   "travel planning"
+  ]
+ },
+ {
+  "doc": "conversation",
+  "subject": "Joey",
+  "verb": "plans to drive from",
+  "object": "San Jose on Thursday night",
+  "sentence": "SPEAKER:Joey|Yeah, we're doing Curry Village again anyway because it's cheap, but I want to drive up from San Jose on the Thursday night so we get a full first day.",
+  "topics": [
+   "accommodation choices"
+  ]
+ },
+ {
+  "doc": "procedural",
+  "subject": "stop the nginx service",
+  "verb": "is done by running",
+  "object": "`systemctl stop nginx`",
+  "sentence": "To rotate the nginx logs on the web host, first stop the service with `systemctl stop nginx`.",
+  "topics": [
+   "nginx management",
+   "service control"
+  ]
+ },
+ {
+  "doc": "procedural",
+  "subject": "archive the current logs",
+  "verb": "is done by running",
+  "object": "`tar -czf /backup/nginx-logs-$(date +%F).tar.gz /var/log/nginx`",
+  "sentence": "Then archive the current logs: `tar -czf /backup/nginx-logs-$(date +%F).tar.gz /var/log/nginx`.",
+  "topics": [
+   "log rotation",
+   "file archiving"
+  ]
+ },
+ {
+  "doc": "procedural",
+  "subject": "clear the log directory",
+  "verb": "is done by running",
+  "object": "`rm /var/log/nginx/*.log`",
+  "sentence": "After the archive is written, clear the log directory with `rm /var/log/nginx/*.log` and start the service again using `systemctl start nginx`.",
+  "topics": [
+   "log rotation",
+   "file archiving"
+  ]
+ },
+ {
+  "doc": "procedural",
+  "subject": "start the nginx service",
+  "verb": "is done by running",
+  "object": "`systemctl start nginx`",
+  "sentence": "After the archive is written, clear the log directory with `rm /var/log/nginx/*.log` and start the service again using `systemctl start nginx`.",
+  "topics": [
+   "nginx management",
+   "service control"
+  ]
+ },
+ {
+  "doc": "procedural",
+  "subject": "verify the service status",
+  "verb": "is done by running",
+  "object": "`systemctl status nginx`",
+  "sentence": "You can verify it came back with `systemctl status nginx`.",
+  "topics": [
+   "nginx management",
+   "service control"
+  ]
+ },
+ {
+  "doc": "procedural",
+  "subject": "do not delete the archive directory",
+  "verb": "because",
+  "object": "the retention script prunes it weekly",
+  "sentence": "Do not delete the archive directory; the retention script prunes it weekly.",
+  "topics": [
+   "log rotation",
+   "file archiving"
+  ]
+ },
+ {
+  "doc": "web-chunk-with-noise",
+  "subject": "Hatsune Miku",
+  "verb": "is a",
+  "object": "Vocaloid software voicebank",
+  "sentence": "Hatsune Miku is a Vocaloid software voicebank developed by Crypton Future Media and released on August 31, 2007.",
+  "topics": [
+   "Vocaloid software"
+  ]
+ },
+ {
+  "doc": "web-chunk-with-noise",
+  "subject": "Hatsune Miku",
+  "verb": "was developed by",
+  "object": "Crypton Future Media",
+  "sentence": "Hatsune Miku is a Vocaloid software voicebank developed by Crypton Future Media and released on August 31, 2007.",
+  "topics": [
+   "Vocaloid software"
+  ]
+ },
+ {
+  "doc": "web-chunk-with-noise",
+  "subject": "Hatsune Miku",
+  "verb": "was released on",
+  "object": "August 31, 2007",
+  "sentence": "Hatsune Miku is a Vocaloid software voicebank developed by Crypton Future Media and released on August 31, 2007.",
+  "topics": [
+   "Vocaloid software"
+  ]
+ },
+ {
+  "doc": "web-chunk-with-noise",
+  "subject": "Hatsune Miku's voice",
+  "verb": "is sampled from",
+  "object": "Saki Fujita",
+  "sentence": "Her voice is sampled from Japanese voice actress Saki Fujita.",
+  "topics": [
+   "Vocaloid software"
+  ]
+ },
+ {
+  "doc": "web-chunk-with-noise",
+  "subject": "The software",
+  "verb": "is built on",
+  "object": "Yamaha Vocaloid 2 engine",
+  "sentence": "The software is built on the Yamaha Vocaloid 2 engine.",
+  "topics": [
+   "Vocaloid software"
+  ]
+ },
+ {
+  "doc": "web-chunk-with-noise",
+  "subject": "Miku",
+  "verb": "has performed as an animated projection at live concerts since",
+  "object": "2009",
+  "sentence": "Miku has performed as an animated projection at live concerts since 2009.",
+  "topics": [
+   "voice synthesis"
+  ]
+ },
+ {
+  "doc": "personal-note",
+  "subject": "Dr. Alvarez",
+  "verb": "moved her clinic to",
+  "object": "240 Willow Street in Mountain View",
+  "sentence": "Reminder for next month: Dr. Alvarez moved her clinic to 240 Willow Street in Mountain View, and the follow-up appointment is on October 14 at 9:30.",
+  "topics": [
+   "medical appointments",
+   "location updates"
+  ]
+ },
+ {
+  "doc": "personal-note",
+  "subject": "follow-up appointment",
+  "verb": "is on",
+  "object": "October 14 at 9:30",
+  "sentence": "Reminder for next month: Dr. Alvarez moved her clinic to 240 Willow Street in Mountain View, and the follow-up appointment is on October 14 at 9:30.",
+  "topics": [
+   "medical appointments"
+  ]
+ },
+ {
+  "doc": "personal-note",
+  "subject": "MRI results",
+  "verb": "are from",
+  "object": "Stanford imaging center",
+  "sentence": "Bring the MRI results from the Stanford imaging center.",
+  "topics": [
+   "medical appointments"
+  ]
+ },
+ {
+  "doc": "personal-note",
+  "subject": "Insurance",
+  "verb": "changed to",
+  "object": "Blue Shield in September",
+  "sentence": "Insurance changed to Blue Shield in September, so the old card is no longer valid.",
+  "topics": [
+   "medical appointments"
+  ]
+ },
+ {
+  "doc": "personal-note",
+  "subject": "old card",
+  "verb": "is no longer valid",
+  "object": "[implicit]",
+  "sentence": "Insurance changed to Blue Shield in September, so the old card is no longer valid.",
+  "topics": [
+   "medical appointments"
+  ]
+ },
+ {
+  "doc": "personal-note",
+  "subject": "Mom's birthday",
+  "verb": "is on",
+  "object": "October 20",
+  "sentence": "Also, Mom's birthday is October 20; she said she wants the blue ceramic teapot from the shop on Castro Street.",
+  "topics": [
+   "medical appointments"
+  ]
+ },
+ {
+  "doc": "personal-note",
+  "subject": "blue ceramic teapot",
+  "verb": "is from",
+  "object": "the shop on Castro Street",
+  "sentence": "Also, Mom's birthday is October 20; she said she wants the blue ceramic teapot from the shop on Castro Street.",
+  "topics": [
+   "medical appointments"
+  ]
+ },
+ {
+  "doc": "conv-sam-iceland",
+  "subject": "Sam",
+  "verb": "shot footage on",
+  "object": "Canon R6",
+  "sentence": "SPEAKER:Sam|I just got back from Iceland. I shot the whole trip on my Canon R6 and the drone footage from Skogafoss came out great.",
+  "topics": [
+   "travel photography"
+  ]
+ },
+ {
+  "doc": "conv-sam-iceland",
+  "subject": "Sam",
+  "verb": "captured drone footage of",
+  "object": "Skogafoss",
+  "sentence": "SPEAKER:Sam|I just got back from Iceland. I shot the whole trip on my Canon R6 and the drone footage from Skogafoss came out great.",
+  "topics": [
+   "travel photography"
+  ]
+ },
+ {
+  "doc": "conv-sam-iceland",
+  "subject": "Sam",
+  "verb": "stayed in",
+  "object": "Vik",
+  "sentence": "SPEAKER:Sam|Mostly. We stayed in Vik for three nights and drove the Ring Road clockwise.",
+  "topics": [
+   "Iceland trip"
+  ]
+ },
+ {
+  "doc": "maria-job",
+  "subject": "Maria",
+  "verb": "started a new job at",
+  "object": "Stripe",
+  "sentence": "Maria started a new job at Stripe in March 2026 as a staff engineer on the payments reliability team.",
+  "topics": [
+   "employment"
+  ]
+ },
+ {
+  "doc": "maria-job",
+  "subject": "Maria",
+  "verb": "joined as",
+  "object": "staff engineer on the payments reliability team",
+  "sentence": "Maria started a new job at Stripe in March 2026 as a staff engineer on the payments reliability team.",
+  "topics": [
+   "employment"
+  ]
+ },
+ {
+  "doc": "maria-job",
+  "subject": "Maria",
+  "verb": "started the new job in",
+  "object": "March 2026",
+  "sentence": "Maria started a new job at Stripe in March 2026 as a staff engineer on the payments reliability team.",
+  "topics": [
+   "employment"
+  ]
+ },
+ {
+  "doc": "maria-job",
+  "subject": "Maria",
+  "verb": "moved from",
+  "object": "Seattle",
+  "sentence": "She moved from Seattle to Oakland and now commutes by BART.",
+  "topics": [
+   "relocation"
+  ]
+ },
+ {
+  "doc": "maria-job",
+  "subject": "Maria",
+  "verb": "moved to",
+  "object": "Oakland",
+  "sentence": "She moved from Seattle to Oakland and now commutes by BART.",
+  "topics": [
+   "relocation"
+  ]
+ },
+ {
+  "doc": "maria-job",
+  "subject": "Maria",
+  "verb": "commutes by",
+  "object": "BART",
+  "sentence": "She moved from Seattle to Oakland and now commutes by BART.",
+  "topics": [
+   "relocation"
+  ]
+ },
+ {
+  "doc": "maria-job",
+  "subject": "David Chen",
+  "verb": "is manager of",
+  "object": "Maria",
+  "sentence": "Her manager is David Chen, who previously led infrastructure at Dropbox.",
+  "topics": [
+   "employment"
+  ]
+ },
+ {
+  "doc": "maria-job",
+  "subject": "David Chen",
+  "verb": "previously led infrastructure at",
+  "object": "Dropbox",
+  "sentence": "Her manager is David Chen, who previously led infrastructure at Dropbox.",
+  "topics": [
+   "professional background"
+  ]
+ },
+ {
+  "doc": "webb",
+  "subject": "James Webb Space Telescope",
+  "verb": "launched on",
+  "object": "December 25, 2021 aboard an Ariane 5 rocket from Kourou, French Guiana",
+  "sentence": "The James Webb Space Telescope launched on December 25, 2021 aboard an Ariane 5 rocket from Kourou, French Guiana.",
+  "topics": [
+   "space telescopes"
+  ]
+ },
+ {
+  "doc": "webb",
+  "subject": "James Webb Space Telescope",
+  "verb": "orbits the Sun near",
+  "object": "the second Lagrange point",
+  "sentence": "It orbits the Sun near the second Lagrange point and observes primarily in the infrared.",
+  "topics": [
+   "orbital mechanics"
+  ]
+ },
+ {
+  "doc": "webb",
+  "subject": "James Webb Space Telescope",
+  "verb": "observes primarily in",
+  "object": "the infrared",
+  "sentence": "It orbits the Sun near the second Lagrange point and observes primarily in the infrared.",
+  "topics": [
+   "orbital mechanics"
+  ]
+ },
+ {
+  "doc": "webb",
+  "subject": "primary mirror",
+  "verb": "is 6.5 meters across and made of",
+  "object": "18 gold-coated beryllium segments",
+  "sentence": "Its primary mirror is 6.5 meters across and made of 18 gold-coated beryllium segments.",
+  "topics": [
+   "telescope optics"
+  ]
+ },
+ {
+  "doc": "emma",
+  "subject": "Joey's sister",
+  "verb": "lives in",
+  "object": "Denver",
+  "sentence": "Joey's sister Emma lives in Denver and works as a veterinarian.",
+  "topics": [
+   "family relationships"
+  ]
+ },
+ {
+  "doc": "emma",
+  "subject": "Joey's sister",
+  "verb": "works as",
+  "object": "a veterinarian",
+  "sentence": "Joey's sister Emma lives in Denver and works as a veterinarian.",
+  "topics": [
+   "family relationships"
+  ]
+ },
+ {
+  "doc": "emma",
+  "subject": "Emma",
+  "verb": "is allergic to",
+  "object": "cats",
+  "sentence": "She is allergic to cats, which she says is ironic.",
+  "topics": [
+   "allergies"
+  ]
+ },
+ {
+  "doc": "emma",
+  "subject": "Emma",
+  "verb": "says being allergic to cats",
+  "object": "is ironic",
+  "sentence": "She is allergic to cats, which she says is ironic.",
+  "topics": [
+   "allergies"
+  ]
+ },
+ {
+  "doc": "emma",
+  "subject": "Emma",
+  "verb": "is visiting in",
+  "object": "November for Thanksgiving",
+  "sentence": "Emma is visiting in November for Thanksgiving and prefers vegetarian food.",
+  "topics": [
+   "travel plans"
+  ]
+ },
+ {
+  "doc": "emma",
+  "subject": "Emma",
+  "verb": "prefers",
+  "object": "vegetarian food",
+  "sentence": "Emma is visiting in November for Thanksgiving and prefers vegetarian food.",
+  "topics": [
+   "dietary preferences"
+  ]
+ },
+ {
+  "doc": "rin-len-luka",
+  "subject": "Kagamine Rin",
+  "verb": "is a",
+  "object": "Vocaloid voicebank",
+  "sentence": "Kagamine Rin and Len are Vocaloid voicebanks released by Crypton Future Media in December 2007.",
+  "topics": [
+   "Vocaloid voicebanks",
+   "voice providers"
+  ]
+ },
+ {
+  "doc": "rin-len-luka",
+  "subject": "Len",
+  "verb": "is a",
+  "object": "Vocaloid voicebank",
+  "sentence": "Kagamine Rin and Len are Vocaloid voicebanks released by Crypton Future Media in December 2007.",
+  "topics": [
+   "Vocaloid voicebanks",
+   "voice providers"
+  ]
+ },
+ {
+  "doc": "rin-len-luka",
+  "subject": "Kagamine Rin and Len",
+  "verb": "were released by",
+  "object": "Crypton Future Media",
+  "sentence": "Kagamine Rin and Len are Vocaloid voicebanks released by Crypton Future Media in December 2007.",
+  "topics": [
+   "Crypton Future Media"
+  ]
+ },
+ {
+  "doc": "rin-len-luka",
+  "subject": "Kagamine Rin and Len",
+  "verb": "were released in",
+  "object": "December 2007",
+  "sentence": "Kagamine Rin and Len are Vocaloid voicebanks released by Crypton Future Media in December 2007.",
+  "topics": [
+   "release dates"
+  ]
+ },
+ {
+  "doc": "rin-len-luka",
+  "subject": "Megurine Luka",
+  "verb": "is a",
+  "object": "bilingual Japanese and English voicebank",
+  "sentence": "Megurine Luka followed in January 2009 as a bilingual Japanese and English voicebank.",
+  "topics": [
+   "Vocaloid voicebanks",
+   "language support"
+  ]
+ },
+ {
+  "doc": "rin-len-luka",
+  "subject": "Megurine Luka",
+  "verb": "was released in",
+  "object": "January 2009",
+  "sentence": "Megurine Luka followed in January 2009 as a bilingual Japanese and English voicebank.",
+  "topics": [
+   "release dates"
+  ]
+ },
+ {
+  "doc": "rin-len-luka",
+  "subject": "Kagamine Rin and Len",
+  "verb": "have voice provider",
+  "object": "Asami Shimoda",
+  "sentence": "Their voice provider is Asami Shimoda.",
+  "topics": [
+   "voice providers"
+  ]
+ },
+ {
+  "doc": "bazel",
+  "subject": "The build system",
+  "verb": "was migrated from",
+  "object": "Make to Bazel",
+  "sentence": "The team decided to migrate the build system from Make to Bazel in Q3.",
+  "topics": [
+   "build systems"
+  ]
+ },
+ {
+  "doc": "bazel",
+  "subject": "The migration",
+  "verb": "is owned by",
+  "object": "Priya",
+  "sentence": "The migration is owned by Priya, and the target is to cut CI time below twelve minutes.",
+  "topics": [
+   "project ownership"
+  ]
+ },
+ {
+  "doc": "bazel",
+  "subject": "The target of the migration",
+  "verb": "is to cut CI time below",
+  "object": "twelve minutes",
+  "sentence": "The migration is owned by Priya, and the target is to cut CI time below twelve minutes.",
+  "topics": [
+   "performance goals"
+  ]
+ },
+ {
+  "doc": "bazel",
+  "subject": "Remote caching",
+  "verb": "will be hosted on",
+  "object": "the existing GCS bucket",
+  "sentence": "Remote caching will be hosted on the existing GCS bucket.",
+  "topics": [
+   "remote caching"
+  ]
+ },
+ {
+  "doc": "dentist",
+  "subject": "Dr. Patel's dental office",
+  "verb": "is located at",
+  "object": "55 Oak Avenue in Palo Alto",
+  "sentence": "Dr. Patel's dental office is at 55 Oak Avenue in Palo Alto.",
+  "topics": [
+   "business locations"
+  ]
+ },
+ {
+  "doc": "dentist",
+  "subject": "Joey",
+  "verb": "has a cleaning scheduled for",
+  "object": "November 3 at 2:00 PM",
+  "sentence": "Joey has a cleaning scheduled for November 3 at 2:00 PM.",
+  "topics": [
+   "appointment scheduling"
+  ]
+ },
+ {
+  "doc": "dentist",
+  "subject": "The office",
+  "verb": "requires",
+  "object": "24 hours notice for cancellations",
+  "sentence": "The office requires 24 hours notice for cancellations.",
+  "topics": [
+   "cancellation policies"
+  ]
+ }
+]
