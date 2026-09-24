@@ -37,6 +37,7 @@ class Engine:
         self.tools = Tools(self)
         self.last_injection: Dict[str, str] = {}
         self.last_injection_shingles: Dict[str, set] = {}
+        self.last_injection_text: Dict[str, str] = {}
         self.last_prefetch: Dict[str, Dict[str, Any]] = {}
         self._degraded: Dict[str, Any] = {}
 
@@ -92,16 +93,19 @@ class Engine:
     def prefetch(self, query: str, session_id: str) -> str:
         text, info = self.recall.prefetch(query, session_id)
         self.last_prefetch[session_id] = info
+        self.last_injection_text[session_id] = text
         return text
 
     def capture_turn(self, session_id: str, user: str, assistant: str,
                      messages: Optional[Sequence[Dict[str, Any]]] = None, agent_context: str = "primary") -> Dict[str, int]:
         msgs = list(messages) if messages else [{"role": "user", "content": user}, {"role": "assistant", "content": assistant}]
-        stats = self.capture.process_messages(session_id, msgs, agent_context=agent_context)
+        stats = self.capture.process_messages(session_id, msgs, agent_context=agent_context,
+                                              ground=session_id in self.last_injection_text)
         inj = self.last_injection.pop(session_id, None)
         if inj:
             self.store.x("UPDATE injections SET response_text=? WHERE id=?", ((assistant or "")[:8000], inj))
         self.last_injection_shingles.pop(session_id, None)
+        self.last_injection_text.pop(session_id, None)
         return stats
 
     def mark_compacted(self, session_id: str, messages: Sequence[Dict[str, Any]]) -> int:

@@ -22,6 +22,7 @@ from ..decider import Decider, DeciderError, fit_temperature
 from ..spans import resolve_times
 from ..store import sha
 from .. import text as T
+from ..text import norm_entity
 
 MODALITIES = {"asserted", "planned", "habitual", "preferred", "hypothetical", "negated", "reported"}
 _PLACEHOLDER = re.compile(r"^\s*(\[?implicit\]?|unknown|unspecified|n/?a|none|null|-|\?)\s*$", re.I)
@@ -42,13 +43,6 @@ class Yielded(RuntimeError):
 
 def _d(ts):
     return dt.datetime.fromtimestamp(ts).strftime("%Y-%m-%d") if ts else "?"
-
-
-def norm_entity(s: str) -> str:
-    s = (s or "").strip().lower()
-    s = re.sub(r"^(the|a|an|my|our|his|her|their)\s+", "", s)
-    s = re.sub(r"['’]s$", "", s)
-    return re.sub(r"\s+", " ", s).strip(" .,:;\"'")
 
 
 def norm_relation(r: str) -> str:

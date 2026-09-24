@@ -82,6 +82,15 @@ def _args(tc: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
     return name, raw if isinstance(raw, dict) else {}
 
 
+# Worded positively and read in both option orders: on hand-labelled replies the 9B separated made-up claims
+# (>= 0.59 unsupported) from acknowledgements, answers from memory and general knowledge (<= 0.34);
+# the negative wording in one order did not separate them at all.
+GROUND_INSTRUCTIONS = ("Every specific claim the reply makes about the user, the people in their life, or their plans "
+                       "(names, places, jobs, dates, times, numbers) is stated in the user's message, the memory "
+                       "given, or the tool results. General knowledge about the world does not count as a claim "
+                       "about the user.")
+
+
 def message_hash(session_id: str, m: Dict[str, Any]) -> str:
     """Stable identity of a message whether it comes live from the agent loop or from the session store."""
     content = T.message_text(m.get("content")).strip()
@@ -106,7 +115,9 @@ class Capture:
 
     # --------------------------------------------------------------- turns
     def process_messages(self, session_id: str, messages: Sequence[Dict[str, Any]], now: Optional[float] = None,
-                         agent_context: str = "primary") -> Dict[str, int]:
+                         agent_context: str = "primary", ground: bool = False) -> Dict[str, int]:
+        """``ground``: this is a live turn whose injected memory is known, so new agent replies can be checked
+        for claims about the user's world that nothing in the turn supports (history imports can't be)."""
         cfg, store = self.e.cfg, self.e.store
         now = now or time.time()
         full = (agent_context or "primary") in cfg["full_capture_contexts"]
@@ -118,6 +129,7 @@ class Capture:
         events, outcomes, citations, new_hashes = [], [], [], []
         injected = self.e.last_injection_shingles.get(session_id, set())
         stats = collections.Counter()
+        turn_user, turn_tools = "", []
 
         for m in messages:
             role = m.get("role")
@@ -131,6 +143,11 @@ class Capture:
                 if is_new:
                     if full:
                         ws = self._windows_for(session_id, role, content, _said(m, now), h, prev, recent_names, injected)
+                        if role == "assistant" and ground and ws and not self._grounded(session_id, turn_user,
+                                                                                       turn_tools, content):
+                            for w in ws:
+                                w["flags"] = " ".join(sorted(set(w["flags"].split()) | {"ungrounded"}))
+                            stats["ungrounded"] += 1
                         new_windows.extend(ws)
                         stats["windows"] += len(ws)
                     if role == "assistant":
@@ -141,7 +158,10 @@ class Capture:
                                        content[:160], _said(m, now), None))
                 recent_names.extend(T.names_in(content))
                 prev[role] = content
+                if role == "user":
+                    turn_user, turn_tools = content, []
             elif role == "tool" and is_new:
+                turn_tools.append(unwrap(content)[:1500])
                 name = m.get("name") or m.get("tool_name") or tool_map.get(m.get("tool_call_id") or "", ("", {}))[0]
                 args = tool_map.get(m.get("tool_call_id") or "", ("", {}))[1]
                 low = (name or "").lower()
@@ -191,6 +211,18 @@ class Capture:
         store.mark_processed(session_id, new_hashes)
         seen.update(new_hashes)
         return dict(stats)
+
+    def _grounded(self, session_id: str, user: str, tools: List[str], reply: str) -> bool:
+        """False when the reply states specifics about the user's world that the turn gave it no basis for."""
+        if not self.e.cfg["ground_check"] or not (T.names_in(reply) or re.search(r"\d", reply)):
+            return True                                    # nothing specific to check
+        state = {"message": user[:2000], "memory_given": self.e.last_injection_text.get(session_id, "")[:4000],
+                 "tool_results": tools[-4:], "reply": reply[:2000]}
+        try:
+            return self.e.decider.noul(state, GROUND_INSTRUCTIONS, permutations=2).noul >= 0.5
+        except Exception as ex:                            # can't tell: keep it (it is still labelled assistant)
+            self.e.set_degraded("decider", str(ex))
+            return True
 
     def _windows_for(self, session_id, role, content, said, h, prev, recent_names, injected) -> List[Dict[str, Any]]:
         cfg = self.e.cfg

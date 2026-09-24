@@ -83,7 +83,7 @@ class Recall:
         items: Dict[str, Dict[str, Any]] = {}
         for wid, s in scores.items():
             r = rows.get(wid)
-            if r is None or "echo" in (r["flags"] or "") or "dropped" in (r["flags"] or ""):
+            if r is None or any(f in (r["flags"] or "") for f in ("echo", "dropped", "ungrounded")):
                 continue
             if session_id and r["session_id"] == session_id and "compacted" not in (r["flags"] or ""):
                 continue                                   # already in the live context window
@@ -93,7 +93,10 @@ class Recall:
                     (cfg["question_penalty"] if (r["text"] or "").rstrip().endswith("?") and len(r["text"]) < 240 else 0)
             if s < cfg["junk_floor"] and wid not in fts_ids:
                 continue
+            bare_q = "assistant" not in (r["flags"] or "") and (r["text"] or "").rstrip().endswith("?") \
+                and len(r["text"]) < 240 and len(T.split_sentences(r["text"])) <= 1
             items[wid] = {"kind": "window", "id": wid, "score": s + bonus, "sim": s, "text": r["text"],
+                          "bare_question": bare_q,
                           "said": r["said"], "speaker": r["speaker"], "flags": r["flags"] or "", "ref": r["ref"]}
 
         # facts (consolidated at night)
@@ -103,24 +106,12 @@ class Recall:
             frows = store.facts_by_ids([i for i, _ in fhits])
             for fid, s in fhits:
                 f = frows.get(fid)
-                if f is None or s < cfg["junk_floor"]:
+                if f is None or s < cfg["junk_floor"] or not self._fact_ok(f, history, scope):
                     continue
-                if not history and f["status"] not in ("active", "unconfirmed"):
-                    continue
-                if scope and f["h_start"] and not (f["h_start"] < scope[1] and (f["h_end"] or f["h_start"]) > scope[0]):
-                    continue
-                srcs = [r["window_id"] for r in store.q("SELECT window_id FROM fact_sources WHERE fact_id=?", (fid,))]
-                ev = store.windows_by_ids(srcs[:1])
-                evw = next(iter(ev.values()), None)
-                best = max([s] + [items[w]["score"] for w in srcs if w in items])
-                for w in srcs:
-                    items.pop(w, None)                        # the fact carries its own source as evidence
-                items["f:" + fid] = {"kind": "fact", "id": fid, "score": best + 0.005, "sim": s,
-                                     "evidence_id": evw["id"] if evw else None,
-                                     "fact": [f["subject"], f["relation"], f["object"]], "modality": f["modality"],
-                                     "happens": f["happens"], "status": f["status"],
-                                     "text": evw["text"] if evw else "", "said": evw["said"] if evw else f["created_at"],
-                                     "speaker": evw["speaker"] if evw else "", "flags": "", "ref": evw["ref"] if evw else ""}
+                self._add_fact(items, f, s, s)
+        # the graph: walk from what matched to what it connects to
+        if cfg["graph_hops"] > 0:
+            info["graph"] = self._expand(items, query, qv, history, scope, session_id)
         # raw windows that stated a fact since superseded: label what changed, keep the verbatim evidence
         by_window: Dict[str, List[Dict[str, Any]]] = {}
         for it in items.values():
@@ -144,6 +135,125 @@ class Recall:
         ranked.sort(key=lambda it: (round(it["score"], 3), it["credit"].get("real", 0), it["credit"].get("replay", 0)),
                     reverse=True)
         return ranked, info
+
+    # ------------------------------------------------------------------ graph
+    @staticmethod
+    def _fact_ok(f, history: bool, scope) -> bool:
+        if not history and f["status"] not in ("active", "unconfirmed"):
+            return False
+        if scope and f["h_start"] and not (f["h_start"] < scope[1] and (f["h_end"] or f["h_start"]) > scope[0]):
+            return False
+        return True
+
+    def _add_fact(self, items: Dict[str, Dict[str, Any]], f, sim: float, score: float,
+                  via: Optional[str] = None) -> None:
+        """A fact item carries its source window as evidence (and replaces that window's own entry)."""
+        store = self.e.store
+        srcs = [r["window_id"] for r in store.q("SELECT window_id FROM fact_sources WHERE fact_id=?", (f["id"],))]
+        evw = next(iter(store.windows_by_ids(srcs[:1]).values()), None)
+        best = max([score] + [items[w]["score"] for w in srcs if w in items])
+        for w in srcs:
+            items.pop(w, None)
+        items["f:" + f["id"]] = {"kind": "fact", "id": f["id"], "score": best + 0.005, "sim": sim,
+                                 "evidence_id": evw["id"] if evw else None,
+                                 "fact": [f["subject"], f["relation"], f["object"]], "modality": f["modality"],
+                                 "happens": f["happens"], "status": f["status"],
+                                 "text": evw["text"] if evw else "", "said": evw["said"] if evw else f["created_at"],
+                                 "speaker": evw["speaker"] if evw else "", "flags": "",
+                                 "ref": evw["ref"] if evw else "", **({"via": via} if via else {})}
+
+    def _expand(self, items: Dict[str, Dict[str, Any]], query: str, qv, history: bool, scope,
+                session_id: str) -> Dict[str, Any]:
+        """Graph expansion. Bridge entities -- named in the top items but not in the question, which
+        similarity already covers -- are seeds. Facts one hop away join the candidates (or are raised) at
+        the seed's score times ``graph_decay`` (or their own similarity, if higher), damped for hub entities
+        with many facts. Conversation links (answers / corrects) are followed too. The user and the agent
+        are never expanded: everything connects to them."""
+        e, cfg, store = self.e, self.e.cfg, self.e.store
+        decay, fanout, hub = cfg["graph_decay"], cfg["graph_fanout"], cfg["graph_hub_degree"]
+        skip = {T.norm_entity(cfg["user_name"]), T.norm_entity(cfg["agent_name"]), "i", "me", "user", "assistant"}
+        skip |= {T.norm_entity(n) for n in T.names_in(query)}
+        seeds = sorted(items.values(), key=lambda it: it["score"], reverse=True)[:cfg["gate_top"]]
+        weight: Dict[str, float] = {}
+        names: Dict[str, str] = {}
+
+        def seed(name: str, w: float) -> None:
+            eid = T.norm_entity(name)
+            if eid and eid not in skip and w > weight.get(eid, 0.0):
+                weight[eid], names[eid] = w, name
+
+        for it in seeds:
+            if it["kind"] == "fact":
+                seed(it["fact"][0], it["score"])
+                seed(it["fact"][2], it["score"])
+            else:
+                for name in T.names_in(it.get("text") or ""):
+                    seed(name, it["score"])
+        known = {r["id"]: r for r in store.q(
+            f"SELECT id, name, fact_count FROM entities WHERE id IN ({','.join('?' * len(weight))})", list(weight))} \
+            if weight else {}
+        frontier = sorted(((w, eid) for eid, w in weight.items() if eid in known), reverse=True)[:cfg["graph_entities"]]
+        added, walked = 0, []
+        fidx = store.index("fact", cfg["embed_model"]) if qv is not None else None
+        for hop in range(cfg["graph_hops"]):
+            nxt: Dict[str, float] = {}
+            for w, eid in frontier:
+                deg = max(1, known[eid]["fact_count"] if eid in known else 1)
+                damp = min(1.0, (hub / deg) ** 0.5)
+                facts = [f for f in store.q("""SELECT * FROM facts WHERE (subject_norm=? OR lower(object)=?)
+                                               ORDER BY valid_from DESC LIMIT 50""", (eid, eid))
+                         if self._fact_ok(f, history, scope)]
+                if not facts:
+                    continue
+                own = fidx.score_ids(qv, [f["id"] for f in facts]) if fidx is not None else {}
+                facts.sort(key=lambda f: own.get(f["id"], 0.0), reverse=True)
+                via = known[eid]["name"] if eid in known else names.get(eid, eid)
+                reached = False
+                for f in facts[:fanout]:
+                    sim = own.get(f["id"], 0.0)
+                    score = max(sim, w * decay * damp)
+                    have = items.get("f:" + f["id"])
+                    if have is not None:                 # already a candidate: the path can only raise it
+                        if score > have["score"]:
+                            have["score"], have["via"] = score, via
+                            added += 1
+                            reached = True
+                    else:
+                        self._add_fact(items, f, sim, score, via=via)
+                        added += 1
+                        reached = True
+                    for other in (T.norm_entity(f["subject"]), T.norm_entity(f["object"])):
+                        if other != eid and other not in skip:
+                            nxt[other] = max(nxt.get(other, 0.0), score)
+                if reached:
+                    walked.append(via)
+            if hop + 1 < cfg["graph_hops"] and nxt:
+                more = {r["id"]: r for r in store.q(
+                    f"SELECT id, name, fact_count FROM entities WHERE id IN ({','.join('?' * len(nxt))})", list(nxt))}
+                known.update(more)
+                frontier = sorted(((w, i) for i, w in nxt.items() if i in more), reverse=True)[:cfg["graph_entities"]]
+        # conversation links: a matched "yes" brings the question it answered, and the reverse
+        wseeds = {it["id"]: it for it in seeds if it["kind"] == "window"}
+        if wseeds:
+            ids = list(wseeds)
+            ph = ",".join("?" * len(ids))
+            for r in store.q(f"SELECT src, dst, kind FROM links WHERE src IN ({ph}) OR dst IN ({ph})", ids + ids):
+                parent, other = (r["src"], r["dst"]) if r["src"] in wseeds else (r["dst"], r["src"])
+                if other in items or any(it.get("evidence_id") == other for it in items.values()):
+                    continue
+                w = store.windows_by_ids([other]).get(other)
+                if w is None or any(f in (w["flags"] or "") for f in ("echo", "dropped", "ungrounded")):
+                    continue
+                if session_id and w["session_id"] == session_id and "compacted" not in (w["flags"] or ""):
+                    continue
+                rel = r["kind"] if r["src"] == other else {"answers": "answered by", "corrects": "corrected by"}.get(
+                    r["kind"], r["kind"])
+                items[other] = {"kind": "window", "id": other, "score": wseeds[parent]["score"] * decay,
+                                "sim": wseeds[parent]["sim"], "text": w["text"], "said": w["said"],
+                                "speaker": w["speaker"], "flags": w["flags"] or "", "ref": w["ref"],
+                                "via": f"{rel} a match"}
+                added += 1
+        return {"entities": walked, "raised_or_added": added}
 
     # ---------------------------------------------------------------- prefetch
     def prefetch(self, query: str, session_id: str) -> Tuple[str, Dict[str, Any]]:
@@ -186,10 +296,12 @@ class Recall:
         cfg = self.e.cfg
         if not top:
             return []
-        floor = top[0]["sim"] - cfg["inject_relative_floor"]
+        floor = max(it["score"] for it in top) - cfg["inject_relative_floor"]
         out, n_asst = [], 0
         for it in top:
-            if it["sim"] < floor:
+            if it["score"] < floor:                 # score: graph-raised items keep a low raw similarity
+                continue
+            if it.get("bare_question"):             # an earlier question carries no facts; sophia_recall still finds it
                 continue
             if "assistant" in it.get("flags", ""):
                 if n_asst >= cfg["max_assistant_items"]:
@@ -225,12 +337,14 @@ class Recall:
                 when = f" · happens {it['happens']}" if it.get("happens") else ""
                 status = f" · {it['status']}" if it.get("status") not in ("active", None) else ""
                 changed = f" · evidence later changed: {'; '.join(it['changed'])}" if it.get("changed") else ""
-                line = f"- [{_date(it['said'])} · fact · {mod}{when}{status}{num}] {s} | {r} | {o} — \"{it['text']}\"{changed}"
+                via = f" · linked via {it['via']}" if it.get("via") else ""
+                line = f"- [{_date(it['said'])} · fact · {mod}{when}{status}{num}{via}] {s} | {r} | {o} — \"{it['text']}\"{changed}"
             else:
                 who = it["speaker"] + (" (assistant said)" if "assistant" in it["flags"] else "") + \
                       (" (untrusted source text)" if "external" in it["flags"] else "")
                 changed = f" · later changed: {'; '.join(it['changed'])}" if it.get("changed") else ""
-                line = f"- [{_date(it['said'])} · {who}{num}{changed}] {it['text']}"
+                via = f" · {it['via']}" if it.get("via") else ""
+                line = f"- [{_date(it['said'])} · {who}{num}{via}{changed}] {it['text']}"
             if used + len(line) + 1 > budget:
                 break
             lines.append(line)

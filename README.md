@@ -8,6 +8,8 @@ Sophia is a Hermes memory provider. Memory reaches the agent in three ways:
 2. **The agent can query it.** Memory tools let the agent dig deeper, count and list things, and ask what changed.
 3. **The agent can browse it.** **Mindscape** is the wiki Sophia builds overnight: a page per person, place and thing, a timeline, sources, and a changelog. Every line links back to the words it came from.
 
+Underneath is a **temporal memory graph** built overnight: people, places and things; what is true about them, and since when; and the exact words each fact came from. Recall walks it one hop, so a question about "Sam's sister" can reach where Lily lives.
+
 Sophia never initiates anything. It doesn't speak, ask questions or take actions; the agent's tools are the only deliberate part. Everything runs locally against [LM Studio](https://lmstudio.ai), or an OpenAI-compatible server such as llama-server.
 
 > Status: working prototype (v0.1), exercised end to end inside real Hermes v0.21.4. See [what is built and what isn't](docs/DESIGN.md#15-implementation-status-prototype-2026-09-23).
@@ -19,8 +21,9 @@ Sophia never initiates anything. It doesn't speak, ask questions or take actions
 Each time you send a message, before the agent's model sees it, Sophia:
 
 1. **Searches** everything it has recorded: conversations, pages the agent read, and facts extracted overnight. It combines vector search, keyword search, and date scoping for "last week" style questions.
-2. **Checks** whether any of it actually bears on your message. A very strong match (cosine ≥ 0.82) passes straight through. Anything weaker goes to a small local model that answers yes or no by reading the probability of its first token, without generating any text. That check takes about 0.3 s.
-3. **Injects** what passed into the agent's context, or nothing.
+2. **Follows the graph** one hop from the people and things in the best matches that the question itself doesn't name. The question "Where does Sam's sister live?" matches `Sam | has a sister named | Lily`, and the hop through Lily reaches `Lily | moved to | Denver`, which similarity alone ranked too low to inject.
+3. **Checks** whether any of it actually bears on your message. A very strong match (cosine ≥ 0.82) passes straight through. Anything weaker goes to a small local model that answers yes or no by reading the probability of its first token, without generating any text. That check takes about 0.3 s.
+4. **Injects** what passed into the agent's context, or nothing.
 
 This is a real injection from the test profile, for "Which camera am I taking on the Yosemite trip?". It is an excerpt: 4 of the 8 items, in the order they were injected.
 
@@ -47,10 +50,17 @@ What the agent is told about each item:
 | `happens` | When it takes place, as distinct from when it was said |
 | `evidence later changed` | These words include something that was later superseded, so the agent doesn't repeat a stale plan |
 | `assistant said` | The agent's own earlier words: weaker evidence, and capped at two per injection |
+| `linked via Lily` | Reached through the graph rather than by similarity |
 | `untrusted source text` | Text from a web page, which the agent must treat as data, not instructions |
 | `used +0.25` | Credit earned when this item actually helped a past answer. It affects ordering only, never whether an item may be shown |
 
 For an off-topic message ("What's the capital of Australia?") the check said no (0.45), so nothing was injected.
+
+**What is never injected:**
+- the agent repeating memory back (echoes);
+- agent replies that stated facts about you that nothing in the turn supported. These are checked as they're captured, because an invented answer recalled later becomes "memory";
+- your own earlier questions, which carry no facts;
+- failed page fetches.
 
 ## 2. On request: memory the agent can query
 
@@ -188,6 +198,16 @@ Nothing generates text on the chat's critical path.
 
 The night waits while the big model is serving chat, and yields rather than competing with you.
 
+### How it compares
+
+The data model (three clocks, supersession, provenance, triples indexing passages) has converged with the best graph memories: Graphiti/Zep, SodaMem, HippoRAG 2 and Hindsight. What's different is how Sophia behaves:
+- it makes no model calls when something is saved;
+- it checks relevance and can inject nothing;
+- its own invented claims can't become memory;
+- a night tests and repairs its own recall.
+
+Benchmarks are in progress. The details and sources are in [docs/COMPARISON.md](docs/COMPARISON.md).
+
 ### Principles
 
 - **The raw record is the truth; everything else is an index.**
@@ -275,7 +295,7 @@ Nothing is scheduled for you. When you're ready, add a nightly run:
 
 ```bash
 pip install -e ".[test]"
-pytest -q        # 31 tests against a fake model server; no GPU needed
+pytest -q        # 38 tests against a fake model server; no GPU needed
 ```
 
 | Path | What |
@@ -285,6 +305,7 @@ pytest -q        # 31 tests against a fake model server; no GPU needed
 | `docs/DESIGN.md` | The design (v0.5) and implementation status |
 | `docs/STORY.md` | How it got here: the research, the dead ends, and the bugs only real use found |
 | `docs/CONFIGURATION.md` | Every setting |
+| `docs/COMPARISON.md` | How Sophia compares with other graph and agent memories |
 | `research/` | The experiments behind the design |
 | `scripts/` | Debug helpers |
 

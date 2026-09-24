@@ -164,3 +164,11 @@ def message_text(content) -> str:
         elif isinstance(p, str):
             parts.append(p)
     return "\n".join(x for x in parts if x)
+
+
+def norm_entity(s: str) -> str:
+    """Entity id: lower-case, without a leading article or possessive."""
+    s = (s or "").strip().lower()
+    s = re.sub(r"^(the|a|an|my|our|his|her|their)\s+", "", s)
+    s = re.sub(r"['’]s$", "", s)
+    return re.sub(r"\s+", " ", s).strip(" .,:;\"'")

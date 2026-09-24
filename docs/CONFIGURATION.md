@@ -94,6 +94,7 @@ hermes sophia sleep --model M [--url U --api openai]
 | `test_tools` | `terminal`, `shell`, `bash`, `run_command`, `execute_code` | Their output is scanned for pytest outcomes |
 | `full_capture_contexts` | `primary` | Agent contexts captured in full. Other contexts (subagents, cron) record only a short event per task prompt: no conversation windows, no web reads |
 | `echo_threshold` | 0.5 | Shingle containment above which a reply that just repeats injected memory is fenced off as an echo |
+| `ground_check` | on | Each live agent reply that names people, places or numbers is checked by the decider (both option orders). The question is whether every claim it makes about you is in your message, the memory it was given, or the turn's tool results. If not, the reply is kept out of recall. Imported history is not checked, because what was injected then is unknown |
 
 ## Awake: recall and injection
 
@@ -109,7 +110,21 @@ hermes sophia sleep --model M [--url U --api openai]
 | `inject_relative_floor` | 0.15 | Only inject items within this similarity of the top item |
 | `recency_bonus`, `fts_bonus`, `type_bonus` | 0.01, 0.03, 0.02 | Ranking nudges |
 | `assistant_penalty`, `max_assistant_items` | 0.06, 2 | Keep the agent's own restatements from crowding out your words |
-| `question_penalty` | 0.04 | A bare earlier question carries no facts |
+| `question_penalty` | 0.04 | Ranking penalty for a bare earlier question in `sophia_recall`. Passive injection leaves bare questions out entirely |
+
+## Awake: graph expansion
+
+After the search, recall walks the memory graph from bridge entities: people and things in the best matches that the question itself doesn't name. Facts about them join the candidates, or raise candidates already found.
+
+| Key | Default | |
+|---|---|---|
+| `graph_hops` | 1 | Hops from a matched entity to connected facts. 0 turns expansion off; 2 is untested |
+| `graph_decay` | 0.9 | A connected fact scores its seed's score times this, or its own similarity if that is higher |
+| `graph_hub_degree` | 8 | Entities with more facts than this spread less, damped by √(hub_degree / facts). You and the agent are never expanded |
+| `graph_fanout` | 3 | Connected facts taken per entity, best-matching first |
+| `graph_entities` | 6 | Entities expanded per hop |
+
+Conversation links are followed too: a matched message brings what corrects it, or what it answered.
 
 ## Asleep
 

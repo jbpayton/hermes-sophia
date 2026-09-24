@@ -433,7 +433,10 @@ The code is this repository. It is tested on the `sophiadev` profile (a clone of
 - `ingest-history` reads the session store read-only and is idempotent: live and stored message shapes hash to the same identity.
 - Per-job model servers. Embeddings, decider and night each have a model and an optional server, of type `lmstudio` or `openai` (llama-server, vLLM). Verified against LM Studio and a CPU llama-server: chat, logprob readout, routed recall, and the night's busy check.
 - Hermes setup (`hermes memory setup`) and the dashboard expose all 48 settings. The basics are always shown; servers and tuning sit behind two gate questions.
-- Unit tests: 31, all passing, run against a fake model server.
+- Graph expansion at recall: one hop from bridge entities, with hub damping, plus conversation links. Live, "Where does Sam's sister live?" reached `Lily | moved to | Denver` (similarity 0.57, below the cutoff) through Lily.
+- Grounding check at capture. Live agent replies whose claims about the user are unsupported are kept out of recall. Found live: an invented answer was recalled as memory in the next session. The positive wording, read in both option orders, separated six hand-labelled cases (bad ≥ 0.59, good ≤ 0.34); the negative wording did not.
+- Bare earlier questions are never injected passively.
+- Unit tests: 38, all passing, run against a fake model server.
 
 **Answers to §14 verify items**
 - `ctx.llm` is not forwarded to memory providers (`_ProviderCollector`), so Sophia talks to LM Studio directly. `reasoning_effort: "none"` works on `/v1/chat/completions`, and `/v1/responses` returns first-token logprobs.

@@ -1,3 +1,4 @@
+import re
 import datetime as dt
 import json
 import time
@@ -208,3 +209,36 @@ def test_live_and_stored_messages_hash_the_same(engine):
     engine.capture_turn("h", "", "", live)
     stats = engine.capture.process_messages("h", stored)
     assert stats.get("windows", 0) == 0
+
+
+def test_ungrounded_reply_is_kept_out_of_recall(engine, fake):
+    engine.prefetch("Where does Sam's sister live now?", "g")          # a live turn: what was injected is known
+    def readout(prompt):                                               # the check answers "false" in either order
+        if "Every specific claim" in prompt:
+            no = re.search(r"^([A-Z])\) (?i:false)", prompt, re.M).group(1)
+            return [(no, -0.05), ("B" if no == "A" else "A", -3.0)]
+        return [("B", -0.05), ("A", -3.0)]
+    fake.readout = readout
+    engine.capture_turn("g", "", "", [
+        {"role": "user", "content": "Where does Sam's sister live now?"},
+        {"role": "assistant", "content": "Sam's sister Lily lives in San Francisco and works as a designer."}])
+    row = engine.store.one("SELECT flags FROM windows WHERE text LIKE 'Sam''s sister Lily lives%'")
+    assert "ungrounded" in row["flags"]
+    items, _ = engine.recall.candidates("Where does Lily live? San Francisco designer", k=20)
+    assert not any("San Francisco" in it["text"] for it in items)
+
+
+def test_history_import_is_not_ground_checked(engine, fake):
+    fake.readout = lambda p: [("B", -0.05), ("A", -3.0)]
+    engine.capture.process_messages("h2", [
+        {"role": "user", "content": "Remind me where Lily lives."},
+        {"role": "assistant", "content": "Lily lives in Denver, you told me last week."}])
+    assert "ungrounded" not in engine.store.one("SELECT flags FROM windows WHERE text LIKE 'Lily lives in Denver%'")["flags"]
+
+
+def test_bare_question_is_not_injected(engine, fake):
+    engine.capture.remember("Which camera am I taking on the Yosemite trip?", speaker="Joey")
+    engine.capture.remember("I'm taking the Sony A7 IV camera on the Yosemite trip.", speaker="Joey")
+    engine.cfg["skip_gate"] = 0.0                                      # inject whatever ranks
+    text, _ = engine.recall.prefetch("Which camera am I taking on the Yosemite trip?", "q")
+    assert "Sony A7 IV" in text and "Which camera am I taking" not in text.split("\n", 1)[1]

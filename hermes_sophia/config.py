@@ -52,12 +52,19 @@ DEFAULTS: Dict[str, Any] = {
     "max_assistant_items": 2,
     "question_penalty": 0.04,         # a bare earlier question carries no facts
     "inject_relative_floor": 0.15,    # inject only items within this similarity of the top match
+    # graph expansion at recall
+    "graph_hops": 1,                  # 0 turns it off
+    "graph_decay": 0.9,               # a neighbour scores its seed's score times this…
+    "graph_hub_degree": 8,            # …damped by sqrt(hub_degree / facts) for entities with more facts
+    "graph_fanout": 3,                # facts taken per entity, best-matching first
+    "graph_entities": 6,              # entities expanded per hop
     # capture
     "capture_tools": ["web_extract", "browser_snapshot", "browser_navigate"],
     "never_capture_substrings": ["vault", "credential", "secret", "password"],
     "test_tools": ["terminal", "shell", "bash", "run_command", "execute_code"],
     "full_capture_contexts": ["primary"],
     "echo_threshold": 0.5,
+    "ground_check": True,             # flag agent replies that assert facts about the user out of nowhere
     # timeouts (seconds)
     "embed_timeout": 5.0,
     "decider_timeout": 8.0,
@@ -116,6 +123,13 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
     ("recency_bonus", "Ranking bonus for recent items", {"when": _ADVANCED}),
     ("fts_bonus", "Ranking bonus for keyword matches", {"when": _ADVANCED}),
     ("type_bonus", "Ranking bonus when a typed span matches the question", {"when": _ADVANCED}),
+    ("graph_hops", "Graph expansion at recall: hops from matched entities to connected facts (0 = off)",
+     {"when": _ADVANCED}),
+    ("graph_decay", "A connected fact scores its seed's score times this", {"when": _ADVANCED}),
+    ("graph_hub_degree", "Entities with more facts than this are damped (hubs connect to everything)",
+     {"when": _ADVANCED}),
+    ("graph_fanout", "Connected facts taken per entity", {"when": _ADVANCED}),
+    ("graph_entities", "Entities expanded per hop", {"when": _ADVANCED}),
     ("window_sentences", "Sentences per raw-record window", {"when": _ADVANCED}),
     ("window_chars", "Characters per raw-record window", {"when": _ADVANCED}),
     ("code_block_chars", "Long code blocks become one window truncated to this many characters",
@@ -128,6 +142,8 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
                               "event per task)", {"when": _ADVANCED}),
     ("echo_threshold", "Overlap above which a reply that repeats injected memory is fenced off as an echo",
      {"when": _ADVANCED}),
+    ("ground_check", "Check each live agent reply; one that asserts facts about you that nothing in the turn "
+                     "supports is kept out of recall", {"when": _ADVANCED, "choices": ["on", "off"], "default": "on"}),
     ("embed_timeout", "Embedding call timeout (seconds)", {"when": _ADVANCED}),
     ("decider_timeout", "Decider call timeout (seconds); keep embed + decider well under Hermes's 8 s",
      {"when": _ADVANCED}),
@@ -202,6 +218,9 @@ def load_config(hermes_home: Optional[str] = None, overrides: Optional[Dict[str,
     section: Dict[str, Any] = {}
     try:
         from hermes_cli.config import load_config_readonly  # inside Hermes: honours profiles and ${VAR}
+        from hermes_constants import get_hermes_home
+        if hermes_home and Path(hermes_home).resolve() != Path(get_hermes_home()).resolve():
+            raise LookupError("another profile than the active one")
         root = load_config_readonly() or {}
         section = ((root.get("memory") or {}).get("sophia") or {})
     except Exception:
