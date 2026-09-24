@@ -31,7 +31,8 @@ SodaMem is the closest relative: its data model is nearly Sophia's. It reports 9
    - uses those labels to calibrate the check.
    Hindsight's reflect step and Letta's consolidation reorganize memory, but we didn't find either grading its own recall.
 5. **Emergent schema with learned exclusivity.** Graphiti's custom types are declared up front. Sophia promotes relations that recur, and learns from its own history whether a relation holds one value at a time (and so supersedes older values) or several.
-6. **Footprint.** SQLite, numpy and a local model server. No graph database, no cloud. The night waits for your chat model to be idle.
+6. **Task memory from the action log.** Hindsight also keeps agent experiences as one of its memory networks. Sophia builds a task card from the tool-call log itself: outcome, working steps, dead ends with reasons, and the pages that informed them. The night model only points at logged actions, so a card can't contain a step that wasn't run. Hermes's own skills stay the general rulebook, and the cards are the evidence behind it.
+7. **Footprint.** SQLite, numpy and a local model server. No graph database, no cloud. The night waits for your chat model to be idle.
 
 ## What "graph" means here
 

@@ -50,6 +50,15 @@ CREATE TABLE IF NOT EXISTS relations(name TEXT PRIMARY KEY, instances INT, sessi
   exclusive INT DEFAULT 0, promoted_night TEXT, pinned INT DEFAULT 0);
 CREATE TABLE IF NOT EXISTS events(id TEXT PRIMARY KEY, session_id TEXT, kind TEXT, summary TEXT, said REAL,
   detail TEXT);
+CREATE TABLE IF NOT EXISTS actions(
+  id TEXT PRIMARY KEY, session_id TEXT, seq INT, context TEXT, request_ref TEXT, request_text TEXT,
+  tool TEXT, args TEXT, result_head TEXT, result_tail TEXT, result_chars INT, error INT, exit_code INT,
+  said REAL, task_id TEXT);
+CREATE INDEX IF NOT EXISTS actions_session ON actions(session_id, said, seq);
+CREATE TABLE IF NOT EXISTS tasks(
+  id TEXT PRIMARY KEY, session_id TEXT, request_ref TEXT, goal TEXT, outcome TEXT, confidence REAL,
+  card TEXT, first_said REAL, last_said REAL, n_actions INT, night_id TEXT, created_at REAL);
+CREATE TABLE IF NOT EXISTS task_links(task_id TEXT, kind TEXT, target TEXT, PRIMARY KEY (task_id, kind, target));
 CREATE TABLE IF NOT EXISTS outcomes(id TEXT PRIMARY KEY, session_id TEXT, kind TEXT, ok INT, summary TEXT, said REAL);
 CREATE TABLE IF NOT EXISTS citations(session_id TEXT, message_ref TEXT, target TEXT, said REAL);
 CREATE TABLE IF NOT EXISTS injections(id TEXT PRIMARY KEY, session_id TEXT, query TEXT, items TEXT, gate TEXT,
@@ -311,7 +320,7 @@ class Store:
 
     def counts(self) -> Dict[str, int]:
         out = {}
-        for t in ("windows", "spans", "facts", "entities", "chunks", "events", "injections", "decisions",
-                  "credit_events", "links", "journal"):
+        for t in ("windows", "spans", "facts", "entities", "chunks", "events", "actions", "tasks", "injections",
+                  "decisions", "credit_events", "links", "journal"):
             out[t] = int(self.one(f"SELECT COUNT(*) AS n FROM {t}")["n"])
         return out

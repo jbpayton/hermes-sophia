@@ -12,6 +12,10 @@ for it in json.loads(r["items"]):
     if it["kind"] == "fact":
         f = c.execute("SELECT subject, relation, object, status FROM facts WHERE id=?", (it["id"],)).fetchone()
         print(f"  {it['sim']:.3f} fact   [{f['status']}] {f['subject']} | {f['relation']} | {f['object']}")
+    elif it["kind"] == "task":
+        t = c.execute("SELECT outcome, card FROM tasks WHERE id=?", (it["id"],)).fetchone()
+        print(f"  {it['sim']:.3f} task   [{t['outcome']}] {json.loads(t['card'])['text'][:160]}")
+        continue
     else:
         w = c.execute("SELECT speaker, session_id, text FROM windows WHERE id=?", (it["id"],)).fetchone()
         print(f"  {it['sim']:.3f} window {w['speaker']}: {w['text'][:110]}")

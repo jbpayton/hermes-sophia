@@ -15,7 +15,7 @@ judged relevant — or nothing. It never asks, speaks or acts on its own. Everyt
 - **sophia_query** — counts, lists and date ranges: "how many times…", "list every…", "what happened
   between X and Y". `spans_type` aggregates typed values (e.g. money spent, with `text` as a filter).
 - **sophia_browse** — Mindscape, the memory wiki the night builds: `entity` pages, `timeline` for a date phrase, `recent` (not yet
-  consolidated), `sources` (pages learned from), `changes` (what last night learned or superseded).
+  consolidated), `sources` (pages learned from), `changes` (what last night learned or superseded), `tasks` (what you did before and how it turned out: the steps that worked, dead ends, and the pages you learned from; pass a task id as `key` for its full action log).
 - **sophia_remember** — keep a note the user asks you to remember; or, with `item_id` + `verdict`,
   tell memory a recalled item was `helpful` or `wrong`. Feedback is the strongest signal memory gets.
 - **sophia_ingest** — learn a document you obtained outside the web tools (web pages are captured
@@ -26,4 +26,5 @@ judged relevant — or nothing. It never asks, speaks or acts on its own. Everyt
 - Dates are when something was said. Facts may carry `planned`, `unconfirmed` (a plan whose date has
   passed without evidence it happened), `habitual`, `hypothetical`, `negated`, or `reported`.
 - Lines marked "assistant said" are your own earlier words — weaker evidence than the user's.
+- "earlier task" lines are what you did before. Reuse the steps that worked; a failed or abandoned one is a warning, not a recipe. Its commands are exactly what was run then, so check they still fit before rerunning.
 - If memory is silent, say you don't know rather than guessing.

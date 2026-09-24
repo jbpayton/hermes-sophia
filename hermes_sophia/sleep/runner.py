@@ -33,7 +33,7 @@ _QUESTION_REL = re.compile(r"\b(wants? to know|asks?|asked|asking|wonders?|wonde
                            r"wants? (?:me|you|the assistant|hermes) to|told (?:me|you) to)\b", re.I)
 _REL_HAS_OBJECT = re.compile(r"(?<!^)\b[A-Z][A-Za-z]+|\d")
 _NEG = re.compile(r"\b(not|never|no longer|isn't|aren't|won't|doesn't|don't|didn't|can't|n't)\b", re.I)
-ALL_STEPS = ["settle", "sort", "contextualize", "headroom", "relate", "integrate", "index", "outcomes", "replay",
+ALL_STEPS = ["settle", "sort", "contextualize", "headroom", "relate", "integrate", "tasks", "index", "outcomes", "replay",
              "rehearse", "calibrate", "promote", "views", "anticipate", "tidy"]
 
 
@@ -406,6 +406,10 @@ class SleepRunner:
                            undo={"fact": r["id"], "status": "active"})
         return {"entities": self.s.one("SELECT COUNT(*) AS n FROM entities")["n"], "supersession_checks": asked,
                 "superseded": superseded, "plans_unconfirmed": len(stale)}
+
+    def step_tasks(self):
+        from .tasks import TaskPass
+        return TaskPass(self).run()
 
     def step_index(self):
         rows = self.s.q("""SELECT f.id, f.subject, f.relation, f.object, (SELECT w.text FROM fact_sources fs JOIN windows w

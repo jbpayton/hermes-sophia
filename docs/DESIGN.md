@@ -436,7 +436,12 @@ The code is this repository. It is tested on the `sophiadev` profile (a clone of
 - Graph expansion at recall: one hop from bridge entities, with hub damping, plus conversation links. Live, "Where does Sam's sister live?" reached `Lily | moved to | Denver` (similarity 0.57, below the cutoff) through Lily.
 - Grounding check at capture. Live agent replies whose claims about the user are unsupported are kept out of recall. Found live: an invented answer was recalled as memory in the next session. The positive wording, read in both option orders, separated six hand-labelled cases (bad ≥ 0.59, good ≤ 0.34); the negative wording did not.
 - Bare earlier questions are never injected passively.
-- Unit tests: 38, all passing, run against a fake model server.
+- Task memory:
+  - **Action log (day, no model calls):** each tool call with its arguments, the start and end of its result, its exit code, and the request it served.
+  - **Night task pass:** segmentation, with a decider check for whether a follow-up continues the task; an outcome choice read in both orders; and cards assembled from logged actions, which the night model only points at by number.
+  - **Recall and credit:** cards stand in for their matched request, failed attempts carry a warning, a card gains or loses credit when it is reused, and `sophia_browse view=tasks` lists them.
+  - **Evaluation:** scripted evaluation 5/5 outcomes, 5/5 segmentation, 5/5 card details and 4/4 recall. In a live Hermes run, the card from a real task was injected (0.88) when asked to do it again.
+- Unit tests: 46, all passing, run against a fake model server.
 
 **Answers to §14 verify items**
 - `ctx.llm` is not forwarded to memory providers (`_ProviderCollector`), so Sophia talks to LM Studio directly. `reasoning_effort: "none"` works on `/v1/chat/completions`, and `/v1/responses` returns first-token logprobs.

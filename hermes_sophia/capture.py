@@ -99,6 +99,44 @@ def message_hash(session_id: str, m: Dict[str, Any]) -> str:
                json.dumps([_args(tc) for tc in tcs], sort_keys=True, default=str)[:2000])
 
 
+_EXIT = re.compile(r'"?(?:exit_code|exit code|returncode|exit status)"?\s*[:=]?\s*(-?\d+)', re.I)
+ACTION_HEAD, ACTION_TAIL, ARG_CHARS = 1500, 700, 2000
+
+
+def _clip_args(args: Dict[str, Any]) -> str:
+    """Arguments as JSON with secrets redacted and long values cut, so a command can be replayed from the log."""
+    def clip(v):
+        if isinstance(v, str):
+            return v if len(v) <= ARG_CHARS else v[:ARG_CHARS] + f"… [{len(v)} chars]"
+        if isinstance(v, list):
+            return [clip(x) for x in v[:50]]
+        if isinstance(v, dict):
+            return {k: clip(x) for k, x in list(v.items())[:50]}
+        return v
+    text, _ = T.redact(json.dumps({k: clip(v) for k, v in args.items()}, ensure_ascii=False, default=str))
+    return text
+
+
+def _result_status(content: str, err: bool) -> Tuple[bool, Optional[int]]:
+    """(error, exit_code) from a tool result: the terminal envelope's JSON first, then text patterns."""
+    inner = unwrap(content)
+    code = None
+    try:
+        data = json.loads(inner)
+        if isinstance(data, dict):
+            if isinstance(data.get("exit_code"), int):
+                code = data["exit_code"]
+            if data.get("error") or data.get("success") is False:
+                err = True
+    except (ValueError, TypeError):
+        m = _EXIT.search(inner[-600:])
+        if m:
+            code = int(m.group(1))
+    if code not in (None, 0):
+        err = True
+    return err, code
+
+
 def _key_arg(args: Dict[str, Any]) -> str:
     for k in ("command", "url", "urls", "path", "file_path", "query", "q", "pattern", "task", "view", "key", "name"):
         v = args.get(k)
@@ -130,8 +168,10 @@ class Capture:
         injected = self.e.last_injection_shingles.get(session_id, set())
         stats = collections.Counter()
         turn_user, turn_tools = "", []
+        request_ref, request_text = "", ""
+        actions = []
 
-        for m in messages:
+        for seq, m in enumerate(messages):
             role = m.get("role")
             content = T.message_text(m.get("content"))
             tcs = m.get("tool_calls") or []
@@ -161,6 +201,7 @@ class Capture:
                 prev[role] = content
                 if role == "user":
                     turn_user, turn_tools = content, []
+                    request_ref, request_text = f"hermes:{session_id}:{h[:12]}", T.redact(content[:600])[0]
             elif role == "tool" and is_new:
                 turn_tools.append(unwrap(content)[:1500])
                 name = m.get("name") or m.get("tool_name") or tool_map.get(m.get("tool_call_id") or "", ("", {}))[0]
@@ -183,6 +224,14 @@ class Capture:
                 events.append((sha("tool", session_id, h), session_id, "tool",
                                f"{name}({_key_arg(args)})" + (" → error" if err else ""), said,
                                json.dumps({"chars": len(content), "pages": len(pages)})))
+                if not (name or "").startswith("sophia_"):        # memory lookups are not steps of a task
+                    a_err, code = _result_status(content, err)
+                    body = T.redact(unwrap(content))[0]
+                    actions.append((sha("act", session_id, h), session_id, seq, agent_context or "primary",
+                                    request_ref, request_text, name or "?", _clip_args(args), body[:ACTION_HEAD],
+                                    body[-ACTION_TAIL:] if len(body) > ACTION_HEAD else "", len(content),
+                                    int(a_err), code, said))
+                    stats["actions"] += 1
                 stats["events"] += 1
                 if full and not err:
                     for purl, ptitle, ptext in pages:
@@ -205,6 +254,10 @@ class Capture:
         self._persist(new_windows)
         if events:
             store.xmany("INSERT OR IGNORE INTO events(id,session_id,kind,summary,said,detail) VALUES(?,?,?,?,?,?)", events)
+        if actions:
+            store.xmany("""INSERT OR IGNORE INTO actions(id,session_id,seq,context,request_ref,request_text,tool,args,
+                           result_head,result_tail,result_chars,error,exit_code,said) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                        actions)
         if outcomes:
             store.xmany("INSERT OR IGNORE INTO outcomes(id,session_id,kind,ok,summary,said) VALUES(?,?,?,?,?,?)", outcomes)
         if citations:

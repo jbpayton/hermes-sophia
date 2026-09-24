@@ -42,9 +42,11 @@ BROWSE = {
                     "person/place/project plus history; view=timeline: what was said or happens in a date range "
                     "(key like 'last week' or 'March'); view=recent: today's not-yet-consolidated memory; "
                     "view=sources: pages and documents learned from; view=changes: what the last night learned, "
-                    "superseded or merged; view=topics: the emergent relations and entities."),
+                    "superseded or merged; view=topics: the emergent relations and entities; view=tasks: what the "
+                    "agent did before and how it turned out -- the steps that worked, dead ends and sources "
+                    "(key: a phrase to search, or a task id for its full action log)."),
     "parameters": {"type": "object", "properties": {
-        "view": {"type": "string", "enum": ["entity", "timeline", "recent", "sources", "changes", "topics"]},
+        "view": {"type": "string", "enum": ["entity", "timeline", "recent", "sources", "changes", "topics", "tasks"]},
         "key": {"type": "string", "description": "Entity name for view=entity; date phrase for view=timeline."}},
         "required": ["view"]},
 }
@@ -219,4 +221,21 @@ class Tools:
             rels = s.q("SELECT name, instances, sessions, canonical, exclusive FROM relations ORDER BY instances DESC LIMIT 40")
             ents = s.q("SELECT name, type, fact_count, page FROM entities ORDER BY fact_count DESC LIMIT 40")
             return {"relations": [dict(r) for r in rels], "entities": [dict(r) for r in ents]}
+        if view == "tasks":
+            if key and s.one("SELECT 1 FROM tasks WHERE id=?", (key,)):
+                t = s.one("SELECT * FROM tasks WHERE id=?", (key,))
+                acts = s.q("SELECT tool, args, error, exit_code, result_head FROM actions WHERE task_id=? ORDER BY said, seq",
+                           (key,))
+                return {"task": json.loads(t["card"]) | {"id": key, "date": _d(t["last_said"])},
+                        "actions": [{"tool": a["tool"], "args": json.loads(a["args"] or "{}"), "error": bool(a["error"]),
+                                     "exit_code": a["exit_code"], "result": (a["result_head"] or "")[:400]} for a in acts],
+                        "earlier_attempts": [r["target"] for r in s.q(
+                            "SELECT target FROM task_links WHERE task_id=? AND kind='earlier'", (key,))]}
+            if key:
+                ids = [i for i, _ in s.fts(key, "task", 20)]
+                rows = [r for r in (s.one("SELECT * FROM tasks WHERE id=?", (i,)) for i in ids) if r]
+            else:
+                rows = s.q("SELECT * FROM tasks ORDER BY last_said DESC LIMIT 20")
+            return {"tasks": [{"id": r["id"], "date": _d(r["last_said"]), "outcome": r["outcome"], "goal": r["goal"],
+                               "card": json.loads(r["card"]).get("text", "")} for r in rows]}
         return {"error": f"unknown view {view!r}"}

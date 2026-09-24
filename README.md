@@ -8,6 +8,8 @@ Sophia is a Hermes memory provider. Memory reaches the agent in three ways:
 2. **The agent can query it.** Memory tools let the agent dig deeper, count and list things, and ask what changed.
 3. **The agent can browse it.** **Mindscape** is the wiki Sophia builds overnight: a page per person, place and thing, a timeline, sources, and a changelog. Every line links back to the words it came from.
 
+Sophia also remembers **what the agent did**: every tool call by day, and at night a card per task with the steps that worked, the dead ends, the pages it learned from, and how it turned out. Ask for the same thing again and the card comes back.
+
 Underneath is a **temporal memory graph** built overnight: people, places and things; what is true about them, and since when; and the exact words each fact came from. Recall walks it one hop, so a question about "Sam's sister" can reach where Lily lives.
 
 Sophia never initiates anything. It doesn't speak, ask questions or take actions; the agent's tools are the only deliberate part. Everything runs locally against [LM Studio](https://lmstudio.ai), or an OpenAI-compatible server such as llama-server.
@@ -115,6 +117,45 @@ Real output of `sophia_browse {"view": "entity", "key": "Dr. Patel"}`, trimmed:
 
 Today the agent reaches Mindscape through `sophia_browse`. In SophiaAMS, Mindscape was a visual graph browser; a visual browser over these views is on the roadmap.
 
+## 4. Task memory: what the agent did, and how it turned out
+
+Hermes's own skills are the *rulebook*: general "how we do X" rules, which Hermes writes itself as it works. Sophia keeps the *logbook*: what actually happened each time.
+
+- **By day, with no model calls.** Every tool call is recorded in order, with:
+  - its arguments (secrets redacted) and the start and end of its result;
+  - its exit code or error;
+  - the request it served.
+
+  Credential and vault tools are never recorded.
+- **At night.** The action log is split into tasks. A follow-up like "try python3.12 instead" joins the task it continues. The outcome is judged from the results and your reaction: succeeded, failed, partly, abandoned or unclear. Then a card is written. The night model only points at logged actions by number, and code assembles the card from the log, so **a card can't contain a step the agent didn't take**.
+- **In recall.** When a request resembles a past task, its card is injected. A failed or abandoned attempt comes with a warning. `sophia_browse {"view": "tasks"}` lists past tasks, and passing a task id returns its full action log.
+- **Credit.** When a card is followed again, it gains credit if the task succeeds and loses credit if it fails.
+
+This card came from a real run on the test profile. The agent was asked to create `/tmp/sophia-task-demo`, write a file and report its checksum:
+
+```text
+- [2026-09-24 · earlier task · succeeded] Create directory, write text file, and compute sha256sum
+  (/tmp/sophia-task-demo) — succeeded on 2026-09-24. Worked: `mkdir -p /tmp/sophia-task-demo` →
+  `write_file(path="/tmp/sophia-task-demo/notes.txt", content="hello from sophia")` →
+  `sha256sum /tmp/sophia-task-demo/notes.txt`.
+```
+
+In a fresh session, "Do the sophia-task-demo notes file thing again, the same way as last time" injected only this card (0.88), and the agent redid the task.
+
+On five scripted sessions with known outcomes (`bench/tasks_eval.py`, 9B night), the results were:
+- **Outcomes:** 5/5.
+- **Task splits:** 5/5.
+- **Card details:** 5/5 (dead ends with reasons, doc links, the corrected step).
+- **Recall:** 4/4. The right card came back for every "do it again" request.
+
+For example:
+
+```text
+Rotate nginx logs on web-1 to free disk space (web-1) — succeeded. Worked: `ssh web-1 'sudo logrotate -f
+/etc/logrotate.d/nginx'`. Dead ends: `ssh web-1 'rm /var/log/nginx/access.log'` (permission denied without
+sudo). Lesson: Use sudo with logrotate instead of manually deleting log files
+```
+
 ---
 
 ## What it looks like across sessions
@@ -180,6 +221,7 @@ flowchart LR
 Nothing generates text on the chat's critical path.
 
 - **Turns.** Each turn is split into small verbatim windows. Each window gets a cheap header (speaker, date, the question it answers, names in play) and deterministic typed values: times, durations, quantities, money, contacts, artifacts.
+- **Actions.** Every tool call is recorded with its arguments, the start and end of its result, its exit code, and the request it served. This is the raw material for task memory.
 - **Web reads.** Pages the agent reads are captured as sources. Failed fetches are dropped, and credential or vault tools are never captured.
 - **Speed.** Capture takes about 0.1 s per turn, off the critical path. The search-check-inject step takes 260–460 ms on the test profile.
 
@@ -191,7 +233,7 @@ Nothing generates text on the chat's critical path.
 |---|---|
 | **Settle, sort** | Snapshot the day. Drop error pages, boilerplate, and pages that try to instruct the agent |
 | **Understand** | A model writes context headers for every window, such as what "yes" agreed to or who "she" is. The headers are re-embedded; the evidence stays verbatim |
-| **Consolidate** | Extract facts with modality and when they happen, and resolve entities. When a newer fact on the same relation names a different object, retire the older one: automatically for relations learned to be exclusive, otherwise judged against the new evidence. Plans whose date passed become "unconfirmed" |
+| **Consolidate** | Split the action log into tasks, judge each outcome, and write task cards. Extract facts with modality and when they happen, and resolve entities. When a newer fact on the same relation names a different object, retire the older one: automatically for relations learned to be exclusive, otherwise judged against the new evidence. Plans whose date passed become "unconfirmed" |
 | **Dream** | Replay the day's injections and judge which ones helped. Rehearse new facts with self-made questions, and repair whatever recall misses. Collect labels to calibrate the check |
 | **Organize** | Promote recurring relations and build the Mindscape views |
 | **Tidy** | Decay only what was repeatedly judged irrelevant, never facts flagged important (health, money, key dates). Journal everything with undo. Advance the watermark last, so an interrupted night simply reruns |
@@ -295,7 +337,7 @@ Nothing is scheduled for you. When you're ready, add a nightly run:
 
 ```bash
 pip install -e ".[test]"
-pytest -q        # 38 tests against a fake model server; no GPU needed
+pytest -q        # 46 tests against a fake model server; no GPU needed
 ```
 
 | Path | What |

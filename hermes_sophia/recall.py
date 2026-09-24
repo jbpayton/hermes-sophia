@@ -110,6 +110,27 @@ class Recall:
                 if f is None or s < cfg["junk_floor"] or not self._fact_ok(f, history, scope):
                     continue
                 self._add_fact(items, f, s, s)
+        # task cards: what the agent did before, and how it turned out. A card carries its request the way a
+        # fact carries its source: when the request itself matched, the card takes its place and its score.
+        found: Dict[str, float] = {}
+        if qv is not None and not scope:
+            tidx = store.index("task", cfg["embed_model"])
+            found.update({tid: s for tid, s in tidx.search(qv, 5) if s >= cfg["junk_floor"]})
+        refs = {it["ref"]: it for it in items.values() if it["kind"] == "window" and it.get("ref")}
+        if refs:
+            ph = ",".join("?" * len(refs))
+            for t in store.q(f"SELECT id, request_ref FROM tasks WHERE request_ref IN ({ph})", list(refs)):
+                found[t["id"]] = max(found.get(t["id"], 0.0), refs[t["request_ref"]]["score"] + 0.005)
+        for tid, sc in found.items():
+            t = store.one("SELECT * FROM tasks WHERE id=?", (tid,))
+            if t is None:
+                continue
+            for wid in [w for w, it in items.items() if it["kind"] == "window" and it.get("ref") == t["request_ref"]]:
+                items.pop(wid)
+            card = json.loads(t["card"])
+            items["t:" + tid] = {"kind": "task", "id": tid, "score": sc, "sim": sc, "text": card.get("text", ""),
+                                 "said": t["last_said"], "speaker": "", "flags": "", "ref": t["request_ref"],
+                                 "outcome": t["outcome"]}
         # the graph: walk from what matched to what it connects to
         if cfg["graph_hops"] > 0:
             info["graph"] = self._expand(items, query, qv, history, scope, session_id)
@@ -314,6 +335,8 @@ class Recall:
     # ------------------------------------------------------------------ format
     @staticmethod
     def short(it: Dict[str, Any]) -> str:
+        if it["kind"] == "task":
+            return f"({_date(it['said'])}, earlier task, {it['outcome']}) {it['text'][:300]}"
         if it["kind"] == "fact":
             s, r, o = it["fact"]
             return f"({_date(it['said'])}) {s} | {r} | {o} — \"{it['text'][:200]}\""
@@ -332,6 +355,14 @@ class Recall:
             if c.get("replay"):
                 nums.append(f"used {c['replay']:+g}")
             num = (" · " + ", ".join(nums)) if nums else ""
+            if it["kind"] == "task":
+                warn = " · did not work: don't repeat blindly" if it["outcome"] in ("failed", "abandoned") else ""
+                line = f"- [{_date(it['said'])} · earlier task · {it['outcome']}{num}{warn}] {it['text']}"
+                if used + len(line) + 1 > budget:
+                    break
+                lines.append(line)
+                used += len(line) + 1
+                continue
             if it["kind"] == "fact":
                 s, r, o = it["fact"]
                 mod = it.get("modality") or "asserted"
