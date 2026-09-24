@@ -58,6 +58,9 @@ class Recall:
             ids.update(r["window_id"] for r in store.q(
                 "SELECT window_id FROM spans WHERE type='time' AND t_start<? AND t_end>?", (t1, t0)))
             allowed = ids
+        in_scope: set = set()
+        if allowed is not None and cfg["time_scope"] == "boost":
+            in_scope, allowed = allowed, None     # a parsed date range ranks things up; it doesn't hide the rest
         hint = next((t for rx, t in _TYPE_HINTS if rx.search(query)), None)
         info["type_hint"] = hint
         last_sleep = store.get_meta("last_sleep_ts", 0) or 0
@@ -94,6 +97,7 @@ class Recall:
             lexical = cfg["fts_weight"] * fts_grade.get(wid, 0.0) if cfg["fts_weight"] else \
                 (cfg["fts_bonus"] if wid in fts_ids else 0)
             bonus = lexical + (cfg["type_bonus"] if wid in typed else 0) + \
+                    (cfg["time_scope_bonus"] if wid in in_scope else 0) + \
                     (cfg["recency_bonus"] if r["said"] > last_sleep else 0) - \
                     (cfg["assistant_penalty"] if "assistant" in (r["flags"] or "") else 0) - \
                     (cfg["question_penalty"] if (r["text"] or "").rstrip().endswith("?") and len(r["text"]) < 240 else 0)
@@ -112,8 +116,11 @@ class Recall:
             frows = store.facts_by_ids([i for i, _ in fhits])
             for fid, s in fhits:
                 f = frows.get(fid)
-                if f is None or s < cfg["junk_floor"] or not self._fact_ok(f, history, scope):
+                boost_scope = cfg["time_scope"] == "boost"
+                if f is None or s < cfg["junk_floor"] or not self._fact_ok(f, history, None if boost_scope else scope):
                     continue
+                if boost_scope and scope and f["h_start"] and f["h_start"] < scope[1] and (f["h_end"] or f["h_start"]) > scope[0]:
+                    s += cfg["time_scope_bonus"]
                 if cfg["facts_as"] == "keys":
                     self._attach_fact(items, f, s, s, session_id=session_id)
                 else:
@@ -121,7 +128,7 @@ class Recall:
         # task cards: what the agent did before, and how it turned out. A card carries its request the way a
         # fact carries its source: when the request itself matched, the card takes its place and its score.
         found: Dict[str, float] = {}
-        if qv is not None and not scope:
+        if qv is not None and (not scope or cfg["time_scope"] == "boost"):
             tidx = store.index("task", cfg["embed_model"])
             found.update({tid: s for tid, s in tidx.search(qv, 5) if s >= cfg["junk_floor"]})
         refs = {it["ref"]: it for it in items.values() if it["kind"] == "window" and it.get("ref")}
@@ -417,6 +424,17 @@ class Recall:
             return f"({_date(it['said'])}) {s} | {r} | {o} — \"{it['text'][:200]}\""
         facts = "; ".join(" | ".join(x["fact"]) for x in it.get("facts", [])[:2])
         return f"({_date(it['said'])}, {it['speaker']}) {it['text'][:260]}" + (f" [fact: {facts}]" if facts else "")
+
+    @classmethod
+    def fit(cls, items: List[Dict[str, Any]], budget: int) -> List[Dict[str, Any]]:
+        """The items whose lines actually fit in the injected block (format stops at the budget)."""
+        n, prev = 0, ""
+        for i in range(1, len(items) + 1):            # lines may contain newlines, so compare whole blocks
+            cur = cls.format(items[:i], budget)
+            if cur == prev:
+                break
+            n, prev = i, cur
+        return items[:n]
 
     @staticmethod
     def format(items: List[Dict[str, Any]], budget: int) -> str:

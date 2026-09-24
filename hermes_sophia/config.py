@@ -38,18 +38,20 @@ DEFAULTS: Dict[str, Any] = {
     "window_chars": 480,
     "code_block_chars": 800,
     # recall
-    "recall_k": 40,
+    "recall_k": 50,
     "gate_top": 10,
-    "inject_top": 30,                 # injection may draw from this deep in the ranking (the gate sees gate_top)
+    "inject_top": 50,                 # injection may draw from this deep in the ranking (the gate sees gate_top)
     "skip_gate": 0.82,
     "gate_threshold": 0.5,
     "gate_permutations": 1,
     "junk_floor": 0.5,
-    "inject_chars": 6000,
+    "inject_chars": 9000,
     "recency_bonus": 0.01,
     "fts_bonus": 0.03,
     "fts_weight": 0.05,                # > 0: keyword matches add weight × (bm25 / best bm25) instead of the flat bonus
     "type_bonus": 0.02,
+    "time_scope": "boost",            # filter: a date range in the question hides everything outside it; boost: ranks it up
+    "time_scope_bonus": 0.05,
     "assistant_penalty": 0.06,        # assistant-authored lines rank below the user's words and sources
     "max_assistant_items": 2,
     "question_penalty": 0.04,         # a bare earlier question carries no facts
@@ -134,6 +136,10 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
     ("fts_weight", "Graded keyword weight: a match adds this × its bm25 relative to the best (0 = flat fts_bonus)",
      {"when": _ADVANCED}),
     ("type_bonus", "Ranking bonus when a typed span matches the question", {"when": _ADVANCED}),
+    ("time_scope", "A date range in the question (\"last week\", \"in March\"): hide everything outside it, or rank "
+                   "what's inside it higher", {"when": _ADVANCED, "choices": ["boost", "filter"]}),
+    ("time_scope_bonus", "Ranking bonus for things inside the question's date range (time_scope=boost)",
+     {"when": _ADVANCED}),
     ("facts_as", "How extracted facts take part in recall: as their own candidates, or as extra search keys for "
                  "the verbatim window they came from", {"when": _ADVANCED, "choices": ["keys", "items"]}),
     ("graph_hops", "Graph expansion at recall: hops from matched entities to connected facts (0 = off)",

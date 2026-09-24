@@ -144,10 +144,13 @@ def test_degraded_decider_injects_only_above_skip(engine, fake):
 def test_time_scoped_recall(engine):
     old = time.time() - 40 * 86400
     engine.capture.remember("We talked about the Bazel migration owned by Priya.", speaker="Joey", now=old)
-    engine.capture.remember("We talked about the Bazel remote cache bucket.", speaker="Joey")
+    engine.capture.remember("We talked about the Bazel remote cache bucket.", speaker="Joey", now=time.time() - 86400)
     items, info = engine.recall.candidates("what did we say about Bazel yesterday?")
     assert info.get("scope")
-    assert all(it["said"] > time.time() - 3 * 86400 for it in items)
+    assert len(items) == 2 and items[0]["said"] > time.time() - 3 * 86400   # boost (default): in-range first
+    engine.cfg["time_scope"] = "filter"
+    items, _ = engine.recall.candidates("what did we say about Bazel yesterday?")
+    assert items and all(it["said"] > time.time() - 3 * 86400 for it in items)   # filter: in-range only
 
 
 def test_tools(engine):

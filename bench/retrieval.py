@@ -97,9 +97,11 @@ def main():
                 stats[cat][f"hit@{k}"].append(bool(got))
                 stats[cat][f"all@{k}"].append(got == ev)
             chosen = e.recall.select(items[:max(cfg["inject_top"], 1)])
+            chosen = e.recall.fit(chosen, cfg["inject_chars"])        # only what reaches the agent
             inj = {ref_of.get(it["id"] if it["kind"] == "window" else it.get("evidence_id")) for it in chosen}
             text = e.recall.format(chosen, cfg["inject_chars"])
             stats[cat]["injected"].append(bool(inj & ev))
+            stats[cat]["injected_all"].append(ev <= inj)
             stats[cat]["inject_chars"].append(len(text))
         e.close()
     def mean(v):
@@ -117,7 +119,7 @@ def main():
         f.write(json.dumps(out) + "\n")
     a = table["all"]
     print(f"{out['label']:40s} n={a['n']} " + " ".join(f"{m}={a[m]}" for m in
-          ["hit@5", "hit@10", "hit@20", "hit@50", "all@10", "all@30", "injected", "inject_chars"]))
+          ["hit@10", "hit@50", "all@30", "injected", "injected_all", "inject_chars"]))
     for cat in sorted(k for k in table if k != "all"):
         c = table[cat]
         print(f"   cat {cat} n={c['n']:3d} hit@10={c['hit@10']} hit@30={c['hit@30']} all@30={c['all@30']} injected={c['injected']}")
