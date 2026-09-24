@@ -137,11 +137,12 @@ def main():
         if args.mode.startswith("sophia"):
             # both speakers are people: neither is "the assistant", whose words the night treats as reported claims
             cfg = memory_config(args, user_name=spk["speaker_a"], agent_name="Assistant")
-            engine = fresh_engine(work, f"{name}_{sid}", cfg)
+            reuse = f"locomo_{args.mode}_{args.reuse_from}_{sid}" if args.reuse_from else None
+            engine = fresh_engine(work, f"{name}_{sid}", cfg, reuse=reuse)
             t = time.time()
-            n = ingest(engine, conv)
-            print(f"[{sid}] ingested {n} windows in {time.time() - t:.0f}s", flush=True)
-            if args.mode == "sophia-night":
+            n = 0 if reuse else ingest(engine, conv)
+            print(f"[{sid}] {'reused ' + reuse if reuse else f'ingested {n} windows'} in {time.time() - t:.0f}s", flush=True)
+            if args.mode == "sophia-night" and not reuse:
                 t = time.time()
                 out = run_night(engine, args, now=last + 3600)
                 facts = engine.store.one("SELECT COUNT(*) AS n FROM facts")["n"]
@@ -180,7 +181,8 @@ def main():
              "night_model": args.night_model if args.mode == "sophia-night" else None,
              "inject_chars": args.inject_chars, "graph_hops": args.graph_hops,
              "inject_top": args.inject_top, "recall_k": max(args.recall_k, args.inject_top),
-             "convs": sorted({r["conv"] for r in res.rows}), "limit_per_conv": args.limit}
+             "convs": sorted({r["conv"] for r in res.rows}), "limit_per_conv": args.limit, "set": args.set,
+             "reused_memory_from": args.reuse_from or None}
     write_summary(RESULTS / f"{name}.summary.json", setup, summary)
     print(json.dumps(summary, indent=1))
 

@@ -63,7 +63,10 @@ class Recall:
         last_sleep = store.get_meta("last_sleep_ts", 0) or 0
 
         scores: Dict[str, float] = {}
-        fts_ids = {i for i, _ in store.fts(query, "window", k)}
+        fts_hits = store.fts(query, "window", k * (3 if cfg["fts_weight"] else 1))
+        fts_ids = {i for i, _ in fts_hits}
+        top_bm25 = max((b for _, b in fts_hits), default=0.0)
+        fts_grade = {i: b / top_bm25 for i, b in fts_hits} if top_bm25 > 0 else {}
         if qv is not None:
             widx = store.index("window", cfg["embed_model"])
             for wid, s in widx.search(qv, k * 3, allowed):
@@ -88,7 +91,9 @@ class Recall:
                 continue
             if session_id and r["session_id"] == session_id and "compacted" not in (r["flags"] or ""):
                 continue                                   # already in the live context window
-            bonus = (cfg["fts_bonus"] if wid in fts_ids else 0) + (cfg["type_bonus"] if wid in typed else 0) + \
+            lexical = cfg["fts_weight"] * fts_grade.get(wid, 0.0) if cfg["fts_weight"] else \
+                (cfg["fts_bonus"] if wid in fts_ids else 0)
+            bonus = lexical + (cfg["type_bonus"] if wid in typed else 0) + \
                     (cfg["recency_bonus"] if r["said"] > last_sleep else 0) - \
                     (cfg["assistant_penalty"] if "assistant" in (r["flags"] or "") else 0) - \
                     (cfg["question_penalty"] if (r["text"] or "").rstrip().endswith("?") and len(r["text"]) < 240 else 0)
@@ -254,8 +259,30 @@ class Recall:
                     f"SELECT id, name, fact_count FROM entities WHERE id IN ({','.join('?' * len(nxt))})", list(nxt))}
                 known.update(more)
                 frontier = sorted(((w, i) for i, w in nxt.items() if i in more), reverse=True)[:cfg["graph_entities"]]
-        # conversation links: a matched "yes" brings the question it answered, and the reverse
+        # adjacency: the turns right before and after a matched one (a question and its answer, a claim and its
+        # correction) join at the seed's score times graph_adjacent_decay
         wseeds = {it["id"]: it for it in seeds if it["kind"] == "window"}
+        if cfg["graph_adjacent"] > 0:
+            n_adj = cfg["graph_adjacent"]
+            for wid, it in list(wseeds.items()):
+                me = store.one("SELECT session_id, said FROM windows WHERE id=?", (wid,))
+                if me is None or not me["session_id"]:
+                    continue
+                around = store.q("""SELECT * FROM (SELECT * FROM windows WHERE session_id=? AND said<? ORDER BY said DESC, id DESC LIMIT ?)
+                                    UNION ALL SELECT * FROM (SELECT * FROM windows WHERE session_id=? AND said>? ORDER BY said, id LIMIT ?)""",
+                                 (me["session_id"], me["said"], n_adj, me["session_id"], me["said"], n_adj))
+                for w in around:
+                    if w["id"] in items or any(x.get("evidence_id") == w["id"] for x in items.values()):
+                        continue
+                    if any(f in (w["flags"] or "") for f in ("echo", "dropped", "ungrounded")):
+                        continue
+                    if session_id and w["session_id"] == session_id and "compacted" not in (w["flags"] or ""):
+                        continue
+                    items[w["id"]] = {"kind": "window", "id": w["id"], "score": it["score"] * cfg["graph_adjacent_decay"],
+                                      "sim": it["sim"], "text": w["text"], "said": w["said"], "speaker": w["speaker"],
+                                      "flags": w["flags"] or "", "ref": w["ref"], "via": "next to a match"}
+                    added += 1
+        # conversation links: a matched "yes" brings the question it answered, and the reverse
         if wseeds:
             ids = list(wseeds)
             ph = ",".join("?" * len(ids))

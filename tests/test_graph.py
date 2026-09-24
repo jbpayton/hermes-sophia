@@ -9,7 +9,7 @@ def _night(engine, fake, facts_for):
         if prompt.startswith("You are indexing"):
             n = len(re.findall(r"^w\d+ \(", prompt, re.M))
             return "\n".join(f"w{i} | ctx {i} | -" for i in range(1, n + 1))
-        if prompt.startswith("Extract durable facts"):
+        if prompt.startswith("Extract facts"):
             lines = prompt.split("Lines:\n")[-1]
             out = []
             for m in re.finditer(r"^w(\d+) \((\w+), [^)]*\) (?:CONTEXT: .*?)?TEXT: (.*)$", lines, re.M):

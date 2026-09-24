@@ -20,7 +20,7 @@ def _fake_models(fake):
             n = len(re.findall(r"^w\d+ \(", prompt, re.M))
             return "\n".join(f"w{i} | context for line {i} about Joey's Yosemite trip | {'answers w1' if i == 2 else '-'}"
                              for i in range(1, n + 1))
-        if prompt.startswith("Extract durable facts"):
+        if prompt.startswith("Extract facts"):
             lines = prompt.split("Lines:\n")[-1]
             out = []
             for m in re.finditer(r"^w(\d+) \((\w+), [^)]*\) (?:CONTEXT: .*?)?TEXT: (.*)$", lines, re.M):
@@ -36,7 +36,7 @@ def _fake_models(fake):
             return "What camera is Joey bringing?"
         return ""
     fake.chat_fn = chat
-    fake.readout = lambda p: [("B", -0.05), ("A", -3.0)]          # teacher says 'true' (replace / used)
+    fake.says(True)                                                # teacher says 'true' (replace / used)
 
 
 def test_night(engine, fake):
@@ -99,7 +99,7 @@ def test_same_message_negation_does_not_self_supersede(engine, fake):
         if prompt.startswith("You are indexing"):
             n = len(re.findall(r"^w\d+ \(", prompt, re.M))
             return "\n".join(f"w{i} | ctx {i} | -" for i in range(1, n + 1))
-        if prompt.startswith("Extract durable facts"):
+        if prompt.startswith("Extract facts"):
             lines = prompt.split("Lines:\n")[-1]
             out = []
             for m in re.finditer(r"^w(\d+) \((\w+), [^)]*\) (?:CONTEXT: .*?)?TEXT: (.*)$", lines, re.M):
@@ -112,7 +112,7 @@ def test_same_message_negation_does_not_self_supersede(engine, fake):
             return "\n".join(out)
         return "What camera is Joey bringing?"
     fake.chat_fn = chat
-    fake.readout = lambda p: [("B", -0.05), ("A", -3.0)]
+    fake.says(True)
     t = time.time() - 3600
     engine.capture_turn("a", "", "", [{"role": "user", "content": "I'm bringing my Fujifilm X-T5.", "timestamp": t}])
     engine.capture_turn("b", "", "", [{"role": "user", "content": "I'm bringing the Sony A7 IV instead of the Fujifilm.", "timestamp": t + 60}])
@@ -133,3 +133,36 @@ def test_validation_rules():
     assert ok({"subject": "Joey", "relation": "is bringing a Fujifilm X-T5 to", "object": "Yosemite"})[1] == "entity inside relation"
     assert ok({"subject": "Joey", "relation": "requested extraction of", "object": "founding date"})[1] == "question, not a fact"
     assert ok({"subject": "Dr. Patel", "relation": "moved his office to", "object": "55 Oak Avenue"})[0]
+
+
+def test_events_do_not_supersede_each_other(engine, fake):
+    photos = {"cup": "a cup with a dog face", "sunset": "a sunset painting"}
+
+    def chat(prompt):
+        if prompt.startswith("You are indexing"):
+            n = len(re.findall(r"^w\d+ \(", prompt, re.M))
+            return "\n".join(f"w{i} | ctx {i} | -" for i in range(1, n + 1))
+        if prompt.startswith("Extract facts"):
+            out = []
+            for m in re.finditer(r"^w(\d+) \(.*?TEXT: (.*)$", prompt.split("Lines:\n")[-1], re.M):
+                for key, obj in photos.items():
+                    if key in m.group(2):
+                        out.append(f"Melanie | shares a photo of | {obj} | w{m.group(1)} | asserted | -")
+            return "\n".join(out)
+        return "Q?"
+
+    def readout(prompt):                    # "the new one replaces it": yes; "is it an ongoing state": no
+        opts = dict(re.findall(r"^([A-Z])\) (.*)$", prompt, re.M))
+        want = "false:" if "ongoing state" in prompt else "true:"
+        pick = next(l for l, d in opts.items() if d.startswith(want))
+        return [(pick, -0.05)] + [(l, -3.0) for l in opts if l != pick]
+
+    fake.chat_fn, fake.readout = chat, readout
+    t = time.time() - 3600
+    engine.capture_turn("p1", "", "", [{"role": "user", "name": "Melanie", "content": "Look at this cup! [shares a photo: cup]",
+                                        "timestamp": t}])
+    engine.capture_turn("p2", "", "", [{"role": "user", "name": "Melanie", "content": "My sunset painting. [shares a photo: sunset]",
+                                        "timestamp": t + 60}])
+    assert SleepRunner(engine, model="fake-9b", max_wait_s=0, steps=["relate", "integrate"]).run()["status"] == "complete"
+    st = [f["status"] for f in engine.store.q("SELECT status FROM facts")]
+    assert len(st) == 2 and set(st) == {"active"}

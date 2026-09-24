@@ -48,6 +48,7 @@ DEFAULTS: Dict[str, Any] = {
     "inject_chars": 3000,
     "recency_bonus": 0.01,
     "fts_bonus": 0.03,
+    "fts_weight": 0.0,                # > 0: keyword matches add weight × (bm25 / best bm25) instead of the flat bonus
     "type_bonus": 0.02,
     "assistant_penalty": 0.06,        # assistant-authored lines rank below the user's words and sources
     "max_assistant_items": 2,
@@ -59,6 +60,8 @@ DEFAULTS: Dict[str, Any] = {
     "graph_hub_degree": 8,            # …damped by sqrt(hub_degree / facts) for entities with more facts
     "graph_fanout": 3,                # facts taken per entity, best-matching first
     "graph_entities": 6,              # entities expanded per hop
+    "graph_adjacent": 0,              # turns before/after a matched window that join the candidates
+    "graph_adjacent_decay": 0.9,
     # capture
     "capture_tools": ["web_extract", "browser_snapshot", "browser_navigate"],
     "never_capture_substrings": ["vault", "credential", "secret", "password"],
@@ -74,10 +77,12 @@ DEFAULTS: Dict[str, Any] = {
     "sleep_max_wait_s": 900,
     "sleep_poll_s": 10,
     "sleep_session_windows": 40,
+    "night_parallel": 2,              # night model calls in flight at once (LM Studio's parallel slots)
     "promote_min_instances": 5,
     "promote_min_sessions": 2,
     "page_min_facts": 3,
     "calibration_min_labels": 50,
+    "supersede_threshold": 0.85,      # wrongly retiring a fact costs more than missing a change
 }
 
 _LIST_KEYS = {k for k, v in DEFAULTS.items() if isinstance(v, list)} | {"sleep_guard_models"}
@@ -125,6 +130,8 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
     ("question_penalty", "Ranking penalty for a bare earlier question", {"when": _ADVANCED}),
     ("recency_bonus", "Ranking bonus for recent items", {"when": _ADVANCED}),
     ("fts_bonus", "Ranking bonus for keyword matches", {"when": _ADVANCED}),
+    ("fts_weight", "Graded keyword weight: a match adds this × its bm25 relative to the best (0 = flat fts_bonus)",
+     {"when": _ADVANCED}),
     ("type_bonus", "Ranking bonus when a typed span matches the question", {"when": _ADVANCED}),
     ("graph_hops", "Graph expansion at recall: hops from matched entities to connected facts (0 = off)",
      {"when": _ADVANCED}),
@@ -133,6 +140,9 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
      {"when": _ADVANCED}),
     ("graph_fanout", "Connected facts taken per entity", {"when": _ADVANCED}),
     ("graph_entities", "Entities expanded per hop", {"when": _ADVANCED}),
+    ("graph_adjacent", "Turns before and after a matched message that join the candidates (0 = off)",
+     {"when": _ADVANCED}),
+    ("graph_adjacent_decay", "A neighbouring turn scores its match's score times this", {"when": _ADVANCED}),
     ("window_sentences", "Sentences per raw-record window", {"when": _ADVANCED}),
     ("window_chars", "Characters per raw-record window", {"when": _ADVANCED}),
     ("code_block_chars", "Long code blocks become one window truncated to this many characters",
@@ -155,10 +165,14 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
      {"when": _ADVANCED}),
     ("sleep_poll_s", "How often a waiting night checks again (seconds)", {"when": _ADVANCED}),
     ("sleep_session_windows", "Windows per contextualize call", {"when": _ADVANCED}),
+    ("night_parallel", "Night model calls in flight at once (match the model's parallel slots in LM Studio)",
+     {"when": _ADVANCED}),
     ("promote_min_instances", "Instances before an emergent relation is promoted", {"when": _ADVANCED}),
     ("promote_min_sessions", "Sessions before an emergent relation is promoted", {"when": _ADVANCED}),
     ("page_min_facts", "Facts about an entity before it gets a wiki page", {"when": _ADVANCED}),
     ("calibration_min_labels", "Gold labels needed before the decider is calibrated", {"when": _ADVANCED}),
+    ("supersede_threshold", "Decider probability needed before a newer fact retires an older one (high on purpose: "
+                            "a wrong retirement hides a true memory)", {"when": _ADVANCED}),
 ]
 
 

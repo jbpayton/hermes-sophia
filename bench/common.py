@@ -44,6 +44,10 @@ def add_model_args(ap) -> None:
     ap.add_argument("--graph-hops", type=int, default=1)
     ap.add_argument("--inject-top", type=int, default=10, help="how deep in the ranking injection may draw from")
     ap.add_argument("--recall-k", type=int, default=20)
+    ap.add_argument("--set", action="append", default=[], metavar="KEY=VALUE",
+                    help="any Sophia setting, e.g. --set fts_weight=0.1 (JSON values)")
+    ap.add_argument("--reuse-from", default="", metavar="TAG",
+                    help="start from the memories another run built (same mode), skipping ingestion and the night")
     ap.add_argument("--tag", default="", help="suffix for the results file")
     ap.add_argument("--yield-to", default="qwen/qwen3.8-27b",
                     help="pause while this LM Studio model is generating (someone's chat); '' to never pause")
@@ -98,15 +102,30 @@ def memory_config(args, **identity) -> Dict[str, Any]:
                inject_chars=args.inject_chars, graph_hops=args.graph_hops, inject_top=args.inject_top,
                recall_k=max(args.recall_k, args.inject_top), embed_timeout=60.0, decider_timeout=60.0,
                sleep_call_timeout=600.0, **identity)
+    for kv in args.set:
+        k, v = kv.split("=", 1)
+        try:
+            cfg[k] = json.loads(v)
+        except ValueError:
+            cfg[k] = v
     cfg["sleep_guard_models"] = [args.night_model]
     cfg["lms_cli"] = os.path.expanduser(cfg["lms_cli"])
     return cfg
 
 
-def fresh_engine(workdir: Path, name: str, cfg: Dict[str, Any]) -> Engine:
+def fresh_engine(workdir: Path, name: str, cfg: Dict[str, Any], reuse: Optional[str] = None) -> Engine:
+    """A new memory; or, with ``reuse``, a copy of the memory stored under that name (so it isn't rebuilt)."""
+    import shutil
     db = workdir / f"{name}.db"
     for suffix in ("", "-wal", "-shm"):
         Path(str(db) + suffix).unlink(missing_ok=True)
+    if reuse:
+        src = workdir / f"{reuse}.db"
+        if not src.exists():
+            raise SystemExit(f"--reuse-from: {src} not found")
+        for suffix in ("", "-wal", "-shm"):
+            if Path(str(src) + suffix).exists():
+                shutil.copy(str(src) + suffix, str(db) + suffix)
     return Engine(cfg, db)
 
 

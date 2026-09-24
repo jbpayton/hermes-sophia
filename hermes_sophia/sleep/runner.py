@@ -37,6 +37,12 @@ ALL_STEPS = ["settle", "sort", "contextualize", "headroom", "relate", "integrate
              "rehearse", "calibrate", "promote", "views", "anticipate", "tidy"]
 
 
+# Measured on the conv-26 night (17 false supersessions, all "separate events") and 5 real changes, 9B, both orders:
+# SUPERSEDES scored false ones <= 0.74 and real ones >= 0.92; IS_STATE scored real ones >= 0.85.
+SUPERSEDES = ("The NEW fact means the OLD fact is no longer true. (If both can be true at the same time, this is false.)")
+IS_STATE = ("The OLD fact describes an ongoing state that holds one value at a time (where someone lives or works, what "
+            "they are bringing, their relationship status, a current setting), not an event or an action that happened once.")
+
 class Yielded(RuntimeError):
     pass
 
@@ -97,9 +103,9 @@ class SleepRunner:
         self.wait_idle()
         return self.client.chat(self.model, prompt, max_tokens=max_tokens, timeout=self.cfg["sleep_call_timeout"])
 
-    def judge(self, state: Any, instructions: str) -> float:
+    def judge(self, state: Any, instructions: str, permutations: int = 1) -> float:
         self.wait_idle()
-        return self.teacher.noul(state, instructions).noul
+        return self.teacher.noul(state, instructions, permutations=permutations).noul
 
     # ---------------------------------------------------------------- run
     def run(self) -> Dict[str, Any]:
@@ -188,10 +194,19 @@ class SleepRunner:
             by[r["session_id"]].append(r)
         return by
 
+    def _pmap(self, fn, items: List[Any]) -> List[Any]:
+        """Model calls in parallel (up to night_parallel at once), results in input order."""
+        n = max(1, int(self.cfg.get("night_parallel", 1)))
+        if n == 1 or len(items) <= 1:
+            return [fn(x) for x in items]
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=n) as ex:
+            return list(ex.map(fn, items))
+
     def step_contextualize(self):
         sessions = self._day_sessions(only_unheaded=True)
-        n_win, n_links, calls = 0, 0, 0
         size = self.cfg["sleep_session_windows"]
+        jobs = []                                   # (batch, prompt): prompts depend only on stored text
         for sid, rows in sessions.items():
             prior = self.s.q("""SELECT speaker, text FROM windows WHERE session_id=? AND header_source='model'
                                 ORDER BY said DESC LIMIT 3""", (sid,))[::-1]
@@ -199,33 +214,34 @@ class SleepRunner:
                 batch = rows[b:b + size]
                 ctx = "\n".join(f"{p['speaker']}: {p['text'][:200]}" for p in prior) or "(start of conversation)"
                 lines = "\n".join(f"w{i+1} ({r['speaker']}, {_d(r['said'])}): {r['text'][:600]}" for i, r in enumerate(batch))
-                prompt = CONTEXT_PROMPT.format(context=ctx, lines=lines)
-                out = self.llm(prompt, max_tokens=90 * len(batch) + 100)
-                calls += 1
-                headers, links = parse_context(out, len(batch))
-                ids, texts = [], []
-                for i, r in enumerate(batch):
-                    h = headers.get(i + 1)
-                    if not h:
-                        continue
-                    idx_text = f"[{r['speaker']} · {_d(r['said'])} · {h}] {r['text']}"
-                    self.s.x("UPDATE windows SET index_text=?, header_source='model', night_id=? WHERE id=?",
-                             (idx_text, self.night, r["id"]))
-                    self.s.fts_put(r["id"], "window", idx_text)
-                    ids.append(r["id"])
-                    texts.append(idx_text)
-                if ids:
-                    self.s.set_vectors("window", ids, self.e.embed(texts, "document"), self.cfg["embed_model"])
-                    n_win += len(ids)
-                for (src, kind, dst) in links:
-                    if 1 <= src <= len(batch) and 1 <= dst <= len(batch) and src != dst:
-                        self.s.x("INSERT OR IGNORE INTO links(src,dst,kind,night_id) VALUES(?,?,?,?)",
-                                 (batch[src - 1]["id"], batch[dst - 1]["id"], kind, self.night))
-                        n_links += 1
+                jobs.append((batch, CONTEXT_PROMPT.format(context=ctx, lines=lines)))
                 prior = [{"speaker": r["speaker"], "text": r["text"]} for r in batch[-3:]]
-                if self.limit and calls >= self.limit:
-                    break
-        return {"sessions": len(sessions), "windows_headed": n_win, "links": n_links, "calls": calls}
+        if self.limit:
+            jobs = jobs[:self.limit]
+        outs = self._pmap(lambda j: self.llm(j[1], max_tokens=90 * len(j[0]) + 100), jobs)
+        n_win, n_links = 0, 0
+        for (batch, _), out in zip(jobs, outs):
+            headers, links = parse_context(out, len(batch))
+            ids, texts = [], []
+            for i, r in enumerate(batch):
+                h = headers.get(i + 1)
+                if not h:
+                    continue
+                idx_text = f"[{r['speaker']} · {_d(r['said'])} · {h}] {r['text']}"
+                self.s.x("UPDATE windows SET index_text=?, header_source='model', night_id=? WHERE id=?",
+                         (idx_text, self.night, r["id"]))
+                self.s.fts_put(r["id"], "window", idx_text)
+                ids.append(r["id"])
+                texts.append(idx_text)
+            if ids:
+                self.s.set_vectors("window", ids, self.e.embed(texts, "document"), self.cfg["embed_model"])
+                n_win += len(ids)
+            for (src, kind, dst) in links:
+                if 1 <= src <= len(batch) and 1 <= dst <= len(batch) and src != dst:
+                    self.s.x("INSERT OR IGNORE INTO links(src,dst,kind,night_id) VALUES(?,?,?,?)",
+                             (batch[src - 1]["id"], batch[dst - 1]["id"], kind, self.night))
+                    n_links += 1
+        return {"sessions": len(sessions), "windows_headed": n_win, "links": n_links, "calls": len(jobs)}
 
     # ======================================================== CONSOLIDATE
     def step_headroom(self):
@@ -251,34 +267,39 @@ class SleepRunner:
         groups: Dict[str, List[Any]] = defaultdict(list)
         for r in cand:
             groups[r["session_id"] or r["ref"]].append(r)
-        facts_new, facts_seen, calls, rejected = 0, 0, 0, 0
+        facts_new, facts_seen, rejected = 0, 0, 0
+        why_rejected: Counter = Counter()
+        jobs = []
         for key, rows in groups.items():
             for b in range(0, len(rows), 30):
                 batch = rows[b:b + 30]
                 lines = "\n".join(f"w{i+1} ({r['speaker']}, {_d(r['said'])}) {self._context_of(r)}TEXT: {r['text'][:700]}"
                                   for i, r in enumerate(batch))
-                out = self.llm(RELATE_PROMPT.format(user=self.cfg["user_name"], agent=self.cfg["agent_name"],
-                                                    lines=lines), max_tokens=1600)
-                calls += 1
-                for f in parse_facts(out, len(batch)):
-                    w = batch[f["w"] - 1]
-                    if "assistant" in (w["flags"] or "") and f["modality"] != "reported":
-                        f["modality"] = "reported"
-                    ok, why = self._validate(f)
-                    if not ok:
-                        rejected += 1
-                        continue
-                    fid, created = self._store_fact(f, w)
-                    facts_new += created
-                    facts_seen += not created
-                    if created:
-                        self.new_facts.append(fid)
-                self.s.xmany("INSERT OR REPLACE INTO jobs(night_id,step,item,status,attempts,updated_at) VALUES('*','relate',?,'done',1,?)",
-                             [(r["id"], time.time()) for r in batch])
-                if self.limit and calls >= self.limit:
-                    break
+                jobs.append((batch, RELATE_PROMPT.format(user=self.cfg["user_name"], agent=self.cfg["agent_name"],
+                                                         lines=lines)))
+        if self.limit:
+            jobs = jobs[:self.limit]
+        outs = self._pmap(lambda j: self.llm(j[1], max_tokens=1600), jobs)
+        calls = len(jobs)
+        for (batch, _), out in zip(jobs, outs):
+            for f in parse_facts(out, len(batch)):
+                w = batch[f["w"] - 1]
+                if "assistant" in (w["flags"] or "") and f["modality"] != "reported":
+                    f["modality"] = "reported"
+                ok, why = self._validate(f)
+                if not ok:
+                    rejected += 1
+                    why_rejected[why] += 1
+                    continue
+                fid, created = self._store_fact(f, w)
+                facts_new += created
+                facts_seen += not created
+                if created:
+                    self.new_facts.append(fid)
+            self.s.xmany("INSERT OR REPLACE INTO jobs(night_id,step,item,status,attempts,updated_at) VALUES('*','relate',?,'done',1,?)",
+                         [(r["id"], time.time()) for r in batch])
         return {"windows": len(cand), "calls": calls, "new_facts": facts_new, "reaffirmed": facts_seen,
-                "rejected": rejected}
+                "rejected": rejected, "rejected_by": dict(why_rejected)}
 
     @staticmethod
     def _context_of(r) -> str:
@@ -380,15 +401,19 @@ class SleepRunner:
                 if rel and rel["exclusive"] and not f_neg:
                     p = 1.0
                 else:
+                    # Wrongly retiring a fact hides a true memory; missing a change leaves both visible with dates.
+                    # So: a high bar, read in both option orders, and only for states (not one-off events).
                     src = self.s.one("""SELECT w.text FROM fact_sources fs JOIN windows w ON w.id=fs.window_id
                                         WHERE fs.fact_id=? LIMIT 1""", (f["id"],))
-                    p = self.judge({"old_fact": f"{g['subject']} | {g['relation']} | {g['object']} (believed since {_d(g['valid_from'])})",
-                                    "new_fact": f"{f['subject']} | {f['relation']} | {f['object']} (said {_d(f['valid_from'])})",
-                                    "new_evidence": src["text"] if src else ""},
-                                   "The NEW fact means the OLD fact is no longer true. (If both can be true at the "
-                                   "same time, this is false.)")
+                    pair = {"old_fact": f"{g['subject']} | {g['relation']} | {g['object']} (believed since {_d(g['valid_from'])})",
+                            "new_fact": f"{f['subject']} | {f['relation']} | {f['object']} (said {_d(f['valid_from'])})",
+                            "new_evidence": src["text"] if src else ""}
+                    p = self.judge(pair, SUPERSEDES, permutations=2)
                     asked += 1
-                if p >= 0.6:
+                    if p >= self.cfg["supersede_threshold"] and not f_neg:
+                        if self.judge(pair, IS_STATE, permutations=2) < 0.5:
+                            p = 0.0
+                if p >= self.cfg["supersede_threshold"]:
                     self.s.x("UPDATE facts SET status='superseded', valid_to=?, superseded_by=? WHERE id=?",
                              (f["valid_from"], f["id"], g["id"]))
                     self.s.add_credit(g["id"], "fact", "replay", "contradicted", -2.0, self.night)
@@ -609,25 +634,32 @@ Earlier context:
 Lines:
 {lines}"""
 
-RELATE_PROMPT = """Extract durable facts from the numbered lines for a long-term memory. Output one fact per line, nothing else:
+RELATE_PROMPT = """Extract facts about people and their world from the numbered lines, for a long-term memory. Output one fact per line, nothing else:
 subject | relation | object | wN | modality | when
 
-- subject/object: specific people, things, places, values. Use real names: "I/me/my" means the speaker of that line, "you" means the other person. The user is {user}; the assistant is {agent}.
-- relation: a short verb phrase; it must not contain the object.
+What to extract: who people are (identity, job, relationships, where they live or come from), what they did (events and activities, with when), what they have, like, believe or plan, and anything else a friend would remember later.
+- subject/object: specific people, things, places, activities, values. Use real names: "I/me/my" means the speaker of that line, "you" means the other person. The user is {user}; the assistant is {agent}.
+- relation: a short verb phrase (1-4 words). The object is the thing, place, person or activity itself and is never empty or "-": write "attended | a support group", not "attended a support group | -".
 - wN: the line the fact comes from.
 - modality: asserted, planned, habitual, preferred, hypothetical, negated, or reported (reported = someone else's claim, including anything the assistant said).
-- when: the time the fact happens, copied from the TEXT (e.g. "second week of May", "next Tuesday at 9:30", "2007"), or - if the text states no time. Never use the line's own date.
-- Extract only what the TEXT states. CONTEXT is there only to resolve words like "it", "that" or "yes"; never take facts from it.
-- One fact per line. A question states no fact. Skip greetings, filler, questions, and general advice or rules of thumb. Skip facts that are common knowledge.
+- when: the time the fact happens, copied from the TEXT (e.g. "yesterday", "second week of May", "2007", "last year"), or - if the text states no time. Never use the line's own date.
+- Extract only what the TEXT states. CONTEXT is there only to resolve words like "it", "that" or "yes"; never take facts from it. A "[shares a photo: ...]" note describes a photo the speaker shared.
+- A question states no fact. Skip greetings, thanks, compliments and filler, and skip general advice or common knowledge.
 
 Example lines:
 w1 ({user}, 2026-09-21) CONTEXT: {user} plans the Yosemite trip TEXT: I booked Yosemite for the second week of May, and Sam is coming.
-w2 (source:nps.gov, 2026-09-21) TEXT: Curry Village has canvas tent cabins.
-w3 ({user}, 2026-09-21) CONTEXT: {user} asks what the cabins cost TEXT: How much are the cabins?
+w2 (Maria, 2026-09-21) TEXT: I went to my first pottery class yesterday! It reminded me of my grandma back in Lisbon.
+w3 (Maria, 2026-09-21) TEXT: Being a single mom of two isn't easy, but my kids keep me going. [shares a photo: two kids on a swing]
+w4 (source:nps.gov, 2026-09-21) TEXT: Curry Village has canvas tent cabins.
+w5 ({user}, 2026-09-21) CONTEXT: {user} asks what the cabins cost TEXT: How much are the cabins?
 Example output:
 {user} | booked a trip to | Yosemite | w1 | planned | second week of May
 Sam | is coming on the trip to | Yosemite | w1 | planned | second week of May
-Curry Village | has | canvas tent cabins | w2 | asserted | -
+Maria | attended | her first pottery class | w2 | asserted | yesterday
+Maria | has a grandmother in | Lisbon | w2 | asserted | -
+Maria | is | a single mother | w3 | asserted | -
+Maria | has | two kids | w3 | asserted | -
+Curry Village | has | canvas tent cabins | w4 | asserted | -
 
 Lines:
 {lines}"""
@@ -648,13 +680,35 @@ def parse_context(out: str, n: int) -> Tuple[Dict[int, str], List[Tuple[int, str
         i = int(m.group(1))
         if not 1 <= i <= n:
             continue
-        h = parts[1][:200]
+        h = re.sub(r"[\s;,.]*-\s*$", "", parts[1][:200]).strip()     # a stray "-" link marker leaks in sometimes
         if h and h != "-":
             headers[i] = h
         if len(parts) >= 3:
             for kind, dst in re.findall(r"(answers|corrects|decides)\s+w?(\d+)", parts[2].lower()):
                 links.append((i, kind, int(dst)))
     return headers, links
+
+
+_NP_START = re.compile(r"\s(?=(?:a|an|the|her|his|their|my|our|your|its|some|two|three|four|five|several|many|\d+|[A-Z]\w*)\b)")
+
+
+_PREP = re.compile(r"^((?:\S+\s+){0,3}?(?:to|with|on|in|at|for|from|about|of|into|as))\s+(\S.*)$", re.I)
+_LIGHT = re.compile(r"^(has|have|is|are|was|likes|loves|enjoys|wants|needs|owns|prefers|hates|misses|values)\s+(\S.*)$", re.I)
+
+
+def _split_relation(rel: str) -> Tuple[str, str]:
+    """Recover an object the model left inside the relation, or ("…", "") when there is none:
+    "attended an LGBTQ support group" -> ("attended", "an LGBTQ support group")   (noun phrase)
+    "plans to continue education"     -> ("plans to", "continue education")        (preposition or particle)
+    "has empathy and understanding"   -> ("has", "empathy and understanding")      (light verb)"""
+    m = _NP_START.search(rel)
+    if m and m.start() > 0:
+        return rel[:m.start()].strip(), rel[m.start():].strip()
+    for rx in (_PREP, _LIGHT):
+        m = rx.match(rel.strip())
+        if m:
+            return m.group(1).strip(), m.group(2).strip()
+    return rel, ""
 
 
 def parse_facts(out: str, n: int) -> List[Dict[str, Any]]:
@@ -668,7 +722,10 @@ def parse_facts(out: str, n: int) -> List[Dict[str, Any]]:
             continue
         mod = parts[4].lower() if len(parts) > 4 else "asserted"
         when = parts[5] if len(parts) > 5 else "-"
-        facts.append({"subject": parts[0][:120], "relation": parts[1][:120], "object": parts[2][:200],
+        rel, obj = parts[1], parts[2]
+        if _PLACEHOLDER.match(obj) or not obj.strip():
+            rel, obj = _split_relation(rel)
+        facts.append({"subject": parts[0][:120], "relation": rel[:120], "object": obj[:200],
                       "w": int(m.group(1)), "modality": mod if mod in MODALITIES else "asserted",
                       "when": "" if when.strip() in ("-", "", "none", "n/a") else when[:80]})
     return facts

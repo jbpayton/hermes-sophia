@@ -33,6 +33,16 @@ class FakeLMS:
         n[n == 0] = 1
         return out / n
 
+    def says(self, answer: bool):
+        """Answer every yes/no question by meaning ("true"/"false" option), whatever order the options are in."""
+        want = "true:" if answer else "false:"
+
+        def readout(prompt):
+            opts = dict(re.findall(r"^([A-Z])\) (.*)$", prompt, re.M))
+            pick = next((l for l, d in opts.items() if d.startswith(want)), next(iter(opts), "A"))
+            return [(pick, -0.05)] + [(l, -3.0) for l in opts if l != pick]
+        self.readout = readout
+
     def first_token_logprobs(self, model, prompt, top_logprobs=10, timeout=30.0):
         self.calls["readout"] += 1
         tops = self.readout(prompt)
