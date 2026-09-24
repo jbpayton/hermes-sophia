@@ -71,3 +71,9 @@ def engine(tmp_path, fake):
     e = Engine(cfg, tmp_path / "sophia.db", client=fake)
     yield e
     e.close()
+
+
+def facts_of(it):
+    """The facts a recall candidate carries: its own (facts_as=items) or those pointing at its window (keys)."""
+    own = [{"fact": it["fact"], "via": it.get("via")}] if it.get("kind") == "fact" else []
+    return own + [dict(f, via=it.get("via")) for f in it.get("facts", [])]

@@ -40,10 +40,10 @@ def add_model_args(ap) -> None:
     ap.add_argument("--embed", default="nomic-embed")
     ap.add_argument("--decider", default="qwen35-9b")
     ap.add_argument("--night-model", default="qwen35-9b")
-    ap.add_argument("--inject-chars", type=int, default=6000, help="size of Sophia's injected block")
-    ap.add_argument("--graph-hops", type=int, default=1)
-    ap.add_argument("--inject-top", type=int, default=10, help="how deep in the ranking injection may draw from")
-    ap.add_argument("--recall-k", type=int, default=20)
+    ap.add_argument("--inject-chars", type=int, default=None, help="size of Sophia's injected block (default: Sophia's)")
+    ap.add_argument("--graph-hops", type=int, default=None)
+    ap.add_argument("--inject-top", type=int, default=None, help="how deep in the ranking injection may draw from")
+    ap.add_argument("--recall-k", type=int, default=None)
     ap.add_argument("--set", action="append", default=[], metavar="KEY=VALUE",
                     help="any Sophia setting, e.g. --set fts_weight=0.1 (JSON values)")
     ap.add_argument("--reuse-from", default="", metavar="TAG",
@@ -99,9 +99,11 @@ def memory_config(args, **identity) -> Dict[str, Any]:
     cfg = copy.deepcopy(DEFAULTS)
     cfg.update(lmstudio_url=args.url, embed_model=args.embed, embed_api=args.api, decider_model=args.decider,
                decider_api=args.api, sleep_model=args.night_model, sleep_api=args.api,
-               inject_chars=args.inject_chars, graph_hops=args.graph_hops, inject_top=args.inject_top,
-               recall_k=max(args.recall_k, args.inject_top), embed_timeout=60.0, decider_timeout=60.0,
-               sleep_call_timeout=600.0, **identity)
+               embed_timeout=60.0, decider_timeout=60.0, sleep_call_timeout=600.0, **identity)
+    for key in ("inject_chars", "graph_hops", "inject_top", "recall_k"):      # only what the command line set
+        if getattr(args, key, None) is not None:
+            cfg[key] = getattr(args, key)
+    cfg["recall_k"] = max(cfg["recall_k"], cfg["inject_top"])
     for kv in args.set:
         k, v = kv.split("=", 1)
         try:

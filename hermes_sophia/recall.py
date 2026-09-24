@@ -114,7 +114,10 @@ class Recall:
                 f = frows.get(fid)
                 if f is None or s < cfg["junk_floor"] or not self._fact_ok(f, history, scope):
                     continue
-                self._add_fact(items, f, s, s)
+                if cfg["facts_as"] == "keys":
+                    self._attach_fact(items, f, s, s, session_id=session_id)
+                else:
+                    self._add_fact(items, f, s, s)
         # task cards: what the agent did before, and how it turned out. A card carries its request the way a
         # fact carries its source: when the request itself matched, the card takes its place and its score.
         found: Dict[str, float] = {}
@@ -189,6 +192,40 @@ class Recall:
                                  "speaker": evw["speaker"] if evw else "", "flags": "",
                                  "ref": evw["ref"] if evw else "", **({"via": via} if via else {})}
 
+    def _attach_fact(self, items: Dict[str, Dict[str, Any]], f, sim: float, score: float, via: Optional[str] = None,
+                     session_id: str = "") -> bool:
+        """facts_as=keys: a fact is one more search key for the window it came from. The window -- the verbatim
+        evidence -- is what ranks and is injected, labelled with the fact. True if the window was added or raised."""
+        store = self.e.store
+        srcs = [r["window_id"] for r in store.q("SELECT window_id FROM fact_sources WHERE fact_id=?", (f["id"],))]
+        if not srcs:
+            return False
+        wid = next((w for w in srcs if w in items), srcs[0])
+        it = items.get(wid)
+        changed = False
+        if it is None:
+            r = store.windows_by_ids([wid]).get(wid)
+            if r is None or any(x in (r["flags"] or "") for x in ("echo", "dropped", "ungrounded")):
+                return False
+            if session_id and r["session_id"] == session_id and "compacted" not in (r["flags"] or ""):
+                return False
+            it = items[wid] = {"kind": "window", "id": wid, "score": score, "sim": sim, "text": r["text"],
+                               "said": r["said"], "speaker": r["speaker"], "flags": r["flags"] or "", "ref": r["ref"]}
+            changed = True
+            if via:
+                it["via"] = f"linked via {via}"
+        elif score > it["score"]:
+            it["score"] = score
+            changed = True
+            if via:
+                it["via"] = f"linked via {via}"
+        it["sim"] = max(it["sim"], sim)
+        facts = it.setdefault("facts", [])
+        if not any(x["id"] == f["id"] for x in facts):
+            facts.append({"id": f["id"], "fact": [f["subject"], f["relation"], f["object"]],
+                          "modality": f["modality"], "happens": f["happens"], "status": f["status"]})
+        return changed
+
     def _expand(self, items: Dict[str, Dict[str, Any]], query: str, qv, history: bool, scope,
                 session_id: str) -> Dict[str, Any]:
         """Graph expansion. Bridge entities -- named in the top items but not in the question, which
@@ -210,6 +247,9 @@ class Recall:
                 weight[eid], names[eid] = w, name
 
         for it in seeds:
+            for x in it.get("facts", []):
+                seed(x["fact"][0], it["score"])
+                seed(x["fact"][2], it["score"])
             if it["kind"] == "fact":
                 seed(it["fact"][0], it["score"])
                 seed(it["fact"][2], it["score"])
@@ -239,6 +279,14 @@ class Recall:
                 for f in facts[:fanout]:
                     sim = own.get(f["id"], 0.0)
                     score = max(sim, w * decay * damp)
+                    if cfg["facts_as"] == "keys":
+                        if self._attach_fact(items, f, sim, score, via=via, session_id=session_id):
+                            added += 1
+                            reached = True
+                        for other in (T.norm_entity(f["subject"]), T.norm_entity(f["object"])):
+                            if other != eid and other not in skip:
+                                nxt[other] = max(nxt.get(other, 0.0), score)
+                        continue
                     have = items.get("f:" + f["id"])
                     if have is not None:                 # already a candidate: the path can only raise it
                         if score > have["score"]:
@@ -367,7 +415,8 @@ class Recall:
         if it["kind"] == "fact":
             s, r, o = it["fact"]
             return f"({_date(it['said'])}) {s} | {r} | {o} — \"{it['text'][:200]}\""
-        return f"({_date(it['said'])}, {it['speaker']}) {it['text'][:260]}"
+        facts = "; ".join(" | ".join(x["fact"]) for x in it.get("facts", [])[:2])
+        return f"({_date(it['said'])}, {it['speaker']}) {it['text'][:260]}" + (f" [fact: {facts}]" if facts else "")
 
     @staticmethod
     def format(items: List[Dict[str, Any]], budget: int) -> str:
@@ -403,7 +452,16 @@ class Recall:
                       (" (untrusted source text)" if "external" in it["flags"] else "")
                 changed = f" · later changed: {'; '.join(it['changed'])}" if it.get("changed") else ""
                 via = f" · {it['via']}" if it.get("via") else ""
-                line = f"- [{_date(it['said'])} · {who}{num}{via}{changed}] {it['text']}"
+                fx = ""
+                if it.get("facts"):
+                    parts = []
+                    for x in it["facts"][:3]:
+                        fs, fr, fo = x["fact"]
+                        extra = (f", happens {x['happens']}" if x.get("happens") else "") + \
+                                (f", {x['status']}" if x.get("status") not in ("active", None) else "")
+                        parts.append(f"{fs} {fr} {fo} ({x.get('modality') or 'asserted'}{extra})")
+                    fx = " · fact: " + "; ".join(parts)
+                line = f"- [{_date(it['said'])} · {who}{num}{via}{changed}{fx}] {it['text']}"
             if used + len(line) + 1 > budget:
                 break
             lines.append(line)

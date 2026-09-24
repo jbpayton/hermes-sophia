@@ -2,6 +2,7 @@ import json
 import re
 import time
 
+from conftest import facts_of
 from hermes_sophia.sleep import SleepRunner
 from hermes_sophia.sleep.runner import parse_context, parse_facts
 
@@ -66,11 +67,11 @@ def test_night(engine, fake):
     assert s.get_meta("last_sleep_ts") >= t_day + 700
     # recall now prefers the current fact
     items, _ = engine.recall.candidates("what camera is Joey bringing", k=5)
-    top_fact = next(it for it in items if it["kind"] == "fact")
+    top_fact = next(f for it in items for f in facts_of(it))
     assert top_fact["fact"][2] == "Sony A7"
     # history mode shows the superseded one
     hist, _ = engine.recall.candidates("what camera is Joey bringing", k=10, history=True)
-    assert any(it["kind"] == "fact" and it["fact"][2] == "Fujifilm X-T5" for it in hist)
+    assert any(f["fact"][2] == "Fujifilm X-T5" for it in hist for f in facts_of(it))
     # the raw window that said Fujifilm is still evidence, but labelled as changed
     txt = engine.recall.format(engine.recall.candidates("Fujifilm X-T5 camera Yosemite", k=10)[0], 4000)
     assert "later changed: Joey is bringing camera Fujifilm X-T5 → Sony A7" in txt

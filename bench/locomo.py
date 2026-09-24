@@ -179,8 +179,9 @@ def main():
     setup = {"benchmark": "LoCoMo (categories 1-4)", "mode": args.mode, "reader": args.reader, "judge": args.judge,
              "judge_prompt": "Mem0 J (aae5989)", "embed": args.embed, "decider": args.decider,
              "night_model": args.night_model if args.mode == "sophia-night" else None,
-             "inject_chars": args.inject_chars, "graph_hops": args.graph_hops,
-             "inject_top": args.inject_top, "recall_k": max(args.recall_k, args.inject_top),
+             "sophia_config": {k: memory_config(args)[k] for k in (
+                 "inject_chars", "inject_top", "recall_k", "inject_relative_floor", "graph_hops", "graph_adjacent",
+                 "fts_weight", "facts_as", "skip_gate", "gate_threshold")},
              "convs": sorted({r["conv"] for r in res.rows}), "limit_per_conv": args.limit, "set": args.set,
              "reused_memory_from": args.reuse_from or None}
     write_summary(RESULTS / f"{name}.summary.json", setup, summary)

@@ -1,6 +1,8 @@
 import re
 import time
 
+from conftest import facts_of
+
 from hermes_sophia.sleep import SleepRunner
 
 
@@ -37,11 +39,11 @@ def test_one_hop_reaches_a_fact_similarity_cannot(engine, fake):
     q = "Where does Sam's sister live?"
     engine.cfg["graph_hops"] = 0
     flat, _ = engine.recall.candidates(q, k=20)
-    assert not any(it["kind"] == "fact" and it["fact"][2] == "Denver" for it in flat)
+    assert not any(f["fact"][2] == "Denver" for it in flat for f in facts_of(it))
     engine.cfg["graph_hops"] = 1
     items, info = engine.recall.candidates(q, k=20)
-    hit = next(it for it in items if it["kind"] == "fact" and it["fact"][2] == "Denver")
-    assert hit["via"] == "Lily" and info["graph"]["raised_or_added"] >= 1
+    hit = next(it for it in items if any(f["fact"][2] == "Denver" for f in facts_of(it)))
+    assert "Lily" in hit["via"] and info["graph"]["raised_or_added"] >= 1
     assert "linked via Lily" in engine.recall.format([hit], 4000)
 
 
@@ -50,11 +52,11 @@ def test_graph_raises_a_weak_candidate(engine, fake):
     engine.cfg["junk_floor"] = 0.0                                     # Denver is a (weak) candidate already
     engine.cfg["graph_hops"] = 0
     flat, _ = engine.recall.candidates("Where does Sam's sister live?", k=20)
-    before = next(it for it in flat if it["kind"] == "fact" and it["fact"][2] == "Denver")["score"]
+    before = next(it for it in flat if any(f["fact"][2] == "Denver" for f in facts_of(it)))["score"]
     engine.cfg["graph_hops"] = 1
     items, _ = engine.recall.candidates("Where does Sam's sister live?", k=20)
-    hit = next(it for it in items if it["kind"] == "fact" and it["fact"][2] == "Denver")
-    assert hit["score"] > before and hit["via"] == "Lily"
+    hit = next(it for it in items if any(f["fact"][2] == "Denver" for f in facts_of(it)))
+    assert hit["score"] > before and "Lily" in hit["via"]
 
 
 def test_user_is_never_a_graph_hub(engine, fake):

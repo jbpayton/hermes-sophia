@@ -363,8 +363,11 @@ class SleepRunner:
         self.s.x("""UPDATE entities SET fact_count=(SELECT COUNT(*) FROM facts f WHERE f.status IN ('active','unconfirmed')
                     AND (f.subject_norm=entities.id OR lower(f.object)=entities.id))""")
         # supersession: only strictly older facts from other sources; negation retires a matching positive fact
-        superseded, asked = 0, 0
+        superseded, asked, state_asked = 0, 0, 0
         new = sorted(self.s.facts_by_ids(self.new_facts).values(), key=lambda f: f["valid_from"] or 0)
+        # Whether a relation is an ongoing state (one value at a time) or an event is mostly a property of the
+        # relation: asked once, remembered across nights.
+        states: Dict[str, float] = dict(self.s.get_meta("relation_states", {}) or {})
         rel_vec_cache: Dict[str, np.ndarray] = {}
 
         def rvec(text):
@@ -402,17 +405,22 @@ class SleepRunner:
                     p = 1.0
                 else:
                     # Wrongly retiring a fact hides a true memory; missing a change leaves both visible with dates.
-                    # So: a high bar, read in both option orders, and only for states (not one-off events).
+                    # So: only states (not one-off events), a high bar, both option orders.
+                    old_text = f"{g['subject']} | {g['relation']} | {g['object']}"
+                    key = core(g["relation_norm"])
+                    if not f_neg:
+                        if key not in states:
+                            states[key] = round(self.judge({"old_fact": old_text}, IS_STATE, permutations=2), 3)
+                            state_asked += 1
+                        if states[key] < 0.5:
+                            continue
                     src = self.s.one("""SELECT w.text FROM fact_sources fs JOIN windows w ON w.id=fs.window_id
                                         WHERE fs.fact_id=? LIMIT 1""", (f["id"],))
-                    pair = {"old_fact": f"{g['subject']} | {g['relation']} | {g['object']} (believed since {_d(g['valid_from'])})",
+                    pair = {"old_fact": f"{old_text} (believed since {_d(g['valid_from'])})",
                             "new_fact": f"{f['subject']} | {f['relation']} | {f['object']} (said {_d(f['valid_from'])})",
                             "new_evidence": src["text"] if src else ""}
                     p = self.judge(pair, SUPERSEDES, permutations=2)
                     asked += 1
-                    if p >= self.cfg["supersede_threshold"] and not f_neg:
-                        if self.judge(pair, IS_STATE, permutations=2) < 0.5:
-                            p = 0.0
                 if p >= self.cfg["supersede_threshold"]:
                     self.s.x("UPDATE facts SET status='superseded', valid_to=?, superseded_by=? WHERE id=?",
                              (f["valid_from"], f["id"], g["id"]))
@@ -429,7 +437,9 @@ class SleepRunner:
             self.s.x("UPDATE facts SET status='unconfirmed' WHERE id=?", (r["id"],))
             self.s.journal(self.night, "integrate", "plan_unconfirmed", [r["subject"], r["relation"], r["object"]],
                            undo={"fact": r["id"], "status": "active"})
+        self.s.set_meta("relation_states", states)
         return {"entities": self.s.one("SELECT COUNT(*) AS n FROM entities")["n"], "supersession_checks": asked,
+                "state_checks": state_asked,
                 "superseded": superseded, "plans_unconfirmed": len(stale)}
 
     def step_tasks(self):
