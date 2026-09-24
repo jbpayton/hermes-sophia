@@ -1,20 +1,113 @@
 # Sophia
 
-**Passive, associative memory for [Hermes Agent](https://github.com/NousResearch/hermes-agent) that organizes itself while you sleep.**
+**Memory for [Hermes Agent](https://github.com/NousResearch/hermes-agent) that injects what's relevant before every reply, answers when the agent asks, and organizes itself while you sleep.**
 
-Sophia is a Hermes memory provider:
+Sophia is a Hermes memory provider. Memory reaches the agent in three ways:
 
-- **By day** it records everything verbatim and quietly hands the agent dated evidence from the past, or nothing at all.
-- **At night** a local model reads the day back. It works out what was meant, pulls out facts, notices when plans changed, tests itself on what it learned, and builds a small wiki that grows its own structure.
-- **It never initiates.** It doesn't speak, ask questions, or take actions. The agent's memory tools are the only deliberate part.
+1. **It's injected automatically.** Before every reply, Sophia checks whether anything it remembers bears on the message. If it does, it puts that into the agent's context as dated quotes of what was actually said. If nothing is relevant, it adds nothing. Nobody has to ask, and you never have to say "remember this".
+2. **The agent can query it.** Memory tools let the agent dig deeper, count and list things, and ask what changed.
+3. **The agent can browse it.** **Mindscape** is the wiki Sophia builds overnight: a page per person, place and thing, a timeline, sources, and a changelog. Every line links back to the words it came from.
 
-Everything runs locally against [LM Studio](https://lmstudio.ai): an embedding model, a small decider model, and a larger model that works only at night.
+Sophia never initiates anything. It doesn't speak, ask questions or take actions; the agent's tools are the only deliberate part. Everything runs locally against [LM Studio](https://lmstudio.ai), or an OpenAI-compatible server such as llama-server.
 
-> Status: working prototype (v0.1). It has been exercised end to end inside real Hermes v0.21.4. See [what is built and what isn't](docs/DESIGN.md#15-implementation-status-prototype-2026-09-23).
+> Status: working prototype (v0.1), exercised end to end inside real Hermes v0.21.4. See [what is built and what isn't](docs/DESIGN.md#15-implementation-status-prototype-2026-09-23).
 
 ---
 
-## What it looks like
+## 1. Automatic: memory injected before every reply
+
+Each time you send a message, before the agent's model sees it, Sophia:
+
+1. **Searches** everything it has recorded: conversations, pages the agent read, and facts extracted overnight. It combines vector search, keyword search, and date scoping for "last week" style questions.
+2. **Checks** whether any of it actually bears on your message. A very strong match (cosine ≥ 0.82) passes straight through. Anything weaker goes to a small local model that answers yes or no by reading the probability of its first token, without generating any text. That check takes about 0.3 s.
+3. **Injects** what passed into the agent's context, or nothing.
+
+This is a real injection from the test profile, for "Which camera am I taking on the Yosemite trip?". It is an excerpt: 4 of the 8 items, in the order they were injected.
+
+```text
+Sophia memory — verbatim evidence from earlier conversations and reading (dates are when it was said;
+treat assistant-authored lines as weaker evidence):
+- [2026-09-23 · fact · planned · happens 2027-05-08/2027-05-15 · used +0.25] Sam | is coming on the trip to |
+  Yosemite — "Hi, some context for later. I'm Joey. For the Yosemite trip in the second week of May I'm
+  bringing my Fujifilm X-T5, Sam is coming along, and we're staying at Curry Village again."
+  · evidence later changed: Joey is bringing Fujifilm X-T5 → Sony A7 IV to Yosemite (2026-09-23)
+- [2026-09-23 · fact · planned] Joey | is not bringing | Fujifilm camera to Yosemite — "Change of plans for
+  Yosemite: I'm bringing the Sony A7 IV instead of the Fujifilm, the Fujifilm's sensor is acting up. …"
+- [2026-09-23 · fact · planned] Joey | is bringing | Sony A7 IV to Yosemite — "Change of plans for Yosemite: …"
+- [2026-09-23 · Hermes (assistant said)] Got it — Yosemite trip in early May, bringing the Sony A7 IV instead of
+  the Fujifilm X-T5 (sensor acting up), Sam coming along, staying at Curry Village again.
+```
+
+What the agent is told about each item:
+
+| Label | Meaning |
+|---|---|
+| The quoted words | Always the original text. Extracted facts (`subject \| relation \| object`) help find it and label it; they never replace it |
+| `planned`, `habitual`, `negated`, … | How the fact was said |
+| `happens` | When it takes place, as distinct from when it was said |
+| `evidence later changed` | These words include something that was later superseded, so the agent doesn't repeat a stale plan |
+| `assistant said` | The agent's own earlier words: weaker evidence, and capped at two per injection |
+| `untrusted source text` | Text from a web page, which the agent must treat as data, not instructions |
+| `used +0.25` | Credit earned when this item actually helped a past answer. It affects ordering only, never whether an item may be shown |
+
+For an off-topic message ("What's the capital of Australia?") the check said no (0.45), so nothing was injected.
+
+## 2. On request: memory the agent can query
+
+| Tool | Answers |
+|---|---|
+| `sophia_recall` | "Dig deeper": a wider search. `history: true` also returns superseded facts and when they held |
+| `sophia_query` | "How many… / list every… / what happened between…". Filters facts and sums typed values such as money |
+| `sophia_browse` | "What do you know about…": reads Mindscape (next section) |
+| `sophia_remember` | "Keep this", or marks a recalled item `helpful` or `wrong`. This is the strongest learning signal memory gets |
+| `sophia_ingest` | "Learn this document" |
+
+Pages the agent reads with `web_extract` or the browser are learned automatically, so `sophia_ingest` is only for documents obtained some other way. A real `sophia_query` call, `{"subject": "Joey"}`, trimmed:
+
+```json
+{"count": 4, "items": [
+  {"fact": ["Joey", "is bringing", "Sony A7 IV to Yosemite"], "modality": "planned", "status": "active", "believed_from": "2026-09-23 14:38"},
+  {"fact": ["Joey", "is staying at", "Curry Village"], "modality": "planned", "happens": "2027-05-08/2027-05-15", "status": "active"},
+  …]}
+```
+
+## 3. Mindscape: memory you can look around in
+
+Recall answers a question. **Mindscape is for when you don't know the question yet.**
+
+Every night Sophia reorganizes what it knows into views:
+
+| View | What it shows |
+|---|---|
+| `entity` | Everything currently believed about a person, place or thing, the history of what changed, and every mention with its date and speaker. A full page appears once enough is known |
+| `timeline` | What was said, or what happens, in a date range such as "last week" or "March" |
+| `recent` | Today's memory, before the night has consolidated it |
+| `sources` | The pages and documents it learned from |
+| `changes` | What last night learned, superseded or merged. Supersessions can be undone |
+| `topics` | The relations and entities that emerged, and which of them have been promoted to canonical structure |
+
+Nobody designs these pages; they emerge from what you talk about. Relations that recur across sessions get promoted into canonical structure. The only things designed in are how to read values: dates, money, quantities, and whether something was planned or negated. Demoting structure that goes unused is part of the design but isn't built yet.
+
+Mindscape gives you:
+- **Orientation:** "what do you know about Dr. Patel?" returns a page, not a pile of search hits.
+- **Provenance:** every belief traces back to who said it and when.
+- **Accountability:** you can see what changed overnight, and undo a supersession.
+
+Real output of `sophia_browse {"view": "entity", "key": "Dr. Patel"}`, trimmed:
+
+```json
+{"entity": "Dr. Patel",
+ "current": [["Dr. Patel", "moved his office to", "55 Oak Avenue in Palo Alto", "asserted"]],
+ "history": [],
+ "mentions": [{"date": "2026-09-23 14:36", "speaker": "Joey",
+               "text": "Also, my dentist Dr. Patel moved his office to 55 Oak Avenue in Palo Alto. …"}, …]}
+```
+
+Today the agent reaches Mindscape through `sophia_browse`. In SophiaAMS, Mindscape was a visual graph browser; a visual browser over these views is on the roadmap.
+
+---
+
+## What it looks like across sessions
 
 These are verbatim excerpts from real sessions on the test profile. Each one is a fresh `hermes chat`, and Hermes's built-in memory is switched off, so Sophia is the only link between them.
 
@@ -45,7 +138,7 @@ session 4  Joey:   Which camera am I taking on the Yosemite trip?
                    has been acting up, so you've switched to the Sony A7 IV instead.
 ```
 
-The evidence the agent sees is always the original words, with dates. Facts help decide what gets found, and they label evidence that is out of date ("later changed"). They never replace what was actually said. That matters, because extraction is imperfect; notice the object "Sony A7 IV to Yosemite" above.
+Extraction is imperfect; notice the object "Sony A7 IV to Yosemite". That is exactly why the agent always sees the original words and not just the extracted facts.
 
 ## How it works
 
@@ -54,8 +147,8 @@ flowchart LR
   subgraph awake["Awake — every turn, no generated text"]
     direction TB
     T["turn: user, agent,<br/>tool results"] --> C["capture<br/>verbatim windows · heuristic header<br/>typed spans · events"]
-    Q["next user message"] --> R["recall<br/>nomic vectors + FTS + time scope"]
-    R --> G{"gate<br/>first-token logprob decider"}
+    Q["next user message"] --> R["search<br/>vectors + keywords + time scope"]
+    R --> G{"check<br/>first-token logprob decider"}
     G -- "relevant" --> I["inject dated,<br/>verbatim evidence"]
     G -- "not relevant" --> N["inject nothing"]
   end
@@ -69,100 +162,110 @@ flowchart LR
   end
   C --> asleep
   asleep --> R
+  asleep --> M["Mindscape views"]
 ```
 
-### Awake
+### Awake: capture
 
-Sophia generates no text on the chat's critical path.
+Nothing generates text on the chat's critical path.
 
-- **Capture.** Each turn is split into small verbatim windows. Each window gets a cheap heuristic header (speaker, date, the question it answers, names in play) and deterministic typed spans: times, durations, quantities, money, contacts, artifacts.
-- **Web reads.** Pages the agent reads with `web_extract` or the browser are captured as sources. Failed fetches are dropped. Credential and vault tools are never captured.
-- **Recall.** Before each reply, Sophia runs hybrid recall: nomic embeddings plus SQLite FTS, with time-scoped search for "last week" style questions. A strong enough match (cosine ≥ 0.82) is injected directly. Anything weaker goes to the decider.
-- **The decider.** It is a small LLM that reads a single token's logprobs instead of writing an answer: one prefill, about 0.3 s. It decides whether memory has anything that bears on this message.
-- **Measured on the test profile:** capture about 0.1 s; prefetch 260–460 ms including the gate.
+- **Turns.** Each turn is split into small verbatim windows. Each window gets a cheap header (speaker, date, the question it answers, names in play) and deterministic typed values: times, durations, quantities, money, contacts, artifacts.
+- **Web reads.** Pages the agent reads are captured as sources. Failed fetches are dropped, and credential or vault tools are never captured.
+- **Speed.** Capture takes about 0.1 s per turn, off the critical path. The search-check-inject step takes 260–460 ms on the test profile.
 
-### Asleep
+### Asleep: the nightly run
 
 `hermes sophia sleep` runs 15 steps in six phases:
 
 | Phase | What happens |
 |---|---|
 | **Settle, sort** | Snapshot the day. Drop error pages, boilerplate, and pages that try to instruct the agent |
-| **Understand** | A model writes context headers for every window: what "yes" agreed to, who "she" is. The headers are re-embedded; the evidence stays verbatim |
-| **Consolidate** | Extract facts with modality (planned, habitual, negated…) and when they happen. Resolve entities. When a newer fact on the same relation names a different object, retire the older fact. This is automatic for relations learned to be exclusive; otherwise the decider judges it against the new evidence. "Not bringing X" retires "bringing X". Mark plans whose date passed as "unconfirmed" |
-| **Dream** | Replay the day's injections and judge which ones helped. Rehearse new facts with self-made questions and repair any that recall can't find. Collect labels to calibrate the decider |
-| **Organize** | Promote relations that keep recurring into canonical ones. Build entity pages and an upcoming-dates view |
-| **Tidy** | Decay only what was repeatedly judged irrelevant, never facts flagged important (health, money, key dates). Journal everything, with undo. Advance the watermark last, so an interrupted night simply reruns |
+| **Understand** | A model writes context headers for every window, such as what "yes" agreed to or who "she" is. The headers are re-embedded; the evidence stays verbatim |
+| **Consolidate** | Extract facts with modality and when they happen, and resolve entities. When a newer fact on the same relation names a different object, retire the older one: automatically for relations learned to be exclusive, otherwise judged against the new evidence. Plans whose date passed become "unconfirmed" |
+| **Dream** | Replay the day's injections and judge which ones helped. Rehearse new facts with self-made questions, and repair whatever recall misses. Collect labels to calibrate the check |
+| **Organize** | Promote recurring relations and build the Mindscape views |
+| **Tidy** | Decay only what was repeatedly judged irrelevant, never facts flagged important (health, money, key dates). Journal everything with undo. Advance the watermark last, so an interrupted night simply reruns |
 
-The night run waits while the big model is serving chat, and yields rather than competing with you.
+The night waits while the big model is serving chat, and yields rather than competing with you.
 
 ### Principles
 
 - **The raw record is the truth; everything else is an index.**
-- **Similarity ranks, the decider judges.** Cosine scores can't tell "related" from "answers it". The unanswerable near-misses we measured scored up to 0.78.
-- **Emergent over prescribed.** Sophia designs in how to read values (time, money, modality) but not what the world contains. Entities, relations, and pages emerge. Structure is promoted when it recurs and demoted when it goes unused.
+- **Similarity ranks; the decider judges.** Cosine scores can't tell "related" from "answers it": unanswerable near-misses scored up to 0.78.
+- **Emergent over prescribed.** Design how to read values, not what the world contains.
 - **Credit orders what is shown; it never decides what may be shown.**
-- **Degrade loudly.** If a model is missing, Sophia keeps working without it and `sophia status` says so.
+- **Degrade loudly.** If a model is missing, Sophia carries on without it, and `sophia status` says so.
 
 The full reasoning is in [docs/DESIGN.md](docs/DESIGN.md).
+
+---
 
 ## Requirements
 
 - Hermes Agent (developed against v0.21.4).
-- LM Studio serving three models:
-  - `nomic-embed-text-v1.5` for embeddings (about 80 MB);
-  - a small instruct model as the decider (Qwen3.5-9B Q4, reasoning off);
-  - optionally a larger model for night work (Qwen3.8-27B). The 9B also works; every night run so far used it.
-- `numpy`; it is already in the Hermes venv.
+- A model server, LM Studio by default, serving three jobs:
+
+| Job | Recommended | Notes |
+|---|---|---|
+| Embeddings | `nomic-embed-text-v1.5` | about 80 MB |
+| Decider (the per-turn check) | Qwen3.5-9B Q4, reasoning off | Only reads token probabilities. Too small a model fails badly: a 0.8B waved "capital of Australia" through at 0.90 |
+| Night work | Qwen3.8-27B, or the 9B | Every night run so far used the 9B |
+
+- `numpy`, which is already in the Hermes venv.
 
 ## Install
 
-Tested path: link the package into a profile's plugin directory.
+Tested path: link the package into a profile's plugin directory, then run Hermes's setup.
 
 ```bash
 git clone https://github.com/jbpayton/hermes-sophia
 ln -s "$PWD/hermes-sophia/hermes_sophia" ~/.hermes/profiles/<profile>/plugins/sophia
-
-hermes -p <profile> config set memory.provider sophia
-hermes -p <profile> config set memory.sophia.user_name <you>
-hermes -p <profile> config set memory.sophia.agent_name Hermes
-# use the identifiers `lms ps` shows:
-hermes -p <profile> config set memory.sophia.embed_model nomic-embed
-hermes -p <profile> config set memory.sophia.decider_model qwen35-9b
-hermes -p <profile> config set memory.sophia.sleep_model qwen/qwen3.8-27b
+hermes -p <profile> memory setup        # pick "sophia"
 ```
 
-To make Sophia the only memory, also set `memory.memory_enabled false` and `memory.user_profile_enabled false`. The package also declares a `hermes_agent.memory_providers` entry point, so `pip install` into the Hermes venv should work too; that path has not been tested in Hermes yet.
+Setup always asks for the basics: your name, the agent's name, the server, and a model for each job. Then it asks two more questions:
+- whether all jobs share one server or each gets its own;
+- whether to customize recall, capture and night tuning.
 
-All settings are listed in [docs/CONFIGURATION.md](docs/CONFIGURATION.md). The data lives in `$HERMES_HOME/plugin-data/sophia/sophia.db` (SQLite, WAL).
-
-## Use
-
-The agent gets five tools:
-
-| Tool | Use |
-|---|---|
-| `sophia_recall` | Deeper search. `history: true` also shows superseded facts and when they held |
-| `sophia_query` | Counts, lists, date ranges; sums typed spans such as money |
-| `sophia_browse` | The wiki: `entity`, `timeline`, `recent`, `sources`, `changes`, `topics` |
-| `sophia_remember` | Keep a note, or mark a recalled item `helpful` / `wrong`. This is the strongest credit signal |
-| `sophia_ingest` | Learn a document obtained outside the web tools |
-
-And you get a CLI:
+You can also set any value directly:
 
 ```bash
-hermes -p <profile> sophia status                  # sizes, last night, degraded modes
+hermes -p <profile> config set memory.sophia.decider_model qwen35-9b
+```
+
+To make Sophia the only memory, set `memory.memory_enabled false` and `memory.user_profile_enabled false`. The package also declares a `hermes_agent.memory_providers` entry point for `pip install`; that path hasn't been tested in Hermes yet.
+
+## Configure: models and servers
+
+Each job has its own model, and optionally its own server:
+
+```yaml
+memory:
+  provider: sophia
+  sophia:
+    lmstudio_url: http://127.0.0.1:1234     # the default server for every job
+    embed_model: nomic-embed
+    decider_model: qwen35-9b
+    decider_url: http://127.0.0.1:8081      # this job only: a llama-server on its own GPU
+    decider_api: openai                     # lmstudio | openai (llama-server, vLLM, …)
+    sleep_model: qwen/qwen3.8-27b           # sleep_url / embed_url default to lmstudio_url
+```
+
+`hermes sophia status` shows where each job actually runs. Every setting is described in [docs/CONFIGURATION.md](docs/CONFIGURATION.md). The data lives in `$HERMES_HOME/plugin-data/sophia/sophia.db` (SQLite, WAL).
+
+## CLI
+
+```bash
+hermes -p <profile> sophia status                  # sizes, where each job runs, last night, degraded modes
 hermes -p <profile> sophia recall "what camera…" --gate
-hermes -p <profile> sophia sleep [--model M] [--steps a,b] [--max-wait S]
+hermes -p <profile> sophia sleep [--model M] [--url U --api openai] [--steps a,b] [--max-wait S]
 hermes -p <profile> sophia journal                 # what last night learned; #ids marked undoable
 hermes -p <profile> sophia undo <id>
 hermes -p <profile> sophia reconsolidate           # drop derived facts; the next night rebuilds them from raw
 hermes -p <profile> sophia ingest-history --days 7 # import past sessions (idempotent)
 ```
 
-### Nightly
-
-Nothing is scheduled for you. When you're ready, add something like:
+Nothing is scheduled for you. When you're ready, add a nightly run:
 
 ```cron
 30 3 * * * hermes -p <profile> sophia sleep >> ~/.hermes/profiles/<profile>/logs/sophia-sleep.log 2>&1
@@ -172,24 +275,24 @@ Nothing is scheduled for you. When you're ready, add something like:
 
 ```bash
 pip install -e ".[test]"
-pytest -q        # 22 tests against a fake LM Studio; no GPU needed
+pytest -q        # 31 tests against a fake model server; no GPU needed
 ```
 
 | Path | What |
 |---|---|
 | `hermes_sophia/` | The provider. Main modules: `capture`, `recall`, `decider`, `spans`, `store`, `tools`, `sleep/runner` |
-| `tests/` | Awake and sleep tests with a deterministic fake LM Studio |
+| `tests/` | Awake, sleep and configuration tests with a deterministic fake server |
 | `docs/DESIGN.md` | The design (v0.5) and implementation status |
 | `docs/STORY.md` | How it got here: the research, the dead ends, and the bugs only real use found |
-| `docs/archive/` | Earlier design versions |
-| `research/` | The experiments behind the design: decider readouts, decision models, extraction bake-off, speed levers, embedding thresholds |
+| `docs/CONFIGURATION.md` | Every setting |
+| `research/` | The experiments behind the design |
 | `scripts/` | Debug helpers |
 
 ## Lineage
 
-Sophia is a clean-sheet redesign rather than a port. It combines two earlier projects:
+Sophia is a clean-sheet redesign, not a port. It combines two earlier projects:
 
-- [SophiaAMS](https://github.com/jbpayton/SophiaAMS): associative triple memory and the Mindscape graph browser.
+- [SophiaAMS](https://github.com/jbpayton/SophiaAMS): associative triple memory, and the original Mindscape graph browser.
 - [Gemmery](https://github.com/jbpayton/gemmery): credit-earning memory, and the finding that retrieval over the raw record beats write-time summaries.
 
 [docs/STORY.md](docs/STORY.md) tells how it got here.

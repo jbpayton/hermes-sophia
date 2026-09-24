@@ -14,7 +14,7 @@ judged relevant — or nothing. It never asks, speaks or acts on its own. Everyt
   topic, or how something used to be (`history: true` shows superseded facts with the dates they held).
 - **sophia_query** — counts, lists and date ranges: "how many times…", "list every…", "what happened
   between X and Y". `spans_type` aggregates typed values (e.g. money spent, with `text` as a filter).
-- **sophia_browse** — the memory wiki: `entity` pages, `timeline` for a date phrase, `recent` (not yet
+- **sophia_browse** — Mindscape, the memory wiki the night builds: `entity` pages, `timeline` for a date phrase, `recent` (not yet
   consolidated), `sources` (pages learned from), `changes` (what last night learned or superseded).
 - **sophia_remember** — keep a note the user asks you to remember; or, with `item_id` + `verdict`,
   tell memory a recalled item was `helpful` or `wrong`. Feedback is the strongest signal memory gets.
