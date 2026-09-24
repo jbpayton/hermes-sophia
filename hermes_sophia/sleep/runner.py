@@ -54,7 +54,8 @@ def norm_relation(r: str) -> str:
 class SleepRunner:
     def __init__(self, engine, model: Optional[str] = None, log: Callable[[str], None] = print,
                  max_wait_s: Optional[int] = None, steps: Optional[List[str]] = None, limit: int = 0,
-                 client=None):
+                 client=None, now: Optional[float] = None):
+        """``now``: the night's notion of the present (defaults to the clock; benchmarks replay other dates)."""
         self.e, self.cfg, self.s = engine, engine.cfg, engine.store
         self.model = model or self.cfg["sleep_model"]
         self.client = client or engine.clients["sleep"]
@@ -67,7 +68,7 @@ class SleepRunner:
         self.teacher = Decider(self.client, self.model, permutations=1, timeout=self.cfg["sleep_call_timeout"])
         self.stats: Dict[str, Dict[str, Any]] = {}
         self.new_facts: List[str] = []
-        self.snapshot = time.time()
+        self.snapshot = now or time.time()
 
     # ------------------------------------------------------------- guards
     def busy(self) -> List[str]:
@@ -397,7 +398,7 @@ class SleepRunner:
                                    undo={"fact": g["id"], "status": "active"})
                     superseded += 1
         # plan lifecycle
-        now = time.time()
+        now = self.snapshot
         stale = self.s.q("SELECT id, subject, relation, object FROM facts WHERE modality='planned' AND status='active' AND h_end IS NOT NULL AND h_end<?", (now,))
         for r in stale:
             self.s.x("UPDATE facts SET status='unconfirmed' WHERE id=?", (r["id"],))
@@ -569,7 +570,7 @@ class SleepRunner:
         return {"entity_pages": len(ents)}
 
     def step_anticipate(self):
-        now = time.time()
+        now = self.snapshot
         soon = self.s.q("""SELECT subject, relation, object, happens, modality FROM facts WHERE status='active'
                            AND h_start BETWEEN ? AND ? ORDER BY h_start""", (now, now + 7 * 86400))
         self.s.x("INSERT OR REPLACE INTO views(key,kind,body,built_night) VALUES('upcoming','timeline',?,?)",

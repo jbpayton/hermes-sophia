@@ -242,3 +242,11 @@ def test_bare_question_is_not_injected(engine, fake):
     engine.cfg["skip_gate"] = 0.0                                      # inject whatever ranks
     text, _ = engine.recall.prefetch("Which camera am I taking on the Yosemite trip?", "q")
     assert "Sony A7 IV" in text and "Which camera am I taking" not in text.split("\n", 1)[1]
+
+
+def test_user_messages_can_carry_their_own_speaker(engine):
+    engine.capture.process_messages("group", [
+        {"role": "user", "name": "Caroline", "content": "I went to the LGBTQ support group yesterday."},
+        {"role": "user", "name": "Melanie", "content": "I painted a sunrise last year."}])
+    speakers = {r["speaker"] for r in engine.store.q("SELECT speaker FROM windows WHERE session_id='group'")}
+    assert speakers == {"Caroline", "Melanie"}

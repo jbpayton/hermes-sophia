@@ -15,3 +15,6 @@ sleep.lock
 research/SophiaAMS/
 research/hf_home/
 research/*.log
+# benchmark working memories and per-question outputs (the summaries are kept)
+bench/work/
+bench/results/*.jsonl

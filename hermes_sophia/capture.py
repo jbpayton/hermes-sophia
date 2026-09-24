@@ -142,7 +142,8 @@ class Capture:
             if role in ("user", "assistant") and content.strip():
                 if is_new:
                     if full:
-                        ws = self._windows_for(session_id, role, content, _said(m, now), h, prev, recent_names, injected)
+                        ws = self._windows_for(session_id, role, content, _said(m, now), h, prev, recent_names, injected,
+                                               speaker=(m.get("name") or None) if role == "user" else None)
                         if role == "assistant" and ground and ws and not self._grounded(session_id, turn_user,
                                                                                        turn_tools, content):
                             for w in ws:
@@ -224,9 +225,11 @@ class Capture:
             self.e.set_degraded("decider", str(ex))
             return True
 
-    def _windows_for(self, session_id, role, content, said, h, prev, recent_names, injected) -> List[Dict[str, Any]]:
+    def _windows_for(self, session_id, role, content, said, h, prev, recent_names, injected,
+                     speaker: Optional[str] = None) -> List[Dict[str, Any]]:
+        """``speaker``: a user-role message's own ``name`` (several people in one conversation)."""
         cfg = self.e.cfg
-        speaker = cfg["user_name"] if role == "user" else cfg["agent_name"]
+        speaker = speaker or (cfg["user_name"] if role == "user" else cfg["agent_name"])
         text, _ = T.redact(content)
         other = prev["assistant" if role == "user" else "user"]
         ctx = T.last_question(other) if T.needs_context(text) else None

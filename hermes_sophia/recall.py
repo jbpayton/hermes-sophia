@@ -36,7 +36,8 @@ class Recall:
 
     # ------------------------------------------------------------- candidates
     def candidates(self, query: str, k: int = 20, history: bool = False, use_scope: bool = True,
-                   session_id: str = "") -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+                   session_id: str = "", now: Optional[float] = None) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+        """``now``: the moment the question is asked (defaults to the clock; benchmarks replay other dates)."""
         e, cfg, store = self.e, self.e.cfg, self.e.store
         info: Dict[str, Any] = {}
         qv = None
@@ -46,7 +47,7 @@ class Recall:
         except Exception as ex:
             e.set_degraded("embed", str(ex))
             info["degraded"] = "embed"
-        scope = query_time_scope(query) if use_scope else None
+        scope = query_time_scope(query, now) if use_scope else None
         allowed = None
         if scope:
             t0, t1, clock = scope
@@ -256,10 +257,10 @@ class Recall:
         return {"entities": walked, "raised_or_added": added}
 
     # ---------------------------------------------------------------- prefetch
-    def prefetch(self, query: str, session_id: str) -> Tuple[str, Dict[str, Any]]:
+    def prefetch(self, query: str, session_id: str, now: Optional[float] = None) -> Tuple[str, Dict[str, Any]]:
         e, cfg = self.e, self.e.cfg
         t0 = time.perf_counter()
-        items, info = self.candidates(query, cfg["recall_k"], session_id=session_id)
+        items, info = self.candidates(query, cfg["recall_k"], session_id=session_id, now=now)
         top = items[:cfg["gate_top"]]
         gate, decision_id, passed = "none", "", False
         if top:
