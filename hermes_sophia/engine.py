@@ -9,9 +9,9 @@ from typing import Any, Dict, List, Optional, Sequence
 
 from . import text as T
 from .capture import Capture
-from .config import load_config
+from .config import ROLES, endpoint, load_config
 from .decider import Decider
-from .lms import LMStudio
+from .lms import ModelServer
 from .recall import Recall
 from .store import Store
 from .tools import Tools
@@ -24,12 +24,12 @@ def default_db_path(hermes_home: str) -> Path:
 
 
 class Engine:
-    def __init__(self, cfg: Dict[str, Any], db_path: str | Path, client: Optional[LMStudio] = None):
+    def __init__(self, cfg: Dict[str, Any], db_path: str | Path, client: Optional[ModelServer] = None):
         self.cfg = cfg
         self.store = Store(db_path)
-        self.client = client or LMStudio(cfg["lmstudio_url"], cfg["lms_cli"])
+        self.clients = self._clients(cfg, client)
         cal = self.store.get_meta("calibration", {}) or {}
-        self.decider = Decider(self.client, cfg["decider_model"], permutations=cfg["gate_permutations"],
+        self.decider = Decider(self.clients["decider"], cfg["decider_model"], permutations=cfg["gate_permutations"],
                                timeout=cfg["decider_timeout"], temperatures=cal.get("temperatures"),
                                log=self._log_decision)
         self.capture = Capture(self)
@@ -40,13 +40,27 @@ class Engine:
         self.last_prefetch: Dict[str, Dict[str, Any]] = {}
         self._degraded: Dict[str, Any] = {}
 
+    @staticmethod
+    def _clients(cfg: Dict[str, Any], client: Optional[ModelServer]) -> Dict[str, ModelServer]:
+        """One client per job; jobs on the same server share it. ``client`` overrides all (tests)."""
+        if client is not None:
+            return {role: client for role in ROLES}
+        by_server: Dict[tuple, ModelServer] = {}
+        out = {}
+        for role in ROLES:
+            url, api = endpoint(cfg, role)
+            if (url, api) not in by_server:
+                by_server[(url, api)] = ModelServer(url, cfg["lms_cli"], api=api)
+            out[role] = by_server[(url, api)]
+        return out
+
     @classmethod
     def for_home(cls, hermes_home: str, overrides: Optional[Dict[str, Any]] = None) -> "Engine":
         return cls(load_config(hermes_home, overrides), default_db_path(hermes_home))
 
     # ---------------------------------------------------------------- models
     def embed(self, texts: Sequence[str], kind: str = "document"):
-        return self.client.embed(list(texts), self.cfg["embed_model"], kind, self.cfg["embed_timeout"])
+        return self.clients["embed"].embed(list(texts), self.cfg["embed_model"], kind, self.cfg["embed_timeout"])
 
     def _log_decision(self, rec: Dict[str, Any]) -> None:
         self.store.x("""INSERT OR IGNORE INTO decisions(id,ts,model,type,state_sha,instructions,options,probabilities,raw,flip)
@@ -111,7 +125,8 @@ class Engine:
                                              (self.cfg["embed_model"],))["n"]),
                 "last_sleep": s.get_meta("last_sleep", None), "degraded": s.get_meta("degraded", {}) or {},
                 "calibration": s.get_meta("calibration", None),
-                "models": {k: self.cfg[k] for k in ("embed_model", "decider_model", "sleep_model")}}
+                "models": {role: {"model": self.cfg[f"{role}_model"], "server": getattr(self.clients[role], "base_url", ""),
+                                  "api": getattr(self.clients[role], "api", "lmstudio")} for role in ROLES}}
 
     def close(self) -> None:
         self.store.close()

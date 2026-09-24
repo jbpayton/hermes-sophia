@@ -27,9 +27,15 @@ def cmd(args):
             _print(e.status())
         elif sub == "sleep":
             from .sleep import SleepRunner
+            from .lms import ModelServer
             steps = args.steps.split(",") if args.steps else None
-            r = SleepRunner(e, model=args.model, max_wait_s=args.max_wait, steps=steps, limit=args.limit or 0)
-            print(f"Sophia sleep — night {r.night}, model {r.model}")
+            client = None
+            if args.url or args.api:
+                base = e.clients["sleep"]
+                client = ModelServer(args.url or base.base_url, e.cfg["lms_cli"], api=args.api or base.api)
+            r = SleepRunner(e, model=args.model, max_wait_s=args.max_wait, steps=steps, limit=args.limit or 0,
+                            client=client)
+            print(f"Sophia sleep — night {r.night}, model {r.model} on {r.client.base_url} ({r.client.api})")
             out = r.run()
             print(f"status: {out['status']}")
         elif sub == "journal":
@@ -98,6 +104,8 @@ def register_cli(subparser) -> None:
     subs.add_parser("status", help="Store sizes, last sleep, degraded modes, calibration")
     p = subs.add_parser("sleep", help="Run the nightly sequence now")
     p.add_argument("--model", help="Model for night work (default: memory.sophia.sleep_model)")
+    p.add_argument("--url", help="Server for this night only (default: the night job's server)")
+    p.add_argument("--api", choices=["lmstudio", "openai"], help="Server type for --url")
     p.add_argument("--steps", help="Comma-separated subset of steps")
     p.add_argument("--max-wait", type=int, default=None, help="Seconds to wait for a busy model before yielding")
     p.add_argument("--limit", type=int, default=0, help="Cap model calls per step (testing)")

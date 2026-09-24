@@ -20,6 +20,7 @@ class FakeLMS:
         self.chat_fn = lambda prompt: ""
         self.calls = {"embed": 0, "readout": 0, "chat": 0}
         self.status = {"qwen/qwen3.8-27b": "idle"}
+        self.base_url, self.api = "fake://lms", "lmstudio"
 
     def embed(self, texts, model, kind="document", timeout=10.0, batch=64):
         self.calls["embed"] += 1
@@ -43,6 +44,9 @@ class FakeLMS:
 
     def model_status(self):
         return self.status
+
+    def server_busy(self):
+        return None
 
 
 @pytest.fixture

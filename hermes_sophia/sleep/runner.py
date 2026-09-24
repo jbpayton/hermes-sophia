@@ -59,28 +59,38 @@ def norm_relation(r: str) -> str:
 
 class SleepRunner:
     def __init__(self, engine, model: Optional[str] = None, log: Callable[[str], None] = print,
-                 max_wait_s: Optional[int] = None, steps: Optional[List[str]] = None, limit: int = 0):
+                 max_wait_s: Optional[int] = None, steps: Optional[List[str]] = None, limit: int = 0,
+                 client=None):
         self.e, self.cfg, self.s = engine, engine.cfg, engine.store
         self.model = model or self.cfg["sleep_model"]
+        self.client = client or engine.clients["sleep"]
         self.guard = [self.model] if model else list(self.cfg["sleep_guard_models"])
         self.log = log
         self.max_wait = self.cfg["sleep_max_wait_s"] if max_wait_s is None else max_wait_s
         self.steps = steps or ALL_STEPS
         self.limit = limit
         self.night = time.strftime("%Y%m%d-%H%M%S")
-        self.teacher = Decider(engine.client, self.model, permutations=1, timeout=self.cfg["sleep_call_timeout"])
+        self.teacher = Decider(self.client, self.model, permutations=1, timeout=self.cfg["sleep_call_timeout"])
         self.stats: Dict[str, Dict[str, Any]] = {}
         self.new_facts: List[str] = []
         self.snapshot = time.time()
 
     # ------------------------------------------------------------- guards
+    def busy(self) -> List[str]:
+        """Guarded LM Studio models that are generating, plus the night server itself if it reports busy.
+        Anything that can't be checked counts as idle."""
+        out = []
+        st = self.client.model_status()
+        if st:
+            out += [m for m in self.guard if st.get(m) not in (None, "", "idle", "loaded")]
+        if getattr(self.client, "api", "lmstudio") != "lmstudio" and self.client.server_busy():
+            out.append(self.client.base_url)
+        return out
+
     def wait_idle(self) -> None:
         waited = 0.0
         while True:
-            st = self.e.client.model_status()
-            if st is None:
-                return
-            busy = [m for m in self.guard if st.get(m) not in (None, "", "idle", "loaded")]
+            busy = self.busy()
             if not busy:
                 return
             if waited >= self.max_wait:
@@ -90,7 +100,7 @@ class SleepRunner:
 
     def llm(self, prompt: str, max_tokens: int = 1500) -> str:
         self.wait_idle()
-        return self.e.client.chat(self.model, prompt, max_tokens=max_tokens, timeout=self.cfg["sleep_call_timeout"])
+        return self.client.chat(self.model, prompt, max_tokens=max_tokens, timeout=self.cfg["sleep_call_timeout"])
 
     def judge(self, state: Any, instructions: str) -> float:
         self.wait_idle()

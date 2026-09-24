@@ -431,7 +431,9 @@ The code is this repository. It is tested on the `sophiadev` profile (a clone of
   - Fresh sessions afterward answer "Sony A7 IV"; one noted the original plan.
 - When the prompt told the agent to use `sophia_browse` (view=entity for Dr. Patel), it called the tool correctly and cited where the fact came from. Unprompted tool use hasn't been tested yet.
 - `ingest-history` reads the session store read-only and is idempotent: live and stored message shapes hash to the same identity.
-- Unit tests: 22, all passing, run against a fake LM Studio.
+- Per-job model servers. Embeddings, decider and night each have a model and an optional server, of type `lmstudio` or `openai` (llama-server, vLLM). Verified against LM Studio and a CPU llama-server: chat, logprob readout, routed recall, and the night's busy check.
+- Hermes setup (`hermes memory setup`) and the dashboard expose all 48 settings. The basics are always shown; servers and tuning sit behind two gate questions.
+- Unit tests: 31, all passing, run against a fake model server.
 
 **Answers to §14 verify items**
 - `ctx.llm` is not forwarded to memory providers (`_ProviderCollector`), so Sophia talks to LM Studio directly. `reasoning_effort: "none"` works on `/v1/chat/completions`, and `/v1/responses` returns first-token logprobs.

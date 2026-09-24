@@ -1,4 +1,11 @@
-"""Minimal client for LM Studio's OpenAI-compatible server: embeddings, chat, first-token logprobs, model status."""
+"""Minimal client for a model server: embeddings, chat, first-token logprobs, busy status.
+
+Two server types:
+  lmstudio  LM Studio. Logprobs come from ``/v1/responses`` (its chat endpoint returns none), reasoning
+            is switched off with ``reasoning_effort``, and ``lms ps`` reports whether a model is busy.
+  openai    Any OpenAI-compatible server that returns chat logprobs (llama-server, vLLM). Reasoning is
+            switched off with ``chat_template_kwargs``; llama-server's ``/slots`` reports whether it is busy.
+"""
 from __future__ import annotations
 
 import json
@@ -6,7 +13,7 @@ import re
 import subprocess
 import urllib.error
 import urllib.request
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
 
@@ -17,10 +24,19 @@ class LMStudioError(RuntimeError):
     pass
 
 
-class LMStudio:
-    def __init__(self, base_url: str = "http://127.0.0.1:1234", lms_cli: str = ""):
+ModelServerError = LMStudioError
+
+_NO_THINKING = {"enable_thinking": False}
+
+
+class ModelServer:
+    def __init__(self, base_url: str = "http://127.0.0.1:1234", lms_cli: str = "", api: str = "lmstudio"):
         self.base_url = base_url.rstrip("/")
         self.lms_cli = lms_cli
+        self.api = api
+
+    def __repr__(self) -> str:
+        return f"ModelServer({self.base_url!r}, api={self.api!r})"
 
     # ------------------------------------------------------------------ http
     def _post(self, path: str, body: dict, timeout: float) -> dict:
@@ -33,6 +49,13 @@ class LMStudio:
             detail = e.read()[:300].decode("utf-8", "replace")
             raise LMStudioError(f"{path} HTTP {e.code}: {detail}") from e
         except Exception as e:  # timeouts, refused connections
+            raise LMStudioError(f"{path}: {e}") from e
+
+    def _get(self, path: str, timeout: float) -> Any:
+        try:
+            with urllib.request.urlopen(self.base_url + path, timeout=timeout) as r:
+                return json.loads(r.read())
+        except Exception as e:
             raise LMStudioError(f"{path}: {e}") from e
 
     # ------------------------------------------------------------ embeddings
@@ -58,10 +81,14 @@ class LMStudio:
     # ------------------------------------------------------------------ chat
     def chat(self, model: str, prompt: str, max_tokens: int = 1024, temperature: float = 0.0,
              timeout: float = 120.0, system: Optional[str] = None) -> str:
-        """Plain completion with reasoning off (LM Studio honours top-level ``reasoning_effort: none``)."""
+        """Plain completion with reasoning off."""
         messages = ([{"role": "system", "content": system}] if system else []) + [{"role": "user", "content": prompt}]
-        r = self._post("/v1/chat/completions", {"model": model, "messages": messages, "max_tokens": max_tokens,
-                                                  "temperature": temperature, "reasoning_effort": "none"}, timeout)
+        body = {"model": model, "messages": messages, "max_tokens": max_tokens, "temperature": temperature}
+        if self.api == "lmstudio":
+            body["reasoning_effort"] = "none"          # LM Studio ignores chat_template_kwargs
+        else:
+            body["chat_template_kwargs"] = _NO_THINKING
+        r = self._post("/v1/chat/completions", body, timeout)
         try:
             text = r["choices"][0]["message"].get("content") or ""
         except Exception as e:
@@ -72,6 +99,8 @@ class LMStudio:
     def first_token_logprobs(self, model: str, prompt: str, top_logprobs: int = 10,
                              timeout: float = 30.0) -> Tuple[str, List[Tuple[str, float]]]:
         """(first token, [(token, logprob), ...]) for a one-token answer with reasoning off."""
+        if self.api != "lmstudio":
+            return self._chat_logprobs(model, prompt, top_logprobs, timeout)
         body = {"model": model, "input": prompt, "max_output_tokens": 2, "temperature": 0,
                 "top_logprobs": top_logprobs, "reasoning": {"effort": "none"},
                 "include": ["message.output_text.logprobs"]}
@@ -86,7 +115,31 @@ class LMStudio:
         first = lps[0]
         return first.get("token", ""), [(t.get("token", ""), float(t["logprob"])) for t in first.get("top_logprobs", [])]
 
+    def _chat_logprobs(self, model: str, prompt: str, top_logprobs: int,
+                       timeout: float) -> Tuple[str, List[Tuple[str, float]]]:
+        body = {"model": model, "messages": [{"role": "user", "content": prompt}], "max_tokens": 1,
+                "temperature": 0, "logprobs": True, "top_logprobs": min(int(top_logprobs), 20),
+                "chat_template_kwargs": _NO_THINKING}
+        r = self._post("/v1/chat/completions", body, timeout)
+        try:
+            first = r["choices"][0]["logprobs"]["content"][0]
+        except (KeyError, IndexError, TypeError) as e:
+            raise LMStudioError(f"no logprobs in chat response: {str(r)[:200]}") from e
+        return first.get("token", ""), [(t.get("token", ""), float(t["logprob"])) for t in first.get("top_logprobs", [])]
+
     # ---------------------------------------------------------------- status
+    def server_busy(self, timeout: float = 5.0) -> Optional[bool]:
+        """For openai-type servers: True while llama-server's /slots shows a slot processing; None if unknown."""
+        if self.api == "lmstudio":
+            return None
+        try:
+            slots = self._get("/slots", timeout)
+        except LMStudioError:
+            return None
+        if not isinstance(slots, list):
+            return None
+        return any(bool(s.get("is_processing")) for s in slots if isinstance(s, dict))
+
     def model_status(self) -> Optional[Dict[str, str]]:
         """{identifier: status} from ``lms ps --json`` (idle | generating | ...); None if unavailable."""
         if not self.lms_cli:
@@ -98,3 +151,6 @@ class LMStudio:
                     for row in rows}
         except Exception:
             return None
+
+
+LMStudio = ModelServer  # the original name

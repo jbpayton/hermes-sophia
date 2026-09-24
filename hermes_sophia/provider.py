@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional
 
 from agent.memory_provider import MemoryProvider, RecallStatus, spawn_context_thread
 
-from .config import DEFAULTS, load_config
+from .config import config_schema, load_config
 from .engine import Engine, default_db_path
 from .tools import SCHEMAS
 
@@ -154,13 +154,7 @@ class SophiaProvider(MemoryProvider):
 
     # ---------------------------------------------------------------- config
     def get_config_schema(self) -> List[Dict[str, Any]]:
-        return [
-            {"key": "lmstudio_url", "description": "LM Studio server URL", "default": DEFAULTS["lmstudio_url"]},
-            {"key": "embed_model", "description": "Embedding model identifier in LM Studio", "default": DEFAULTS["embed_model"]},
-            {"key": "decider_model", "description": "Small model for per-turn decisions (reasoning off)", "default": DEFAULTS["decider_model"]},
-            {"key": "sleep_model", "description": "Large model for night-time consolidation", "default": DEFAULTS["sleep_model"]},
-            {"key": "user_name", "description": "Your name, used as the speaker label", "default": DEFAULTS["user_name"]},
-        ]
+        return config_schema()
 
     def save_config(self, values: Dict[str, Any], hermes_home: str) -> None:
         from hermes_cli.config import save_config

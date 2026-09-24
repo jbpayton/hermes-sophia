@@ -1,10 +1,20 @@
 # Configuration
 
-Sophia reads the `memory.sophia` section of the active profile's `config.yaml`, on top of the defaults in [`hermes_sophia/config.py`](../hermes_sophia/config.py). You can set any key with:
+Sophia reads the `memory.sophia` section of the active profile's `config.yaml`, on top of the defaults in [`hermes_sophia/config.py`](../hermes_sophia/config.py).
 
-```bash
-hermes -p <profile> config set memory.sophia.<key> <value>
-```
+There are three ways to set a value:
+
+- **`hermes -p <profile> memory setup`**, then pick sophia. It always asks for the basics: names, the default server, and a model for each job. Then it asks two gate questions, whose answers are saved and only affect what setup shows:
+  - `server_layout: shared | per-job` reveals the per-job server settings;
+  - `show_advanced: no | yes` reveals every tuning setting below.
+- **The Hermes dashboard**, which shows the same fields.
+- **Directly:**
+
+  ```bash
+  hermes -p <profile> config set memory.sophia.<key> <value>
+  ```
+
+Values typed into setup arrive as text and are converted to the right type: numbers stay numbers, and lists are comma-separated. A value that can't be converted is ignored with a warning, and the default is used.
 
 A typical profile:
 
@@ -14,23 +24,57 @@ memory:
   memory_enabled: false          # optional: make Sophia the only memory
   user_profile_enabled: false
   sophia:
-    embed_model: nomic-embed     # the identifiers `lms ps` shows
+    embed_model: nomic-embed     # the identifiers your server shows (`lms ps`)
     decider_model: qwen35-9b
     sleep_model: qwen/qwen3.8-27b
     user_name: Joey
     agent_name: Hermes
 ```
 
-## Models
+## Models and servers
 
-| Key | Default | What it is |
+Sophia has three jobs. Each one has a model and, optionally, its own server:
+
+| Job | Model key | Server keys | What it does |
+|---|---|---|---|
+| Embeddings | `embed_model` (default `text-embedding-nomic-embed-text-v1.5`) | `embed_url`, `embed_api` | Every embedding, day and night. Sophia adds the nomic `search_query:` / `search_document:` prefixes |
+| Decider | `decider_model` (default `qwen/qwen3.5-9b`) | `decider_url`, `decider_api` | The per-turn check whether to inject. One prefill; only the first token's probabilities are read |
+| Night | `sleep_model` (default `qwen/qwen3.8-27b`) | `sleep_url`, `sleep_api` | Context headers, fact extraction, and the night's judgments (sorting, supersession, replay, rehearsal) |
+
+- **`lmstudio_url`** (default `http://127.0.0.1:1234`) is the default server. A job whose `*_url` is `default` or blank uses it.
+- **`*_api`** is the server type:
+
+  | Type | For | How Sophia talks to it |
+  |---|---|---|
+  | `lmstudio` (default) | LM Studio | Logprobs come from `/v1/responses`, because LM Studio's chat endpoint returns none. Reasoning is switched off with `reasoning_effort: none`. Busy status comes from `lms ps` |
+  | `openai` | llama-server, vLLM, or any OpenAI-compatible server whose chat endpoint returns `logprobs` | Chat completions with `logprobs` / `top_logprobs`. Reasoning is switched off with `chat_template_kwargs: {enable_thinking: false}`. Busy status comes from llama-server's `/slots` |
+
+- Jobs that share a server share one client. `hermes sophia status` shows where each job runs.
+
+Example: the decider pinned to its own GPU under llama-server, which was about 1.35× faster in the speed tests, while everything else stays on LM Studio:
+
+```yaml
+    decider_url: http://127.0.0.1:8081
+    decider_api: openai
+    decider_model: qwen35-9b      # whatever --alias the server was started with
+```
+
+**Pick a capable decider.** The check is only as good as the model behind it. The Qwen3.5-9B blocked "What's the capital of Australia?" at 0.45. A Qwen3.5-0.8B passed it at 0.90, which would inject noise into every turn.
+
+### The night's busy guard
+
+| Key | Default | |
 |---|---|---|
-| `lmstudio_url` | `http://127.0.0.1:1234` | LM Studio's OpenAI-compatible server |
-| `lms_cli` | `~/.cache/lm-studio/bin/lms` | Used only by the sleep guard, through `lms ps --json` |
-| `embed_model` | `text-embedding-nomic-embed-text-v1.5` | Embeddings. Sophia adds the nomic `search_query:` / `search_document:` prefixes |
-| `decider_model` | `qwen/qwen3.5-9b` | Per-turn gate and night judgments. Runs with reasoning off, one prefill; Sophia reads only the first-token logprobs |
-| `sleep_model` | `qwen/qwen3.8-27b` | Night work: context headers and fact extraction |
-| `sleep_guard_models` | `[sleep_model]` | Before each call, the night run waits until these models are idle |
+| `sleep_guard_models` | `[sleep_model]` | Before each call, the night waits until these LM Studio models are idle |
+| `lms_cli` | `~/.cache/lm-studio/bin/lms` | Used to read LM Studio's model status |
+
+When the night server is of type `openai`, the night also waits while that server reports a busy slot. A status that can't be read counts as idle.
+
+To run one night on a different model or server:
+
+```bash
+hermes sophia sleep --model M [--url U --api openai]
+```
 
 ## Identity
 
@@ -48,7 +92,7 @@ memory:
 | `capture_tools` | `web_extract`, `browser_snapshot`, `browser_navigate` | Tool results that are captured as external sources |
 | `never_capture_substrings` | `vault`, `credential`, `secret`, `password` | A tool whose name contains any of these is never captured |
 | `test_tools` | `terminal`, `shell`, `bash`, `run_command`, `execute_code` | Their output is scanned for pytest outcomes |
-| `full_capture_contexts` | `primary`, `""` | Agent contexts captured in full. Other contexts (subagents, cron) record only a short event per task prompt: no conversation windows, no web reads |
+| `full_capture_contexts` | `primary` | Agent contexts captured in full. Other contexts (subagents, cron) record only a short event per task prompt: no conversation windows, no web reads |
 | `echo_threshold` | 0.5 | Shingle containment above which a reply that just repeats injected memory is fenced off as an echo |
 
 ## Awake: recall and injection

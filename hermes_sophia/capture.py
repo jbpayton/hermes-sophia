@@ -109,7 +109,7 @@ class Capture:
                          agent_context: str = "primary") -> Dict[str, int]:
         cfg, store = self.e.cfg, self.e.store
         now = now or time.time()
-        full = agent_context in cfg["full_capture_contexts"]
+        full = (agent_context or "primary") in cfg["full_capture_contexts"]
         seen = self._seen.setdefault(session_id, store.processed(session_id))
         tool_map: Dict[str, Tuple[str, Dict[str, Any]]] = {}
         prev: Dict[str, Optional[str]] = {"user": None, "assistant": None}
