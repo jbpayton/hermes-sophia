@@ -1,0 +1,63 @@
+{
+  "setup": {
+    "benchmark": "LongMemEval (longmemeval_s_cleaned.json)",
+    "sample": "gemmery60",
+    "mode": "sophia",
+    "reader": "qwen35-9b",
+    "judge": "qwen35-9b",
+    "judge_prompts": "official evaluate_qa.py (9e0b455)",
+    "embed": "nomic-embed",
+    "decider": "qwen35-9b",
+    "night_model": null,
+    "sophia_config": {
+      "inject_chars": 6000,
+      "inject_top": 10,
+      "recall_k": 20,
+      "inject_relative_floor": 0.15,
+      "graph_hops": 1,
+      "graph_adjacent": 0,
+      "fts_weight": 0,
+      "facts_as": "items",
+      "skip_gate": 0.82,
+      "gate_threshold": 0.5
+    }
+  },
+  "summary": {
+    "n": 60,
+    "accuracy": 0.6333,
+    "by": {
+      "knowledge-update": {
+        "n": 9,
+        "acc": 1.0
+      },
+      "multi-session": {
+        "n": 16,
+        "acc": 0.5
+      },
+      "single-session-assistant": {
+        "n": 7,
+        "acc": 0.4286
+      },
+      "single-session-preference": {
+        "n": 4,
+        "acc": 0.5
+      },
+      "single-session-user": {
+        "n": 8,
+        "acc": 0.875
+      },
+      "temporal-reasoning": {
+        "n": 16,
+        "acc": 0.5625
+      }
+    },
+    "mean_seconds_per_question": 42.27,
+    "gate_passed_rate": 0.95,
+    "task_averaged": 0.6443,
+    "abstention": {
+      "n": 8,
+      "acc": 0.75
+    }
+  },
+  "written": "2026-09-24T09:35:11"
+}

@@ -1,0 +1,44 @@
+{
+  "setup": {
+    "benchmark": "LoCoMo (categories 1-4)",
+    "mode": "sophia-night",
+    "reader": "qwen35-9b",
+    "judge": "qwen35-9b",
+    "judge_prompt": "Mem0 J (aae5989)",
+    "embed": "nomic-embed",
+    "decider": "qwen35-9b",
+    "night_model": "qwen35-9b",
+    "inject_chars": 6000,
+    "graph_hops": 1,
+    "convs": [
+      "conv-26"
+    ],
+    "limit_per_conv": 0
+  },
+  "summary": {
+    "n": 152,
+    "accuracy": 0.6053,
+    "by": {
+      "1": {
+        "n": 32,
+        "acc": 0.375
+      },
+      "2": {
+        "n": 37,
+        "acc": 0.6757
+      },
+      "3": {
+        "n": 13,
+        "acc": 0.2308
+      },
+      "4": {
+        "n": 70,
+        "acc": 0.7429
+      }
+    },
+    "group_mean": 0.5061,
+    "mean_seconds_per_question": 3.33,
+    "gate_passed_rate": 0.9934
+  },
+  "written": "2026-09-24T07:58:25"
+}

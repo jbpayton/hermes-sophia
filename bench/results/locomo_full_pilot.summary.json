@@ -1,0 +1,43 @@
+{
+  "setup": {
+    "benchmark": "LoCoMo (categories 1-4)",
+    "mode": "full",
+    "reader": "qwen35-9b",
+    "judge": "qwen35-9b",
+    "judge_prompt": "Mem0 J (aae5989)",
+    "embed": "nomic-embed",
+    "decider": "qwen35-9b",
+    "night_model": null,
+    "inject_chars": 6000,
+    "graph_hops": 1,
+    "convs": [
+      "conv-26"
+    ],
+    "limit_per_conv": 0
+  },
+  "summary": {
+    "n": 152,
+    "accuracy": 0.7895,
+    "by": {
+      "1": {
+        "n": 32,
+        "acc": 0.75
+      },
+      "2": {
+        "n": 37,
+        "acc": 0.7027
+      },
+      "3": {
+        "n": 13,
+        "acc": 0.5385
+      },
+      "4": {
+        "n": 70,
+        "acc": 0.9
+      }
+    },
+    "group_mean": 0.7228,
+    "mean_seconds_per_question": 3.29
+  },
+  "written": "2026-09-24T07:33:58"
+}

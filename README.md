@@ -248,7 +248,11 @@ The data model (three clocks, supersession, provenance, triples indexing passage
 - its own invented claims can't become memory;
 - a night tests and repairs its own recall.
 
-Benchmarks are in progress. The details and sources are in [docs/COMPARISON.md](docs/COMPARISON.md).
+**Benchmarks** (held-out data, a local 9B as reader and judge; [docs/BENCHMARKS.md](docs/BENCHMARKS.md)):
+- **LongMemEval-S, 60 questions:** 0.750. The same reader scores 0.917 when handed the evidence sessions.
+- **LoCoMo, 7 conversations:** J 0.730 after one night, against 0.768 with the whole conversation in context.
+
+These aren't directly comparable with published GPT-4o-judged numbers. The comparison and sources are in [docs/COMPARISON.md](docs/COMPARISON.md).
 
 ### Principles
 
@@ -337,7 +341,7 @@ Nothing is scheduled for you. When you're ready, add a nightly run:
 
 ```bash
 pip install -e ".[test]"
-pytest -q        # 46 tests against a fake model server; no GPU needed
+pytest -q        # 47 tests against a fake model server; no GPU needed
 ```
 
 | Path | What |
@@ -348,6 +352,8 @@ pytest -q        # 46 tests against a fake model server; no GPU needed
 | `docs/STORY.md` | How it got here: the research, the dead ends, and the bugs only real use found |
 | `docs/CONFIGURATION.md` | Every setting |
 | `docs/COMPARISON.md` | How Sophia compares with other graph and agent memories |
+| `docs/BENCHMARKS.md` | LongMemEval and LoCoMo: protocol, results, what changed |
+| `bench/` | The benchmark harness |
 | `research/` | The experiments behind the design |
 | `scripts/` | Debug helpers |
 

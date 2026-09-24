@@ -1,0 +1,113 @@
+{
+  "night_seconds": 17.8,
+  "night": {
+    "tasks": 6,
+    "succeeded": 5,
+    "failed": 0,
+    "reused": 0,
+    "calls": 2,
+    "abandoned": 1,
+    "seconds": 17.8
+  },
+  "sessions": {
+    "nginx": {
+      "tasks": 1,
+      "outcomes": [
+        "succeeded"
+      ],
+      "segmentation_ok": true,
+      "outcome_ok": true,
+      "details_ok": true,
+      "cards": [
+        "Rotate nginx logs on web-1 to free disk space (web-1) — succeeded on 2026-09-23. Worked: `ssh web-1 'sudo logrotate -f /etc/logrotate.d/nginx'`. Dead ends: `ssh web-1 'rm /var/log/nginx/access.log'` (permission denied without sudo). Lesson: Use sudo with logrotate instead of manually deleting log files"
+      ]
+    },
+    "docker": {
+      "tasks": 1,
+      "outcomes": [
+        "abandoned"
+      ],
+      "segmentation_ok": true,
+      "outcome_ok": true,
+      "details_ok": true,
+      "cards": [
+        "Build the docker image for the billing service (terminal) — abandoned on 2026-09-23. Dead ends: `docker build -t billing:latest services/billing` (Dockerfile not found); `docker build -t billing:latest -f services/billing/docker/Dockerfile .` (build failed during pip install due to unreachable private package index). Lesson: Fix the private package index configuration before attempting to build the image."
+      ]
+    },
+    "certbot": {
+      "tasks": 1,
+      "outcomes": [
+        "succeeded"
+      ],
+      "segmentation_ok": true,
+      "outcome_ok": true,
+      "details_ok": true,
+      "cards": [
+        "Renew TLS certificate for shop.example.com (->) — succeeded on 2026-09-23. Worked: `sudo certbot renew --cert-name shop.example.com --dry-run` → `sudo certbot renew --cert-name shop.example.com && sudo systemctl reload nginx`. Learned from: https://eff-certbot.readthedocs.io/en/stable/using.html#renewing-certificates. Lesson: Always run a dry-run first before executing the actual renewal."
+      ]
+    },
+    "venv": {
+      "tasks": 1,
+      "outcomes": [
+        "succeeded"
+      ],
+      "segmentation_ok": true,
+      "outcome_ok": true,
+      "details_ok": true,
+      "cards": [
+        "Set up a virtualenv for the reports project and install its requirements (~/reports) — succeeded on 2026-09-23. Worked: `cd ~/reports && rm -rf .venv && python3.12 -m venv .venv && .venv/bin/pip install -r requirements.txt`. Dead ends: `cd ~/reports && python3.9 -m venv .venv && .venv/bin/pip install -r requirements.txt` (Python version mismatch (required >=3.11, found 3.9)). Lesson: Check package Python version requirements before creating the virtualenv"
+      ]
+    },
+    "mixed": {
+      "tasks": 2,
+      "outcomes": [
+        "succeeded",
+        "succeeded"
+      ],
+      "segmentation_ok": true,
+      "outcome_ok": true,
+      "details_ok": true,
+      "cards": [
+        "Check disk space on build server (build-1) — succeeded on 2026-09-23. Worked: `ssh build-1 'df -h /'`. Lesson: ->",
+        "Determine the number of CPU cores on the laptop (terminal) — succeeded on 2026-09-23. Worked: `nproc`. Lesson: ->"
+      ]
+    }
+  },
+  "again": {
+    "nginx": {
+      "query": "The disk on web-1 is filling up with nginx logs again, can you rotate them?",
+      "gate": "skip:0.95",
+      "card_injected": true,
+      "injection": "Sophia memory — verbatim evidence from earlier conversations and reading (dates are when it was said; treat assistant-authored lines as weaker evidence):\n- [2026-09-23 · earlier task · succeeded] Rotate nginx logs on web-1 to free disk space (web-1) — succeeded on 2026-09-23. Worked: `ssh web-1 'sudo logrotate -f /etc/logrotate.d/nginx'`. Dead ends: `ssh web-1 'rm /var/log/nginx/access.log'` (permission denied without sudo). Lesson: Use sudo with logrotate instead of manually deleting log files"
+    },
+    "docker": {
+      "query": "Let's try building the billing service docker image.",
+      "gate": "skip:0.88",
+      "card_injected": true,
+      "injection": "Sophia memory — verbatim evidence from earlier conversations and reading (dates are when it was said; treat assistant-authored lines as weaker evidence):\n- [2026-09-23 · earlier task · abandoned · did not work: don't repeat blindly] Build the docker image for the billing service (terminal) — abandoned on 2026-09-23. Dead ends: `docker build -t billing:latest services/billing` (Dockerfile not found); `docker build -t billing:latest -f services/billing/docker/Dockerfile .` (build failed during pip install due to unreachable private package index). Lesson: Fix the private package index configuration before attempting to build the image."
+    },
+    "certbot": {
+      "query": "The TLS certificate for shop.example.com needs renewing.",
+      "gate": "skip:0.94",
+      "card_injected": true,
+      "injection": "Sophia memory — verbatim evidence from earlier conversations and reading (dates are when it was said; treat assistant-authored lines as weaker evidence):\n- [2026-09-23 · earlier task · succeeded] Renew TLS certificate for shop.example.com (->) — succeeded on 2026-09-23. Worked: `sudo certbot renew --cert-name shop.example.com --dry-run` → `sudo certbot renew --cert-name shop.example.com && sudo systemctl reload nginx`. Learned from: https://eff-certbot.readthedocs.io/en/stable/using.html#renewing-certificates. Lesson: Always run a dry-run first before executing the actual renewal.\n- [2026-09-23 · Joey] Great, the padlock shows the new expiry date.\n- [2026-09-23 · Hermes (assistant said)] Renewed shop.example.com's certificate and reloaded nginx."
+    },
+    "venv": {
+      "query": "Recreate the virtualenv for the reports project.",
+      "gate": "skip:0.89",
+      "card_injected": true,
+      "injection": "Sophia memory — verbatim evidence from earlier conversations and reading (dates are when it was said; treat assistant-authored lines as weaker evidence):\n- [2026-09-23 · earlier task · succeeded] Set up a virtualenv for the reports project and install its requirements (~/reports) — succeeded on 2026-09-23. Worked: `cd ~/reports && rm -rf .venv && python3.12 -m venv .venv && .venv/bin/pip install -r requirements.txt`. Dead ends: `cd ~/reports && python3.9 -m venv .venv && .venv/bin/pip install -r requirements.txt` (Python version mismatch (required >=3.11, found 3.9)). Lesson: Check package Python version requirements before creating the virtualenv"
+    }
+  },
+  "score": {
+    "outcome": "5/5",
+    "segmentation": "5/5",
+    "details": "5/5",
+    "recall": "4/4"
+  },
+  "setup": {
+    "night_model": "qwen35-9b",
+    "decider": "qwen35-9b",
+    "embed": "nomic-embed"
+  }
+}

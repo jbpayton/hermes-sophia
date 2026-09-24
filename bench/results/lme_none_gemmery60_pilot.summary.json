@@ -1,0 +1,54 @@
+{
+  "setup": {
+    "benchmark": "LongMemEval (longmemeval_s_cleaned.json)",
+    "sample": "gemmery60",
+    "mode": "none",
+    "reader": "qwen35-9b",
+    "judge": "qwen35-9b",
+    "judge_prompts": "official evaluate_qa.py (9e0b455)",
+    "embed": "nomic-embed",
+    "decider": "qwen35-9b",
+    "night_model": null,
+    "inject_chars": 6000,
+    "graph_hops": 1,
+    "inject_top": 10,
+    "recall_k": 20
+  },
+  "summary": {
+    "n": 60,
+    "accuracy": 0.1833,
+    "by": {
+      "knowledge-update": {
+        "n": 9,
+        "acc": 0.0
+      },
+      "multi-session": {
+        "n": 16,
+        "acc": 0.1875
+      },
+      "single-session-assistant": {
+        "n": 7,
+        "acc": 0.4286
+      },
+      "single-session-preference": {
+        "n": 4,
+        "acc": 0.0
+      },
+      "single-session-user": {
+        "n": 8,
+        "acc": 0.25
+      },
+      "temporal-reasoning": {
+        "n": 16,
+        "acc": 0.1875
+      }
+    },
+    "mean_seconds_per_question": 8.38,
+    "task_averaged": 0.1756,
+    "abstention": {
+      "n": 8,
+      "acc": 0.875
+    }
+  },
+  "written": "2026-09-24T08:17:45"
+}

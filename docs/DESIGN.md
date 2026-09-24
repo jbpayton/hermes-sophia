@@ -441,7 +441,8 @@ The code is this repository. It is tested on the `sophiadev` profile (a clone of
   - **Night task pass:** segmentation, with a decider check for whether a follow-up continues the task; an outcome choice read in both orders; and cards assembled from logged actions, which the night model only points at by number.
   - **Recall and credit:** cards stand in for their matched request, failed attempts carry a warning, a card gains or loses credit when it is reused, and `sophia_browse view=tasks` lists them.
   - **Evaluation:** scripted evaluation 5/5 outcomes, 5/5 segmentation, 5/5 card details and 4/4 recall. In a live Hermes run, the card from a real task was injected (0.88) when asked to do it again.
-- Unit tests: 46, all passing, run against a fake model server.
+- Benchmarks (docs/BENCHMARKS.md): tuned on development splits and reported on held-out data with a 9B reader and judge. LongMemEval-S (60 questions): 0.633 → 0.750. LoCoMo (7 conversations): J 0.671 by day, 0.730 after one night, against 0.768 with the whole conversation in context.
+- Unit tests: 47, all passing, run against a fake model server.
 
 **Answers to §14 verify items**
 - `ctx.llm` is not forwarded to memory providers (`_ProviderCollector`), so Sophia talks to LM Studio directly. `reasoning_effort: "none"` works on `/v1/chat/completions`, and `/v1/responses` returns first-token logprobs.

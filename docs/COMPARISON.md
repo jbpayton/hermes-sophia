@@ -5,7 +5,7 @@ This is a reality check, written in September 2026, against the best-known graph
 - that it decides whether to inject anything at all;
 - a night that tests and repairs its own recall.
 
-Sophia has no benchmark number yet (see [Benchmarks](#benchmarks)), so none of this is a claim about accuracy.
+Benchmark results, measured with a local 9B reader, are in [Benchmarks](#benchmarks).
 
 ## Where Sophia matches the field
 
@@ -52,4 +52,11 @@ This is **one hop by default** (`graph_hops`), which is lighter than HippoRAG's 
 
 ## Benchmarks
 
-The comparison that matters is accuracy on shared benchmarks: LongMemEval and LoCoMo. The harness is in [`bench/`](../bench/). Results will be added here with their exact setup: reader model, judge model, split and sample size. Numbers from a local 9B reader and judge are not directly comparable to published numbers that use GPT-4o, and are labelled as such.
+The full protocol, results and caveats are in [BENCHMARKS.md](BENCHMARKS.md). Everything was tuned on development data and reported on held-out data, with a local 9B as reader and judge:
+
+| Benchmark | Sophia | Same reader's reference |
+|---|---|---|
+| LongMemEval-S, 60 held-out questions | 0.750 (0.633 before tuning) | 0.917 with the evidence sessions handed over |
+| LoCoMo, 7 held-out conversations (J) | 0.730 after one night; 0.671 by day | 0.768 with the whole conversation in context |
+
+These numbers are not directly comparable with published results that use GPT-4o-class readers and judges. For orientation: on LongMemEval-S, Zep scored 71.2 with GPT-4o and Hindsight 83.6 with gpt-oss-20b. On LoCoMo, Mem0 scored 66.9, Zep 75.1 and Hindsight 83.2.
