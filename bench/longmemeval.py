@@ -100,11 +100,14 @@ def main():
     ap.add_argument("--mode", required=True, choices=["sophia", "sophia-night", "oracle", "none"])
     ap.add_argument("--sample", default="gemmery60", help="gemmery60 | all | N (first N of gemmery60)")
     ap.add_argument("--split", default="longmemeval_s_cleaned.json")
+    ap.add_argument("--memories", default="", help="reuse per-question memories from this folder "
+                    "(e.g. bench/work/lme, built by retrieval_lme.py) instead of ingesting each haystack")
     add_model_args(ap)
     args = ap.parse_args()
 
     from pathlib import Path
-    ids = json.loads((Path(__file__).parent / "lme_gemmery60.json").read_text())["ids"]
+    sample_file = Path(__file__).parent / f"lme_{args.sample}.json"
+    ids = json.loads((sample_file if sample_file.exists() else Path(__file__).parent / "lme_gemmery60.json").read_text())["ids"]
     if args.sample.isdigit():
         ids = ids[:int(args.sample)]
     data = json.loads((DATA / args.split).read_text())
@@ -126,9 +129,15 @@ def main():
                "gold": str(item["answer"])}
         asked_at = ts(item["question_date"])
         if args.mode.startswith("sophia"):
-            engine = fresh_engine(work, "lme_current", memory_config(args, user_name="User", agent_name="Assistant"))
-            n = ingest(engine, item)
-            row["windows"] = n
+            cfg = memory_config(args, user_name="User", agent_name="Assistant")
+            cached = Path(args.memories) / f"day_{qid}.db" if args.memories else None
+            if cached and cached.exists():
+                from hermes_sophia.engine import Engine
+                engine = Engine(cfg, cached)
+                row["windows"] = engine.store.one("SELECT COUNT(*) AS n FROM windows")["n"]
+            else:
+                engine = fresh_engine(work, f"{name}_current", cfg)          # one scratch memory per run
+                row["windows"] = ingest(engine, item)
             if args.mode == "sophia-night":
                 row["night"] = run_night(engine, args, now=asked_at)["status"]
             text, info = engine.recall.prefetch(item["question"], "bench", now=asked_at)
