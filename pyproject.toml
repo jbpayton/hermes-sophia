@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hermes-sophia"
+version = "0.1.0"
+description = "Passive, associative memory for Hermes Agent that organizes itself while you sleep."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Joey Payton" }]
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.24"]
+keywords = ["hermes-agent", "memory", "llm", "agents", "lm-studio"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.urls]
+Homepage = "https://github.com/jbpayton/hermes-sophia"
+"Design" = "https://github.com/jbpayton/hermes-sophia/blob/main/docs/DESIGN.md"
+"Story" = "https://github.com/jbpayton/hermes-sophia/blob/main/docs/STORY.md"
+
+[project.entry-points."hermes_agent.memory_providers"]
+sophia = "hermes_sophia:register"
+
+[tool.setuptools.packages.find]
+include = ["hermes_sophia*"]
+
+[tool.setuptools.package-data]
+hermes_sophia = ["plugin.yaml", "skills/*/SKILL.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

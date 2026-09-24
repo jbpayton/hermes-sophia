@@ -1,0 +1,10 @@
+name: sophia
+version: 0.1.0
+description: "Sophia — passive, associative memory: verbatim evidence recall by day, consolidation and dreaming by night."
+python_dependencies:
+  - "numpy>=1.24"
+hooks:
+  - on_session_end
+  - on_pre_compress
+  - on_memory_write
+  - on_delegation
