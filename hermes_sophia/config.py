@@ -86,6 +86,7 @@ DEFAULTS: Dict[str, Any] = {
     "page_min_facts": 3,
     "calibration_min_labels": 50,
     "supersede_threshold": 0.85,      # wrongly retiring a fact costs more than missing a change
+    "supersede_prescreen": 0.8,       # one reading below this ends it (false ones scored <= 0.74, real ones >= 0.93)
 }
 
 _LIST_KEYS = {k for k, v in DEFAULTS.items() if isinstance(v, list)} | {"sleep_guard_models"}
@@ -174,6 +175,8 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
      {"when": _ADVANCED}),
     ("sleep_poll_s", "How often a waiting night checks again (seconds)", {"when": _ADVANCED}),
     ("sleep_session_windows", "Windows per contextualize call", {"when": _ADVANCED}),
+    ("supersede_prescreen", "One reading below this settles 'no change' before the careful two-order reading",
+     {"when": _ADVANCED}),
     ("night_parallel", "Night model calls in flight at once (match the model's parallel slots in LM Studio)",
      {"when": _ADVANCED}),
     ("promote_min_instances", "Instances before an emergent relation is promoted", {"when": _ADVANCED}),

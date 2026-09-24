@@ -51,7 +51,8 @@ Sophia on LongMemEval and LoCoMo, measured on one machine (2× RTX 3090, LM Stud
 - **Night cost** on the 9B with 2 parallel slots: 12–21 minutes per conversation.
   - Headers: about 0.3 s per window.
   - Facts: about 0.25 s per window.
-  - Integration: 4–13 minutes, spent mostly on supersession checks that found only 0–2 changes. This is the next thing to make cheaper.
+  - Integration: 4–13 minutes, spent mostly on supersession checks that found only 0–2 changes.
+  - **Since these runs,** supersession questions are batched, read once first, read in both orders only near the bar, and run in parallel. On conversation 26, integration went from 754 s to 270 s with the same outcome, and fact extraction from 226 s to 134 s. A night for a conversation like this is now about 9 minutes instead of 21.
 - **Weakest categories:** temporal (0.57) and open-domain inference (0.39). They are also the reader's weakest with the whole conversation in view (0.62 and 0.48).
 
 **Published numbers** (J), for orientation only (different readers and judges):

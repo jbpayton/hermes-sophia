@@ -381,6 +381,8 @@ class SleepRunner:
         def similar(a, b, th=0.8):
             return a == b or float(rvec(a) @ rvec(b)) >= th
 
+        # 1. candidate pairs, with the cheap filters only
+        pairs = []                                  # (f, g, f_neg, exclusive)
         for f in new:
             if f["status"] != "active" or f["modality"] in ("hypothetical", "reported"):
                 continue
@@ -401,35 +403,50 @@ class SleepRunner:
                 if f_neg != same_object:
                     continue          # positive new fact must name a different object; negated one the same object
                 rel = self.s.one("SELECT exclusive FROM relations WHERE name=?", (f["relation_norm"],))
-                if rel and rel["exclusive"] and not f_neg:
-                    p = 1.0
-                else:
-                    # Wrongly retiring a fact hides a true memory; missing a change leaves both visible with dates.
-                    # So: only states (not one-off events), a high bar, both option orders.
-                    old_text = f"{g['subject']} | {g['relation']} | {g['object']}"
-                    key = core(g["relation_norm"])
-                    if not f_neg:
-                        if key not in states:
-                            states[key] = round(self.judge({"old_fact": old_text}, IS_STATE, permutations=2), 3)
-                            state_asked += 1
-                        if states[key] < 0.5:
-                            continue
-                    src = self.s.one("""SELECT w.text FROM fact_sources fs JOIN windows w ON w.id=fs.window_id
-                                        WHERE fs.fact_id=? LIMIT 1""", (f["id"],))
-                    pair = {"old_fact": f"{old_text} (believed since {_d(g['valid_from'])})",
-                            "new_fact": f"{f['subject']} | {f['relation']} | {f['object']} (said {_d(f['valid_from'])})",
-                            "new_evidence": src["text"] if src else ""}
-                    p = self.judge(pair, SUPERSEDES, permutations=2)
-                    asked += 1
-                if p >= self.cfg["supersede_threshold"]:
-                    self.s.x("UPDATE facts SET status='superseded', valid_to=?, superseded_by=? WHERE id=?",
-                             (f["valid_from"], f["id"], g["id"]))
-                    self.s.add_credit(g["id"], "fact", "replay", "contradicted", -2.0, self.night)
-                    self.s.journal(self.night, "integrate", "superseded",
-                                   {"old": [g["subject"], g["relation"], g["object"]],
-                                    "new": [f["subject"], f["relation"], f["object"]], "p": round(p, 2)},
-                                   undo={"fact": g["id"], "status": "active"})
-                    superseded += 1
+                pairs.append((f, g, f_neg, bool(rel and rel["exclusive"] and not f_neg)))
+        # 2. is the old fact's relation an ongoing state? Once per relation, remembered across nights.
+        ask_state = {}
+        for f, g, f_neg, excl in pairs:
+            key = core(g["relation_norm"])
+            if not f_neg and not excl and key not in states and key not in ask_state:
+                ask_state[key] = f"{g['subject']} | {g['relation']} | {g['object']}"
+        keys = list(ask_state)
+        for key, p in zip(keys, self._pmap(lambda k: self.judge({"old_fact": ask_state[k]}, IS_STATE, permutations=2), keys)):
+            states[key] = round(p, 3)
+        state_asked = len(keys)
+        # 3. "does the new fact make the old one untrue?" -- one reading first, both orders only near the bar.
+        # Wrongly retiring a fact hides a true memory; missing a change leaves both visible with dates.
+        todo = [(f, g, f_neg) for f, g, f_neg, excl in pairs
+                if not excl and (f_neg or states.get(core(g["relation_norm"]), 0.0) >= 0.5)]
+
+        def pair_state(f, g):
+            src = self.s.one("""SELECT w.text FROM fact_sources fs JOIN windows w ON w.id=fs.window_id
+                                WHERE fs.fact_id=? LIMIT 1""", (f["id"],))
+            return {"old_fact": f"{g['subject']} | {g['relation']} | {g['object']} (believed since {_d(g['valid_from'])})",
+                    "new_fact": f"{f['subject']} | {f['relation']} | {f['object']} (said {_d(f['valid_from'])})",
+                    "new_evidence": src["text"] if src else ""}
+        states_of = [pair_state(f, g) for f, g, _ in todo]
+        first = self._pmap(lambda st: self.judge(st, SUPERSEDES, permutations=1), states_of)
+        near = [i for i, p in enumerate(first) if p >= self.cfg["supersede_prescreen"]]
+        second = dict(zip(near, self._pmap(lambda i: self.judge(states_of[i], SUPERSEDES, permutations=2), near)))
+        asked = len(todo) + len(near)
+        verdict = {(f["id"], g["id"]): second.get(i, 0.0) for i, (f, g, _) in enumerate(todo)}
+        # 4. apply in date order
+        retired = set()
+        for f, g, f_neg, excl in pairs:
+            if g["id"] in retired:
+                continue
+            p = 1.0 if excl else verdict.get((f["id"], g["id"]), 0.0)
+            if p >= self.cfg["supersede_threshold"]:
+                self.s.x("UPDATE facts SET status='superseded', valid_to=?, superseded_by=? WHERE id=?",
+                         (f["valid_from"], f["id"], g["id"]))
+                self.s.add_credit(g["id"], "fact", "replay", "contradicted", -2.0, self.night)
+                self.s.journal(self.night, "integrate", "superseded",
+                               {"old": [g["subject"], g["relation"], g["object"]],
+                                "new": [f["subject"], f["relation"], f["object"]], "p": round(p, 2)},
+                               undo={"fact": g["id"], "status": "active"})
+                superseded += 1
+                retired.add(g["id"])
         # plan lifecycle
         now = self.snapshot
         stale = self.s.q("SELECT id, subject, relation, object FROM facts WHERE modality='planned' AND status='active' AND h_end IS NOT NULL AND h_end<?", (now,))
