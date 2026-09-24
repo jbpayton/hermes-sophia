@@ -100,16 +100,19 @@ hermes sophia sleep --model M [--url U --api openai]
 
 | Key | Default | |
 |---|---|---|
-| `recall_k` | 20 | Number of candidates fetched |
+| `recall_k` | 50 | Number of candidates fetched |
 | `gate_top` | 10 | Number of candidates the gate looks at |
-| `inject_top` | 10 | How deep in the ranking injection may draw from. It is still bounded by `inject_relative_floor` and `inject_chars` |
+| `inject_top` | 50 | How deep in the ranking injection may draw from. It is still bounded by `inject_relative_floor` and `inject_chars` |
 | `skip_gate` | 0.82 | At or above this top-1 cosine, inject without asking the decider (measured; see `research/embed_thresholds.py`) |
 | `gate_threshold` | 0.5 | Decider probability needed to inject |
 | `gate_permutations` | 1 | Option orders averaged per gate decision. With 2, both orders are averaged, cancelling position bias at twice the cost |
 | `junk_floor` | 0.5 | Candidates below this cosine are never shown to the gate |
-| `inject_chars` | 3000 | Size cap for the injected block |
-| `inject_relative_floor` | 0.15 | Only inject items within this similarity of the top item |
-| `recency_bonus`, `fts_bonus`, `type_bonus` | 0.01, 0.03, 0.02 | Ranking nudges |
+| `inject_chars` | 9000 | Size cap for the injected block: about 2,300 tokens at most, and typically 1,900 when memory is relevant. The check injects nothing on unrelated turns. If your model's context is small, lower this and `inject_top` |
+| `inject_relative_floor` | 0.25 | Only inject items within this score of the top item |
+| `recency_bonus`, `fts_bonus`, `type_bonus` | 0.01, 0.03, 0.02 | Ranking nudges. `fts_bonus` applies only when `fts_weight` is 0 |
+| `fts_weight` | 0.05 | Graded keyword weight: a keyword match adds this × its bm25 score relative to the best match |
+| `time_scope`, `time_scope_bonus` | boost, 0.05 | A date range in the question ("last week", "in March") ranks memories inside it higher. `filter` hides everything outside it instead, which misses facts told later about an earlier month |
+| `facts_as` | keys | Extracted facts are extra search keys for the verbatim message they came from. The message ranks and is injected, labelled with its facts. `items` lets facts compete as their own entries, which pushed evidence down in testing |
 | `assistant_penalty`, `max_assistant_items` | 0.06, 2 | Keep the agent's own restatements from crowding out your words |
 | `question_penalty` | 0.04 | Ranking penalty for a bare earlier question in `sophia_recall`. Passive injection leaves bare questions out entirely |
 
@@ -124,6 +127,7 @@ After the search, recall walks the memory graph from bridge entities: people and
 | `graph_hub_degree` | 8 | Entities with more facts than this spread less, damped by √(hub_degree / facts). You and the agent are never expanded |
 | `graph_fanout` | 3 | Connected facts taken per entity, best-matching first |
 | `graph_entities` | 6 | Entities expanded per hop |
+| `graph_adjacent`, `graph_adjacent_decay` | 1, 0.9 | Turns immediately before and after a matched message (a question and its answer) join the candidates at the match's score × decay |
 
 Conversation links are followed too: a matched message brings what corrects it, or what it answered.
 
@@ -137,6 +141,8 @@ Conversation links are followed too: a matched message brings what corrects it, 
 | `promote_min_instances` / `promote_min_sessions` | 5 / 2 | Evidence needed before an emergent relation is promoted to canonical |
 | `page_min_facts` | 3 | Minimum facts about an entity before it gets a wiki page |
 | `calibration_min_labels` | 50 | Gold labels needed before decider temperatures are fitted |
+| `supersede_threshold` | 0.85 | Decider probability needed before a newer fact retires an older one. It's high on purpose: a wrong retirement hides a true memory, while a missed one leaves both visible with their dates. Only facts about an ongoing state (asked once per relation) can be retired |
+| `night_parallel` | 2 | Night model calls in flight at once. Match the model's parallel slots in LM Studio |
 
 ## Timeouts (seconds)
 
