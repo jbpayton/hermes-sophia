@@ -167,3 +167,30 @@ def test_events_do_not_supersede_each_other(engine, fake):
     assert SleepRunner(engine, model="fake-9b", max_wait_s=0, steps=["relate", "integrate"]).run()["status"] == "complete"
     st = [f["status"] for f in engine.store.q("SELECT status FROM facts")]
     assert len(st) == 2 and set(st) == {"active"}
+
+
+def test_parallel_night_is_not_blocked_by_its_own_calls(engine, fake):
+    """The night model is also the guarded model (the 27B case): its own in-flight calls must not look like chat."""
+    import threading
+    inflight = {"n": 0}
+    lock = threading.Lock()
+    _fake_models(fake)
+    base_chat = fake.chat
+
+    def chat(*a, **k):
+        with lock:
+            inflight["n"] += 1
+        try:
+            time.sleep(0.05)
+            return base_chat(*a, **k)
+        finally:
+            with lock:
+                inflight["n"] -= 1
+    fake.chat = chat
+    fake.model_status = lambda: {"qwen/qwen3.8-27b": "generating" if inflight["n"] else "idle"}
+    for i in range(6):
+        engine.capture_turn(f"s{i}", "", "", [{"role": "user", "content": f"For Yosemite I'm bringing the Fujifilm X-T5, day {i}.",
+                                               "timestamp": time.time() - 3600 + i}])
+    engine.cfg["night_parallel"] = 3
+    out = SleepRunner(engine, max_wait_s=0, steps=["contextualize", "relate"]).run()   # guard = the night model
+    assert out["status"] == "complete", out

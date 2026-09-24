@@ -200,7 +200,7 @@ class TaskPass:
             if self.r.limit and made["tasks"] >= self.r.limit:
                 break
             ev = self.evidence(task)
-            self.r.wait_idle()
+            self.r._guard()
             ans = self.r.teacher.choice(ev, "How did the task turn out?", OUTCOMES, permutations=2)
             outcome = ans.choice
             parsed = self.parse_card(self.r.llm(CARD_PROMPT.format(

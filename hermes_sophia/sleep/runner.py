@@ -12,6 +12,7 @@ import fcntl
 import json
 import math
 import re
+import threading
 import time
 from collections import Counter, defaultdict
 from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -65,6 +66,7 @@ class SleepRunner:
         self.e, self.cfg, self.s = engine, engine.cfg, engine.store
         self.model = model or self.cfg["sleep_model"]
         self.client = client or engine.clients["sleep"]
+        self._batch = threading.local()
         self.guard = [self.model] if model else list(self.cfg["sleep_guard_models"])
         self.log = log
         self.max_wait = self.cfg["sleep_max_wait_s"] if max_wait_s is None else max_wait_s
@@ -99,12 +101,18 @@ class SleepRunner:
             time.sleep(self.cfg["sleep_poll_s"])
             waited += self.cfg["sleep_poll_s"]
 
+    def _guard(self) -> None:
+        """Wait for guarded models to be idle -- except inside a parallel batch, where "generating" is our own
+        calls; batches check once before they start (see _pmap)."""
+        if not getattr(self._batch, "on", False):
+            self.wait_idle()
+
     def llm(self, prompt: str, max_tokens: int = 1500) -> str:
-        self.wait_idle()
+        self._guard()
         return self.client.chat(self.model, prompt, max_tokens=max_tokens, timeout=self.cfg["sleep_call_timeout"])
 
     def judge(self, state: Any, instructions: str, permutations: int = 1) -> float:
-        self.wait_idle()
+        self._guard()
         return self.teacher.noul(state, instructions, permutations=permutations).noul
 
     # ---------------------------------------------------------------- run
@@ -200,8 +208,19 @@ class SleepRunner:
         if n == 1 or len(items) <= 1:
             return [fn(x) for x in items]
         from concurrent.futures import ThreadPoolExecutor
+
+        def run(x):
+            self._batch.on = True
+            try:
+                return fn(x)
+            finally:
+                self._batch.on = False
+        out: List[Any] = []
         with ThreadPoolExecutor(max_workers=n) as ex:
-            return list(ex.map(fn, items))
+            for i in range(0, len(items), n):          # the guard is checked between batches, with nothing of ours in flight
+                self.wait_idle()
+                out.extend(ex.map(run, items[i:i + n]))
+        return out
 
     def step_contextualize(self):
         sessions = self._day_sessions(only_unheaded=True)
