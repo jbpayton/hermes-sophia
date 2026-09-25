@@ -46,7 +46,8 @@ def main():
                "default_yes_strong_no": tally[(1, 0)], "default_no_strong_yes": tally[(0, 1)],
                "default_accuracy": round(sum(r["default"] for r in out) / n, 3),
                "strong_accuracy": round(sum(r["strong"] for r in out) / n, 3), "files": args.files}
-    name = "judge_agreement_" + "_".join(sorted({f.split("/")[-1].split(".")[0].split("_")[0] for f in args.files.split(",")}))
+    stems = [f.split("/")[-1].rsplit(".", 1)[0] for f in args.files.split(",")]
+    name = "judge_agreement_" + "+".join(stems)                  # one summary per graded file set
     (RESULTS / f"{name}.summary.json").write_text(json.dumps(summary, indent=2))
     print(json.dumps(summary, indent=1))
 

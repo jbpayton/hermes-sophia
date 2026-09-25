@@ -1,0 +1,10 @@
+{
+  "judge": "qwen/qwen3.8-27b",
+  "n": 200,
+  "agree": 0.945,
+  "default_yes_strong_no": 8,
+  "default_no_strong_yes": 3,
+  "default_accuracy": 0.835,
+  "strong_accuracy": 0.81,
+  "files": "bench/results/locomo_sophia-night_active_heldout_split_r27.jsonl"
+}

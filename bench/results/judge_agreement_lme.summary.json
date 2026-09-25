@@ -1,0 +1,10 @@
+{
+  "judge": "qwen/qwen3.8-27b",
+  "n": 60,
+  "agree": 0.967,
+  "default_yes_strong_no": 1,
+  "default_no_strong_yes": 1,
+  "default_accuracy": 0.75,
+  "strong_accuracy": 0.75,
+  "files": "results/lme_sophia_gemmery60_heldout.jsonl"
+}

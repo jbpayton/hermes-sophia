@@ -1,0 +1,11 @@
+{
+  "judge": "qwen/qwen3.8-27b",
+  "n": 200,
+  "agree": 0.915,
+  "default_yes_strong_no": 13,
+  "default_no_strong_yes": 4,
+  "default_accuracy": 0.75,
+  "strong_accuracy": 0.705,
+  "files": "results/locomo_sophia-night_heldout.jsonl",
+  "note": "restored from the run's printed output after a later run overwrote this file"
+}

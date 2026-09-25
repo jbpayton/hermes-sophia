@@ -248,9 +248,10 @@ The data model (three clocks, supersession, provenance, triples indexing passage
 - its own invented claims can't become memory;
 - a night tests and repairs its own recall.
 
-**Benchmarks** (held-out data, a local 9B as reader and judge; [docs/BENCHMARKS.md](docs/BENCHMARKS.md)):
-- **LongMemEval-S, 60 questions:** 0.750. The same reader scores 0.917 when handed the evidence sessions.
-- **LoCoMo, 7 conversations:** J 0.730 after a night on the 9B and 0.748 on the 27B, against 0.768 with the whole conversation in context.
+**Benchmarks** (held-out data, local models as reader and judge; [docs/BENCHMARKS.md](docs/BENCHMARKS.md)). *Passive* means injection only; *active* means the agent also uses Sophia's tools:
+- **LoCoMo, 7 conversations:** active recall with a 27B reader scores J 0.858, matching the same reader with the whole conversation in context (0.853). Passive: 0.780.
+- **LongMemEval-S:** 0.804 on all 500 questions (9B reader, passive). On 60 held-out questions, passive scores 0.833 with the 9B reader and 0.867 with the 27B; the 27B scores 0.900 when handed just the evidence sessions.
+- **[Almanac](https://github.com/jbpayton/almanac)** (a benchmark of time, plans, provenance, absence, tasks and memory hygiene, written alongside Sophia): passive, by day, 1.000, against 0.945 for full context and 0.899 for RAG. It also found a secret-redaction bug, now fixed.
 
 These aren't directly comparable with published GPT-4o-judged numbers. The comparison and sources are in [docs/COMPARISON.md](docs/COMPARISON.md).
 
@@ -352,7 +353,7 @@ pytest -q        # 47 tests against a fake model server; no GPU needed
 | `docs/STORY.md` | How it got here: the research, the dead ends, and the bugs only real use found |
 | `docs/CONFIGURATION.md` | Every setting |
 | `docs/COMPARISON.md` | How Sophia compares with other graph and agent memories |
-| `docs/BENCHMARKS.md` | LongMemEval and LoCoMo: protocol, results, what changed |
+| `docs/BENCHMARKS.md` | LongMemEval, LoCoMo and Almanac: protocol, results, what changed |
 | `bench/` | The benchmark harness |
 | `research/` | The experiments behind the design |
 | `scripts/` | Debug helpers |
