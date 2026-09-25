@@ -304,3 +304,20 @@ def test_redaction_happens_before_cutting(engine):
     engine.capture_turn("s2", "run the report", "Done.", messages=msgs)
     dump = "\n".join(engine.store.conn.iterdump())
     assert "q7q7q7q7q7" not in dump
+
+
+def test_old_databases_are_scrubbed(tmp_path, fake):
+    """A database written before the fix is cleaned the first time it is opened."""
+    from hermes_sophia.store import Store
+    key = "sk-proj-" + "Zz9" * 14
+    s = Store(tmp_path / "old.db")
+    s.x("INSERT INTO injections(id,session_id,query,items,gate,decision_id,said) VALUES('i1','s','use ' || ?, '[]','{}','',0)",
+        (key,))
+    s.fts_put("w1", "window", f"[Hermes · re: here is {key}] ok")
+    s.x("DELETE FROM meta WHERE key='secrets_scrubbed_v1'")
+    s.close()
+    s = Store(tmp_path / "old.db")
+    dump = "\n".join(s.conn.iterdump())
+    assert key not in dump and "REDACTED" in dump
+    assert (tmp_path / "old.db").read_bytes().find(key.encode()) == -1
+    s.close()

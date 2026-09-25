@@ -165,6 +165,38 @@ class Store:
             self.conn.executescript(SCHEMA)
             self.conn.commit()
         self._indexes: Dict[Tuple[str, str], VectorIndex] = {}
+        if not self.get_meta("secrets_scrubbed_v1"):
+            self.scrub_secrets()
+            self.set_meta("secrets_scrubbed_v1", True)
+
+    def scrub_secrets(self) -> int:
+        """Redact every stored text value again: databases from before redaction covered headers, logs and cut text
+        can still hold a pasted key. Returns the number of values changed. Runs once per database."""
+        from .text import redact
+        changed = 0
+        with self.lock:
+            c = self.conn
+            tables = [r[0] for r in c.execute("SELECT name FROM sqlite_master WHERE type='table'")
+                      if not r[0].startswith(("fts_", "sqlite_"))]
+            for t in tables:
+                cols = [r[1] for r in c.execute(f'PRAGMA table_info("{t}")')]
+                for col in cols:
+                    for rowid, v in c.execute(f'SELECT rowid, "{col}" FROM "{t}"').fetchall():
+                        if isinstance(v, str):
+                            clean = redact(v)[0]
+                            if clean != v:
+                                c.execute(f'UPDATE "{t}" SET "{col}"=? WHERE rowid=?', (clean, rowid))
+                                changed += 1
+            if changed:
+                c.execute("INSERT INTO fts(fts) VALUES('optimize')")    # drop the old terms from the index
+                c.commit()
+                try:                                                  # and the freed pages that held them
+                    c.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+                    c.execute("VACUUM")
+                except sqlite3.OperationalError:                      # another process has it open: next time
+                    pass
+            c.commit()
+        return changed
 
     # ------------------------------------------------------------ basics
     def close(self) -> None:
