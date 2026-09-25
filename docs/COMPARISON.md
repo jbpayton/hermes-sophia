@@ -57,6 +57,6 @@ The full protocol, results and caveats are in [BENCHMARKS.md](BENCHMARKS.md). Ev
 | Benchmark | Sophia | Same reader's reference |
 |---|---|---|
 | LongMemEval-S, 60 held-out questions | 0.750 (0.633 before tuning) | 0.917 with the evidence sessions handed over |
-| LoCoMo, 7 held-out conversations (J) | 0.730 after one night; 0.671 by day | 0.768 with the whole conversation in context |
+| LoCoMo, 7 held-out conversations (J) | 0.748 after a 27B night; 0.730 after a 9B night; 0.671 by day | 0.768 with the whole conversation in context |
 
 These numbers are not directly comparable with published results that use GPT-4o-class readers and judges. For orientation: on LongMemEval-S, Zep scored 71.2 with GPT-4o and Hindsight 83.6 with gpt-oss-20b. On LoCoMo, Mem0 scored 66.9, Zep 75.1 and Hindsight 83.2.

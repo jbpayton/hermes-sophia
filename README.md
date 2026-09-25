@@ -250,7 +250,7 @@ The data model (three clocks, supersession, provenance, triples indexing passage
 
 **Benchmarks** (held-out data, a local 9B as reader and judge; [docs/BENCHMARKS.md](docs/BENCHMARKS.md)):
 - **LongMemEval-S, 60 questions:** 0.750. The same reader scores 0.917 when handed the evidence sessions.
-- **LoCoMo, 7 conversations:** J 0.730 after one night, against 0.768 with the whole conversation in context.
+- **LoCoMo, 7 conversations:** J 0.730 after a night on the 9B and 0.748 on the 27B, against 0.768 with the whole conversation in context.
 
 These aren't directly comparable with published GPT-4o-judged numbers. The comparison and sources are in [docs/COMPARISON.md](docs/COMPARISON.md).
 

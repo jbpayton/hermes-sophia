@@ -42,11 +42,13 @@ Sophia on LongMemEval and LoCoMo, measured on one machine (2× RTX 3090, LM Stud
 | Memory | J | Multi-hop (1) | Temporal (2) | Open-domain (3) | Single-hop (4) |
 |---|---|---|---|---|---|
 | Sophia, day memory | 0.671 | 0.663 | 0.476 | 0.373 | 0.778 |
-| **Sophia, after one night** | **0.730** | 0.740 | 0.567 | 0.387 | 0.825 |
+| **Sophia, after one night (9B night model)** | **0.730** | 0.740 | 0.567 | 0.387 | 0.825 |
+| **Sophia, after one night (27B night model)** | **0.748** | 0.755 | 0.593 | 0.387 | 0.844 |
 | The whole conversation in the reader's context | 0.768 | 0.788 | 0.619 | 0.480 | 0.849 |
 
 - **Scale:** 1,155 questions over 7 conversations (roughly 700–950 windows each), scored with Mem0's J prompt; category 5 excluded, as is conventional.
-- **Against full context:** after one night, Sophia reaches **95% of the same reader's full-context score** while injecting at most 9,000 characters instead of the whole ~70,000-character conversation. Full context stops being an option at LongMemEval scale (about 490,000 characters per question).
+- **Against full context:** after one night, Sophia reaches **95% (9B night) to 97% (27B night) of the same reader's full-context score** while injecting at most 9,000 characters instead of the whole ~70,000-character conversation. Full context stops being an option at LongMemEval scale (about 490,000 characters per question).
+- **27B night against 9B night:** same memories and the same 9B reader and judge, so the difference is the night model alone. The 27B wrote headers, facts and judgments. It extracted about twice as many facts (median 679 per conversation against 359) and scored +1.8 points. Question by question it won 104 and lost 83 (sign test p ≈ 0.14), so the gain is real but not significant. Its nights took a median of 28 minutes against 15. Most of that went to integration (1,120 s), which is a stage of one-token yes/no checks; the 9B is well suited to those, and every threshold was measured on it. **Next step:** the 27B writes, the 9B decides.
 - **Before, for reference:** with the pilot settings, the development conversation 26 scored 0.566 by day and 0.605 after its night.
 - **Night cost** on the 9B with 2 parallel slots: 12–21 minutes per conversation.
   - Headers: about 0.3 s per window.
