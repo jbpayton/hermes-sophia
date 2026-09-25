@@ -10,6 +10,7 @@ from __future__ import annotations
 import datetime as dt
 import fcntl
 import json
+import logging
 import math
 import re
 import threading
@@ -24,6 +25,8 @@ from ..spans import resolve_times
 from ..store import sha
 from .. import text as T
 from ..text import norm_entity
+
+logger = logging.getLogger(__name__)
 
 MODALITIES = {"asserted", "planned", "habitual", "preferred", "hypothetical", "negated", "reported"}
 _PLACEHOLDER = re.compile(r"^\s*(\[?implicit\]?|unknown|unspecified|n/?a|none|null|-|\?)\s*$", re.I)
@@ -67,6 +70,8 @@ class SleepRunner:
         self.model = model or self.cfg["sleep_model"]
         self.client = client or engine.clients["sleep"]
         self._batch = threading.local()
+        self._err_lock = threading.Lock()
+        self.judge_errors = 0
         self.guard = [self.model] if model else list(self.cfg["sleep_guard_models"])
         self.log = log
         self.max_wait = self.cfg["sleep_max_wait_s"] if max_wait_s is None else max_wait_s
@@ -118,8 +123,16 @@ class SleepRunner:
         return self.client.chat(self.model, prompt, max_tokens=max_tokens, timeout=self.cfg["sleep_call_timeout"])
 
     def judge(self, state: Any, instructions: str, permutations: int = 1) -> float:
+        """Probability the statement holds. If the model fails even after retries, the answer is "no" (0.0):
+        for every night question -- supersede, merge, drop, is-a-state -- "no" is the safe default."""
         self._guard()
-        return self.teacher.noul(state, instructions, permutations=permutations).noul
+        try:
+            return self.teacher.noul(state, instructions, permutations=permutations).noul
+        except Exception as e:                       # DeciderError after retries, or a malformed reply
+            with self._err_lock:
+                self.judge_errors += 1
+            logger.warning("Sophia night: judgment failed, treated as 'no': %s", str(e)[:200])
+            return 0.0
 
     # ---------------------------------------------------------------- run
     def run(self) -> Dict[str, Any]:
@@ -129,17 +142,29 @@ class SleepRunner:
             fcntl.flock(lf, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except OSError:
             return {"night": self.night, "status": "another sleep is running"}
-        status = "complete"
+        status, failed = "complete", []
         try:
             for step in ALL_STEPS:
                 if step not in self.steps:
                     continue
                 t0 = time.time()
-                out = getattr(self, "step_" + step)() or {}
+                try:
+                    out = getattr(self, "step_" + step)() or {}
+                except Yielded:
+                    raise
+                except Exception as e:          # one step failing doesn't end the night; its work is redone later
+                    logger.warning("Sophia night: step %s failed: %s", step, e, exc_info=True)
+                    out = {"error": str(e)[:300]}
+                    failed.append(step)
                 out["seconds"] = round(time.time() - t0, 1)
                 self.stats[step] = out
-                self.s.journal(self.night, step, "summary", out)
+                self.s.journal(self.night, step, "summary" if step not in failed else "failed", out)
                 self.log(f"  {step:13s} {json.dumps(out, default=str)}")
+            if failed:
+                status = f"partial: {', '.join(failed)} failed"
+            if self.judge_errors:
+                self.stats["judge_errors"] = self.judge_errors
+                self.s.journal(self.night, "run", "judge_errors", {"count": self.judge_errors})
         except Yielded as y:
             status = f"yielded: {y}"
             self.s.journal(self.night, "run", "yielded", str(y))

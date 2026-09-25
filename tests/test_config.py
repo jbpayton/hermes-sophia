@@ -107,3 +107,26 @@ def test_night_waits_for_a_busy_openai_server(engine, fake):
     assert SleepRunner(engine, model="m").busy() == ["http://gpu1:8081"]
     fake.server_busy = lambda: None                                      # unknown counts as idle
     assert SleepRunner(engine, model="m").busy() == []
+
+
+def test_transient_server_errors_are_retried(monkeypatch):
+    import io
+    import urllib.error
+    import urllib.request
+    calls = {"n": 0}
+
+    class Resp(io.BytesIO):
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+    def urlopen(req, timeout):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            raise urllib.error.HTTPError(req.full_url, 500, "busy", {}, io.BytesIO(b'{"error": "fetch failed"}'))
+        return Resp(b'{"choices": [{"message": {"content": "ok"}}]}')
+    monkeypatch.setattr(urllib.request, "urlopen", urlopen)
+    monkeypatch.setattr("hermes_sophia.lms.time.sleep", lambda s: None)
+    assert ModelServer(api="openai").chat("m", "hi", timeout=5) == "ok" and calls["n"] == 2

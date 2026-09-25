@@ -194,3 +194,32 @@ def test_parallel_night_is_not_blocked_by_its_own_calls(engine, fake):
     engine.cfg["night_parallel"] = 3
     out = SleepRunner(engine, max_wait_s=0, steps=["contextualize", "relate"]).run()   # guard = the night model
     assert out["status"] == "complete", out
+
+
+def test_a_failed_judgment_is_a_safe_no_and_a_failed_step_is_partial(engine, fake):
+    _fake_models(fake)
+
+    def boom(prompt):
+        raise RuntimeError("engine fetch failed")
+    fake.readout = boom                                           # every one-token judgment fails
+    t = time.time() - 3600
+    engine.capture_turn("s1", "", "", [{"role": "user", "content": "I'm bringing the Fujifilm X-T5.", "timestamp": t}])
+    engine.capture_turn("s2", "", "", [{"role": "user", "content": "I'm bringing the Sony instead of the Fujifilm.",
+                                        "timestamp": t + 60}])
+    out = SleepRunner(engine, model="fake-9b", max_wait_s=0).run()
+    assert out["stats"]["judge_errors"] > 0
+    assert not engine.store.q("SELECT 1 FROM facts WHERE status='superseded'")   # "no" is the safe answer
+
+    def broken(self):
+        raise RuntimeError("disk full")
+    import hermes_sophia.sleep.runner as R
+    orig = R.SleepRunner.step_views
+    R.SleepRunner.step_views = broken
+    try:
+        before = engine.store.get_meta("last_sleep_ts", 0)
+        out = SleepRunner(engine, model="fake-9b", max_wait_s=0).run()
+    finally:
+        R.SleepRunner.step_views = orig
+    assert out["status"].startswith("partial") and "views" in out["status"]
+    assert "tidy" in out["stats"]                                 # later steps still ran
+    assert engine.store.get_meta("last_sleep_ts", 0) == before    # the watermark waits for a complete night

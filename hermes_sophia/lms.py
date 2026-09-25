@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import re
 import subprocess
+import time
 import urllib.error
 import urllib.request
 from typing import Any, Dict, List, Optional, Sequence, Tuple
@@ -40,16 +41,28 @@ class ModelServer:
 
     # ------------------------------------------------------------------ http
     def _post(self, path: str, body: dict, timeout: float) -> dict:
-        req = urllib.request.Request(self.base_url + path, data=json.dumps(body).encode(),
-                                     headers={"Content-Type": "application/json"})
-        try:
-            with urllib.request.urlopen(req, timeout=timeout) as r:
-                return json.loads(r.read())
-        except urllib.error.HTTPError as e:
-            detail = e.read()[:300].decode("utf-8", "replace")
-            raise LMStudioError(f"{path} HTTP {e.code}: {detail}") from e
-        except Exception as e:  # timeouts, refused connections
-            raise LMStudioError(f"{path}: {e}") from e
+        """POST with retries on transient failures (HTTP 5xx, dropped connections): servers under load fail now and
+        then. Slow calls (night work) retry twice with backoff; fast ones (the per-turn path) once, briefly, so a
+        retry can't blow the agent's time budget. Client errors (4xx) are not retried."""
+        attempts = 3 if timeout >= 30 else 2
+        pause = 5.0 if timeout >= 30 else 0.5
+        for attempt in range(attempts):
+            req = urllib.request.Request(self.base_url + path, data=json.dumps(body).encode(),
+                                         headers={"Content-Type": "application/json"})
+            try:
+                with urllib.request.urlopen(req, timeout=timeout) as r:
+                    return json.loads(r.read())
+            except urllib.error.HTTPError as e:
+                detail = e.read()[:300].decode("utf-8", "replace")
+                err = LMStudioError(f"{path} HTTP {e.code}: {detail}")
+                if e.code < 500 or attempt == attempts - 1:
+                    raise err from e
+            except Exception as e:  # timeouts, refused or dropped connections
+                err = LMStudioError(f"{path}: {e}")
+                if attempt == attempts - 1:
+                    raise err from e
+            time.sleep(pause * (attempt + 1))
+        raise LMStudioError(f"{path}: gave up")
 
     def _get(self, path: str, timeout: float) -> Any:
         try:
