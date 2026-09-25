@@ -241,6 +241,9 @@ class Capture:
                                     body[-ACTION_TAIL:] if len(body) > ACTION_HEAD else "", len(content),
                                     int(a_err), code, said))
                     stats["actions"] += 1
+                    if full and not (name or "") in cfg["capture_tools"]:
+                        # searchable the same day (tonight it becomes part of a task card): what ran, how it went
+                        new_windows.append(self._action_window(session_id, h, name or "?", args, a_err, code, body, said))
                 stats["events"] += 1
                 if full and not err:
                     for purl, ptitle, ptext in pages:
@@ -274,6 +277,19 @@ class Capture:
         store.mark_processed(session_id, new_hashes)
         seen.update(new_hashes)
         return dict(stats)
+
+    def _action_window(self, session_id: str, h: str, tool: str, args: Dict[str, Any], err: bool,
+                       code: Optional[int], body: str, said: float) -> Dict[str, Any]:
+        cmd = next((str(args[k]) for k in ("command", "code", "script", "path", "query") if args.get(k)), "")
+        cmd = cmd or json.dumps(args, ensure_ascii=False)[:200]
+        status = ("failed" + (f" (exit {code})" if code not in (None, 0) else "")) if err else "ok"
+        out = re.sub(r"\s+", " ", body)[:240]
+        text, _ = T.redact(f"{tool}: {cmd[:400]} -> {status}: {out}")
+        ref = f"hermes:{session_id}:{h[:12]}"
+        day = dt.datetime.fromtimestamp(said).strftime("%Y-%m-%d")
+        return {"id": sha(ref, "action"), "ref": ref, "session_id": session_id, "speaker": "action", "said": said,
+                "text": text, "index_text": f"[action · {day} · {tool}] {text}",
+                "flags": "action" + (" error" if err else ""), "stream": "action", "spans": []}
 
     def _grounded(self, session_id: str, user: str, tools: List[str], reply: str) -> bool:
         """False when the reply states specifics about the user's world that the turn gave it no basis for."""

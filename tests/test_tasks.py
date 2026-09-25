@@ -135,3 +135,14 @@ def test_reusing_a_card_earns_credit(engine, fake):
 def test_card_parser_drops_placeholders():
     p = TaskPass.parse_card("GOAL: Check disk\nWHERE: terminal\nWORKED: a1\nDEAD ENDS: -\nLEARNED FROM: ->\nLESSON: ->", 1)
     assert p["where"] == "" and p["lesson"] == "" and p["worked"] == [0] and p["learned"] == []
+
+
+def test_actions_are_searchable_the_same_day(engine):
+    msgs, token = _session()
+    engine.capture.process_messages("ops", msgs)
+    rows = engine.store.q("SELECT text, flags FROM windows WHERE speaker='action' ORDER BY said")
+    assert len(rows) == 2 and "rm /var/log/nginx/*.log -> failed (exit 1)" in rows[0]["text"]
+    assert "error" in rows[0]["flags"] and token not in rows[1]["text"]
+    engine.cfg.update(skip_gate=0.0, junk_floor=0.0, inject_relative_floor=1.0)    # plumbing, not ranking
+    text, _ = engine.recall.prefetch("What didn't work when we rotated the nginx logs?", "later")
+    assert "rm /var/log/nginx/*.log" in text

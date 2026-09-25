@@ -318,6 +318,7 @@ class SleepRunner:
         cand = self.s.q("""SELECT w.* FROM windows w LEFT JOIN chunks c ON c.ref=w.ref
                            WHERE w.said<=? AND w.flags NOT LIKE '%echo%' AND w.flags NOT LIKE '%dropped%'
                            AND w.flags NOT LIKE '%code%' AND w.flags NOT LIKE '%assistant%'
+                           AND w.flags NOT LIKE '%action%'
                            AND (w.stream!='external' OR c.headroom='novel')
                            AND NOT EXISTS (SELECT 1 FROM jobs j WHERE j.night_id='*' AND j.step='relate'
                                            AND j.item=w.id AND j.status='done')
