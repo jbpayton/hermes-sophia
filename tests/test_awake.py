@@ -272,3 +272,9 @@ def test_agent_lines_are_evidence_when_asked_about(engine):
     asked, info = engine.recall.prefetch("Which films did you recommend for Friday night?", "q2")
     assert info["asks_agent"] and sum(f in asked for f in ["Alien", "Arrival", "Heat", "Ronin"]) == 4
     assert sum(f in plain for f in ["Alien", "Arrival", "Heat", "Ronin"]) <= 2      # otherwise still capped
+
+
+def test_ancient_dates_do_not_break_capture(engine):
+    stats = engine.capture.process_messages("hist", [
+        {"role": "user", "content": "Humans started farming about 12,000 years ago, and writing 6000 years ago."}])
+    assert stats["windows"] == 1

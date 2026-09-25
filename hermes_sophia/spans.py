@@ -184,10 +184,13 @@ def resolve_times(text: str, ref: dt.datetime, mode: str = "statement", sp: Opti
             sp.add(m.start(), m.end(), "time", v, t0, t1)
     for m in re.finditer(rf"\b{_NUM}\s+{_UNIT}\s+ago\b", low):
         n, unit = _num(m.group(1)), m.group(2)
-        if unit in ("month", "year"):
-            d = _add_months(today, -n * (12 if unit == "year" else 1))
-        else:
-            d = today - dt.timedelta(days=n * {"week": 7, "day": 1}.get(unit, 0))
+        try:                                   # "6,000 years ago" is history, not a date to resolve
+            if unit in ("month", "year"):
+                d = _add_months(today, -n * (12 if unit == "year" else 1))
+            else:
+                d = today - dt.timedelta(days=n * {"week": 7, "day": 1}.get(unit, 0))
+        except (ValueError, OverflowError):
+            continue
         add_day(m, d)
     for m in re.finditer(rf"\bin\s+{_NUM}\s+{_UNIT}\b", low):
         n, unit = _num(m.group(1)), m.group(2)

@@ -91,6 +91,15 @@ GROUND_INSTRUCTIONS = ("Every specific claim the reply makes about the user, the
                        "about the user.")
 
 
+def _spans(text: str, said: float) -> List[Dict[str, Any]]:
+    """Typed spans are a bonus: a parsing surprise must never cost the message itself."""
+    try:
+        return extract_spans(text, said)
+    except Exception as e:
+        logger.warning("Sophia: span extraction failed, message kept without spans: %s", e)
+        return []
+
+
 def message_hash(session_id: str, m: Dict[str, Any]) -> str:
     """Stable identity of a message whether it comes live from the agent loop or from the session store."""
     content = T.message_text(m.get("content")).strip()
@@ -299,7 +308,7 @@ class Capture:
             hdr = T.header(speaker, said, ctx if i == 0 else None, ctx_names if i == 0 else ())
             out.append({"id": sha(ref, i), "ref": ref, "session_id": session_id, "speaker": speaker, "said": said,
                         "text": wtext, "index_text": f"{hdr} {wtext}", "flags": " ".join(sorted(flags)),
-                        "stream": "conversation", "spans": extract_spans(wtext, said)})
+                        "stream": "conversation", "spans": _spans(wtext, said)})
         return out
 
     # ------------------------------------------------------------ external
@@ -321,7 +330,7 @@ class Capture:
             hdr = f"[{speaker} · {dt.datetime.fromtimestamp(said).strftime('%Y-%m-%d')} · {label}]"
             out.append({"id": sha(ref, i), "ref": ref, "session_id": "", "speaker": speaker, "said": said,
                         "text": wtext, "index_text": f"{hdr} {wtext}", "flags": " ".join(sorted({"external", *wflags.split()})),
-                        "stream": stream, "spans": extract_spans(wtext, said)})
+                        "stream": stream, "spans": _spans(wtext, said)})
         return out
 
     def ingest_document(self, text: str, url: str, title: str = "", now: Optional[float] = None) -> int:
@@ -337,7 +346,7 @@ class Capture:
         hdr = T.header(speaker, now)
         ws = [{"id": sha(ref, i), "ref": ref, "session_id": session_id, "speaker": speaker, "said": now, "text": w,
                "index_text": f"{hdr} {w}", "flags": " ".join(sorted({*flags.split(), *wf.split()})),
-               "stream": "explicit", "spans": extract_spans(w, now)}
+               "stream": "explicit", "spans": _spans(w, now)}
               for i, (w, wf) in enumerate(T.make_windows(text, 3, 480, 800))]
         self._persist(ws)
         return [w["id"] for w in ws]
