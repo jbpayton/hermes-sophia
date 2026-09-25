@@ -127,7 +127,7 @@ def header(speaker: str, said: float, ctx: Optional[str] = None, names: Sequence
     date = _dt.datetime.fromtimestamp(said).strftime("%Y-%m-%d")
     parts = [speaker, date]
     if ctx:
-        parts.append(f"re: {ctx}")
+        parts.append(f"re: {redact(ctx)[0]}")
     if names:
         parts.append("about " + ", ".join(names[:4]))
     return "[" + " · ".join(parts) + "]"

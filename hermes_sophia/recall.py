@@ -412,7 +412,7 @@ class Recall:
                      "ms": round((time.perf_counter() - t0) * 1000)})
         inj_id = sha(session_id, query, time.time())
         e.store.x("""INSERT INTO injections(id,session_id,query,items,gate,decision_id,said) VALUES(?,?,?,?,?,?,?)""",
-                  (inj_id, session_id, query[:2000],
+                  (inj_id, session_id, T.redact(query)[0][:2000],
                    json.dumps([{"kind": it["kind"], "id": it["id"], "sim": round(it["sim"], 4),
                                "assistant": "assistant" in it.get("flags", "")} for it in chosen]),
                    json.dumps({"gate": gate, "passed": passed, "top_sim": round(top[0]["sim"], 4) if top else None,

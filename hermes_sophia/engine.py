@@ -107,7 +107,7 @@ class Engine:
                                               ground=session_id in self.last_injection_text)
         inj = self.last_injection.pop(session_id, None)
         if inj:
-            self.store.x("UPDATE injections SET response_text=? WHERE id=?", ((assistant or "")[:8000], inj))
+            self.store.x("UPDATE injections SET response_text=? WHERE id=?", (T.redact(assistant or "")[0][:8000], inj))
         self.last_injection_shingles.pop(session_id, None)
         self.last_injection_text.pop(session_id, None)
         return stats

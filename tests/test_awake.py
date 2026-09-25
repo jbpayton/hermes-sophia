@@ -278,3 +278,29 @@ def test_ancient_dates_do_not_break_capture(engine):
     stats = engine.capture.process_messages("hist", [
         {"role": "user", "content": "Humans started farming about 12,000 years ago, and writing 6000 years ago."}])
     assert stats["windows"] == 1
+
+
+def test_secret_never_stored(engine):
+    """A pasted key must not survive anywhere: not in a reply's 're:' header, the full-text index or the injection log
+    (Almanac's hygiene check found both of those leaking)."""
+    key = "sk-proj-" + "Ab3" * 14
+    msg = f"Here's the API key for the script, use it just for tonight's run: {key}"
+    engine.prefetch(msg, "s1")
+    engine.capture_turn("s1", msg, "Got it, I'll use it for tonight's run only.")
+    dump = "\n".join(engine.store.conn.iterdump())
+    assert "REDACTED" in dump
+    assert key not in dump and key[8:30] not in dump
+
+
+def test_redaction_happens_before_cutting(engine):
+    """A key straddling a length cut must not survive as a fragment too short to match the pattern."""
+    key = "sk-proj-" + "q7" * 24
+    cmd = "x" * 354 + f" OPENAI_API_KEY={key} python run.py"     # the 400-char cut lands inside the key
+    msgs = [{"role": "user", "content": "run the report"},
+            {"role": "assistant", "content": "", "tool_calls": [
+                {"id": "c1", "type": "function", "function": {"name": "terminal", "arguments": json.dumps({"command": cmd})}}]},
+            {"role": "tool", "tool_call_id": "c1", "name": "terminal", "content": json.dumps({"output": "ok", "exit_code": 0})},
+            {"role": "assistant", "content": "Done."}]
+    engine.capture_turn("s2", "run the report", "Done.", messages=msgs)
+    dump = "\n".join(engine.store.conn.iterdump())
+    assert "q7q7q7q7q7" not in dump

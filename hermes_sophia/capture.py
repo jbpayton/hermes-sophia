@@ -116,6 +116,7 @@ def _clip_args(args: Dict[str, Any]) -> str:
     """Arguments as JSON with secrets redacted and long values cut, so a command can be replayed from the log."""
     def clip(v):
         if isinstance(v, str):
+            v = T.redact(v)[0]                                     # before cutting: a cut key no longer matches
             return v if len(v) <= ARG_CHARS else v[:ARG_CHARS] + f"… [{len(v)} chars]"
         if isinstance(v, list):
             return [clip(x) for x in v[:50]]
@@ -205,12 +206,13 @@ class Capture:
                             citations.append((session_id, f"hermes:{session_id}:{h[:12]}", c, _said(m, now)))
                     if not full and role == "user":
                         events.append((sha("ctx", session_id, h), session_id, agent_context or "context",
-                                       content[:160], _said(m, now), None))
-                recent_names.extend(T.names_in(content))
-                prev[role] = content
+                                       T.redact(content)[0][:160], _said(m, now), None))
+                clean = T.redact(content)[0]                    # later headers quote it and take names from it
+                recent_names.extend(T.names_in(clean))
+                prev[role] = clean
                 if role == "user":
                     turn_user, turn_tools = content, []
-                    request_ref, request_text = f"hermes:{session_id}:{h[:12]}", T.redact(content[:600])[0]
+                    request_ref, request_text = f"hermes:{session_id}:{h[:12]}", T.redact(content)[0][:600]
             elif role == "tool" and is_new:
                 turn_tools.append(unwrap(content)[:1500])
                 name = m.get("name") or m.get("tool_name") or tool_map.get(m.get("tool_call_id") or "", ("", {}))[0]
@@ -281,10 +283,10 @@ class Capture:
     def _action_window(self, session_id: str, h: str, tool: str, args: Dict[str, Any], err: bool,
                        code: Optional[int], body: str, said: float) -> Dict[str, Any]:
         cmd = next((str(args[k]) for k in ("command", "code", "script", "path", "query") if args.get(k)), "")
-        cmd = cmd or json.dumps(args, ensure_ascii=False)[:200]
+        cmd = T.redact(cmd)[0][:400] if cmd else T.redact(json.dumps(args, ensure_ascii=False))[0][:200]
         status = ("failed" + (f" (exit {code})" if code not in (None, 0) else "")) if err else "ok"
-        out = re.sub(r"\s+", " ", body)[:240]
-        text, _ = T.redact(f"{tool}: {cmd[:400]} -> {status}: {out}")
+        out = T.redact(re.sub(r"\s+", " ", body))[0][:240]                 # redact, then cut
+        text = f"{tool}: {cmd} -> {status}: {out}"
         ref = f"hermes:{session_id}:{h[:12]}"
         day = dt.datetime.fromtimestamp(said).strftime("%Y-%m-%d")
         return {"id": sha(ref, "action"), "ref": ref, "session_id": session_id, "speaker": "action", "said": said,
@@ -330,7 +332,7 @@ class Capture:
     # ------------------------------------------------------------ external
     def _chunk(self, url: str, content: str, title: str, said: float, stream: str) -> List[Dict[str, Any]]:
         cfg, store = self.e.cfg, self.e.store
-        text, _ = T.redact(content[:MAX_PAGE_CHARS])
+        text = T.redact(content)[0][:MAX_PAGE_CHARS]
         chash = sha(text, n=24)
         if store.one("SELECT ref FROM chunks WHERE content_hash=?", (chash,)):
             return []                                           # same page read again: nothing new
