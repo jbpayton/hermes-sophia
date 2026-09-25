@@ -180,3 +180,47 @@ def write_summary(path: Path, setup: Dict[str, Any], summary: Dict[str, Any]) ->
 def final_answer(text: str) -> str:
     m = re.search(r"(?im)^\s*answer\s*:\s*(.+)$", text or "")
     return (m.group(1) if m else (text or "")).strip()
+
+
+# ------------------------------------------------------------------ active recall
+ACTIVE_TOOLS = ("sophia_recall", "sophia_query", "sophia_browse")
+
+
+def active_read(models: "Models", engine: Engine, memory_block: str, question_prompt: str, max_steps: int = 4,
+                max_tokens: int = 800) -> Dict[str, Any]:
+    """The reader as a Hermes agent would be: Sophia's system note, the passive injection, and Sophia's own
+    recall / query / browse tools, called through the plugin's tool dispatcher, for up to ``max_steps`` rounds."""
+    from hermes_sophia.tools import SCHEMAS, SYSTEM_NOTE
+    tools = [{"type": "function", "function": s} for s in SCHEMAS if s["name"] in ACTIVE_TOOLS]
+    skill = (ROOT / "hermes_sophia" / "skills" / "memory" / "SKILL.md").read_text()
+    skill = re.sub(r"^---.*?---\s*", "", skill, flags=re.S)      # the skill Hermes loads with the plugin
+    messages = [{"role": "system", "content": SYSTEM_NOTE + "\n\n" + skill},
+                {"role": "user", "content": f"{memory_block}\n\n{question_prompt}"}]
+    calls: List[Dict[str, Any]] = []
+    for step in range(max_steps + 1):
+        models.wait_turn()
+        body = {"model": models.args.reader, "messages": messages, "max_tokens": max_tokens, "temperature": 0.0}
+        if models.args.api == "lmstudio":
+            body["reasoning_effort"] = "none"
+        else:
+            body["chat_template_kwargs"] = {"enable_thinking": False}
+        if step < max_steps:
+            body["tools"], body["tool_choice"] = tools, "auto"
+        r = models.server._post("/v1/chat/completions", body, 300)
+        msg = r["choices"][0]["message"]
+        tcs = msg.get("tool_calls") or []
+        if not tcs or step == max_steps:
+            text = re.sub(r"<think>.*?</think>\s*", "", msg.get("content") or "", flags=re.S).strip()
+            return {"response": text, "tool_calls": calls}
+        messages.append({"role": "assistant", "content": msg.get("content") or "", "tool_calls": tcs})
+        for tc in tcs:
+            fn = tc.get("function") or {}
+            try:
+                args = json.loads(fn.get("arguments") or "{}")
+            except ValueError:
+                args = {}
+            name = fn.get("name", "")
+            out = engine.tools.dispatch(name, args) if name in ACTIVE_TOOLS else json.dumps({"error": "unknown tool"})
+            calls.append({"tool": name, "args": args, "chars": len(out)})
+            messages.append({"role": "tool", "tool_call_id": tc.get("id", ""), "name": name, "content": out[:8000]})
+    return {"response": "", "tool_calls": calls}

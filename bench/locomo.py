@@ -19,7 +19,7 @@ import re
 import time
 from pathlib import Path
 
-from common import (DATA, RESULTS, Models, Results, add_model_args, fresh_engine, final_answer, memory_config,
+from common import (active_read, DATA, RESULTS, Models, Results, add_model_args, fresh_engine, final_answer, memory_config,
                     run_night, summarize, write_summary)
 
 J_PROMPT = (  # verbatim from mem0 evaluation/metrics/llm_judge.py @ aae5989, trailing spaces kept
@@ -48,6 +48,11 @@ J_PROMPT = (  # verbatim from mem0 evaluation/metrics/llm_judge.py @ aae5989, tr
     '\n'
     'Just return the label CORRECT or WRONG in a json format with the key as "label".\n'
     '')
+
+ACTIVE_INSTRUCTIONS = ("Answer from the memories above; if they are not enough, use the memory tools to search "
+                       "further. Dates in the memories are when things were said; resolve words like \"yesterday\" "
+                       "against them. If memory doesn't contain the answer, say it wasn't mentioned.\nGive a short "
+                       "answer on a final line starting with \"Answer:\".")
 
 INSTRUCTIONS = ("Answer from the memories. Dates in the memories are when things were said; resolve words like "
                 "\"yesterday\" or \"last week\" against them. If the memories don't contain the answer, say it "
@@ -110,6 +115,8 @@ def main():
     ap.add_argument("--mode", required=True, choices=["sophia", "sophia-night", "full", "none"])
     ap.add_argument("--convs", default="", help="comma-separated sample ids (default: all 10)")
     ap.add_argument("--limit", type=int, default=0, help="questions per conversation (0 = all)")
+    ap.add_argument("--recall", default="passive", choices=["passive", "active"],
+                    help="passive: the reader sees only what Sophia injects; active: it may also call Sophia's tools")
     add_model_args(ap)
     args = ap.parse_args()
 
@@ -117,7 +124,7 @@ def main():
     if args.convs:
         keep = set(args.convs.split(","))
         data = [c for c in data if c["sample_id"] in keep]
-    name = f"locomo_{args.mode}" + (f"_{args.tag}" if args.tag else "")
+    name = f"locomo_{args.mode}" + ("_active" if args.recall == "active" else "") + (f"_{args.tag}" if args.tag else "")
     res = Results(RESULTS / f"{name}.jsonl")
     work = RESULTS.parent / "work"
     work.mkdir(parents=True, exist_ok=True)
@@ -156,10 +163,21 @@ def main():
             row = {"id": f"{sid}:{i}", "conv": sid, "category": q["category"], "question": q["question"], "gold": gold}
             date = dt.datetime.fromtimestamp(asked_at).strftime("%Y-%m-%d")
             if engine is not None:
+                engine.now_override = asked_at
                 text, info = engine.recall.prefetch(q["question"], f"bench-{sid}", now=asked_at)
                 row.update(gate=info.get("gate"), injected=info.get("n", 0), graph=info.get("graph"))
                 memory = text or "(No memories were recalled for this question.)"
                 prompt = f"{memory}\n\nThe question is asked on {date}.\nQuestion: {q['question']}\n{INSTRUCTIONS}"
+                if args.recall == "active":
+                    act = active_read(models, engine, memory, f"The question is asked on {date}.\nQuestion: "
+                                      f"{q['question']}\n{ACTIVE_INSTRUCTIONS}")
+                    response = act["response"]
+                    row["tool_calls"] = act["tool_calls"]
+                    answer = final_answer(response)
+                    row.update(response=response, answer=answer, correct=int(judge(models, q["question"], gold, answer)),
+                               seconds=round(time.time() - t, 2))
+                    res.add(row)
+                    continue
             elif args.mode == "full":
                 prompt = f"{context}\n\nThe question is asked on {date}.\nQuestion: {q['question']}\n{INSTRUCTIONS}"
             else:
@@ -176,7 +194,7 @@ def main():
         print(f"[{sid}] J={s['accuracy']} over {s['n']}  {s['by']}", flush=True)
 
     summary = summarize(res.rows, "category")
-    setup = {"benchmark": "LoCoMo (categories 1-4)", "mode": args.mode, "reader": args.reader, "judge": args.judge,
+    setup = {"benchmark": "LoCoMo (categories 1-4)", "mode": args.mode, "recall": args.recall, "reader": args.reader, "judge": args.judge,
              "judge_prompt": "Mem0 J (aae5989)", "embed": args.embed, "decider": args.decider,
              "night_model": args.night_model if args.mode == "sophia-night" else None,
              "sophia_config": {k: memory_config(args)[k] for k in (

@@ -55,14 +55,14 @@ def main():
                 if t.get("has_answer"):
                     ev.add(f"hermes:{sid}:{message_hash(sid, {'role': t['role'], 'content': t['content']})[:12]}")
         ref_of = {r["id"]: r["ref"] for r in e.store.q("SELECT id, ref FROM windows")}
-        items, _ = e.recall.candidates(item["question"], k=max(KS), now=ts(item["question_date"]))
+        items, _info = e.recall.candidates(item["question"], k=max(KS), now=ts(item["question_date"]))
         ranked = [ref_of.get(it["id"] if it["kind"] == "window" else it.get("evidence_id")) for it in items]
         typ = item["question_type"]
         for k in KS:
             got = set(ranked[:k]) & ev
             stats[typ][f"hit@{k}"].append(bool(got))
             stats[typ][f"all@{k}"].append(got == ev)
-        chosen = e.recall.select(items[:max(cfg["inject_top"], 1)])
+        chosen = e.recall.select(items[:max(cfg["inject_top"], 1)], agent_asked=_info.get("asks_agent", False))
         chosen = e.recall.fit(chosen, cfg["inject_chars"])            # only what reaches the agent
         inj = {ref_of.get(it["id"] if it["kind"] == "window" else it.get("evidence_id")) for it in chosen}
         stats[typ]["injected"].append(bool(inj & ev))

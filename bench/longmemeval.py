@@ -18,7 +18,7 @@ import datetime as dt
 import json
 import time
 
-from common import (DATA, RESULTS, Models, Results, add_model_args, fresh_engine, memory_config, run_night,
+from common import (active_read, DATA, RESULTS, Models, Results, add_model_args, fresh_engine, memory_config, run_night,
                     summarize, write_summary)
 
 _STD = ("I will give you a question, a correct answer, and a response from a model. Please answer yes if the response "
@@ -55,6 +55,9 @@ READ_MEMORY = ("I will give you memories recalled from several history chats bet
                "question based on the relevant memories. Answer the question step by step: first extract all the "
                "relevant information, and then reason over the information to get the answer.\n\n\nMemories:\n\n{}\n\n"
                "Current Date: {}\nQuestion: {}\nAnswer (step by step):")
+ACTIVE_QUESTION = ("Answer the question based on the memories above; if they are not enough, use the memory tools to "
+                   "search further. Answer step by step: first extract all the relevant information, and then reason "
+                   "over it to get the answer.\n\nCurrent Date: {}\nQuestion: {}")
 READ_HISTORY = ("I will give you several history chats between you and a user. Please answer the question based on the "
                 "relevant chat history. Answer the question step by step: first extract all the relevant information, "
                 "and then reason over the information to get the answer.\n\n\nHistory Chats:\n\n{}\n\nCurrent Date: "
@@ -100,6 +103,10 @@ def main():
     ap.add_argument("--mode", required=True, choices=["sophia", "sophia-night", "oracle", "none"])
     ap.add_argument("--sample", default="gemmery60", help="gemmery60 | all | N (first N of gemmery60)")
     ap.add_argument("--split", default="longmemeval_s_cleaned.json")
+    ap.add_argument("--limit", type=int, default=0, help="only the first N questions of the sample")
+    ap.add_argument("--only-type", default="", help="only this question_type (development diagnosis)")
+    ap.add_argument("--recall", default="passive", choices=["passive", "active"],
+                    help="passive: the reader sees only what Sophia injects; active: it may also call Sophia's tools")
     ap.add_argument("--memories", default="", help="reuse per-question memories from this folder "
                     "(e.g. bench/work/lme, built by retrieval_lme.py) instead of ingesting each haystack")
     add_model_args(ap)
@@ -114,7 +121,12 @@ def main():
     if args.sample != "all":
         by_id = {x["question_id"]: x for x in data}
         data = [by_id[i] for i in ids]
-    name = f"lme_{args.mode}_{args.sample}" + (f"_{args.tag}" if args.tag else "")
+    if args.only_type:
+        data = [x for x in data if x["question_type"] == args.only_type]
+    if args.limit:
+        data = data[:args.limit]
+    name = f"lme_{args.mode}" + ("_active" if args.recall == "active" else "") + f"_{args.sample}" + \
+        (f"_{args.tag}" if args.tag else "")
     res = Results(RESULTS / f"{name}.jsonl")
     work = RESULTS.parent / "work"
     work.mkdir(parents=True, exist_ok=True)
@@ -131,20 +143,36 @@ def main():
         if args.mode.startswith("sophia"):
             cfg = memory_config(args, user_name="User", agent_name="Assistant")
             cached = Path(args.memories) / f"day_{qid}.db" if args.memories else None
-            if cached and cached.exists():
+            if cached:                                   # reuse, or build once and keep (for other readers)
                 from hermes_sophia.engine import Engine
+                cached.parent.mkdir(parents=True, exist_ok=True)
+                fresh_db = not cached.exists()
                 engine = Engine(cfg, cached)
-                row["windows"] = engine.store.one("SELECT COUNT(*) AS n FROM windows")["n"]
+                row["windows"] = ingest(engine, item) if fresh_db else \
+                    engine.store.one("SELECT COUNT(*) AS n FROM windows")["n"]
             else:
                 engine = fresh_engine(work, f"{name}_current", cfg)          # one scratch memory per run
                 row["windows"] = ingest(engine, item)
             if args.mode == "sophia-night":
                 row["night"] = run_night(engine, args, now=asked_at)["status"]
+            engine.now_override = asked_at
             text, info = engine.recall.prefetch(item["question"], "bench", now=asked_at)
             row.update(gate=info.get("gate"), injected=info.get("n", 0), graph=info.get("graph"))
-            engine.close()
             prompt = READ_MEMORY.format(text or "(No memories were recalled for this question.)",
                                         item["question_date"], item["question"])
+            if args.recall == "active":
+                act = active_read(models, engine, text or "(No memories were recalled for this question.)",
+                                  ACTIVE_QUESTION.format(item["question_date"], item["question"]))
+                engine.close()
+                row["tool_calls"] = act["tool_calls"]
+                response = act["response"]
+                row.update(response=response, correct=int(judge(models, item, response)),
+                           seconds=round(time.time() - t, 2))
+                res.add(row)
+                print(f"{len(res.rows):3d} {qid:18s} {row['type']:26s} {'OK ' if row['correct'] else 'MISS'} "
+                      f"{row.get('gate', '')} tools={len(act['tool_calls'])} {row['seconds']}s", flush=True)
+                continue
+            engine.close()
         elif args.mode == "oracle":
             prompt = READ_HISTORY.format(oracle_history(item), item["question_date"], item["question"])
         else:
@@ -161,7 +189,7 @@ def main():
     summary["task_averaged"] = summary.pop("group_mean", None)
     ab = [r for r in rows if r["abstention"]]
     summary["abstention"] = {"n": len(ab), "acc": round(sum(r["correct"] for r in ab) / len(ab), 4) if ab else None}
-    setup = {"benchmark": f"LongMemEval ({args.split})", "sample": args.sample, "mode": args.mode,
+    setup = {"benchmark": f"LongMemEval ({args.split})", "sample": args.sample, "mode": args.mode, "recall": args.recall,
              "reader": args.reader, "judge": args.judge, "judge_prompts": "official evaluate_qa.py (9e0b455)",
              "embed": args.embed, "decider": args.decider,
              "night_model": args.night_model if args.mode == "sophia-night" else None,

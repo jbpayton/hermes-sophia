@@ -73,7 +73,13 @@ class SleepRunner:
         self.steps = steps or ALL_STEPS
         self.limit = limit
         self.night = time.strftime("%Y%m%d-%H%M%S")
-        self.teacher = Decider(self.client, self.model, permutations=1, timeout=self.cfg["sleep_call_timeout"])
+        # One-token judgments (supersession, state, task outcomes, replay) run on the decider by default: they are
+        # fast there, and their thresholds were measured on it. The night model writes (headers, facts, cards).
+        if self.cfg.get("night_judge", "decider") == "decider":
+            self.teacher = Decider(engine.clients["decider"], self.cfg["decider_model"], permutations=1,
+                                   timeout=self.cfg["sleep_call_timeout"])
+        else:
+            self.teacher = Decider(self.client, self.model, permutations=1, timeout=self.cfg["sleep_call_timeout"])
         self.stats: Dict[str, Dict[str, Any]] = {}
         self.new_facts: List[str] = []
         self.snapshot = now or time.time()
@@ -229,12 +235,20 @@ class SleepRunner:
         for sid, rows in sessions.items():
             prior = self.s.q("""SELECT speaker, text FROM windows WHERE session_id=? AND header_source='model'
                                 ORDER BY said DESC LIMIT 3""", (sid,))[::-1]
+            user_only = self.cfg.get("header_roles", "all") == "user"
             for b in range(0, len(rows), size):
-                batch = rows[b:b + size]
+                chunk = rows[b:b + size]
                 ctx = "\n".join(f"{p['speaker']}: {p['text'][:200]}" for p in prior) or "(start of conversation)"
-                lines = "\n".join(f"w{i+1} ({r['speaker']}, {_d(r['said'])}): {r['text'][:600]}" for i, r in enumerate(batch))
-                jobs.append((batch, CONTEXT_PROMPT.format(context=ctx, lines=lines)))
-                prior = [{"speaker": r["speaker"], "text": r["text"]} for r in batch[-3:]]
+                batch, out_lines = [], []
+                for r in chunk:
+                    if user_only and "assistant" in (r["flags"] or ""):
+                        out_lines.append(f"    ({r['speaker']}: {r['text'][:200]})")      # context only, no header
+                        continue
+                    batch.append(r)
+                    out_lines.append(f"w{len(batch)} ({r['speaker']}, {_d(r['said'])}): {r['text'][:600]}")
+                if batch:
+                    jobs.append((batch, CONTEXT_PROMPT.format(context=ctx, lines="\n".join(out_lines))))
+                prior = [{"speaker": r["speaker"], "text": r["text"]} for r in chunk[-3:]]
         if self.limit:
             jobs = jobs[:self.limit]
         outs = self._pmap(lambda j: self.llm(j[1], max_tokens=90 * len(j[0]) + 100), jobs)

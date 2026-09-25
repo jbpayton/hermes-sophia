@@ -253,3 +253,22 @@ def test_user_messages_can_carry_their_own_speaker(engine):
         {"role": "user", "name": "Melanie", "content": "I painted a sunrise last year."}])
     speakers = {r["speaker"] for r in engine.store.q("SELECT speaker FROM windows WHERE session_id='group'")}
     assert speakers == {"Caroline", "Melanie"}
+
+
+def test_relative_dates_are_resolved_in_the_injection(engine):
+    said = time.mktime((2023, 5, 25, 12, 0, 0, 0, 0, -1))                # a Thursday
+    engine.capture.remember("I ran a charity race last Saturday, and I painted a sunrise last year.", speaker="Melanie", now=said)
+    engine.cfg["skip_gate"] = 0.0
+    text, _ = engine.recall.prefetch("When did Melanie run the charity race?", "q", now=said + 86400 * 30)
+    assert '"last Saturday" = 2023-05-20' in text and '"last year" = 2022' in text
+
+
+def test_agent_lines_are_evidence_when_asked_about(engine):
+    for i, film in enumerate(["Alien", "Arrival", "Heat", "Ronin"]):
+        engine.capture.process_messages(f"m{i}", [{"role": "user", "content": "Any film ideas for Friday?"},
+                                                  {"role": "assistant", "content": f"I recommend {film} for Friday night."}])
+    engine.cfg.update(skip_gate=0.0, junk_floor=0.0, inject_relative_floor=1.0)
+    plain, _ = engine.recall.prefetch("Any film ideas for Friday night?", "q1")
+    asked, info = engine.recall.prefetch("Which films did you recommend for Friday night?", "q2")
+    assert info["asks_agent"] and sum(f in asked for f in ["Alien", "Arrival", "Heat", "Ronin"]) == 4
+    assert sum(f in plain for f in ["Alien", "Arrival", "Heat", "Ronin"]) <= 2      # otherwise still capped

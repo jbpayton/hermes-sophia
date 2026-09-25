@@ -22,6 +22,12 @@ _TYPE_HINTS = [(re.compile(r"\b(when|what time|what date|which day|how long ago)
                (re.compile(r"\b(link|url|website|email|phone|number for)\b", re.I), "contact"),
                (re.compile(r"\b(command|path|file|version|ticket|script)\b", re.I), "artifact")]
 
+# The user asks about the agent's own words: then the agent's lines are the evidence, not restatements to demote.
+_ASKS_AGENT = re.compile(r"\b(?:you|you've|you had)\s+(?:said|told|recommended|suggested|mentioned|gave|wrote|listed|"
+                         r"proposed|explained|described|shared|provided|came up with|recommend|suggest)\b|"
+                         r"\bdid you\s+(?:say|tell|recommend|suggest|mention|give|list)\b|"
+                         r"\byour\s+(?:answer|suggestions?|recommendations?|advice|list|reply|explanation)\b", re.I)
+
 GATE_INSTRUCTIONS = ("At least one memory item is directly relevant to the message: it answers it, or states a fact "
                      "the reply should take into account.")
 
@@ -47,7 +53,7 @@ class Recall:
         except Exception as ex:
             e.set_degraded("embed", str(ex))
             info["degraded"] = "embed"
-        scope = query_time_scope(query, now) if use_scope else None
+        scope = query_time_scope(query, now if now is not None else e.now()) if use_scope else None
         allowed = None
         if scope:
             t0, t1, clock = scope
@@ -61,6 +67,8 @@ class Recall:
         in_scope: set = set()
         if allowed is not None and cfg["time_scope"] == "boost":
             in_scope, allowed = allowed, None     # a parsed date range ranks things up; it doesn't hide the rest
+        asks_agent = bool(_ASKS_AGENT.search(query))
+        info["asks_agent"] = asks_agent
         hint = next((t for rx, t in _TYPE_HINTS if rx.search(query)), None)
         info["type_hint"] = hint
         last_sleep = store.get_meta("last_sleep_ts", 0) or 0
@@ -99,7 +107,7 @@ class Recall:
             bonus = lexical + (cfg["type_bonus"] if wid in typed else 0) + \
                     (cfg["time_scope_bonus"] if wid in in_scope else 0) + \
                     (cfg["recency_bonus"] if r["said"] > last_sleep else 0) - \
-                    (cfg["assistant_penalty"] if "assistant" in (r["flags"] or "") else 0) - \
+                    (cfg["assistant_penalty"] if "assistant" in (r["flags"] or "") and not asks_agent else 0) - \
                     (cfg["question_penalty"] if (r["text"] or "").rstrip().endswith("?") and len(r["text"]) < 240 else 0)
             if s < cfg["junk_floor"] and wid not in fts_ids:
                 continue
@@ -165,6 +173,7 @@ class Recall:
                     if note not in it.setdefault("changed", []):
                         it["changed"].append(note)
         ranked = sorted(items.values(), key=lambda it: it["score"], reverse=True)[:k]
+        self._attach_times(ranked)
         credit = store.credit([it["id"] for it in ranked])
         for it in ranked:
             c = credit.get(it["id"], {})
@@ -172,6 +181,23 @@ class Recall:
         ranked.sort(key=lambda it: (round(it["score"], 3), it["credit"].get("real", 0), it["credit"].get("replay", 0)),
                     reverse=True)
         return ranked, info
+
+    def _attach_times(self, items: List[Dict[str, Any]]) -> None:
+        """Relative time words resolved against when they were said ("last Saturday" -> 2023-05-20), so the
+        reader doesn't have to do the date arithmetic. Phrases that already name a year are left alone."""
+        wins = {it["id"]: it for it in items if it["kind"] == "window"}
+        if not wins or not self.e.cfg["show_resolved_dates"]:
+            return
+        ph = ",".join("?" * len(wins))
+        for r in self.e.store.q(f"""SELECT window_id, start, end, value FROM spans WHERE type='time'
+                                    AND window_id IN ({ph}) ORDER BY window_id, start""", list(wins)):
+            it = wins[r["window_id"]]
+            phrase = (it["text"] or "")[r["start"]:r["end"]].strip()
+            if not phrase or re.search(r"\b(1[89]|20)\d\d\b", phrase) or not r["value"]:
+                continue
+            times = it.setdefault("times", [])
+            if len(times) < 3 and (phrase, r["value"]) not in times:
+                times.append((phrase, r["value"]))
 
     # ------------------------------------------------------------------ graph
     @staticmethod
@@ -380,7 +406,7 @@ class Recall:
                 except (DeciderError, Exception) as ex:
                     e.set_degraded("decider", str(ex))
                     gate = "degraded"
-        chosen = self.select(items[:max(cfg["inject_top"], 1)]) if passed else []
+        chosen = self.select(items[:max(cfg["inject_top"], 1)], agent_asked=info.get("asks_agent", False)) if passed else []
         text = self.format(chosen, cfg["inject_chars"]) if chosen else ""
         info.update({"gate": gate, "passed": passed, "n": len(chosen),
                      "ms": round((time.perf_counter() - t0) * 1000)})
@@ -396,7 +422,7 @@ class Recall:
         e.note_injection(session_id, inj_id, chosen)
         return text, info
 
-    def select(self, top: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def select(self, top: List[Dict[str, Any]], agent_asked: bool = False) -> List[Dict[str, Any]]:
         cfg = self.e.cfg
         if not top:
             return []
@@ -407,7 +433,7 @@ class Recall:
                 continue
             if it.get("bare_question"):             # an earlier question carries no facts; sophia_recall still finds it
                 continue
-            if "assistant" in it.get("flags", ""):
+            if "assistant" in it.get("flags", "") and not agent_asked:
                 if n_asst >= cfg["max_assistant_items"]:
                     continue
                 n_asst += 1
@@ -479,7 +505,10 @@ class Recall:
                                 (f", {x['status']}" if x.get("status") not in ("active", None) else "")
                         parts.append(f"{fs} {fr} {fo} ({x.get('modality') or 'asserted'}{extra})")
                     fx = " · fact: " + "; ".join(parts)
-                line = f"- [{_date(it['said'])} · {who}{num}{via}{changed}{fx}] {it['text']}"
+                tm = ""
+                if it.get("times"):
+                    tm = " · " + "; ".join(f'"{p}" = {v}' for p, v in it["times"])
+                line = f"- [{_date(it['said'])} · {who}{num}{via}{changed}{fx}{tm}] {it['text']}"
             if used + len(line) + 1 > budget:
                 break
             lines.append(line)

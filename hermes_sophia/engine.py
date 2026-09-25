@@ -40,6 +40,7 @@ class Engine:
         self.last_injection_text: Dict[str, str] = {}
         self.last_prefetch: Dict[str, Dict[str, Any]] = {}
         self._degraded: Dict[str, Any] = {}
+        self.now_override: Optional[float] = None       # replaying another date (benchmarks); None = the clock
 
     @staticmethod
     def _clients(cfg: Dict[str, Any], client: Optional[ModelServer]) -> Dict[str, ModelServer]:
@@ -58,6 +59,9 @@ class Engine:
     @classmethod
     def for_home(cls, hermes_home: str, overrides: Optional[Dict[str, Any]] = None) -> "Engine":
         return cls(load_config(hermes_home, overrides), default_db_path(hermes_home))
+
+    def now(self) -> float:
+        return self.now_override or time.time()
 
     # ---------------------------------------------------------------- models
     def embed(self, texts: Sequence[str], kind: str = "document"):

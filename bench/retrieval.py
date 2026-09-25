@@ -86,7 +86,7 @@ def main():
             ev = {refs[d] for d in re.findall(r"D\d+:\d+", " ".join(q["evidence"])) if d in refs}
             if not ev:
                 continue
-            items, _ = e.recall.candidates(q["question"], k=max(KS), now=asked_at)
+            items, _info = e.recall.candidates(q["question"], k=max(KS), now=asked_at)
             ranked = []
             for it in items:
                 wid = it["id"] if it["kind"] == "window" else it.get("evidence_id")
@@ -96,7 +96,7 @@ def main():
                 got = set(ranked[:k]) & ev
                 stats[cat][f"hit@{k}"].append(bool(got))
                 stats[cat][f"all@{k}"].append(got == ev)
-            chosen = e.recall.select(items[:max(cfg["inject_top"], 1)])
+            chosen = e.recall.select(items[:max(cfg["inject_top"], 1)], agent_asked=_info.get("asks_agent", False))
             chosen = e.recall.fit(chosen, cfg["inject_chars"])        # only what reaches the agent
             inj = {ref_of.get(it["id"] if it["kind"] == "window" else it.get("evidence_id")) for it in chosen}
             text = e.recall.format(chosen, cfg["inject_chars"])
