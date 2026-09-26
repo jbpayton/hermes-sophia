@@ -29,10 +29,15 @@ Passive is allowed to be the weaker of the two: it is the floor the agent gets f
 | **Sophia, + resolved dates and agent-words recall** | 9B | passive | **0.833** | 0.802 | 6/8 |
 | **Sophia, same** | 27B | passive | **0.867** | 0.885 | 5/8 |
 | Sophia, same | 27B | active | 0.850 | 0.836 | 4/8 |
+| Sophia v6: evidence listed by date, advice mode | 9B | passive | 0.700 | 0.750 | 4/8 |
+| Sophia v6 code with those two off, same memories (control) | 9B | passive | 0.817 | 0.823 | 6/8 |
+| Sophia v6 | 27B | passive | 0.867 | 0.854 | 6/8 |
+| Sophia v6 | 27B | active | 0.833 | 0.848 | 3/8 |
 | Evidence sessions only (the reader's ceiling) | 9B | | 0.917 | 0.854 | 6/8 |
 | Evidence sessions only (the reader's ceiling) | 27B | | 0.900 | 0.875 | 6/8 |
 
-- **The last Sophia change** labels relative time words with the date they mean ("last Saturday" = 2023-05-20) and treats the agent's own lines as evidence when the user asks what the agent said. Development set: 0.733 → 0.750. Held-out: 0.750 → 0.833, mostly temporal (12/16 → 14/16) and single-session-assistant (5/7 → 7/7).
+- **v6 hurt the 9B on these 60 questions.** Listing the evidence by date (see [what changed](#what-changed-and-why)) won 1 question and lost 8 against the control on the same memories, mostly multi-session (0.69 → 0.44) and temporal (0.75 → 0.56). It had helped the same reader on the development set (6 won, 2 lost). With the 27B reader it made no difference. On all 500 questions it is neutral (below), so it stayed: it helps LoCoMo clearly. A small reader seems to rely on the best match coming first, and LongMemEval's injections are mostly noise around one or two passages.
+- **The resolved-dates change** labels relative time words with the date they mean ("last Saturday" = 2023-05-20) and treats the agent's own lines as evidence when the user asks what the agent said. Development set: 0.733 → 0.750. Held-out: 0.750 → 0.833, mostly temporal (12/16 → 14/16) and single-session-assistant (5/7 → 7/7).
 - **With the 27B reader,** passive Sophia is at 0.867 against a ceiling of 0.900: 96% of what the same reader does with only the right sessions in view.
 - **Active did not beat passive here** (0.850 against 0.867, well within noise). It lost one abstention: when the agent searches and finds something nearby, it answers instead of saying it doesn't know.
 - **Uncertainty:** with 60 questions, the 95% interval is roughly ±0.09–0.11. Differences of a few points between rows are not significant.
@@ -41,7 +46,7 @@ Passive is allowed to be the weaker of the two: it is the floor the agent gets f
 
 ### All 500 questions
 
-Sophia with resolved dates, 9B reader and judge, passive, day memory: **0.804** (task-averaged 0.795; abstention 25/30).
+Sophia with resolved dates, 9B reader and judge, passive, day memory: **0.804** (task-averaged 0.795; abstention 25/30). **v6: 0.802** (task-averaged 0.782; abstention 23/30): 29 questions won, 30 lost. Within that, the held-out 60 fall from 0.800 to 0.700 and the other 440 rise from about 0.805 to 0.816. Runs with the same settings agree question for question (temperature 0), so these differences are the change, not noise.
 
 | Type | n | Accuracy |
 |---|---|---|
@@ -92,8 +97,17 @@ Each LongMemEval question has its own haystack of about 50 sessions, so the rows
 | Sophia, after one night (27B writes, 9B decides) | 27B | passive | 0.780 | 0.755 | 0.706 | 0.507 | 0.847 |
 | **Sophia, same memories** | 27B | **active** | **0.858** | 0.817 | 0.805 | 0.640 | 0.916 |
 | The whole conversation in the reader's context | 27B | | 0.853 | 0.803 | 0.805 | 0.547 | 0.922 |
+| Sophia v6: evidence listed by date, advice mode (same memories) | 9B | passive | 0.789 | 0.745 | 0.693 | 0.387 | 0.885 |
+| Sophia v6 | 27B | passive | 0.806 | 0.769 | 0.740 | 0.493 | 0.878 |
+| **Sophia v6** | 27B | **active** | **0.869** | 0.870 | 0.796 | 0.613 | 0.925 |
 
 - **Scale:** 1,155 questions over 7 conversations (roughly 700–950 windows each), scored with Mem0's J prompt; category 5 excluded, as is conventional.
+- **v6 on the same memories:**
+  - Passive with the 9B reader: 0.745 → 0.789 (102 won, 51 lost).
+  - Passive with the 27B: 0.780 → 0.806 (66 won, 36 lost).
+  - Active with the 27B: 0.858 → 0.869 (50 won, 37 lost).
+  - Both passive gains are significant (sign test p < 0.005). They held from the development conversations (0.730 → 0.790, 42 won, 19 lost), and multi-hop, temporal and single-hop questions all gain.
+  - Active recall is now 0.869 against 0.853 for the same reader with the whole conversation in context (better on 73 questions, worse on 54; p ≈ 0.09): on par, slightly ahead.
 - **Active recall matches full context.** With the 27B reader and Sophia's tools, J is 0.858 against 0.853 with the whole conversation in context, a tie within noise. It gets there from recalled passages, not the whole ~70,000-character conversation.
   - Against passive on the same memories: 114 questions won and 24 lost.
   - The agent used a tool on a third of the questions (589 `sophia_recall`, 196 `sophia_browse` and 27 `sophia_query` calls), at 15 s per question against 8 s for passive.
@@ -136,6 +150,20 @@ Each LongMemEval question has its own haystack of about 50 sessions, so the rows
 - **It found a real weakness.** Memory reaches some questions that need none (5 of 16 by day, 9 of 16 after a night), usually through a word they share with old small talk. It is not tuned here, because tuning on the test lives would be teaching to the test.
 - **Its limits.** v0.1 lives are short, so a 27B with everything in context is near the ceiling too. See Almanac's README.
 
+## Response time
+
+Passive recall runs on every message, before the agent reads it, so it has to be fast. Active recall is a tool the agent chooses to call, so it can take longer. Measured on the development set's LongMemEval memories, about 2,000 windows each, with LM Studio on this machine (`bench/profile_prefetch.py`):
+
+| Passive recall step | Median | p90 |
+|---|---|---|
+| Search: embed the message, vectors, text search, graph | 0.07 s | 0.08 s |
+| The whole passive path, including the relevance gate | 0.65 s | 0.95 s |
+
+- **The gate is the cost:** one decision call, asked on 50 of 60 messages; a very strong match (cosine ≥ 0.82) skips it.
+- **Most of that is LM Studio's fixed cost per uncached request.** The same call with no memories in it takes 0.38 s, with 3 memories 0.43 s, and with the usual 10 memories 0.57 s. Trimming what the gate sees would save little.
+- **Every accuracy change in v6 is ranking or formatting.** No model calls were added, and passive time didn't change.
+- **Active recall** averaged 10 s per LoCoMo question with the 27B reader. On the LongMemEval development set its 90th percentile was about 30 s, most of it the reader's own tool rounds.
+
 ## Judge agreement
 
 The 9B judges every run above. To check it, `bench/judge_agreement.py` re-grades a sample with the 27B, using the same official prompts:
@@ -164,6 +192,13 @@ Each change was found stage by stage on the development data (`bench/stages.py`,
 | Relative dates | The reader had to work out which date "last Saturday" meant from the line's date, and often got it wrong | Injected lines label relative time words with the date they mean (`show_resolved_dates`). LoCoMo development conversation: 0.645 → 0.684, temporal 0.51 → 0.70 |
 | The agent's own words | "What did you recommend?" needs the agent's lines, which recall normally ranks down so the agent doesn't quote itself as fact | When the user asks about the agent's words, agent lines are evidence: no penalty, no cap |
 | Who judges at night | Every night threshold was measured on the 9B's one-token readouts | The night model writes; its yes/no judgments go to the decider (`night_judge: decider`) |
+| Order of the injected evidence | Ranked best first, the reader had to put events in order and tell separate occasions apart itself | Still chosen best first, then listed by date under a heading per day (`inject_order: time`). Development: LongMemEval 0.717 → 0.783, LoCoMo 0.730 → 0.790. Held-out: LoCoMo up in all three settings, LongMemEval-500 flat (see above) |
+| "Can you suggest…" | Present-tense "you suggest" matched the pattern for asking about the agent's own words, which switched off the assistant penalty on exactly the requests that need it | Only past forms ("you suggested", "did you recommend") count |
+| Advice requests | Asked for suggestions, the top slots went to the assistant's earlier generic advice rather than what the user had said about themselves | Advice requests rank the agent's lines a further 0.06 lower and keep the user's own past questions (which describe them) at full rank (`advice_penalty`, `advice_keeps_questions`). On the 26 preference questions outside the held-out set: evidence injected 0.69 → 0.89, answers 0.42 → 0.50 |
+
+**Tried and rejected** on development data:
+- **An exhaustive recall option** (`sophia_recall` with `all: true`: every candidate checked by the decider, matches returned oldest first). Active recall went 0.883 → 0.867: the agent used it on most questions, over-counted, and twice ran out of tool rounds. The p90 time per question went from 30 s to 46 s. Removed.
+- **A heading asking the reader to use the user's preferences:** preference questions 0.42 → 0.46 and dev60 0.72 → 0.73, 4 won and 3 lost each, which is noise. Removed.
 
 ## Reproducing
 
