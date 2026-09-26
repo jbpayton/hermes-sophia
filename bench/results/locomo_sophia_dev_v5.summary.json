@@ -1,0 +1,59 @@
+{
+  "setup": {
+    "benchmark": "LoCoMo (categories 1-4)",
+    "mode": "sophia",
+    "recall": "passive",
+    "reader": "qwen35-9b",
+    "judge": "qwen35-9b",
+    "judge_prompt": "Mem0 J (aae5989)",
+    "embed": "nomic-embed",
+    "decider": "qwen35-9b",
+    "night_model": null,
+    "sophia_config": {
+      "inject_chars": 9000,
+      "inject_top": 50,
+      "recall_k": 50,
+      "inject_relative_floor": 0.25,
+      "graph_hops": 1,
+      "graph_adjacent": 1,
+      "fts_weight": 0.05,
+      "facts_as": "keys",
+      "skip_gate": 0.82,
+      "gate_threshold": 0.5
+    },
+    "convs": [
+      "conv-26",
+      "conv-30",
+      "conv-41"
+    ],
+    "limit_per_conv": 0,
+    "set": [],
+    "reused_memory_from": null
+  },
+  "summary": {
+    "n": 385,
+    "accuracy": 0.7299,
+    "by": {
+      "1": {
+        "n": 74,
+        "acc": 0.6216
+      },
+      "2": {
+        "n": 90,
+        "acc": 0.7222
+      },
+      "3": {
+        "n": 21,
+        "acc": 0.4762
+      },
+      "4": {
+        "n": 200,
+        "acc": 0.8
+      }
+    },
+    "group_mean": 0.655,
+    "mean_seconds_per_question": 3.0,
+    "gate_passed_rate": 1.0
+  },
+  "written": "2026-09-26T09:43:39"
+}

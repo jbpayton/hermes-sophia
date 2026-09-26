@@ -1,3 +1,4 @@
+import pytest
 import re
 import time
 
@@ -81,3 +82,43 @@ def test_conversation_link_brings_the_correction(engine, fake):
     items, _ = engine.recall.candidates("Where is the dentist?", k=20)
     fix = next(it for it in items if it["id"] == rows["Actually it moved to Oak Avenue."])
     assert fix["via"] == "corrects a match"          # the added window corrects what matched
+
+
+def test_inject_order_time_lists_by_date_under_day_headings():
+    from hermes_sophia.recall import Recall
+    day = 86400.0
+    items = [{"kind": "window", "id": str(i), "said": 1_700_000_000 + d * day, "speaker": "Joey", "flags": "",
+              "text": t} for i, (d, t) in enumerate([(3, "Third: we adopted a cat."), (1, "First: bought a bike."),
+                                                      (2, "Second: tuned the bike.")])]
+    rank = Recall.format(items, 9000)
+    assert rank.index("Third") < rank.index("First")                  # best first, as given
+    by_time = Recall.format(items, 9000, "time")
+    assert by_time.index("First") < by_time.index("Second") < by_time.index("Third")
+    assert by_time.count("\n2023-") == 3 and "listed by date" in by_time
+    assert Recall.format(items[:1], len(rank.splitlines()[0]) + 5, "time") == ""   # nothing fits: nothing at all
+
+
+
+def test_advice_requests_put_the_users_own_words_first(engine):
+    """Asked for suggestions, the assistant's earlier lines rank advice_penalty lower, and the user's own past
+    questions (which describe them) lose their usual penalty; asking what the agent said is not advice mode."""
+    t0 = engine.now()
+    engine.now_override = t0 - 5 * 86400
+    engine.capture_turn("s1", "I prefer winding down by 9:30 pm; what can I do in the evening?",
+                        "Some evening activities you could do: evening walks, evening classes, evening concerts.")
+    engine.now_override = t0
+    q = "Can you suggest some evening activities I can do?"
+
+    def scores():
+        items, info = engine.recall.candidates(q, 20)
+        by = {("agent" if "assistant" in (it.get("flags") or "") else "user"): it["score"]
+              for it in items if it["kind"] == "window"}
+        return by, info
+    on, info = scores()
+    assert info["asks_advice"] and set(on) == {"agent", "user"}
+    engine.cfg.update(advice_penalty=0.0, advice_keeps_questions=False)
+    off, _ = scores()
+    assert abs((off["agent"] - on["agent"]) - 0.06) < 1e-6              # the agent's line: 0.06 lower
+    assert on["user"] - off["user"] == pytest.approx(engine.cfg["question_penalty"])   # the user's question: no penalty
+    _, info2 = engine.recall.candidates("What evening activities did you suggest to me?", 20)
+    assert not info2["asks_advice"] and info2["asks_agent"]

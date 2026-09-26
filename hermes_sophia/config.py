@@ -40,6 +40,7 @@ DEFAULTS: Dict[str, Any] = {
     # recall
     "recall_k": 50,
     "gate_top": 10,
+    "inject_order": "time",          # rank: best first; time: by date, under a heading per day
     "inject_top": 50,                 # injection may draw from this deep in the ranking (the gate sees gate_top)
     "skip_gate": 0.82,
     "gate_threshold": 0.5,
@@ -54,6 +55,8 @@ DEFAULTS: Dict[str, Any] = {
     "time_scope": "boost",            # filter: a date range in the question hides everything outside it; boost: ranks it up
     "time_scope_bonus": 0.05,
     "assistant_penalty": 0.06,        # assistant-authored lines rank below the user's words and sources
+    "advice_penalty": 0.06,            # ... and this much more when the user asks for suggestions or advice
+    "advice_keeps_questions": True,  # advice requests: the user's own past questions (which describe them) keep full rank
     "max_assistant_items": 2,
     "question_penalty": 0.04,         # a bare earlier question carries no facts
     "inject_relative_floor": 0.25,    # inject only items within this similarity of the top match
@@ -131,8 +134,14 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
                    "size cap)", {"when": _ADVANCED}),
     ("junk_floor", "Candidates below this cosine are never shown to the gate", {"when": _ADVANCED}),
     ("inject_chars", "Size cap for the injected memory block (characters)", {"when": _ADVANCED}),
+    ("inject_order", "How the injected evidence is listed: best match first, or by date under a heading per day",
+     {"when": _ADVANCED, "choices": ["rank", "time"]}),
     ("inject_relative_floor", "Only inject items within this similarity of the top item", {"when": _ADVANCED}),
     ("assistant_penalty", "Ranking penalty for the agent's own earlier lines", {"when": _ADVANCED}),
+    ("advice_penalty", "Extra penalty for the agent's earlier lines when the user asks for suggestions or advice, so "
+                       "what they said about themselves comes first", {"when": _ADVANCED}),
+    ("advice_keeps_questions", "When the user asks for suggestions or advice, their own earlier questions (which say "
+                               "a lot about them) are not ranked down", {"when": _ADVANCED}),
     ("max_assistant_items", "Most agent-authored items per injection", {"when": _ADVANCED}),
     ("question_penalty", "Ranking penalty for a bare earlier question", {"when": _ADVANCED}),
     ("recency_bonus", "Ranking bonus for recent items", {"when": _ADVANCED}),

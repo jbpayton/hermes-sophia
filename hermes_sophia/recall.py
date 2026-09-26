@@ -23,8 +23,10 @@ _TYPE_HINTS = [(re.compile(r"\b(when|what time|what date|which day|how long ago)
                (re.compile(r"\b(command|path|file|version|ticket|script)\b", re.I), "artifact")]
 
 # The user asks about the agent's own words: then the agent's lines are the evidence, not restatements to demote.
+_ASKS_ADVICE = re.compile(r"\b(?:suggest|suggestions?|recommend|recommendations?|advice|tips?|ideas?|what should I|"
+                          r"should I|help me (?:choose|pick|find|decide|plan)|any (?:thoughts|pointers))\b", re.I)
 _ASKS_AGENT = re.compile(r"\b(?:you|you've|you had)\s+(?:said|told|recommended|suggested|mentioned|gave|wrote|listed|"
-                         r"proposed|explained|described|shared|provided|came up with|recommend|suggest)\b|"
+                         r"proposed|explained|described|shared|provided|came up with)\b|"    # past: "can you suggest" is a request
                          r"\bdid you\s+(?:say|tell|recommend|suggest|mention|give|list)\b|"
                          r"\byour\s+(?:answer|suggestions?|recommendations?|advice|list|reply|explanation)\b", re.I)
 
@@ -69,6 +71,8 @@ class Recall:
             in_scope, allowed = allowed, None     # a parsed date range ranks things up; it doesn't hide the rest
         asks_agent = bool(_ASKS_AGENT.search(query))
         info["asks_agent"] = asks_agent
+        info["asks_advice"] = asks_advice = bool(_ASKS_ADVICE.search(query)) and not asks_agent
+        a_pen = cfg["assistant_penalty"] + (cfg["advice_penalty"] if asks_advice else 0.0)
         hint = next((t for rx, t in _TYPE_HINTS if rx.search(query)), None)
         info["type_hint"] = hint
         last_sleep = store.get_meta("last_sleep_ts", 0) or 0
@@ -107,8 +111,9 @@ class Recall:
             bonus = lexical + (cfg["type_bonus"] if wid in typed else 0) + \
                     (cfg["time_scope_bonus"] if wid in in_scope else 0) + \
                     (cfg["recency_bonus"] if r["said"] > last_sleep else 0) - \
-                    (cfg["assistant_penalty"] if "assistant" in (r["flags"] or "") and not asks_agent else 0) - \
-                    (cfg["question_penalty"] if (r["text"] or "").rstrip().endswith("?") and len(r["text"]) < 240 else 0)
+                    (a_pen if "assistant" in (r["flags"] or "") and not asks_agent else 0) - \
+                    (cfg["question_penalty"] if (r["text"] or "").rstrip().endswith("?") and len(r["text"]) < 240
+                     and not (asks_advice and cfg["advice_keeps_questions"]) else 0)
             if s < cfg["junk_floor"] and wid not in fts_ids:
                 continue
             bare_q = "assistant" not in (r["flags"] or "") and (r["text"] or "").rstrip().endswith("?") \
@@ -407,7 +412,7 @@ class Recall:
                     e.set_degraded("decider", str(ex))
                     gate = "degraded"
         chosen = self.select(items[:max(cfg["inject_top"], 1)], agent_asked=info.get("asks_agent", False)) if passed else []
-        text = self.format(chosen, cfg["inject_chars"]) if chosen else ""
+        text = self.format(chosen, cfg["inject_chars"], cfg["inject_order"]) if chosen else ""
         info.update({"gate": gate, "passed": passed, "n": len(chosen),
                      "ms": round((time.perf_counter() - t0) * 1000)})
         inj_id = sha(session_id, query, time.time())
@@ -463,10 +468,13 @@ class Recall:
         return items[:n]
 
     @staticmethod
-    def format(items: List[Dict[str, Any]], budget: int) -> str:
+    def format(items: List[Dict[str, Any]], budget: int, order: str = "rank") -> str:
+        """The injected block. Items are chosen best-first until the budget is spent; ``order="time"`` then lists
+        them by date under a heading per day, which makes counting and ordering across conversations easier."""
         lines = ["Sophia memory — verbatim evidence from earlier conversations and reading "
                  "(dates are when it was said; treat assistant-authored lines as weaker evidence):"]
         used = len(lines[0])
+        said: List[float] = []
         for it in items:
             c = it.get("credit") or {}
             nums = []
@@ -481,6 +489,7 @@ class Recall:
                 if used + len(line) + 1 > budget:
                     break
                 lines.append(line)
+                said.append(it.get("said") or 0.0)
                 used += len(line) + 1
                 continue
             if it["kind"] == "fact":
@@ -512,5 +521,16 @@ class Recall:
             if used + len(line) + 1 > budget:
                 break
             lines.append(line)
+            said.append(it.get("said") or 0.0)
             used += len(line) + 1
-        return "\n".join(lines) if len(lines) > 1 else ""
+        if len(lines) == 1:
+            return ""
+        if order == "time":
+            head, body, day = lines[0][:-1] + ", listed by date):", [], None
+            for t, line in sorted(zip(said, lines[1:]), key=lambda x: x[0]):
+                if _date(t) != day:
+                    day = _date(t)
+                    body.append(f"{day}:")
+                body.append(line)
+            return "\n".join([head] + body)
+        return "\n".join(lines)
