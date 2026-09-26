@@ -1,0 +1,25 @@
+{
+ "source": "stratified 20 of lme_dev60 (no abstention questions; random.Random(20); includes the two questions whose nights were already built)",
+ "ids": [
+  "f685340e",
+  "e66b632c",
+  "7401057b",
+  "bf659f65",
+  "d6062bb9",
+  "37f165cf",
+  "85fa3a3f",
+  "0a995998",
+  "8b9d4367",
+  "c4f10528",
+  "09d032c9",
+  "6b168ec8",
+  "dccbc061",
+  "6f9b354f",
+  "gpt4_18c2b244",
+  "2c63a862",
+  "gpt4_4929293a",
+  "a3838d2b",
+  "370a8ff4",
+  "gpt4_7a0daae1"
+ ]
+}

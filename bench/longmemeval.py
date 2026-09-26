@@ -109,6 +109,8 @@ def main():
                     help="passive: the reader sees only what Sophia injects; active: it may also call Sophia's tools")
     ap.add_argument("--memories", default="", help="reuse per-question memories from this folder "
                     "(e.g. bench/work/lme, built by retrieval_lme.py) instead of ingesting each haystack")
+    ap.add_argument("--memories-prefix", default="day",
+                    help="which cached memories: day, or night (built by lme_night.py)")
     add_model_args(ap)
     args = ap.parse_args()
 
@@ -142,7 +144,7 @@ def main():
         asked_at = ts(item["question_date"])
         if args.mode.startswith("sophia"):
             cfg = memory_config(args, user_name="User", agent_name="Assistant")
-            cached = Path(args.memories) / f"day_{qid}.db" if args.memories else None
+            cached = Path(args.memories) / f"{args.memories_prefix}_{qid}.db" if args.memories else None
             if cached:                                   # reuse, or build once and keep (for other readers)
                 from hermes_sophia.engine import Engine
                 cached.parent.mkdir(parents=True, exist_ok=True)

@@ -54,6 +54,21 @@ Sophia with resolved dates, 9B reader and judge, passive, day memory: **0.804** 
 
 The whole run, including building each question's memory from about 50 sessions, averaged 44 seconds per question.
 
+### Does a night help on LongMemEval?
+
+Each LongMemEval question has its own haystack of about 50 sessions, so the rows above use day memory only. To see what a night adds, a stratified 20-question slice of the development set (`bench/lme_dev20.json`) got one night per question. The 9B wrote and decided, with model-written headers only for the user's lines. A night took a median of 14 minutes, about 2,000 windows each on 4 parallel slots.
+
+| Memory | All evidence in the top 30 | All evidence injected | Characters injected | Answer accuracy (9B reader) |
+|---|---|---|---|---|
+| Day | 16/20 | 15/20 | 5,184 | 0.65 |
+| After a night | 17/20 | **18/20** | 6,747 | **0.75** |
+
+- **The direction is right, but the sample is small.** Paired, the night won 2 questions and lost none: a preference question and an event-ordering question. That isn't significant with 20 questions.
+- **The retrieval gain is in multi-session questions** (all evidence injected: 3/5 → 5/5) and one temporal question (4/6 → 5/6). The 9B reader still counted wrong on the multi-session questions, so those answers didn't improve. That's a reader limit, not a memory one.
+- **In real use, a night runs once over everything new, not once per question.** The cost that makes this benchmark expensive (a fresh night per haystack) doesn't arise.
+
+`bench/run_dev20_night.sh` reproduces it, and a resumed run skips nights that are already built.
+
 **Published numbers**, for orientation only (different readers, judges and sample sizes):
 
 | System | Score | Reader / judge | Setting |
