@@ -184,6 +184,20 @@ The gate should let memory through when it bears on the message, and keep it out
 - **`gate: similarity`** with `gate_floor: 0.50`: under 0.1 s; it lets memory through on nearly every message. On held-out data it scored the same as the default, apart from the Almanac misses above at 0.60.
 
 **Also tested and rejected:** the gate through the chat endpoint (top letter only), which was 0.2 s faster but turned away 17% of relevant messages.
+
+### Serving the decider faster
+
+Most of the gate's time on LM Studio is the server, not the model: `/v1/responses`, the only LM Studio endpoint that returns logprobs, costs about 0.24 s even for a tiny cached prompt. The same 9B file served by llama.cpp's `llama-server`, on one GPU (`bench/decider_servers.py`, 20 real gate prompts, none cached):
+
+| Decider server | Gate call, median | p90 | Repeated prompt | Same decisions |
+|---|---|---|---|---|
+| LM Studio (model split over two GPUs) | 594 ms | 864 ms | 430 ms | |
+| llama-server, one GPU | **399 ms** | **421 ms** | 216 ms | 40 / 40 (p within 0.009) |
+
+- **Whole passive path** (development memories of 2,000 windows): 651 ms median and 954 ms p90 on LM Studio, against 490 ms and 527 ms on llama-server.
+- **Showing the gate 5 memories instead of 10** would bring it to 361 ms, but it turned away 3 more of 76 relevant LongMemEval questions and 2 more of 148 LoCoMo ones, so it stays at 10.
+- **Two option orders** still cost double on llama-server (850 ms): processing the prompt, not the server, is the limit.
+- **Other servers:** vLLM and SGLang need 8–9 GB for this model's 4-bit checkpoints (its embeddings stay 16-bit), and their prefix caching for its hybrid recurrent layers is still unreliable. Details and sources are in [CONFIGURATION.md](CONFIGURATION.md#serving-the-decider).
 - **Active recall** averaged 10 s per LoCoMo question with the 27B reader. On the LongMemEval development set its 90th percentile was about 30 s, most of it the reader's own tool rounds.
 
 ## Judge agreement

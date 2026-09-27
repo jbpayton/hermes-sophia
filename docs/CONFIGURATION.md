@@ -153,3 +153,26 @@ Hermes gives an external provider's prefetch 8 s in total, so keep `embed_timeou
 - with no embeddings, recall falls back to keyword search;
 - with no decider, nothing is injected;
 - capture stores windows without vectors, and the next night fills them in.
+
+## Serving the decider
+
+The decider only ever reads one token's probabilities, so the server it runs on matters more than the model's speed. LM Studio works, but its only logprob endpoint (`/v1/responses`) adds about 0.2 s per call. llama.cpp's own server returns the same probabilities from its chat endpoint, faster: passive recall dropped from 651 to 490 ms median, and from 954 to 527 ms p90, with identical decisions (docs/BENCHMARKS.md, "Serving the decider faster").
+
+```bash
+# the same GGUF LM Studio uses, on one GPU (about 6 GB)
+CUDA_VISIBLE_DEVICES=1 llama-server -m Qwen3.5-9B-Q4_K_M.gguf -ngl 99 -c 16384 -np 4 -fa on --jinja \
+    --alias qwen35-9b --host 127.0.0.1 --port 8081
+```
+
+```yaml
+# Sophia's config: only the decider moves; embeddings and the night can stay on LM Studio
+decider_url: http://127.0.0.1:8081
+decider_api: openai
+```
+
+- **Thinking.** Sophia turns thinking off per request (`chat_template_kwargs: {enable_thinking: false}`). Don't use `--reasoning-budget 0` instead: the first token is then likely to be a thinking tag, not the answer.
+- **Memory.** llama-server needs its own copy of the model. On a machine that's already full, unload the model from LM Studio first.
+- **Other servers** (surveyed in September 2026, not all tested here):
+  - **vLLM** (`logprob_token_ids`, `/generative_scoring`) and **SGLang** (`/v1/score`, which scores candidate tokens in one pass) have the neatest APIs for this. But Qwen3.5-9B's 4-bit checkpoints for them take 8–9 GB. Prefix caching for its hybrid recurrent layers is still unreliable in both, and SGLang's kernels for them need newer GPUs than a 3090.
+  - **TabbyAPI + ExLlamaV3** returns logprobs and has a 4-bit build that fits in 6–8 GB. Untested here.
+  - **Ollama** returns logprobs natively since v0.12.11, but reportedly not through its OpenAI-compatible endpoint. Untested here.
