@@ -1,0 +1,2708 @@
+[
+ {
+  "kind": "relevant",
+  "query": "How many bikes do I own?",
+  "how": "gate",
+  "current": 0.9780689411399719,
+  "reply-uses": 0.9486712747046018,
+  "about-user": 0.9117100496724476,
+  "not-just-topic": 0.953010951446062
+ },
+ {
+  "kind": "relevant",
+  "query": "What was my previous stance on spirituality?",
+  "how": "gate",
+  "current": 0.7557727163069325,
+  "reply-uses": 0.9381645938015205,
+  "about-user": 0.7735289172727641,
+  "not-just-topic": 0.7121396414170879
+ },
+ {
+  "kind": "relevant",
+  "query": "Where did I buy my new bookshelf from?",
+  "how": "gate",
+  "current": 0.9790270982435632,
+  "reply-uses": 0.9749718755336767,
+  "about-user": 0.8806202234484068,
+  "not-just-topic": 0.9446763148355677
+ },
+ {
+  "kind": "relevant",
+  "query": "Where did I attend my cousin's wedding?",
+  "how": "gate",
+  "current": 0.8671371405857344,
+  "reply-uses": 0.8715715530147917,
+  "about-user": 0.7556972584602244,
+  "not-just-topic": 0.5963235391744267
+ },
+ {
+  "kind": "relevant",
+  "query": "What brand of shampoo do I currently use?",
+  "how": "gate",
+  "current": 0.9609641455358056,
+  "reply-uses": 0.9045113933740386,
+  "about-user": 0.8729282018881965,
+  "not-just-topic": 0.866164587602452
+ },
+ {
+  "kind": "relevant",
+  "query": "What color did I repaint my bedroom walls?",
+  "how": "skip"
+ },
+ {
+  "kind": "relevant",
+  "query": "How long did Alex marinate the BBQ ribs in special sauce?",
+  "how": "skip"
+ },
+ {
+  "kind": "relevant",
+  "query": "What size is my new Samsung TV?",
+  "how": "gate",
+  "current": 0.780737795937988,
+  "reply-uses": 0.9485472835052153,
+  "about-user": 0.9129129158509326,
+  "not-just-topic": 0.8139377700035648
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm planning to visit Bandung again and I was wondering if you could remind me of the name of that restaurant in Cihampelas Walk that serves a great Nasi Goreng?",
+  "how": "gate",
+  "current": 0.9681513630260514,
+  "reply-uses": 0.964538282737138,
+  "about-user": 0.6816110179656184,
+  "not-just-topic": 0.9495056044992471
+ },
+ {
+  "kind": "relevant",
+  "query": "I wanted to follow up on our previous conversation about natural remedies for dark circles under the eyes. You mentioned applying tomato juice mixed with lemon juice, how long did you say I should leave it on for?",
+  "how": "skip"
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you remind me what was the average improvement in framerate when using the Hardware-Aware Modular Training (HAMT) agent in the 'To Adapt or Not to Adapt? Real-Time Adaptation for Semantic Segmentation' submission?",
+  "how": "skip"
+ },
+ {
+  "kind": "relevant",
+  "query": "I wanted to follow up on our previous conversation about private sector businesses in Chaudhary. Can you remind me of the company that employs over 40,000 people in the rug-manufacturing industry?",
+  "how": "gate",
+  "current": 0.9212508603711731,
+  "reply-uses": 0.9487108750484734,
+  "about-user": 0.24885444504436355,
+  "not-just-topic": 0.9484863953665976
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm going back to our previous conversation about the children's book on dinosaurs. Can you remind me what color was the scaly body of the Plesiosaur in the image?",
+  "how": "skip"
+ },
+ {
+  "kind": "relevant",
+  "query": "I wanted to follow up on our previous conversation about the fusion breakthrough at Lawrence Livermore National Laboratory. Can you remind me who is the President's Chief Advisor for Science and Technology mentioned in the article?",
+  "how": "gate",
+  "current": 0.9567045622721739,
+  "reply-uses": 0.9613753878509299,
+  "about-user": 0.16502664107934423,
+  "not-just-topic": 0.946391289268502
+ },
+ {
+  "kind": "relevant",
+  "query": "I wanted to follow up on our previous conversation about front-end and back-end development. Can you remind me of the specific back-end programming languages you recommended I learn?",
+  "how": "skip"
+ },
+ {
+  "kind": "relevant",
+  "query": "I am planning another theme park weekend; do you have any suggestions?",
+  "how": "gate",
+  "current": 0.8930947243950107,
+  "reply-uses": 0.9011069406940164,
+  "about-user": 0.789384107920097,
+  "not-just-topic": 0.8084308391813995
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you suggest a hotel for my upcoming trip to Miami?",
+  "how": "gate",
+  "current": 0.6053403933502037,
+  "reply-uses": 0.8015753267994881,
+  "about-user": 0.7293587542705219,
+  "not-just-topic": 0.5271078772796463
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been having trouble with the battery life on my phone lately. Any tips?",
+  "how": "gate",
+  "current": 0.6239845850599841,
+  "reply-uses": 0.8896907633945398,
+  "about-user": 0.8212244136915314,
+  "not-just-topic": 0.5169113337378186
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been feeling a bit stuck with my paintings lately. Do you have any ideas on how I can find new inspiration?",
+  "how": "gate",
+  "current": 0.8640080680282893,
+  "reply-uses": 0.9525329329094125,
+  "about-user": 0.8803889597966501,
+  "not-just-topic": 0.8618643373212307
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the total number of online courses I've completed?",
+  "how": "gate",
+  "current": 0.9448418517166044,
+  "reply-uses": 0.9298753338722886,
+  "about-user": 0.8739019579360257,
+  "not-just-topic": 0.8278948699291302
+ },
+ {
+  "kind": "relevant",
+  "query": "How many babies were born to friends and family members in the last few months?",
+  "how": "gate",
+  "current": 0.8182649529400488,
+  "reply-uses": 0.8859054865747626,
+  "about-user": 0.7129112219343922,
+  "not-just-topic": 0.7765193576577134
+ },
+ {
+  "kind": "relevant",
+  "query": "How many pages do I have left to read in 'The Nightingale'?",
+  "how": "gate",
+  "current": 0.8628811900325514,
+  "reply-uses": 0.9128154411049322,
+  "about-user": 0.8712128998909205,
+  "not-just-topic": 0.8063476813719042
+ },
+ {
+  "kind": "relevant",
+  "query": "How many bikes did I service or plan to service in March?",
+  "how": "gate",
+  "current": 0.7597499372642018,
+  "reply-uses": 0.746854932428819,
+  "about-user": 0.7489585481770138,
+  "not-just-topic": 0.5066819492172084
+ },
+ {
+  "kind": "relevant",
+  "query": "How many total pieces of writing have I completed since I started writing again three weeks ago, including short stories, poems, and pieces for the writing challenge?",
+  "how": "gate",
+  "current": 0.6299159639980534,
+  "reply-uses": 0.9613122109978498,
+  "about-user": 0.9135359926912617,
+  "not-just-topic": 0.8182133818169386
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the average age of me, my parents, and my grandparents?",
+  "how": "gate",
+  "current": 0.9020407850591567,
+  "reply-uses": 0.9150208842546669,
+  "about-user": 0.8978080924663931,
+  "not-just-topic": 0.8354252637521897
+ },
+ {
+  "kind": "relevant",
+  "query": "How many rare items do I have in total?",
+  "how": "gate",
+  "current": 0.8737926042358848,
+  "reply-uses": 0.955982702540308,
+  "about-user": 0.8222931779945606,
+  "not-just-topic": 0.833333664131096
+ },
+ {
+  "kind": "relevant",
+  "query": "How many different cuisines have I learned to cook or tried out in the past few months?",
+  "how": "gate",
+  "current": 0.8652824971132766,
+  "reply-uses": 0.949705632228506,
+  "about-user": 0.8134285400897725,
+  "not-just-topic": 0.7746858550973494
+ },
+ {
+  "kind": "relevant",
+  "query": "How many items of clothing do I need to pick up or return from a store?",
+  "how": "gate",
+  "current": 0.8626577351475434,
+  "reply-uses": 0.9215048940597962,
+  "about-user": 0.8544272620066301,
+  "not-just-topic": 0.8026540958680061
+ },
+ {
+  "kind": "relevant",
+  "query": "How many music albums or EPs have I purchased or downloaded?",
+  "how": "gate",
+  "current": 0.6803063583070139,
+  "reply-uses": 0.8388071668605144,
+  "about-user": 0.7853224654041278,
+  "not-just-topic": 0.4533591333854058
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the total cost of the new food bowl, measuring cup, dental chews, and flea and tick collar I got for Max?",
+  "how": "gate",
+  "current": 0.8745437475082203,
+  "reply-uses": 0.9574849057213521,
+  "about-user": 0.7847427562245193,
+  "not-just-topic": 0.8838635058407085
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the minimum amount I could get if I sold the vintage diamond necklace and the antique vanity?",
+  "how": "gate",
+  "current": 0.9385097891158138,
+  "reply-uses": 0.9665055028304084,
+  "about-user": 0.8645731878088523,
+  "not-just-topic": 0.9039588934813209
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the total number of views on my most popular videos on YouTube and TikTok?",
+  "how": "gate",
+  "current": 0.6052801897066796,
+  "reply-uses": 0.8779157805812474,
+  "about-user": 0.8125064393639125,
+  "not-just-topic": 0.3770261501999587
+ },
+ {
+  "kind": "relevant",
+  "query": "How many fish are there in my 30-gallon tank?",
+  "how": "gate",
+  "current": 0.31537670968791254,
+  "reply-uses": 0.7960193746671911,
+  "about-user": 0.724282749767752,
+  "not-just-topic": 0.18972406554333207
+ },
+ {
+  "kind": "relevant",
+  "query": "How many online courses have I completed in total?",
+  "how": "gate",
+  "current": 0.9017243455727595,
+  "reply-uses": 0.9480814783078246,
+  "about-user": 0.9112508863849154,
+  "not-just-topic": 0.9343600928531979
+ },
+ {
+  "kind": "relevant",
+  "query": "What was the page count of the two novels I finished in January and March?",
+  "how": "gate",
+  "current": 0.5539997097679283,
+  "reply-uses": 0.9185055141887486,
+  "about-user": 0.7762506802279914,
+  "not-just-topic": 0.5667263167954351
+ },
+ {
+  "kind": "relevant",
+  "query": "How many weeks passed between the day I bought my new tennis racket and the day I received it?",
+  "how": "gate",
+  "current": 0.8985742861938812,
+  "reply-uses": 0.9403892202899949,
+  "about-user": 0.8526422843767051,
+  "not-just-topic": 0.8055210874391088
+ },
+ {
+  "kind": "relevant",
+  "query": "How many months have passed since I last visited a museum with a friend?",
+  "how": "gate",
+  "current": 0.8385201800854105,
+  "reply-uses": 0.9221445190134501,
+  "about-user": 0.8263951437944241,
+  "not-just-topic": 0.8127725913967785
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the order of the concerts and musical events I attended in the past two months, starting from the earliest?",
+  "how": "gate",
+  "current": 0.7210654992235628,
+  "reply-uses": 0.909166208598345,
+  "about-user": 0.78457241110473,
+  "not-just-topic": 0.6348662635702701
+ },
+ {
+  "kind": "relevant",
+  "query": "I mentioned that I participated in an art-related event two weeks ago. Where was that event held at?",
+  "how": "gate",
+  "current": 0.7990163573682424,
+  "reply-uses": 0.9050462762272129,
+  "about-user": 0.8173298054686904,
+  "not-just-topic": 0.6508092062824069
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days had passed since I started taking ukulele lessons when I decided to take my acoustic guitar to the guitar tech for servicing?",
+  "how": "gate",
+  "current": 0.8918275071588242,
+  "reply-uses": 0.9396553653197073,
+  "about-user": 0.8457677172184153,
+  "not-just-topic": 0.8207836693673373
+ },
+ {
+  "kind": "relevant",
+  "query": "How many weeks had passed since I recovered from the flu when I went on my 10th jog outdoors?",
+  "how": "gate",
+  "current": 0.9252313006504953,
+  "reply-uses": 0.9348223398369824,
+  "about-user": 0.9042036108383475,
+  "not-just-topic": 0.8837561384743803
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days did it take for me to find a house I loved after starting to work with Rachel?",
+  "how": "gate",
+  "current": 0.8274436922325499,
+  "reply-uses": 0.8733265927027485,
+  "about-user": 0.8268616089220275,
+  "not-just-topic": 0.7448294577131755
+ },
+ {
+  "kind": "relevant",
+  "query": "How many charity events did I participate in before the 'Run for the Cure' event?",
+  "how": "skip"
+ },
+ {
+  "kind": "relevant",
+  "query": "What was the airline that I flied with on Valentine's day?",
+  "how": "gate",
+  "current": 0.7277666270419749,
+  "reply-uses": 0.9136967204153725,
+  "about-user": 0.8045908193363206,
+  "not-just-topic": 0.49649652569659886
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days before I bought the iPhone 13 Pro did I attend the Holiday Market?",
+  "how": "gate",
+  "current": 0.9137191365090609,
+  "reply-uses": 0.9452285972285852,
+  "about-user": 0.7659433141408227,
+  "not-just-topic": 0.843520017922369
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days passed between the day I replaced my spark plugs and the day I participated in the Turbocharged Tuesdays auto racking event?",
+  "how": "gate",
+  "current": 0.901026311194656,
+  "reply-uses": 0.9144330993464742,
+  "about-user": 0.8075662849498293,
+  "not-just-topic": 0.7943521440715411
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days had passed since I finished reading 'The Seven Husbands of Evelyn Hugo' when I attended the book reading event at the local library, where the author of 'The Silent Patient' is discussing her latest thriller novel?",
+  "how": "gate",
+  "current": 0.7476664838716234,
+  "reply-uses": 0.893015440464789,
+  "about-user": 0.7674106315582653,
+  "not-just-topic": 0.7438101110211658
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days ago did I participate in the 5K charity run?",
+  "how": "gate",
+  "current": 0.8134900220649603,
+  "reply-uses": 0.8886666294688665,
+  "about-user": 0.8617467337783273,
+  "not-just-topic": 0.6834708328254384
+ },
+ {
+  "kind": "relevant",
+  "query": "Which event happened first, my cousin's wedding or Michael's engagement party?",
+  "how": "gate",
+  "current": 0.7711648705782221,
+  "reply-uses": 0.9161480565283584,
+  "about-user": 0.7797697514600774,
+  "not-just-topic": 0.5639735899106483
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the order of the three events: 'I signed up for the rewards program at ShopRite', 'I used a Buy One Get One Free coupon on Luvs diapers at Walmart', and 'I redeemed $12 cashback for a $10 Amazon gift card from Ibotta'?",
+  "how": "gate",
+  "current": 0.92769628096109,
+  "reply-uses": 0.9577333095508136,
+  "about-user": 0.8058901012418662,
+  "not-just-topic": 0.8516161541362199
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the order of the sports events I watched in January?",
+  "how": "gate",
+  "current": 0.7944065054028118,
+  "reply-uses": 0.9328039273133892,
+  "about-user": 0.7828278595255502,
+  "not-just-topic": 0.6489054208920555
+ },
+ {
+  "kind": "relevant",
+  "query": "How many Crash Course videos have I watched in the past few weeks?",
+  "how": "gate",
+  "current": 0.9061058337825394,
+  "reply-uses": 0.9491932800865593,
+  "about-user": 0.8886971261793368,
+  "not-just-topic": 0.8745577723754114
+ },
+ {
+  "kind": "relevant",
+  "query": "How often do I play tennis with my friends at the local park previously? How often do I play now?",
+  "how": "skip"
+ },
+ {
+  "kind": "relevant",
+  "query": "For the coffee-to-water ratio in my French press, did I switch to more water per tablespoon of coffee, or less?",
+  "how": "gate",
+  "current": 0.5580645463949192,
+  "reply-uses": 0.8922136481812953,
+  "about-user": 0.7378207051470348,
+  "not-just-topic": 0.5345388330875303
+ },
+ {
+  "kind": "relevant",
+  "query": "How many free night's stays can I redeem at any Hilton property with my accumulated points?",
+  "how": "skip"
+ },
+ {
+  "kind": "relevant",
+  "query": "What was my previous personal best time for the charity 5K run?",
+  "how": "gate",
+  "current": 0.8932339511805172,
+  "reply-uses": 0.9666065153492727,
+  "about-user": 0.812111129284623,
+  "not-just-topic": 0.8024502340171957
+ },
+ {
+  "kind": "relevant",
+  "query": "How many new postcards have I added to my collection since I started collecting again?",
+  "how": "skip"
+ },
+ {
+  "kind": "relevant",
+  "query": "How many bikes do I currently own?",
+  "how": "gate",
+  "current": 0.9740439559577665,
+  "reply-uses": 0.9767505532471846,
+  "about-user": 0.9012403677879046,
+  "not-just-topic": 0.9355450376053468
+ },
+ {
+  "kind": "relevant",
+  "query": "Where do I currently keep my old sneakers?",
+  "how": "gate",
+  "current": 0.9091229941830504,
+  "reply-uses": 0.9545492441415513,
+  "about-user": 0.8853858642047966,
+  "not-just-topic": 0.8794295016691598
+ },
+ {
+  "kind": "relevant",
+  "query": "How often do I play table tennis with my friends at the local park?",
+  "how": "gate",
+  "current": 0.8970990839890909,
+  "reply-uses": 0.9401319474279741,
+  "about-user": 0.9117545212539386,
+  "not-just-topic": 0.8950844274460301
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you suggest some accessories that would complement my current photography setup?",
+  "how": "gate",
+  "current": 0.8663976777199307,
+  "reply-uses": 0.9769230597780942,
+  "about-user": 0.9040614809941085,
+  "not-just-topic": 0.757379562382589
+ },
+ {
+  "kind": "relevant",
+  "query": "What should I serve for dinner this weekend with my homegrown ingredients?",
+  "how": "gate",
+  "current": 0.8700705235365336,
+  "reply-uses": 0.9543423436320337,
+  "about-user": 0.8790553645291185,
+  "not-just-topic": 0.6841962051586067
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you suggest some useful accessories for my phone?",
+  "how": "gate",
+  "current": 0.8300141515671332,
+  "reply-uses": 0.9216487550875687,
+  "about-user": 0.8069086239060452,
+  "not-just-topic": 0.8127799334051597
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been having trouble with the battery life on my phone lately. Any tips?",
+  "how": "gate",
+  "current": 0.6626169285255338,
+  "reply-uses": 0.8990494487073604,
+  "about-user": 0.8374470140744644,
+  "not-just-topic": 0.5288877046367184
+ },
+ {
+  "kind": "relevant",
+  "query": "I\u2019m a bit anxious about getting around Tokyo. Do you have any helpful tips?",
+  "how": "gate",
+  "current": 0.8328619770432063,
+  "reply-uses": 0.9561105793669289,
+  "about-user": 0.8237538841561391,
+  "not-just-topic": 0.8899444455732188
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you suggest a hotel for my upcoming trip to Miami?",
+  "how": "gate",
+  "current": 0.6125412219046107,
+  "reply-uses": 0.8256038964916588,
+  "about-user": 0.7357657876622481,
+  "not-just-topic": 0.46130288728780555
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you suggest some activities that I can do in the evening?",
+  "how": "gate",
+  "current": 0.8500579889118633,
+  "reply-uses": 0.9668366630731158,
+  "about-user": 0.8678125896542126,
+  "not-just-topic": 0.7445196754741319
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been thinking about making a cocktail for an upcoming get-together, but I'm not sure which one to choose. Any suggestions?",
+  "how": "gate",
+  "current": 0.8988033988876032,
+  "reply-uses": 0.9257670503148343,
+  "about-user": 0.8827547693755171,
+  "not-just-topic": 0.7503831448511286
+ },
+ {
+  "kind": "relevant",
+  "query": "I noticed my bike seems to be performing even better during my Sunday group rides. Could there be a reason for this?",
+  "how": "gate",
+  "current": 0.8501151499329124,
+  "reply-uses": 0.9011102408112541,
+  "about-user": 0.9011545780604759,
+  "not-just-topic": 0.7723091258745922
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you recommend a show or movie for me to watch tonight?",
+  "how": "gate",
+  "current": 0.780020906767591,
+  "reply-uses": 0.9351426353232042,
+  "about-user": 0.8485008082380869,
+  "not-just-topic": 0.7554545408975564
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you recommend some interesting cultural events happening around me this weekend?",
+  "how": "gate",
+  "current": 0.8159642108003506,
+  "reply-uses": 0.9407432900262513,
+  "about-user": 0.817463053144766,
+  "not-just-topic": 0.8869065870706285
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been feeling like my chocolate chip cookies need something extra. Any advice?",
+  "how": "gate",
+  "current": 0.6177276472810045,
+  "reply-uses": 0.7893702804860376,
+  "about-user": 0.7188928370147242,
+  "not-just-topic": 0.46218292818464424
+ },
+ {
+  "kind": "relevant",
+  "query": "I was thinking of trying a new coffee creamer recipe. Any recommendations?",
+  "how": "gate",
+  "current": 0.9647603600618639,
+  "reply-uses": 0.9623666932109632,
+  "about-user": 0.8604685963861756,
+  "not-just-topic": 0.8711177491534166
+ },
+ {
+  "kind": "relevant",
+  "query": "I was thinking about rearranging the furniture in my bedroom this weekend. Any tips?",
+  "how": "gate",
+  "current": 0.8177486978060691,
+  "reply-uses": 0.8942377720066115,
+  "about-user": 0.8298922212929538,
+  "not-just-topic": 0.46966827375634146
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been feeling a bit stuck with my paintings lately. Do you have any ideas on how I can find new inspiration?",
+  "how": "gate",
+  "current": 0.8594366067168624,
+  "reply-uses": 0.9510380103569275,
+  "about-user": 0.862717023022016,
+  "not-just-topic": 0.843143537149547
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you recommend some recent publications or conferences that I might find interesting?",
+  "how": "gate",
+  "current": 0.9072275910997347,
+  "reply-uses": 0.9565430247506419,
+  "about-user": 0.8314020579935792,
+  "not-just-topic": 0.7666243675857289
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been sneezing quite a bit lately. Do you think it might be my living room?",
+  "how": "gate",
+  "current": 0.9258509717070604,
+  "reply-uses": 0.959462880052874,
+  "about-user": 0.8972882112426283,
+  "not-just-topic": 0.8953767059421637
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you recommend some resources where I can learn more about video editing?",
+  "how": "gate",
+  "current": 0.9410048386724502,
+  "reply-uses": 0.9485403968167487,
+  "about-user": 0.9001317421929462,
+  "not-just-topic": 0.8716977566271937
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm getting excited about my visit to the music store this weekend. Any tips on what to look for in a new guitar?",
+  "how": "gate",
+  "current": 0.9284841096902762,
+  "reply-uses": 0.9474955564037951,
+  "about-user": 0.88885930977236,
+  "not-just-topic": 0.9114917276540101
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm planning a trip to Denver soon. Any suggestions on what to do there?",
+  "how": "gate",
+  "current": 0.9315846250020547,
+  "reply-uses": 0.9700706871090279,
+  "about-user": 0.894573941421728,
+  "not-just-topic": 0.8896507292329118
+ },
+ {
+  "kind": "relevant",
+  "query": "My kitchen's becoming a bit of a mess again. Any tips for keeping it clean?",
+  "how": "gate",
+  "current": 0.8534547172799921,
+  "reply-uses": 0.9364251620049014,
+  "about-user": 0.8841962754757491,
+  "not-just-topic": 0.7292390786282171
+ },
+ {
+  "kind": "relevant",
+  "query": "I've got some free time tonight, any documentary recommendations?",
+  "how": "gate",
+  "current": 0.8770895140949659,
+  "reply-uses": 0.9585916674805735,
+  "about-user": 0.8095152655633336,
+  "not-just-topic": 0.8553085963096134
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm planning my meal prep next week, any suggestions for new recipes?",
+  "how": "gate",
+  "current": 0.9083774340054863,
+  "reply-uses": 0.9408012249502473,
+  "about-user": 0.8828534294240332,
+  "not-just-topic": 0.8620908043140669
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been struggling with my slow cooker recipes. Any advice on getting better results?",
+  "how": "gate",
+  "current": 0.9172126358854187,
+  "reply-uses": 0.9553677273108607,
+  "about-user": 0.899752626833813,
+  "not-just-topic": 0.8833010796943035
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm thinking of inviting my colleagues over for a small gathering. Any tips on what to bake?",
+  "how": "gate",
+  "current": 0.9422631630344847,
+  "reply-uses": 0.9588014969062628,
+  "about-user": 0.8861586788287907,
+  "not-just-topic": 0.9208503259630108
+ },
+ {
+  "kind": "relevant",
+  "query": "I am planning another theme park weekend; do you have any suggestions?",
+  "how": "gate",
+  "current": 0.8751135298559142,
+  "reply-uses": 0.910196680151912,
+  "about-user": 0.7977736573331823,
+  "not-just-topic": 0.8087470519314492
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Gina open her online clothing store?",
+  "how": "gate",
+  "current": 0.9192485346751752,
+  "reply-uses": 0.9306597597635109,
+  "about-user": 0.6257540490069291,
+  "not-just-topic": 0.8999801564778662
+ },
+ {
+  "kind": "relevant",
+  "query": "Would Melanie go on another roadtrip soon?",
+  "how": "gate",
+  "current": 0.9259267334421585,
+  "reply-uses": 0.9446931946393402,
+  "about-user": 0.7596404568185975,
+  "not-just-topic": 0.9012090389521714
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Jon say about Gina's progress with her store?",
+  "how": "gate",
+  "current": 0.8980237026393718,
+  "reply-uses": 0.9360701635303597,
+  "about-user": 0.639539187572687,
+  "not-just-topic": 0.8557126630192948
+ },
+ {
+  "kind": "relevant",
+  "query": "What emotions did John feel during the small party with the veterans?",
+  "how": "gate",
+  "current": 0.9177678686840192,
+  "reply-uses": 0.944129266869298,
+  "about-user": 0.7607963838869876,
+  "not-just-topic": 0.8797753733593096
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Melanie do to destress?",
+  "how": "gate",
+  "current": 0.9755822707869277,
+  "reply-uses": 0.9700394850869767,
+  "about-user": 0.8551604391671472,
+  "not-just-topic": 0.9514182840938343
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Melanie paint recently?",
+  "how": "gate",
+  "current": 0.9197202869931589,
+  "reply-uses": 0.9340646917060741,
+  "about-user": 0.6883528031506341,
+  "not-just-topic": 0.8786187388131799
+ },
+ {
+  "kind": "relevant",
+  "query": "Does John live close to a beach or the mountains?",
+  "how": "gate",
+  "current": 0.8644427040408178,
+  "reply-uses": 0.9558133154771873,
+  "about-user": 0.6540167208837571,
+  "not-just-topic": 0.6686152593640525
+ },
+ {
+  "kind": "relevant",
+  "query": "What types of pottery have Melanie and her kids made?",
+  "how": "gate",
+  "current": 0.8459991458933517,
+  "reply-uses": 0.9346445965949093,
+  "about-user": 0.7125892012866892,
+  "not-just-topic": 0.8478332153477375
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Jon start learning marketing and analytics tools?",
+  "how": "gate",
+  "current": 0.9185517728014921,
+  "reply-uses": 0.9546758186469235,
+  "about-user": 0.8094614342830072,
+  "not-just-topic": 0.8960932573597857
+ },
+ {
+  "kind": "relevant",
+  "query": "What is John's main focus in local politics?",
+  "how": "gate",
+  "current": 0.9062889748434999,
+  "reply-uses": 0.9459042200795487,
+  "about-user": 0.6695488739911079,
+  "not-just-topic": 0.8704779335265074
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie go to the pottery workshop?",
+  "how": "gate",
+  "current": 0.8443848000219037,
+  "reply-uses": 0.9126365256658047,
+  "about-user": 0.7338573147715137,
+  "not-just-topic": 0.8069947221430835
+ },
+ {
+  "kind": "relevant",
+  "query": "What has Maria done to feel closer to her faith?",
+  "how": "gate",
+  "current": 0.9595442202270832,
+  "reply-uses": 0.9405876964156015,
+  "about-user": 0.8737992833427182,
+  "not-just-topic": 0.9291981629494699
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Mel and her kids make during the pottery workshop?",
+  "how": "gate",
+  "current": 0.8909693206572016,
+  "reply-uses": 0.9406072230699241,
+  "about-user": 0.7447500029029015,
+  "not-just-topic": 0.792985034931359
+ },
+ {
+  "kind": "relevant",
+  "query": "What do Melanie's kids like?",
+  "how": "gate",
+  "current": 0.9415725288457222,
+  "reply-uses": 0.9568002438882721,
+  "about-user": 0.7134634400694346,
+  "not-just-topic": 0.9025498118359305
+ },
+ {
+  "kind": "relevant",
+  "query": "When is Melanie's daughter's birthday?",
+  "how": "gate",
+  "current": 0.9378589057534443,
+  "reply-uses": 0.9046434937468176,
+  "about-user": 0.512844145607862,
+  "not-just-topic": 0.8465593075668856
+ },
+ {
+  "kind": "relevant",
+  "query": "What is Jon working on opening?",
+  "how": "gate",
+  "current": 0.9184743167334919,
+  "reply-uses": 0.9472545014379962,
+  "about-user": 0.7503784220262115,
+  "not-just-topic": 0.9062357443137836
+ },
+ {
+  "kind": "relevant",
+  "query": "How does Gina stay confident in her business?",
+  "how": "gate",
+  "current": 0.9284776963752486,
+  "reply-uses": 0.9685909460846575,
+  "about-user": 0.7043285327942046,
+  "not-just-topic": 0.9414168394892339
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie go camping in July?",
+  "how": "gate",
+  "current": 0.8380951541522518,
+  "reply-uses": 0.8932795605907411,
+  "about-user": 0.8128005457333303,
+  "not-just-topic": 0.766352292234953
+ },
+ {
+  "kind": "relevant",
+  "query": "What pet does Caroline have?",
+  "how": "gate",
+  "current": 0.8330144029066842,
+  "reply-uses": 0.9100695243075647,
+  "about-user": 0.7270741259020678,
+  "not-just-topic": 0.7643921365073711
+ },
+ {
+  "kind": "relevant",
+  "query": "Would Melanie be considered an ally to the transgender community?",
+  "how": "gate",
+  "current": 0.9168694831615456,
+  "reply-uses": 0.9596758918488411,
+  "about-user": 0.6971801377684732,
+  "not-just-topic": 0.8741220081227558
+ },
+ {
+  "kind": "relevant",
+  "query": "What food item did Maria drop off at the homeless shelter?",
+  "how": "gate",
+  "current": 0.8387962692849518,
+  "reply-uses": 0.9252866867882326,
+  "about-user": 0.61991593305214,
+  "not-just-topic": 0.8257780607838673
+ },
+ {
+  "kind": "relevant",
+  "query": "What book is Jon currently reading?",
+  "how": "gate",
+  "current": 0.6625765705631552,
+  "reply-uses": 0.6953383565903863,
+  "about-user": 0.662568501182925,
+  "not-just-topic": 0.7188540392682421
+ },
+ {
+  "kind": "relevant",
+  "query": "Would Melanie be considered a member of the LGBTQ community?",
+  "how": "gate",
+  "current": 0.8427354839332326,
+  "reply-uses": 0.9426249464416347,
+  "about-user": 0.6700454845170878,
+  "not-just-topic": 0.8153657305725619
+ },
+ {
+  "kind": "relevant",
+  "query": "When did John participate in a 5K charity run?",
+  "how": "gate",
+  "current": 0.8814863303902103,
+  "reply-uses": 0.8822939902765754,
+  "about-user": 0.6226558226443837,
+  "not-just-topic": 0.7424592048774461
+ },
+ {
+  "kind": "relevant",
+  "query": "When is Caroline's youth center putting on a talent show?",
+  "how": "gate",
+  "current": 0.8447030147462745,
+  "reply-uses": 0.9159390588215506,
+  "about-user": 0.6582475213445236,
+  "not-just-topic": 0.7951562399659055
+ },
+ {
+  "kind": "relevant",
+  "query": "What do sunflowers represent according to Caroline?",
+  "how": "gate",
+  "current": 0.9253303632728311,
+  "reply-uses": 0.9503917264069787,
+  "about-user": 0.6701819438837311,
+  "not-just-topic": 0.8300550895811766
+ },
+ {
+  "kind": "relevant",
+  "query": "Why did John start blogging about politics and policies?",
+  "how": "gate",
+  "current": 0.9227503254608059,
+  "reply-uses": 0.9491853798812443,
+  "about-user": 0.8053764865064317,
+  "not-just-topic": 0.8958267439829729
+ },
+ {
+  "kind": "relevant",
+  "query": "What topic has John been blogging about recently?",
+  "how": "gate",
+  "current": 0.9551508291445205,
+  "reply-uses": 0.9235333076190297,
+  "about-user": 0.561154207389442,
+  "not-just-topic": 0.904881357074389
+ },
+ {
+  "kind": "relevant",
+  "query": "What recognition did Maria receive at the homeless shelter in August 2023?",
+  "how": "gate",
+  "current": 0.933107281166495,
+  "reply-uses": 0.953893029212832,
+  "about-user": 0.7026210601619087,
+  "not-just-topic": 0.8732725072299321
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie go camping in June?",
+  "how": "gate",
+  "current": 0.866417927356026,
+  "reply-uses": 0.919742109003105,
+  "about-user": 0.7819180875984959,
+  "not-just-topic": 0.7565040041064888
+ },
+ {
+  "kind": "relevant",
+  "query": "How many dogs has Maria adopted from the dog shelter she volunteers at?",
+  "how": "gate",
+  "current": 0.8637675386559791,
+  "reply-uses": 0.8580387346745078,
+  "about-user": 0.6945957795096528,
+  "not-just-topic": 0.6652976060676918
+ },
+ {
+  "kind": "relevant",
+  "query": "What sparked John's interest in improving education and infrastructure in the community?",
+  "how": "gate",
+  "current": 0.9302184081503484,
+  "reply-uses": 0.9632243725421314,
+  "about-user": 0.868931745293658,
+  "not-just-topic": 0.8977920074473784
+ },
+ {
+  "kind": "relevant",
+  "query": "What made Gina choose the furniture and decor for her store?",
+  "how": "gate",
+  "current": 0.9308333781298882,
+  "reply-uses": 0.9388296214859764,
+  "about-user": 0.7811913435374277,
+  "not-just-topic": 0.8705453827971454
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline go to the LGBTQ conference?",
+  "how": "gate",
+  "current": 0.9645761899258767,
+  "reply-uses": 0.9579878766222005,
+  "about-user": 0.8098633727031483,
+  "not-just-topic": 0.8912845984657365
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Caroline see at the council meeting for adoption?",
+  "how": "gate",
+  "current": 0.9328075519207801,
+  "reply-uses": 0.9457294135973895,
+  "about-user": 0.799064722915865,
+  "not-just-topic": 0.8545324036021968
+ },
+ {
+  "kind": "relevant",
+  "query": "What books has Melanie read?",
+  "how": "gate",
+  "current": 0.8251313795449087,
+  "reply-uses": 0.9351397428102526,
+  "about-user": 0.7366353537165522,
+  "not-just-topic": 0.8421254078970004
+ },
+ {
+  "kind": "relevant",
+  "query": "Who have written notes of gratitude to Maria?",
+  "how": "gate",
+  "current": 0.8772123308720652,
+  "reply-uses": 0.8920595674286664,
+  "about-user": 0.5409143772240819,
+  "not-just-topic": 0.7785075065508071
+ },
+ {
+  "kind": "relevant",
+  "query": "How long has Melanie been practicing art?",
+  "how": "gate",
+  "current": 0.8099543211961208,
+  "reply-uses": 0.8995398897939596,
+  "about-user": 0.6339542058553485,
+  "not-just-topic": 0.8508045022233306
+ },
+ {
+  "kind": "relevant",
+  "query": "What was Melanie's reaction to her children enjoying the Grand Canyon?",
+  "how": "gate",
+  "current": 0.936103634374033,
+  "reply-uses": 0.940157936281596,
+  "about-user": 0.7242059674556247,
+  "not-just-topic": 0.9072676963928126
+ },
+ {
+  "kind": "relevant",
+  "query": "Why does Maria think it's important for younger generations to visit military memorials?",
+  "how": "skip"
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie get hurt?",
+  "how": "gate",
+  "current": 0.9543905659948051,
+  "reply-uses": 0.9343232039665987,
+  "about-user": 0.7598288916860845,
+  "not-just-topic": 0.8878645926101305
+ },
+ {
+  "kind": "relevant",
+  "query": "When was John's old area hit with a flood?",
+  "how": "gate",
+  "current": 0.9559299519348863,
+  "reply-uses": 0.929355941966717,
+  "about-user": 0.6661903851647877,
+  "not-just-topic": 0.9005746849428642
+ },
+ {
+  "kind": "relevant",
+  "query": "What instruments does Melanie play?",
+  "how": "gate",
+  "current": 0.954609730460948,
+  "reply-uses": 0.9574354242175223,
+  "about-user": 0.5093785246858626,
+  "not-just-topic": 0.9130504688712899
+ },
+ {
+  "kind": "relevant",
+  "query": "When did John go on a camping trip with Max?",
+  "how": "gate",
+  "current": 0.9320506720811985,
+  "reply-uses": 0.9109401715816621,
+  "about-user": 0.7187375850787535,
+  "not-just-topic": 0.891159921377266
+ },
+ {
+  "kind": "relevant",
+  "query": "What Jon thinks the ideal dance studio should look like?",
+  "how": "gate",
+  "current": 0.9101568539436335,
+  "reply-uses": 0.9378405092221387,
+  "about-user": 0.8879207646404452,
+  "not-just-topic": 0.8948697229626575
+ },
+ {
+  "kind": "relevant",
+  "query": "When did John help renovate his hometown community center?",
+  "how": "gate",
+  "current": 0.9227381153663881,
+  "reply-uses": 0.9356693848230975,
+  "about-user": 0.7518669976130119,
+  "not-just-topic": 0.9043854168206971
+ },
+ {
+  "kind": "relevant",
+  "query": "What country is Caroline's grandma from?",
+  "how": "gate",
+  "current": 0.9451467612104801,
+  "reply-uses": 0.9608691213871295,
+  "about-user": 0.7913635943075158,
+  "not-just-topic": 0.9554960560813395
+ },
+ {
+  "kind": "relevant",
+  "query": "What are Melanie's pets' names?",
+  "how": "gate",
+  "current": 0.8560405422782094,
+  "reply-uses": 0.9369706976394868,
+  "about-user": 0.7195883076929068,
+  "not-just-topic": 0.8378774984673669
+ },
+ {
+  "kind": "relevant",
+  "query": "What job might Maria pursue in the future?",
+  "how": "gate",
+  "current": 0.7593761938036487,
+  "reply-uses": 0.914413484698867,
+  "about-user": 0.6381611439385553,
+  "not-just-topic": 0.713464673036478
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Maria say it was like being at the waterfall in Oregon?",
+  "how": "gate",
+  "current": 0.9718082733622981,
+  "reply-uses": 0.959624516825394,
+  "about-user": 0.6830539893072393,
+  "not-just-topic": 0.9585180006725009
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of food did Maria have on her dinner spread iwth her mother?",
+  "how": "gate",
+  "current": 0.9099920225955599,
+  "reply-uses": 0.937968139002235,
+  "about-user": 0.6597286539372214,
+  "not-just-topic": 0.8520009673710245
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of counseling and mental health services is Caroline interested in pursuing?",
+  "how": "gate",
+  "current": 0.9575387960569097,
+  "reply-uses": 0.9820999311005321,
+  "about-user": 0.9006491731427125,
+  "not-just-topic": 0.9681736378649753
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Gina go to a dance class with a group of friends?",
+  "how": "gate",
+  "current": 0.9416830163084995,
+  "reply-uses": 0.9414557912892743,
+  "about-user": 0.7822649759021013,
+  "not-just-topic": 0.8764118314179393
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline and Melanie go to a pride fesetival together?",
+  "how": "gate",
+  "current": 0.6905080518207827,
+  "reply-uses": 0.8205169836750266,
+  "about-user": 0.5803363480066979,
+  "not-just-topic": 0.5393912732184817
+ },
+ {
+  "kind": "relevant",
+  "query": "What exercises has John done?",
+  "how": "gate",
+  "current": 0.9346194060739423,
+  "reply-uses": 0.9044875388271445,
+  "about-user": 0.7583096885644637,
+  "not-just-topic": 0.6975229539110209
+ },
+ {
+  "kind": "relevant",
+  "query": "What LGBTQ+ events has Caroline participated in?",
+  "how": "gate",
+  "current": 0.9452201779005918,
+  "reply-uses": 0.9625013450468463,
+  "about-user": 0.7965110377542071,
+  "not-just-topic": 0.9216990941913831
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Maria receive a medal from the homeless shelter?",
+  "how": "gate",
+  "current": 0.9579739832018099,
+  "reply-uses": 0.9345758850919499,
+  "about-user": 0.7277977839512288,
+  "not-just-topic": 0.8974768828821901
+ },
+ {
+  "kind": "relevant",
+  "query": "What does John think about trying new classes at the yoga studio?",
+  "how": "gate",
+  "current": 0.8795879244981447,
+  "reply-uses": 0.9348053763852283,
+  "about-user": 0.7576932392693709,
+  "not-just-topic": 0.8521386066832701
+ },
+ {
+  "kind": "relevant",
+  "query": "What areas is John particularly interested in for policymaking?",
+  "how": "gate",
+  "current": 0.9266374745387485,
+  "reply-uses": 0.9553549050650607,
+  "about-user": 0.9059695521449129,
+  "not-just-topic": 0.8958611735075617
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Caroline take away from the book \"Becoming Nicole\"?",
+  "how": "gate",
+  "current": 0.8462325837870276,
+  "reply-uses": 0.950281098607375,
+  "about-user": 0.7310518185266006,
+  "not-just-topic": 0.8065391061042537
+ },
+ {
+  "kind": "relevant",
+  "query": "What areas of the U.S. has John been to or is planning to go to?",
+  "how": "gate",
+  "current": 0.7099495817499156,
+  "reply-uses": 0.8854740050812662,
+  "about-user": 0.6898016227972166,
+  "not-just-topic": 0.7323364735265583
+ },
+ {
+  "kind": "relevant",
+  "query": "Around which US holiday did Maria get into a car accident?",
+  "how": "gate",
+  "current": 0.8278897669324388,
+  "reply-uses": 0.8661758700640576,
+  "about-user": 0.6153651330025591,
+  "not-just-topic": 0.6395799953749555
+ },
+ {
+  "kind": "relevant",
+  "query": "What is Jon offering to the dancers at his dance studio?",
+  "how": "gate",
+  "current": 0.932042914042973,
+  "reply-uses": 0.9507080552553923,
+  "about-user": 0.6542974094050674,
+  "not-just-topic": 0.882573954862576
+ },
+ {
+  "kind": "relevant",
+  "query": "When was Jon in Paris?",
+  "how": "gate",
+  "current": 0.7646017889213177,
+  "reply-uses": 0.8513284666483321,
+  "about-user": 0.7216855013669723,
+  "not-just-topic": 0.6659502484652905
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Maria go to the beach?",
+  "how": "gate",
+  "current": 0.9168290945438946,
+  "reply-uses": 0.9277366867197627,
+  "about-user": 0.7405692951017551,
+  "not-just-topic": 0.8448483649144756
+ },
+ {
+  "kind": "relevant",
+  "query": "What natural disaster affected John's old area on 7 July, 2023?",
+  "how": "gate",
+  "current": 0.9068950773902766,
+  "reply-uses": 0.9143087816747171,
+  "about-user": 0.734959553119151,
+  "not-just-topic": 0.9039160363042259
+ },
+ {
+  "kind": "relevant",
+  "query": "What offer does Gina make to Jon regarding social media?",
+  "how": "gate",
+  "current": 0.9272735346598129,
+  "reply-uses": 0.9348093569566983,
+  "about-user": 0.5875458920048323,
+  "not-just-topic": 0.8734867646977746
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Jon visit networking events for his store?",
+  "how": "gate",
+  "current": 0.7750689073070343,
+  "reply-uses": 0.937587048676447,
+  "about-user": 0.7273836737560859,
+  "not-just-topic": 0.7670939344495498
+ },
+ {
+  "kind": "relevant",
+  "query": "When Gina has lost her job at Door Dash?",
+  "how": "gate",
+  "current": 0.9477122428449962,
+  "reply-uses": 0.9399924931544203,
+  "about-user": 0.8090677361447218,
+  "not-just-topic": 0.8883796942734163
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Caroline make for a local church?",
+  "how": "gate",
+  "current": 0.9620332461922465,
+  "reply-uses": 0.973663516990425,
+  "about-user": 0.6361181348895102,
+  "not-just-topic": 0.9364997704927807
+ },
+ {
+  "kind": "relevant",
+  "query": "How does John plan to honor the memories of his beloved pet?",
+  "how": "gate",
+  "current": 0.8507026217211658,
+  "reply-uses": 0.9171010027468598,
+  "about-user": 0.7991034852149113,
+  "not-just-topic": 0.8213632823956136
+ },
+ {
+  "kind": "relevant",
+  "query": "What pets does Melanie have?",
+  "how": "gate",
+  "current": 0.9134332362099071,
+  "reply-uses": 0.9502403879612379,
+  "about-user": 0.7108372978473745,
+  "not-just-topic": 0.8773592714925511
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline join a new activist group?",
+  "how": "gate",
+  "current": 0.8974903657086872,
+  "reply-uses": 0.9447837971750019,
+  "about-user": 0.7998810376142076,
+  "not-just-topic": 0.8972728764368971
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Maria adopt Shadow?",
+  "how": "gate",
+  "current": 0.9141354802598708,
+  "reply-uses": 0.9119549915985112,
+  "about-user": 0.7390338879608312,
+  "not-just-topic": 0.8781784664590238
+ },
+ {
+  "kind": "relevant",
+  "query": "How has John's fitness improved since starting boot camps with his family?",
+  "how": "gate",
+  "current": 0.924690879202305,
+  "reply-uses": 0.9180479504501173,
+  "about-user": 0.8191196694036117,
+  "not-just-topic": 0.8871000194926968
+ },
+ {
+  "kind": "relevant",
+  "query": "What states has Maria vacationed at?",
+  "how": "gate",
+  "current": 0.8746115334528552,
+  "reply-uses": 0.9285762764049819,
+  "about-user": 0.722066856153588,
+  "not-just-topic": 0.9123197247495411
+ },
+ {
+  "kind": "relevant",
+  "query": "When did John take a road trip to the Pacific Northwest?",
+  "how": "gate",
+  "current": 0.9555380548785863,
+  "reply-uses": 0.9384520065151143,
+  "about-user": 0.7237491261892512,
+  "not-just-topic": 0.8696276163100187
+ },
+ {
+  "kind": "relevant",
+  "query": "How did Gina promote her clothes store?",
+  "how": "gate",
+  "current": 0.9274309753889299,
+  "reply-uses": 0.9457449700722425,
+  "about-user": 0.6606925713623037,
+  "not-just-topic": 0.9047216204084026
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Gina make a limited edition line of?",
+  "how": "gate",
+  "current": 0.9623983382897192,
+  "reply-uses": 0.9595836813943459,
+  "about-user": 0.7006781326819462,
+  "not-just-topic": 0.9260268716993678
+ },
+ {
+  "kind": "relevant",
+  "query": "How did Melanie feel after the accident?",
+  "how": "gate",
+  "current": 0.975139894236696,
+  "reply-uses": 0.9567886384603734,
+  "about-user": 0.798180223934063,
+  "not-just-topic": 0.9441568422409499
+ },
+ {
+  "kind": "relevant",
+  "query": "Why does John say he feels stuck and questioning his decisions and goals?",
+  "how": "gate",
+  "current": 0.9113069109838317,
+  "reply-uses": 0.9706298247462122,
+  "about-user": 0.9049835873405462,
+  "not-just-topic": 0.9082414205284288
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Maria say she feels when doing upside-down yoga poses?",
+  "how": "gate",
+  "current": 0.9641698358173614,
+  "reply-uses": 0.9613530259723535,
+  "about-user": 0.7125847771978386,
+  "not-just-topic": 0.9074480452106217
+ },
+ {
+  "kind": "relevant",
+  "query": "What events is Maria planning for the homeless shelter funraiser?",
+  "how": "gate",
+  "current": 0.9588040022764599,
+  "reply-uses": 0.9461905996749242,
+  "about-user": 0.7791306249258257,
+  "not-just-topic": 0.9055053615344321
+ },
+ {
+  "kind": "relevant",
+  "query": "What did John recently get promoted to?",
+  "how": "gate",
+  "current": 0.7327546922282657,
+  "reply-uses": 0.8199921453485812,
+  "about-user": 0.5488345264500769,
+  "not-just-topic": 0.6276716348876776
+ },
+ {
+  "kind": "relevant",
+  "query": "How does Melanie prioritize self-care?",
+  "how": "skip"
+ },
+ {
+  "kind": "relevant",
+  "query": "Why did Maria sit with the little girl at the shelter event in February 2023?",
+  "how": "gate",
+  "current": 0.8502795935219556,
+  "reply-uses": 0.9405962066840409,
+  "about-user": 0.7730768573625155,
+  "not-just-topic": 0.8609696293556162
+ },
+ {
+  "kind": "relevant",
+  "query": "What activities does John's family enjoy doing together?",
+  "how": "gate",
+  "current": 0.8331524982139644,
+  "reply-uses": 0.9366977448548328,
+  "about-user": 0.7625161943946969,
+  "not-just-topic": 0.7691122028413931
+ },
+ {
+  "kind": "relevant",
+  "query": "What might John's degree be in?",
+  "how": "gate",
+  "current": 0.8802684674862842,
+  "reply-uses": 0.9349134598097857,
+  "about-user": 0.8304810104241465,
+  "not-just-topic": 0.790038349177117
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of professional experience did Gina get accepted for on May 23, 2023?",
+  "how": "gate",
+  "current": 0.8952114661477323,
+  "reply-uses": 0.9224566988296146,
+  "about-user": 0.5952679896007209,
+  "not-just-topic": 0.83791096907951
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie go to the museum?",
+  "how": "gate",
+  "current": 0.9236506350111724,
+  "reply-uses": 0.9344340262767331,
+  "about-user": 0.6823168445977854,
+  "not-just-topic": 0.8894731391014401
+ },
+ {
+  "kind": "relevant",
+  "query": "In what ways is Caroline participating in the LGBTQ community?",
+  "how": "gate",
+  "current": 0.9165502945236772,
+  "reply-uses": 0.9735162167008465,
+  "about-user": 0.823691986717833,
+  "not-just-topic": 0.8830966311908963
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of event did John and his family attend in June 2023?",
+  "how": "gate",
+  "current": 0.9229421833235724,
+  "reply-uses": 0.9484767281491612,
+  "about-user": 0.7084596511233854,
+  "not-just-topic": 0.8938527694081142
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of activities did Maria do at the picnic with her church friends?",
+  "how": "gate",
+  "current": 0.882351866109851,
+  "reply-uses": 0.96562087848756,
+  "about-user": 0.7723902841289105,
+  "not-just-topic": 0.872693336687556
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Gina develop a video presentation to teach how to style her fashion pieces? ",
+  "how": "gate",
+  "current": 0.9608834832199791,
+  "reply-uses": 0.8941841728739008,
+  "about-user": 0.5889734976208033,
+  "not-just-topic": 0.8241472451291185
+ },
+ {
+  "kind": "relevant",
+  "query": "Did Jon and Gina both participate in dance competitions?",
+  "how": "gate",
+  "current": 0.8592226195747723,
+  "reply-uses": 0.910819139572781,
+  "about-user": 0.6462814811907447,
+  "not-just-topic": 0.7684873825971104
+ },
+ {
+  "kind": "relevant",
+  "query": "What did John attend with his colleagues in March 2023?",
+  "how": "gate",
+  "current": 0.5777374370286165,
+  "reply-uses": 0.7862221771958183,
+  "about-user": 0.5847523923349743,
+  "not-just-topic": 0.45427911928382936
+ },
+ {
+  "kind": "relevant",
+  "query": "Who did Maria have dinner with on May 3, 2023?",
+  "how": "gate",
+  "current": 0.5283813509012137,
+  "reply-uses": 0.736660123930855,
+  "about-user": 0.5064487226422056,
+  "not-just-topic": 0.46434466797896046
+ },
+ {
+  "kind": "relevant",
+  "query": "How did John describe his kids' reaction at the military memorial?",
+  "how": "gate",
+  "current": 0.8641320778169604,
+  "reply-uses": 0.9137934382686803,
+  "about-user": 0.6602830222415823,
+  "not-just-topic": 0.774854562663353
+ },
+ {
+  "kind": "relevant",
+  "query": "Who supports Caroline when she has a negative experience?",
+  "how": "gate",
+  "current": 0.8592741053498436,
+  "reply-uses": 0.9491323756832757,
+  "about-user": 0.6911660544011208,
+  "not-just-topic": 0.8479914903132577
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of painting did Caroline share with Melanie on October 13, 2023?",
+  "how": "gate",
+  "current": 0.7615743306606353,
+  "reply-uses": 0.93159411691213,
+  "about-user": 0.5505580436880169,
+  "not-just-topic": 0.8274078221648222
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's a good synonym for 'quick'?",
+  "how": "gate",
+  "current": 0.8259635164286894,
+  "reply-uses": 0.7968198127524186,
+  "about-user": 0.5325570894365063,
+  "not-just-topic": 0.5991340747169518
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write me a two-line poem about rain.",
+  "how": "gate",
+  "current": 0.6150275563897443,
+  "reply-uses": 0.8438684544563433,
+  "about-user": 0.5091104929977341,
+  "not-just-topic": 0.4589152910388552
+ },
+ {
+  "kind": "off-topic",
+  "query": "How many ounces are in a cup?",
+  "how": "gate",
+  "current": 0.6941902105074964,
+  "reply-uses": 0.8386900110189668,
+  "about-user": 0.20771958594467438,
+  "not-just-topic": 0.5321417270794755
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the capital of Australia?",
+  "how": "gate",
+  "current": 0.34943825495352754,
+  "reply-uses": 0.7994872843730034,
+  "about-user": 0.47054625033899755,
+  "not-just-topic": 0.3192578891591833
+ },
+ {
+  "kind": "off-topic",
+  "query": "Give me a quick tip for boiling eggs.",
+  "how": "gate",
+  "current": 0.44911667158093294,
+  "reply-uses": 0.8441843514172911,
+  "about-user": 0.6584522065128307,
+  "not-just-topic": 0.4789723169808181
+ },
+ {
+  "kind": "off-topic",
+  "query": "What does 'ephemeral' mean?",
+  "how": "gate",
+  "current": 0.6752759387006793,
+  "reply-uses": 0.8753132814105435,
+  "about-user": 0.6015109611665374,
+  "not-just-topic": 0.4179045939446529
+ },
+ {
+  "kind": "off-topic",
+  "query": "Explain photosynthesis in one sentence.",
+  "how": "gate",
+  "current": 0.37966633065541083,
+  "reply-uses": 0.7245824822618527,
+  "about-user": 0.16944994918193734,
+  "not-just-topic": 0.21235067592113582
+ },
+ {
+  "kind": "off-topic",
+  "query": "Translate 'thank you very much' into Spanish.",
+  "how": "gate",
+  "current": 0.87218394406343,
+  "reply-uses": 0.9071294162100294,
+  "about-user": 0.5963517318295772,
+  "not-just-topic": 0.6901635526650804
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is 17 times 23?",
+  "how": "gate",
+  "current": 0.6416014018989588,
+  "reply-uses": 0.894133292494099,
+  "about-user": 0.4948632816751086,
+  "not-just-topic": 0.41023214834307764
+ },
+ {
+  "kind": "off-topic",
+  "query": "Who wrote Pride and Prejudice?",
+  "how": "gate",
+  "current": 0.2477142675550356,
+  "reply-uses": 0.6538708426878446,
+  "about-user": 0.3785346311671136,
+  "not-just-topic": 0.18014532102763897
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a haiku about autumn leaves.",
+  "how": "gate",
+  "current": 0.8538379643681799,
+  "reply-uses": 0.9000412378210172,
+  "about-user": 0.298294872601905,
+  "not-just-topic": 0.8340464290661775
+ },
+ {
+  "kind": "off-topic",
+  "query": "How do I reverse a list in Python?",
+  "how": "gate",
+  "current": 0.55795083620104,
+  "reply-uses": 0.6979960009785124,
+  "about-user": 0.16630719610935438,
+  "not-just-topic": 0.23548124519774366
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the boiling point of water in Fahrenheit?",
+  "how": "gate",
+  "current": 0.4190685060849566,
+  "reply-uses": 0.6284033489817518,
+  "about-user": 0.26286681336946827,
+  "not-just-topic": 0.32607049884993367
+ },
+ {
+  "kind": "off-topic",
+  "query": "Give me three words that rhyme with 'light'.",
+  "how": "gate",
+  "current": 0.6064726493921953,
+  "reply-uses": 0.8740359838314739,
+  "about-user": 0.4568276533523508,
+  "not-just-topic": 0.558683912397727
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the difference between 'affect' and 'effect'?",
+  "how": "gate",
+  "current": 0.9493329412232826,
+  "reply-uses": 0.9101755415431121,
+  "about-user": 0.49638630647790977,
+  "not-just-topic": 0.8367652545727546
+ },
+ {
+  "kind": "off-topic",
+  "query": "Convert 5 kilometres to miles.",
+  "how": "gate",
+  "current": 0.7744748069807286,
+  "reply-uses": 0.9217609393699878,
+  "about-user": 0.6968524013030242,
+  "not-just-topic": 0.5065950262229146
+ },
+ {
+  "kind": "off-topic",
+  "query": "Tell me a short joke about penguins.",
+  "how": "gate",
+  "current": 0.6328980548818368,
+  "reply-uses": 0.8604739406515581,
+  "about-user": 0.19888319574072044,
+  "not-just-topic": 0.2643746118264893
+ },
+ {
+  "kind": "off-topic",
+  "query": "What year did the Berlin Wall fall?",
+  "how": "gate",
+  "current": 0.05446349707386574,
+  "reply-uses": 0.3244501017680932,
+  "about-user": 0.22502333550963194,
+  "not-just-topic": 0.10591102529695423
+ },
+ {
+  "kind": "off-topic",
+  "query": "Summarize the plot of Romeo and Juliet in two sentences.",
+  "how": "gate",
+  "current": 0.41330210654679744,
+  "reply-uses": 0.7724441735705772,
+  "about-user": 0.17360673088123652,
+  "not-just-topic": 0.19178227042277093
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the square root of 144?",
+  "how": "gate",
+  "current": 0.35437311832355783,
+  "reply-uses": 0.7914727128016087,
+  "about-user": 0.22810606372788528,
+  "not-just-topic": 0.19141035331320122
+ },
+ {
+  "kind": "off-topic",
+  "query": "How many continents are there?",
+  "how": "gate",
+  "current": 0.5172075674045616,
+  "reply-uses": 0.7234994568998416,
+  "about-user": 0.35763286687041435,
+  "not-just-topic": 0.5377812644420892
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a regex that matches an email address.",
+  "how": "gate",
+  "current": 0.5873075628916696,
+  "reply-uses": 0.7006255977851472,
+  "about-user": 0.36794484538099337,
+  "not-just-topic": 0.44467251698004945
+ },
+ {
+  "kind": "off-topic",
+  "query": "What does HTTP stand for?",
+  "how": "gate",
+  "current": 0.42364359672385155,
+  "reply-uses": 0.7426775448222653,
+  "about-user": 0.199064510046142,
+  "not-just-topic": 0.24357992525549566
+ },
+ {
+  "kind": "off-topic",
+  "query": "Name three primary colours.",
+  "how": "gate",
+  "current": 0.6070548432715952,
+  "reply-uses": 0.830572758263378,
+  "about-user": 0.261263677327133,
+  "not-just-topic": 0.5379950770270645
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the plural of 'cactus'?",
+  "how": "gate",
+  "current": 0.5188034445908023,
+  "reply-uses": 0.8074533282818805,
+  "about-user": 0.3271773921967877,
+  "not-just-topic": 0.27046950057979235
+ },
+ {
+  "kind": "off-topic",
+  "query": "Explain what a black hole is to a ten-year-old.",
+  "how": "gate",
+  "current": 0.27085235703889915,
+  "reply-uses": 0.39897527979108927,
+  "about-user": 0.10787707343455856,
+  "not-just-topic": 0.16282038889016767
+ },
+ {
+  "kind": "off-topic",
+  "query": "How many days are in a leap year?",
+  "how": "gate",
+  "current": 0.36604898774512773,
+  "reply-uses": 0.6706240875145872,
+  "about-user": 0.1512435891549085,
+  "not-just-topic": 0.18407858534312083
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is the chemical symbol for gold?",
+  "how": "gate",
+  "current": 0.49286371525315065,
+  "reply-uses": 0.8396640109104017,
+  "about-user": 0.18733603935767768,
+  "not-just-topic": 0.5638589050870246
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a limerick about a cat who loves boxes.",
+  "how": "gate",
+  "current": 0.7667935697983583,
+  "reply-uses": 0.8465363801556491,
+  "about-user": 0.3795069423166384,
+  "not-just-topic": 0.5090924569172024
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the opposite of 'generous'?",
+  "how": "gate",
+  "current": 0.8051270797386514,
+  "reply-uses": 0.7504357647064618,
+  "about-user": 0.4037979314994993,
+  "not-just-topic": 0.5583123585566452
+ },
+ {
+  "kind": "off-topic",
+  "query": "How do you say 'good morning' in Japanese?",
+  "how": "gate",
+  "current": 0.32088605968720474,
+  "reply-uses": 0.6444190482126084,
+  "about-user": 0.48554848656626604,
+  "not-just-topic": 0.17730965479260646
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is the speed of light, roughly?",
+  "how": "gate",
+  "current": 0.3163699439510914,
+  "reply-uses": 0.7209429327151033,
+  "about-user": 0.19561031130512402,
+  "not-just-topic": 0.6283800268522073
+ },
+ {
+  "kind": "off-topic",
+  "query": "Give me a one-line definition of machine learning.",
+  "how": "gate",
+  "current": 0.8833916117758637,
+  "reply-uses": 0.8472481848538738,
+  "about-user": 0.091106942915816,
+  "not-just-topic": 0.8363096978975532
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's 15% of 80?",
+  "how": "gate",
+  "current": 0.586302353437667,
+  "reply-uses": 0.7955411790778567,
+  "about-user": 0.24795838158219907,
+  "not-just-topic": 0.5180337040000017
+ },
+ {
+  "kind": "off-topic",
+  "query": "Who painted the Mona Lisa?",
+  "how": "gate",
+  "current": 0.29739926477556994,
+  "reply-uses": 0.857559373604988,
+  "about-user": 0.29618796963554556,
+  "not-just-topic": 0.3002182822316049
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a SQL query that counts rows in a table called orders.",
+  "how": "gate",
+  "current": 0.1205881530114157,
+  "reply-uses": 0.329665152894809,
+  "about-user": 0.09900837471324023,
+  "not-just-topic": 0.07991917482406938
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is the largest planet in our solar system?",
+  "how": "gate",
+  "current": 0.4100134229468191,
+  "reply-uses": 0.7006507345868278,
+  "about-user": 0.26374179833301353,
+  "not-just-topic": 0.21078547320933605
+ },
+ {
+  "kind": "off-topic",
+  "query": "Explain the difference between weather and climate.",
+  "how": "gate",
+  "current": 0.7690011873542493,
+  "reply-uses": 0.7880262646919662,
+  "about-user": 0.3277323064707667,
+  "not-just-topic": 0.5176562959714057
+ },
+ {
+  "kind": "off-topic",
+  "query": "What does 'carpe diem' mean?",
+  "how": "gate",
+  "current": 0.13505406330798342,
+  "reply-uses": 0.6209089367436391,
+  "about-user": 0.09031968813907752,
+  "not-just-topic": 0.16593497057468234
+ },
+ {
+  "kind": "off-topic",
+  "query": "How many sides does a hexagon have?",
+  "how": "gate",
+  "current": 0.27646633830150213,
+  "reply-uses": 0.7345902364966468,
+  "about-user": 0.22144205079394352,
+  "not-just-topic": 0.28560746458505015
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a two-sentence horror story.",
+  "how": "gate",
+  "current": 0.8938207362277146,
+  "reply-uses": 0.8715283570575209,
+  "about-user": 0.39486005770649113,
+  "not-just-topic": 0.7211710165308642
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the freezing point of water in Celsius?",
+  "how": "gate",
+  "current": 0.37655462288194674,
+  "reply-uses": 0.6938841232258851,
+  "about-user": 0.3656780052906846,
+  "not-just-topic": 0.5245412327200093
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is a prime number?",
+  "how": "gate",
+  "current": 0.24222858434468397,
+  "reply-uses": 0.7476970205546134,
+  "about-user": 0.41609988031780987,
+  "not-just-topic": 0.16986042600597795
+ },
+ {
+  "kind": "off-topic",
+  "query": "Suggest a title for a poem about the ocean.",
+  "how": "gate",
+  "current": 0.6812794114818004,
+  "reply-uses": 0.909089657986992,
+  "about-user": 0.7529708178468185,
+  "not-just-topic": 0.5554772291675958
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the past tense of 'swim'?",
+  "how": "gate",
+  "current": 0.48560197115836123,
+  "reply-uses": 0.8207294779571337,
+  "about-user": 0.5377653925825927,
+  "not-just-topic": 0.485265615050439
+ },
+ {
+  "kind": "off-topic",
+  "query": "How long is a marathon?",
+  "how": "gate",
+  "current": 0.4514919187991542,
+  "reply-uses": 0.7943053117342174,
+  "about-user": 0.5956828319934433,
+  "not-just-topic": 0.44940345086719624
+ },
+ {
+  "kind": "off-topic",
+  "query": "What language is spoken in Brazil?",
+  "how": "gate",
+  "current": 0.6588858328059923,
+  "reply-uses": 0.8793689548307866,
+  "about-user": 0.21962186264802858,
+  "not-just-topic": 0.7963654087641067
+ },
+ {
+  "kind": "off-topic",
+  "query": "Explain recursion in one sentence.",
+  "how": "gate",
+  "current": 0.5729983582159952,
+  "reply-uses": 0.8708724347354946,
+  "about-user": 0.6657148224657922,
+  "not-just-topic": 0.47898841894568367
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is the tallest mountain on Earth?",
+  "how": "gate",
+  "current": 0.26875594922468976,
+  "reply-uses": 0.7370025310887354,
+  "about-user": 0.35072893320218923,
+  "not-just-topic": 0.15968450298763132
+ },
+ {
+  "kind": "off-topic",
+  "query": "Give me an anagram of 'listen'.",
+  "how": "gate",
+  "current": 0.6305854671286057,
+  "reply-uses": 0.8595347115733476,
+  "about-user": 0.6139539866789272,
+  "not-just-topic": 0.57290312480856
+ },
+ {
+  "kind": "off-topic",
+  "query": "What does DNA stand for?",
+  "how": "gate",
+  "current": 0.18683534845238076,
+  "reply-uses": 0.6574637615881678,
+  "about-user": 0.27143512151940885,
+  "not-just-topic": 0.17954362140810454
+ },
+ {
+  "kind": "off-topic",
+  "query": "How many minutes are in three hours?",
+  "how": "gate",
+  "current": 0.551101021080936,
+  "reply-uses": 0.8124391042001513,
+  "about-user": 0.5057215267729622,
+  "not-just-topic": 0.41697707766337905
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the difference between a virus and a bacterium?",
+  "how": "gate",
+  "current": 0.24112924477699066,
+  "reply-uses": 0.7258091386721246,
+  "about-user": 0.2916878444857159,
+  "not-just-topic": 0.15587428883424936
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a tongue twister about sheep.",
+  "how": "gate",
+  "current": 0.9148344327897064,
+  "reply-uses": 0.9354465855850701,
+  "about-user": 0.6363142396099628,
+  "not-just-topic": 0.8336070602966803
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is the main ingredient in guacamole?",
+  "how": "gate",
+  "current": 0.42932417258963884,
+  "reply-uses": 0.8161471338519009,
+  "about-user": 0.35636224743707057,
+  "not-just-topic": 0.3834498846806206
+ },
+ {
+  "kind": "off-topic",
+  "query": "How do I center text in CSS?",
+  "how": "gate",
+  "current": 0.14333962049292193,
+  "reply-uses": 0.6889373993792285,
+  "about-user": 0.16917050150191543,
+  "not-just-topic": 0.07949476400493122
+ },
+ {
+  "kind": "off-topic",
+  "query": "Who discovered penicillin?",
+  "how": "gate",
+  "current": 0.3136882747338785,
+  "reply-uses": 0.8246559068579842,
+  "about-user": 0.42036058689695277,
+  "not-just-topic": 0.4499231616146354
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's a synonym for 'happy'?",
+  "how": "gate",
+  "current": 0.5900125234169904,
+  "reply-uses": 0.8478149526343794,
+  "about-user": 0.2843283784519882,
+  "not-just-topic": 0.5275913678540827
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is 2 to the power of 10?",
+  "how": "gate",
+  "current": 0.7579682281565445,
+  "reply-uses": 0.8568217718966102,
+  "about-user": 0.5022001461623913,
+  "not-just-topic": 0.7273144700190246
+ },
+ {
+  "kind": "off-topic",
+  "query": "Explain what inflation means in economics.",
+  "how": "gate",
+  "current": 0.2717632426590863,
+  "reply-uses": 0.8142237522597291,
+  "about-user": 0.20875050198684417,
+  "not-just-topic": 0.18943492251170557
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's a good synonym for 'quick'?",
+  "how": "gate",
+  "current": 0.5642369679367684,
+  "reply-uses": 0.8283678473314687,
+  "about-user": 0.693826848036007,
+  "not-just-topic": 0.4947751449390747
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write me a two-line poem about rain.",
+  "how": "gate",
+  "current": 0.7953746370401005,
+  "reply-uses": 0.9460701197265889,
+  "about-user": 0.7770557812585736,
+  "not-just-topic": 0.7606505063928096
+ },
+ {
+  "kind": "off-topic",
+  "query": "How many ounces are in a cup?",
+  "how": "gate",
+  "current": 0.5661530973024587,
+  "reply-uses": 0.8423417508880281,
+  "about-user": 0.568387260497027,
+  "not-just-topic": 0.41958131650376196
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the capital of Australia?",
+  "how": "gate",
+  "current": 0.36826195402213985,
+  "reply-uses": 0.7836425397687088,
+  "about-user": 0.5309665373771815,
+  "not-just-topic": 0.30071960729886127
+ },
+ {
+  "kind": "off-topic",
+  "query": "Give me a quick tip for boiling eggs.",
+  "how": "gate",
+  "current": 0.43648312207711454,
+  "reply-uses": 0.8660865684064533,
+  "about-user": 0.5989088925755504,
+  "not-just-topic": 0.4840805407886527
+ },
+ {
+  "kind": "off-topic",
+  "query": "What does 'ephemeral' mean?",
+  "how": "gate",
+  "current": 0.7567613799468182,
+  "reply-uses": 0.8982375915444614,
+  "about-user": 0.6013664250280923,
+  "not-just-topic": 0.6838217376411173
+ },
+ {
+  "kind": "off-topic",
+  "query": "Explain photosynthesis in one sentence.",
+  "how": "gate",
+  "current": 0.45842833047695897,
+  "reply-uses": 0.8734685706333145,
+  "about-user": 0.48675341226246754,
+  "not-just-topic": 0.3369041980516094
+ },
+ {
+  "kind": "off-topic",
+  "query": "Translate 'thank you very much' into Spanish.",
+  "how": "gate",
+  "current": 0.7395995015120488,
+  "reply-uses": 0.8943413880473368,
+  "about-user": 0.4301340122487456,
+  "not-just-topic": 0.684553764984881
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is 17 times 23?",
+  "how": "gate",
+  "current": 0.4903047072517882,
+  "reply-uses": 0.8576271359308129,
+  "about-user": 0.5461621018304377,
+  "not-just-topic": 0.46475937706056847
+ },
+ {
+  "kind": "off-topic",
+  "query": "Who wrote Pride and Prejudice?",
+  "how": "gate",
+  "current": 0.3365599351522719,
+  "reply-uses": 0.8288724944567196,
+  "about-user": 0.5088970341251212,
+  "not-just-topic": 0.19697900572948132
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a haiku about autumn leaves.",
+  "how": "gate",
+  "current": 0.8695707047091858,
+  "reply-uses": 0.9255474031100126,
+  "about-user": 0.7370828014145454,
+  "not-just-topic": 0.836966106038852
+ },
+ {
+  "kind": "off-topic",
+  "query": "How do I reverse a list in Python?",
+  "how": "gate",
+  "current": 0.38511402456781607,
+  "reply-uses": 0.8136612114565576,
+  "about-user": 0.5596980487501826,
+  "not-just-topic": 0.39117965078917905
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the boiling point of water in Fahrenheit?",
+  "how": "gate",
+  "current": 0.38847096762717664,
+  "reply-uses": 0.8156912432992223,
+  "about-user": 0.5539465316220231,
+  "not-just-topic": 0.3558551653967652
+ },
+ {
+  "kind": "off-topic",
+  "query": "Give me three words that rhyme with 'light'.",
+  "how": "gate",
+  "current": 0.7809141928987158,
+  "reply-uses": 0.912698190578368,
+  "about-user": 0.526116555682819,
+  "not-just-topic": 0.6553679317322386
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the difference between 'affect' and 'effect'?",
+  "how": "gate",
+  "current": 0.714347981359187,
+  "reply-uses": 0.9109251791244735,
+  "about-user": 0.5466764889306772,
+  "not-just-topic": 0.5323396349614931
+ },
+ {
+  "kind": "off-topic",
+  "query": "Convert 5 kilometres to miles.",
+  "how": "gate",
+  "current": 0.643098749863366,
+  "reply-uses": 0.889209169200357,
+  "about-user": 0.7665576589303462,
+  "not-just-topic": 0.423176345058822
+ },
+ {
+  "kind": "off-topic",
+  "query": "Tell me a short joke about penguins.",
+  "how": "gate",
+  "current": 0.5121992555276723,
+  "reply-uses": 0.8776496695404902,
+  "about-user": 0.5119402450186092,
+  "not-just-topic": 0.4137518349222439
+ },
+ {
+  "kind": "off-topic",
+  "query": "What year did the Berlin Wall fall?",
+  "how": "gate",
+  "current": 0.2840149048109048,
+  "reply-uses": 0.6747886096553222,
+  "about-user": 0.46175604145477256,
+  "not-just-topic": 0.14493564421720012
+ },
+ {
+  "kind": "off-topic",
+  "query": "Summarize the plot of Romeo and Juliet in two sentences.",
+  "how": "gate",
+  "current": 0.3816263529639271,
+  "reply-uses": 0.5472492637132826,
+  "about-user": 0.3284463501736488,
+  "not-just-topic": 0.11357781105571213
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the square root of 144?",
+  "how": "gate",
+  "current": 0.3193170620930791,
+  "reply-uses": 0.8629914966732533,
+  "about-user": 0.47438484501379163,
+  "not-just-topic": 0.37775532186760563
+ },
+ {
+  "kind": "off-topic",
+  "query": "How many continents are there?",
+  "how": "gate",
+  "current": 0.1945392893898334,
+  "reply-uses": 0.7909661463874016,
+  "about-user": 0.6237280440376878,
+  "not-just-topic": 0.1307748725624832
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a regex that matches an email address.",
+  "how": "gate",
+  "current": 0.591671037590438,
+  "reply-uses": 0.8511448524529885,
+  "about-user": 0.6264363846977979,
+  "not-just-topic": 0.5401005051285831
+ },
+ {
+  "kind": "off-topic",
+  "query": "What does HTTP stand for?",
+  "how": "gate",
+  "current": 0.38447208783017556,
+  "reply-uses": 0.8404156420860235,
+  "about-user": 0.4290512359093944,
+  "not-just-topic": 0.47749329543053265
+ },
+ {
+  "kind": "off-topic",
+  "query": "Name three primary colours.",
+  "how": "gate",
+  "current": 0.6055237448765403,
+  "reply-uses": 0.8873756063616145,
+  "about-user": 0.6688839207988236,
+  "not-just-topic": 0.4946973002058448
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the plural of 'cactus'?",
+  "how": "gate",
+  "current": 0.37066566943143503,
+  "reply-uses": 0.8499225414080345,
+  "about-user": 0.5310633465706568,
+  "not-just-topic": 0.20607407890861384
+ },
+ {
+  "kind": "off-topic",
+  "query": "Explain what a black hole is to a ten-year-old.",
+  "how": "gate",
+  "current": 0.36069610396884955,
+  "reply-uses": 0.8109728943908489,
+  "about-user": 0.42221175184180576,
+  "not-just-topic": 0.23159288402114375
+ },
+ {
+  "kind": "off-topic",
+  "query": "How many days are in a leap year?",
+  "how": "gate",
+  "current": 0.2742193978753943,
+  "reply-uses": 0.6445719755527688,
+  "about-user": 0.4495797756741841,
+  "not-just-topic": 0.24185918175832424
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is the chemical symbol for gold?",
+  "how": "gate",
+  "current": 0.5136544745903396,
+  "reply-uses": 0.832695238442156,
+  "about-user": 0.4332420326665455,
+  "not-just-topic": 0.3585718936645677
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a limerick about a cat who loves boxes.",
+  "how": "gate",
+  "current": 0.45335426653653255,
+  "reply-uses": 0.8543057611971498,
+  "about-user": 0.5316009039212111,
+  "not-just-topic": 0.32602722572212717
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the opposite of 'generous'?",
+  "how": "gate",
+  "current": 0.6236864019621289,
+  "reply-uses": 0.9004070225139607,
+  "about-user": 0.5150282765044716,
+  "not-just-topic": 0.4489484661159329
+ },
+ {
+  "kind": "off-topic",
+  "query": "How do you say 'good morning' in Japanese?",
+  "how": "gate",
+  "current": 0.3338478246073042,
+  "reply-uses": 0.8745165020416754,
+  "about-user": 0.5459509034865512,
+  "not-just-topic": 0.4626420563312962
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is the speed of light, roughly?",
+  "how": "gate",
+  "current": 0.39662691435621433,
+  "reply-uses": 0.6817461693910837,
+  "about-user": 0.5240408279654241,
+  "not-just-topic": 0.3578830616088391
+ },
+ {
+  "kind": "off-topic",
+  "query": "Give me a one-line definition of machine learning.",
+  "how": "gate",
+  "current": 0.16294772051075956,
+  "reply-uses": 0.7594638750940035,
+  "about-user": 0.4180406217674838,
+  "not-just-topic": 0.15634146113464778
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's 15% of 80?",
+  "how": "gate",
+  "current": 0.5076148850340121,
+  "reply-uses": 0.8792154173347355,
+  "about-user": 0.6788087410783628,
+  "not-just-topic": 0.5470458669036931
+ },
+ {
+  "kind": "off-topic",
+  "query": "Who painted the Mona Lisa?",
+  "how": "gate",
+  "current": 0.30268510855727204,
+  "reply-uses": 0.6442928953514816,
+  "about-user": 0.4587932780879607,
+  "not-just-topic": 0.15686303151912473
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a SQL query that counts rows in a table called orders.",
+  "how": "gate",
+  "current": 0.8573223660812404,
+  "reply-uses": 0.8573394523045403,
+  "about-user": 0.4275737698009584,
+  "not-just-topic": 0.5489066363345073
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is the largest planet in our solar system?",
+  "how": "gate",
+  "current": 0.3810587830458483,
+  "reply-uses": 0.8339423825604602,
+  "about-user": 0.428076668781754,
+  "not-just-topic": 0.3471252973372232
+ },
+ {
+  "kind": "off-topic",
+  "query": "Explain the difference between weather and climate.",
+  "how": "gate",
+  "current": 0.5420570294466369,
+  "reply-uses": 0.8845947499721349,
+  "about-user": 0.4303890470604977,
+  "not-just-topic": 0.3351960100904685
+ },
+ {
+  "kind": "off-topic",
+  "query": "What does 'carpe diem' mean?",
+  "how": "gate",
+  "current": 0.8661623442284108,
+  "reply-uses": 0.9479253449245734,
+  "about-user": 0.5818872933650585,
+  "not-just-topic": 0.7158783411397958
+ },
+ {
+  "kind": "off-topic",
+  "query": "How many sides does a hexagon have?",
+  "how": "gate",
+  "current": 0.35988785182914945,
+  "reply-uses": 0.8900002672423128,
+  "about-user": 0.673485435048396,
+  "not-just-topic": 0.2581583982324608
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a two-sentence horror story.",
+  "how": "gate",
+  "current": 0.8489810893437111,
+  "reply-uses": 0.914550021704674,
+  "about-user": 0.7246235606608823,
+  "not-just-topic": 0.7572515667904189
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the freezing point of water in Celsius?",
+  "how": "gate",
+  "current": 0.3557965173391504,
+  "reply-uses": 0.816907770488799,
+  "about-user": 0.47983660549356716,
+  "not-just-topic": 0.4032634101853987
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is a prime number?",
+  "how": "gate",
+  "current": 0.3370859650381258,
+  "reply-uses": 0.8054790888690813,
+  "about-user": 0.49968205266703536,
+  "not-just-topic": 0.31678935011105164
+ },
+ {
+  "kind": "off-topic",
+  "query": "Suggest a title for a poem about the ocean.",
+  "how": "gate",
+  "current": 0.9118960825657374,
+  "reply-uses": 0.9771169861274356,
+  "about-user": 0.6977392864139556,
+  "not-just-topic": 0.9455613439971526
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the past tense of 'swim'?",
+  "how": "gate",
+  "current": 0.7339351615764957,
+  "reply-uses": 0.89964117097853,
+  "about-user": 0.6632506978013986,
+  "not-just-topic": 0.6458889730094746
+ },
+ {
+  "kind": "off-topic",
+  "query": "How long is a marathon?",
+  "how": "gate",
+  "current": 0.6861369124188655,
+  "reply-uses": 0.8874518434665379,
+  "about-user": 0.6393735683788144,
+  "not-just-topic": 0.5527996545907763
+ },
+ {
+  "kind": "off-topic",
+  "query": "What language is spoken in Brazil?",
+  "how": "gate",
+  "current": 0.3964356564621844,
+  "reply-uses": 0.7955786184449413,
+  "about-user": 0.4765469339402497,
+  "not-just-topic": 0.42396374637488077
+ },
+ {
+  "kind": "off-topic",
+  "query": "Explain recursion in one sentence.",
+  "how": "gate",
+  "current": 0.598665601114553,
+  "reply-uses": 0.8506036009017556,
+  "about-user": 0.5911285281087167,
+  "not-just-topic": 0.40415946459924357
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is the tallest mountain on Earth?",
+  "how": "gate",
+  "current": 0.4356093635080197,
+  "reply-uses": 0.907145271392801,
+  "about-user": 0.6541177313101711,
+  "not-just-topic": 0.49350169707177494
+ },
+ {
+  "kind": "off-topic",
+  "query": "Give me an anagram of 'listen'.",
+  "how": "gate",
+  "current": 0.8158397091392067,
+  "reply-uses": 0.911662613299079,
+  "about-user": 0.6933372395352128,
+  "not-just-topic": 0.7494001353807473
+ },
+ {
+  "kind": "off-topic",
+  "query": "What does DNA stand for?",
+  "how": "gate",
+  "current": 0.33916730511580584,
+  "reply-uses": 0.7453519059621921,
+  "about-user": 0.4923450061685513,
+  "not-just-topic": 0.2571454784144378
+ },
+ {
+  "kind": "off-topic",
+  "query": "How many minutes are in three hours?",
+  "how": "gate",
+  "current": 0.4401390636054565,
+  "reply-uses": 0.8443198048785548,
+  "about-user": 0.5845396463630066,
+  "not-just-topic": 0.44786819412705614
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the difference between a virus and a bacterium?",
+  "how": "gate",
+  "current": 0.34565786054638087,
+  "reply-uses": 0.8549810074211583,
+  "about-user": 0.40175393326024966,
+  "not-just-topic": 0.24692616864858258
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a tongue twister about sheep.",
+  "how": "gate",
+  "current": 0.5949798989038608,
+  "reply-uses": 0.811514056634757,
+  "about-user": 0.3000090759636046,
+  "not-just-topic": 0.44482932027059635
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is the main ingredient in guacamole?",
+  "how": "gate",
+  "current": 0.2929048801862001,
+  "reply-uses": 0.756061054116785,
+  "about-user": 0.5373167276522912,
+  "not-just-topic": 0.3365250725010661
+ },
+ {
+  "kind": "off-topic",
+  "query": "How do I center text in CSS?",
+  "how": "gate",
+  "current": 0.46740177558265483,
+  "reply-uses": 0.9103427520499963,
+  "about-user": 0.4782956943125396,
+  "not-just-topic": 0.3268865452710247
+ },
+ {
+  "kind": "off-topic",
+  "query": "Who discovered penicillin?",
+  "how": "gate",
+  "current": 0.3509694023596723,
+  "reply-uses": 0.7124998448040352,
+  "about-user": 0.49861211403111444,
+  "not-just-topic": 0.19255041985429447
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's a synonym for 'happy'?",
+  "how": "gate",
+  "current": 0.7150478474009723,
+  "reply-uses": 0.8758889663828716,
+  "about-user": 0.6450793237417076,
+  "not-just-topic": 0.6068470724377395
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is 2 to the power of 10?",
+  "how": "gate",
+  "current": 0.48988220231617347,
+  "reply-uses": 0.87527240041348,
+  "about-user": 0.42688367934588095,
+  "not-just-topic": 0.45454463663966627
+ },
+ {
+  "kind": "off-topic",
+  "query": "Explain what inflation means in economics.",
+  "how": "gate",
+  "current": 0.1361650345820678,
+  "reply-uses": 0.631662345425654,
+  "about-user": 0.23823480552521492,
+  "not-just-topic": 0.11980299669386
+ }
+]

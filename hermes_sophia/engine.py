@@ -29,7 +29,7 @@ class Engine:
         self.store = Store(db_path)
         self.clients = self._clients(cfg, client)
         cal = self.store.get_meta("calibration", {}) or {}
-        self.decider = Decider(self.clients["decider"], cfg["decider_model"], permutations=cfg["gate_permutations"],
+        self.decider = Decider(self.clients["decider"], cfg["decider_model"], permutations=1,
                                timeout=cfg["decider_timeout"], temperatures=cal.get("temperatures"),
                                log=self._log_decision)
         self.capture = Capture(self)

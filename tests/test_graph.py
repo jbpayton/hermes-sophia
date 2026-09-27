@@ -122,3 +122,4 @@ def test_advice_requests_put_the_users_own_words_first(engine):
     assert on["user"] - off["user"] == pytest.approx(engine.cfg["question_penalty"])   # the user's question: no penalty
     _, info2 = engine.recall.candidates("What evening activities did you suggest to me?", 20)
     assert not info2["asks_advice"] and info2["asks_agent"]
+

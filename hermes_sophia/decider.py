@@ -9,7 +9,9 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Sequence
 
@@ -106,6 +108,15 @@ class Decider:
         self.temperatures = {"choice": 1.0, "noul": 1.0, "score": 1.0, **(temperatures or {})}
         self.top_logprobs = top_logprobs
         self.log = log
+        self._pool: Optional[ThreadPoolExecutor] = None
+        self._pool_lock = threading.Lock()
+
+    def _orders_pool(self) -> ThreadPoolExecutor:
+        """Long-lived threads for the second option order (many callers at once, e.g. the night's batches)."""
+        with self._pool_lock:
+            if self._pool is None:
+                self._pool = ThreadPoolExecutor(max_workers=8, thread_name_prefix="sophia-orders")
+            return self._pool
 
     def ask(self, state: Any, q, permutations: Optional[int] = None) -> Answer:
         keys, descs, qtype = _options(q)
@@ -117,12 +128,16 @@ class Decider:
         state_text = state if isinstance(state, str) else json.dumps(state, ensure_ascii=False, indent=1)
         t0 = time.perf_counter()
         per_order, raws = [], []
-        for order in orders:
+
+        def read(order):
             prompt = _prompt(state_text, q.instructions, [descs[i] for i in order], qtype)
             try:
-                _, tops = self.client.first_token_logprobs(self.model, prompt, max(self.top_logprobs, k), self.timeout)
+                return self.client.first_token_logprobs(self.model, prompt, max(self.top_logprobs, k), self.timeout)[1]
             except LMStudioError as e:
                 raise DeciderError(str(e)) from e
+        # the two orders don't depend on each other: one round trip instead of two
+        readings = list(self._orders_pool().map(read, orders)) if len(orders) > 1 else [read(orders[0])]
+        for order, tops in zip(orders, readings):
             letter_lp: Dict[str, float] = {}
             for tok, lp in tops:
                 t = tok.strip()

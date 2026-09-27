@@ -122,16 +122,18 @@ def test_echo_fencing(engine):
 
 # ---------------------------------------------------------------- recall
 def test_gate_blocks_and_passes(engine, fake):
+    engine.cfg["gate"] = "decider"
     engine.capture.remember("Dr. Alvarez moved her clinic to 240 Willow Street in Mountain View.", speaker="Joey")
-    fake.readout = lambda p: [("A", -0.02), ("B", -4.0)]           # decider says false
+    fake.says(False)                                               # decider says false, in either option order
     assert engine.prefetch("Where is Dr. Alvarez's clinic now?", "s3") == ""
-    fake.readout = lambda p: [("B", -0.02), ("A", -4.0)]           # decider says true
+    fake.says(True)
     out = engine.prefetch("Where is Dr. Alvarez's clinic now?", "s3")
     assert "Willow Street" in out
     assert engine.store.one("SELECT COUNT(*) AS n FROM decisions")["n"] >= 2
 
 
 def test_degraded_decider_injects_only_above_skip(engine, fake):
+    engine.cfg["gate"] = "decider"
     engine.capture.remember("Mom wants the blue ceramic teapot from the shop on Castro Street.", speaker="Joey")
 
     def boom(p):
@@ -321,3 +323,27 @@ def test_old_databases_are_scrubbed(tmp_path, fake):
     assert key not in dump and "REDACTED" in dump
     assert (tmp_path / "old.db").read_bytes().find(key.encode()) == -1
     s.close()
+
+
+def test_two_option_orders_are_read_in_parallel(engine, fake):
+    """A two-order decision takes about one readout's time, not two, and reads the same as before."""
+    import time as _t
+    slow = fake.readout
+
+    def readout(prompt):
+        _t.sleep(0.2)
+        return slow(prompt)
+    fake.readout = readout
+    t = _t.perf_counter()
+    a = engine.decider.noul({"x": 1}, "It holds.", permutations=2)
+    assert _t.perf_counter() - t < 0.35 and len(a.raw) == 2
+
+
+def test_similarity_gate_needs_no_model_call(engine, fake):
+    """The default gate injects when the best match reaches gate_floor, without asking the decider."""
+    engine.capture.remember("Dr. Alvarez moved her clinic to 240 Willow Street in Mountain View.", speaker="Joey")
+    before = fake.calls["readout"]
+    out = engine.prefetch("Where did Dr. Alvarez move her clinic?", "s9")
+    assert "Willow Street" in out and fake.calls["readout"] == before
+    engine.cfg["gate_floor"] = 0.999                           # nothing is that close: nothing injected
+    assert engine.prefetch("What's a good synonym for quick?", "s9") == ""

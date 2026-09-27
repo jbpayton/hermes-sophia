@@ -1,0 +1,3882 @@
+[
+ {
+  "kind": "lme",
+  "query": "How many bikes do I own?",
+  "state_fwd": 0.9858107530912518,
+  "state_rev": 0.9669860659851855,
+  "instr_fwd": 0.9913033769034166,
+  "instr_rev": 0.9899354216479429
+ },
+ {
+  "kind": "lme",
+  "query": "What was my previous stance on spirituality?",
+  "state_fwd": 0.6400186554291981,
+  "state_rev": 0.8560916904946899,
+  "instr_fwd": 0.290133600013471,
+  "instr_rev": 0.6684344231464991
+ },
+ {
+  "kind": "lme",
+  "query": "Where did I buy my new bookshelf from?",
+  "state_fwd": 0.9728483036230936,
+  "state_rev": 0.9861178509309422,
+  "instr_fwd": 0.9550565651568682,
+  "instr_rev": 0.9700917855122253
+ },
+ {
+  "kind": "lme",
+  "query": "Where did I attend my cousin's wedding?",
+  "state_fwd": 0.8972785146676412,
+  "state_rev": 0.8994078571484299,
+  "instr_fwd": 0.2927003240135579,
+  "instr_rev": 0.5543639615099234
+ },
+ {
+  "kind": "lme",
+  "query": "What brand of shampoo do I currently use?",
+  "state_fwd": 0.9567928126337822,
+  "state_rev": 0.9679404568949986,
+  "instr_fwd": 0.4405355559781246,
+  "instr_rev": 0.6140505347696716
+ },
+ {
+  "kind": "lme",
+  "query": "What size is my new Samsung TV?",
+  "state_fwd": 0.6661710957223854,
+  "state_rev": 0.8001960111123054,
+  "instr_fwd": 0.8221645844538085,
+  "instr_rev": 0.9404724443198521
+ },
+ {
+  "kind": "lme",
+  "query": "I'm planning to visit Bandung again and I was wondering if you could remind me of the name of that restaurant in Cihampelas Walk that serves a great Nasi Goreng?",
+  "state_fwd": 0.9804507816978493,
+  "state_rev": 0.9673516290225982,
+  "instr_fwd": 0.9694985154231817,
+  "instr_rev": 0.9366231276465778
+ },
+ {
+  "kind": "lme",
+  "query": "I wanted to follow up on our previous conversation about private sector businesses in Chaudhary. Can you remind me of the company that employs over 40,000 people in the rug-manufacturing industry?",
+  "state_fwd": 0.9240235338056736,
+  "state_rev": 0.9682371915437974,
+  "instr_fwd": 0.9751287207157469,
+  "instr_rev": 0.9879622469183936
+ },
+ {
+  "kind": "lme",
+  "query": "I wanted to follow up on our previous conversation about the fusion breakthrough at Lawrence Livermore National Laboratory. Can you remind me who is the President's Chief Advisor for Science and Technology mentioned in the article?",
+  "state_fwd": 0.9466526663490415,
+  "state_rev": 0.9631853826216982,
+  "instr_fwd": 0.9952441602692893,
+  "instr_rev": 0.9965262880017232
+ },
+ {
+  "kind": "lme",
+  "query": "I am planning another theme park weekend; do you have any suggestions?",
+  "state_fwd": 0.905127568691169,
+  "state_rev": 0.8891295631472818,
+  "instr_fwd": 0.8468742715728115,
+  "instr_rev": 0.9447642418330449
+ },
+ {
+  "kind": "lme",
+  "query": "Can you suggest a hotel for my upcoming trip to Miami?",
+  "state_fwd": 0.5093291898421212,
+  "state_rev": 0.5754836249668837,
+  "instr_fwd": 0.09035977890050463,
+  "instr_rev": 0.11939370237207435
+ },
+ {
+  "kind": "lme",
+  "query": "I've been having trouble with the battery life on my phone lately. Any tips?",
+  "state_fwd": 0.5723399978209407,
+  "state_rev": 0.6816514580827465,
+  "instr_fwd": 0.10242229446761736,
+  "instr_rev": 0.15289956134230154
+ },
+ {
+  "kind": "lme",
+  "query": "I've been feeling a bit stuck with my paintings lately. Do you have any ideas on how I can find new inspiration?",
+  "state_fwd": 0.8952507486555725,
+  "state_rev": 0.8872515407744686,
+  "instr_fwd": 0.838058939825257,
+  "instr_rev": 0.8780093586558452
+ },
+ {
+  "kind": "lme",
+  "query": "What is the total number of online courses I've completed?",
+  "state_fwd": 0.9308408588329571,
+  "state_rev": 0.9515017052733946,
+  "instr_fwd": 0.7981090312749171,
+  "instr_rev": 0.9242302916470693
+ },
+ {
+  "kind": "lme",
+  "query": "How many babies were born to friends and family members in the last few months?",
+  "state_fwd": 0.8920605258760609,
+  "state_rev": 0.6969772405064043,
+  "instr_fwd": 0.9286734312471038,
+  "instr_rev": 0.9116483095109843
+ },
+ {
+  "kind": "lme",
+  "query": "How many pages do I have left to read in 'The Nightingale'?",
+  "state_fwd": 0.9039023063808328,
+  "state_rev": 0.8377695830740609,
+  "instr_fwd": 0.4544466082876082,
+  "instr_rev": 0.4998126030056007
+ },
+ {
+  "kind": "lme",
+  "query": "How many bikes did I service or plan to service in March?",
+  "state_fwd": 0.7005612395692306,
+  "state_rev": 0.8055258428188141,
+  "instr_fwd": 0.3935625438566083,
+  "instr_rev": 0.4008629605883716
+ },
+ {
+  "kind": "lme",
+  "query": "How many total pieces of writing have I completed since I started writing again three weeks ago, including short stories, poems, and pieces for the writing challenge?",
+  "state_fwd": 0.686964280938489,
+  "state_rev": 0.657906829286321,
+  "instr_fwd": 0.5703948881094191,
+  "instr_rev": 0.7830360160452359
+ },
+ {
+  "kind": "lme",
+  "query": "What is the average age of me, my parents, and my grandparents?",
+  "state_fwd": 0.9416918772413742,
+  "state_rev": 0.8298545265640445,
+  "instr_fwd": 0.7647444466218445,
+  "instr_rev": 0.8872353161988006
+ },
+ {
+  "kind": "lme",
+  "query": "How many rare items do I have in total?",
+  "state_fwd": 0.8630808574692882,
+  "state_rev": 0.8866109587907888,
+  "instr_fwd": 0.8179968200972223,
+  "instr_rev": 0.9004085814241412
+ },
+ {
+  "kind": "lme",
+  "query": "How many different cuisines have I learned to cook or tried out in the past few months?",
+  "state_fwd": 0.8772847189462396,
+  "state_rev": 0.8635301346271861,
+  "instr_fwd": 0.8921378077340509,
+  "instr_rev": 0.9232260820802516
+ },
+ {
+  "kind": "lme",
+  "query": "How many items of clothing do I need to pick up or return from a store?",
+  "state_fwd": 0.9011275224107215,
+  "state_rev": 0.8624596239864357,
+  "instr_fwd": 0.8935991991256556,
+  "instr_rev": 0.8772966264481615
+ },
+ {
+  "kind": "lme",
+  "query": "How many music albums or EPs have I purchased or downloaded?",
+  "state_fwd": 0.6436049683614125,
+  "state_rev": 0.6082823363878773,
+  "instr_fwd": 0.14512104188657443,
+  "instr_rev": 0.2211186896126073
+ },
+ {
+  "kind": "lme",
+  "query": "What is the total cost of the new food bowl, measuring cup, dental chews, and flea and tick collar I got for Max?",
+  "state_fwd": 0.906503060208212,
+  "state_rev": 0.8366786587841121,
+  "instr_fwd": 0.9711041628310958,
+  "instr_rev": 0.9785083962976419
+ },
+ {
+  "kind": "lme",
+  "query": "What is the minimum amount I could get if I sold the vintage diamond necklace and the antique vanity?",
+  "state_fwd": 0.9461453710356472,
+  "state_rev": 0.9174745270746425,
+  "instr_fwd": 0.9794541026738197,
+  "instr_rev": 0.9772390656317682
+ },
+ {
+  "kind": "lme",
+  "query": "What is the total number of views on my most popular videos on YouTube and TikTok?",
+  "state_fwd": 0.6344225753009386,
+  "state_rev": 0.5458115567066071,
+  "instr_fwd": 0.23087133765505186,
+  "instr_rev": 0.3752730708444329
+ },
+ {
+  "kind": "lme",
+  "query": "How many fish are there in my 30-gallon tank?",
+  "state_fwd": 0.4900153888366513,
+  "state_rev": 0.2665843424739714,
+  "instr_fwd": 0.085502336923058,
+  "instr_rev": 0.16392481474678475
+ },
+ {
+  "kind": "lme",
+  "query": "How many online courses have I completed in total?",
+  "state_fwd": 0.9237789341325537,
+  "state_rev": 0.8808815615335779,
+  "instr_fwd": 0.9599894188619668,
+  "instr_rev": 0.9664826166572099
+ },
+ {
+  "kind": "lme",
+  "query": "What was the page count of the two novels I finished in January and March?",
+  "state_fwd": 0.5858751047381684,
+  "state_rev": 0.6062393856218976,
+  "instr_fwd": 0.3908708592351113,
+  "instr_rev": 0.5857265617912489
+ },
+ {
+  "kind": "lme",
+  "query": "How many weeks passed between the day I bought my new tennis racket and the day I received it?",
+  "state_fwd": 0.9255219613443549,
+  "state_rev": 0.8478294999134134,
+  "instr_fwd": 0.44396999163629836,
+  "instr_rev": 0.5268025721789864
+ },
+ {
+  "kind": "lme",
+  "query": "How many months have passed since I last visited a museum with a friend?",
+  "state_fwd": 0.8586496159381378,
+  "state_rev": 0.816007227281847,
+  "instr_fwd": 0.581370852068481,
+  "instr_rev": 0.34853641754008874
+ },
+ {
+  "kind": "lme",
+  "query": "What is the order of the concerts and musical events I attended in the past two months, starting from the earliest?",
+  "state_fwd": 0.6924604536859891,
+  "state_rev": 0.7020842231789104,
+  "instr_fwd": 0.3350158991151866,
+  "instr_rev": 0.4254760603794019
+ },
+ {
+  "kind": "lme",
+  "query": "I mentioned that I participated in an art-related event two weeks ago. Where was that event held at?",
+  "state_fwd": 0.7739463100921318,
+  "state_rev": 0.665816833468419,
+  "instr_fwd": 0.7652508877253016,
+  "instr_rev": 0.9232591913011233
+ },
+ {
+  "kind": "lme",
+  "query": "How many days had passed since I started taking ukulele lessons when I decided to take my acoustic guitar to the guitar tech for servicing?",
+  "state_fwd": 0.9461904587261947,
+  "state_rev": 0.916310509423666,
+  "instr_fwd": 0.9499708183239981,
+  "instr_rev": 0.9722087573260052
+ },
+ {
+  "kind": "lme",
+  "query": "How many weeks had passed since I recovered from the flu when I went on my 10th jog outdoors?",
+  "state_fwd": 0.9734552611496087,
+  "state_rev": 0.8960543374521354,
+  "instr_fwd": 0.9686865780101583,
+  "instr_rev": 0.9627392663812437
+ },
+ {
+  "kind": "lme",
+  "query": "How many days did it take for me to find a house I loved after starting to work with Rachel?",
+  "state_fwd": 0.902574213807944,
+  "state_rev": 0.8062172109025968,
+  "instr_fwd": 0.47344800563930944,
+  "instr_rev": 0.6922914413947566
+ },
+ {
+  "kind": "lme",
+  "query": "What was the airline that I flied with on Valentine's day?",
+  "state_fwd": 0.8148322338179491,
+  "state_rev": 0.6056651368559808,
+  "instr_fwd": 0.2415760449051545,
+  "instr_rev": 0.2799191845008398
+ },
+ {
+  "kind": "lme",
+  "query": "How many days before I bought the iPhone 13 Pro did I attend the Holiday Market?",
+  "state_fwd": 0.9059790865002738,
+  "state_rev": 0.9195549539793714,
+  "instr_fwd": 0.9610826890001216,
+  "instr_rev": 0.9364677207593709
+ },
+ {
+  "kind": "lme",
+  "query": "How many days passed between the day I replaced my spark plugs and the day I participated in the Turbocharged Tuesdays auto racking event?",
+  "state_fwd": 0.9312709737624554,
+  "state_rev": 0.8596442029169136,
+  "instr_fwd": 0.8845385131335779,
+  "instr_rev": 0.911487793859221
+ },
+ {
+  "kind": "lme",
+  "query": "How many days had passed since I finished reading 'The Seven Husbands of Evelyn Hugo' when I attended the book reading event at the local library, where the author of 'The Silent Patient' is discussing her latest thriller novel?",
+  "state_fwd": 0.7282578935524262,
+  "state_rev": 0.7514394746510346,
+  "instr_fwd": 0.45839700047420745,
+  "instr_rev": 0.7564770484231301
+ },
+ {
+  "kind": "lme",
+  "query": "How many days ago did I participate in the 5K charity run?",
+  "state_fwd": 0.8552184323187104,
+  "state_rev": 0.9078751306189086,
+  "instr_fwd": 0.7403082325580843,
+  "instr_rev": 0.694692792205219
+ },
+ {
+  "kind": "lme",
+  "query": "Which event happened first, my cousin's wedding or Michael's engagement party?",
+  "state_fwd": 0.7578027566547691,
+  "state_rev": 0.7177168722502938,
+  "instr_fwd": 0.3581144960223315,
+  "instr_rev": 0.4026031028273914
+ },
+ {
+  "kind": "lme",
+  "query": "What is the order of the three events: 'I signed up for the rewards program at ShopRite', 'I used a Buy One Get One Free coupon on Luvs diapers at Walmart', and 'I redeemed $12 cashback for a $10 Amazon gift card from Ibotta'?",
+  "state_fwd": 0.9149633051902073,
+  "state_rev": 0.9283992919495291,
+  "instr_fwd": 0.9574727779611023,
+  "instr_rev": 0.967936132859661
+ },
+ {
+  "kind": "lme",
+  "query": "What is the order of the sports events I watched in January?",
+  "state_fwd": 0.8300504923395527,
+  "state_rev": 0.7808946165640663,
+  "instr_fwd": 0.2997361674478622,
+  "instr_rev": 0.5090617746805406
+ },
+ {
+  "kind": "lme",
+  "query": "How many Crash Course videos have I watched in the past few weeks?",
+  "state_fwd": 0.9400285062580117,
+  "state_rev": 0.8724556581472394,
+  "instr_fwd": 0.9500869967369805,
+  "instr_rev": 0.9465141775900866
+ },
+ {
+  "kind": "lme",
+  "query": "For the coffee-to-water ratio in my French press, did I switch to more water per tablespoon of coffee, or less?",
+  "state_fwd": 0.5890050292670126,
+  "state_rev": 0.5752026209877791,
+  "instr_fwd": 0.30392788561194045,
+  "instr_rev": 0.5485232779581599
+ },
+ {
+  "kind": "lme",
+  "query": "What was my previous personal best time for the charity 5K run?",
+  "state_fwd": 0.9130666728645137,
+  "state_rev": 0.8534839554892494,
+  "instr_fwd": 0.9917383118089789,
+  "instr_rev": 0.9832083095879894
+ },
+ {
+  "kind": "lme",
+  "query": "How many bikes do I currently own?",
+  "state_fwd": 0.9852775012060254,
+  "state_rev": 0.9789799386899161,
+  "instr_fwd": 0.993233727429436,
+  "instr_rev": 0.9952598237694985
+ },
+ {
+  "kind": "lme",
+  "query": "Where do I currently keep my old sneakers?",
+  "state_fwd": 0.9069477953735513,
+  "state_rev": 0.831325785638365,
+  "instr_fwd": 0.802019728630258,
+  "instr_rev": 0.8061853219703027
+ },
+ {
+  "kind": "lme",
+  "query": "How often do I play table tennis with my friends at the local park?",
+  "state_fwd": 0.9232098542674004,
+  "state_rev": 0.8379595278955367,
+  "instr_fwd": 0.8099615645637659,
+  "instr_rev": 0.8659377846485106
+ },
+ {
+  "kind": "lme",
+  "query": "Can you suggest some accessories that would complement my current photography setup?",
+  "state_fwd": 0.8458509499533784,
+  "state_rev": 0.8727283624515679,
+  "instr_fwd": 0.26712465431678734,
+  "instr_rev": 0.5812274193698966
+ },
+ {
+  "kind": "lme",
+  "query": "What should I serve for dinner this weekend with my homegrown ingredients?",
+  "state_fwd": 0.8276203631998553,
+  "state_rev": 0.8994097485985562,
+  "instr_fwd": 0.23883615223576932,
+  "instr_rev": 0.4220723393901712
+ },
+ {
+  "kind": "lme",
+  "query": "Can you suggest some useful accessories for my phone?",
+  "state_fwd": 0.8943881901850294,
+  "state_rev": 0.7660865589148691,
+  "instr_fwd": 0.8584726643419378,
+  "instr_rev": 0.7904462948006252
+ },
+ {
+  "kind": "lme",
+  "query": "I've been having trouble with the battery life on my phone lately. Any tips?",
+  "state_fwd": 0.5679923059762578,
+  "state_rev": 0.6883943797922302,
+  "instr_fwd": 0.07908493094740625,
+  "instr_rev": 0.12095318162192918
+ },
+ {
+  "kind": "lme",
+  "query": "I\u2019m a bit anxious about getting around Tokyo. Do you have any helpful tips?",
+  "state_fwd": 0.7726023707571743,
+  "state_rev": 0.8968523028980543,
+  "instr_fwd": 0.7767136086477168,
+  "instr_rev": 0.8753358505481555
+ },
+ {
+  "kind": "lme",
+  "query": "Can you suggest a hotel for my upcoming trip to Miami?",
+  "state_fwd": 0.5689744250300048,
+  "state_rev": 0.5881108322597555,
+  "instr_fwd": 0.0461318330313662,
+  "instr_rev": 0.13238373772841153
+ },
+ {
+  "kind": "lme",
+  "query": "Can you suggest some activities that I can do in the evening?",
+  "state_fwd": 0.8878507921125708,
+  "state_rev": 0.8354200829641583,
+  "instr_fwd": 0.866397002265543,
+  "instr_rev": 0.8690073037311906
+ },
+ {
+  "kind": "lme",
+  "query": "I've been thinking about making a cocktail for an upcoming get-together, but I'm not sure which one to choose. Any suggestions?",
+  "state_fwd": 0.9344636488155329,
+  "state_rev": 0.9106972243274464,
+  "instr_fwd": 0.9511637581473675,
+  "instr_rev": 0.9611571689735712
+ },
+ {
+  "kind": "lme",
+  "query": "I noticed my bike seems to be performing even better during my Sunday group rides. Could there be a reason for this?",
+  "state_fwd": 0.8716318045927771,
+  "state_rev": 0.8226607210759836,
+  "instr_fwd": 0.8017712783742406,
+  "instr_rev": 0.9170462042582839
+ },
+ {
+  "kind": "lme",
+  "query": "Can you recommend a show or movie for me to watch tonight?",
+  "state_fwd": 0.8107301459444918,
+  "state_rev": 0.7342297281097633,
+  "instr_fwd": 0.35508621747376135,
+  "instr_rev": 0.5012350057281648
+ },
+ {
+  "kind": "lme",
+  "query": "Can you recommend some interesting cultural events happening around me this weekend?",
+  "state_fwd": 0.8408964306981138,
+  "state_rev": 0.7756781623563952,
+  "instr_fwd": 0.7945730677088827,
+  "instr_rev": 0.870087791855556
+ },
+ {
+  "kind": "lme",
+  "query": "I've been feeling like my chocolate chip cookies need something extra. Any advice?",
+  "state_fwd": 0.5098978313170911,
+  "state_rev": 0.5295138332350865,
+  "instr_fwd": 0.06601454776782924,
+  "instr_rev": 0.18462447982143787
+ },
+ {
+  "kind": "lme",
+  "query": "I was thinking of trying a new coffee creamer recipe. Any recommendations?",
+  "state_fwd": 0.9694106839044447,
+  "state_rev": 0.9585089127677214,
+  "instr_fwd": 0.8694825028624577,
+  "instr_rev": 0.9122725117628449
+ },
+ {
+  "kind": "lme",
+  "query": "I was thinking about rearranging the furniture in my bedroom this weekend. Any tips?",
+  "state_fwd": 0.8545454709065812,
+  "state_rev": 0.8023493373112498,
+  "instr_fwd": 0.17095384766492186,
+  "instr_rev": 0.18912678357950904
+ },
+ {
+  "kind": "lme",
+  "query": "I've been feeling a bit stuck with my paintings lately. Do you have any ideas on how I can find new inspiration?",
+  "state_fwd": 0.8723123332912962,
+  "state_rev": 0.8544060132024328,
+  "instr_fwd": 0.8310747687002481,
+  "instr_rev": 0.8890259083579336
+ },
+ {
+  "kind": "lme",
+  "query": "Can you recommend some recent publications or conferences that I might find interesting?",
+  "state_fwd": 0.9048696110597174,
+  "state_rev": 0.9451148437198097,
+  "instr_fwd": 0.6053958798578409,
+  "instr_rev": 0.7692901925656707
+ },
+ {
+  "kind": "lme",
+  "query": "I've been sneezing quite a bit lately. Do you think it might be my living room?",
+  "state_fwd": 0.9259213214665011,
+  "state_rev": 0.9221429975257573,
+  "instr_fwd": 0.9670306067993244,
+  "instr_rev": 0.9587573764721516
+ },
+ {
+  "kind": "lme",
+  "query": "Can you recommend some resources where I can learn more about video editing?",
+  "state_fwd": 0.8930027051653314,
+  "state_rev": 0.9357723109411344,
+  "instr_fwd": 0.8156280778713583,
+  "instr_rev": 0.9430710122779704
+ },
+ {
+  "kind": "lme",
+  "query": "I'm getting excited about my visit to the music store this weekend. Any tips on what to look for in a new guitar?",
+  "state_fwd": 0.9118827882315594,
+  "state_rev": 0.8786591446038804,
+  "instr_fwd": 0.5390609308556211,
+  "instr_rev": 0.7285159705862906
+ },
+ {
+  "kind": "lme",
+  "query": "I'm planning a trip to Denver soon. Any suggestions on what to do there?",
+  "state_fwd": 0.9517596434384791,
+  "state_rev": 0.9428592817445485,
+  "instr_fwd": 0.4802154093742768,
+  "instr_rev": 0.6657782191178122
+ },
+ {
+  "kind": "lme",
+  "query": "My kitchen's becoming a bit of a mess again. Any tips for keeping it clean?",
+  "state_fwd": 0.8575375705476737,
+  "state_rev": 0.8692951500907087,
+  "instr_fwd": 0.7783131467123472,
+  "instr_rev": 0.8240864746207499
+ },
+ {
+  "kind": "lme",
+  "query": "I've got some free time tonight, any documentary recommendations?",
+  "state_fwd": 0.8615334259440863,
+  "state_rev": 0.9116661450140053,
+  "instr_fwd": 0.7375652265064193,
+  "instr_rev": 0.8908407192087018
+ },
+ {
+  "kind": "lme",
+  "query": "I'm planning my meal prep next week, any suggestions for new recipes?",
+  "state_fwd": 0.9300897041561058,
+  "state_rev": 0.9038008624036378,
+  "instr_fwd": 0.9045239275403696,
+  "instr_rev": 0.9557783981137692
+ },
+ {
+  "kind": "lme",
+  "query": "I've been struggling with my slow cooker recipes. Any advice on getting better results?",
+  "state_fwd": 0.9341800472026928,
+  "state_rev": 0.9247942809049767,
+  "instr_fwd": 0.72357887852121,
+  "instr_rev": 0.8009785640414999
+ },
+ {
+  "kind": "lme",
+  "query": "I'm thinking of inviting my colleagues over for a small gathering. Any tips on what to bake?",
+  "state_fwd": 0.9389278792208278,
+  "state_rev": 0.9289243078850412,
+  "instr_fwd": 0.6509527935329394,
+  "instr_rev": 0.7816823633062179
+ },
+ {
+  "kind": "lme",
+  "query": "I am planning another theme park weekend; do you have any suggestions?",
+  "state_fwd": 0.8890603540006209,
+  "state_rev": 0.9017847602731294,
+  "instr_fwd": 0.8805256631549488,
+  "instr_rev": 0.9331210531463746
+ },
+ {
+  "kind": "quiet",
+  "query": "What's a good synonym for 'quick'?",
+  "state_fwd": 0.8018561399241771,
+  "state_rev": 0.7592438831232234,
+  "instr_fwd": 0.4929737901812399,
+  "instr_rev": 0.4466135164410655
+ },
+ {
+  "kind": "quiet",
+  "query": "Write me a two-line poem about rain.",
+  "state_fwd": 0.594495628973675,
+  "state_rev": 0.6045494231253153,
+  "instr_fwd": 0.1597891534138844,
+  "instr_rev": 0.3070381329099938
+ },
+ {
+  "kind": "quiet",
+  "query": "How many ounces are in a cup?",
+  "state_fwd": 0.7852966647085972,
+  "state_rev": 0.5004835276288481,
+  "instr_fwd": 0.5979381102660232,
+  "instr_rev": 0.6135965721198966
+ },
+ {
+  "kind": "quiet",
+  "query": "What's a good synonym for 'quick'?",
+  "state_fwd": 0.5657266218282927,
+  "state_rev": 0.5887044115827925,
+  "instr_fwd": 0.018161350001973924,
+  "instr_rev": 0.09390657425360169
+ },
+ {
+  "kind": "quiet",
+  "query": "Write me a two-line poem about rain.",
+  "state_fwd": 0.702675918404207,
+  "state_rev": 0.6883907102997796,
+  "instr_fwd": 0.14871386704849063,
+  "instr_rev": 0.19085182595507075
+ },
+ {
+  "kind": "quiet",
+  "query": "How many ounces are in a cup?",
+  "state_fwd": 0.6928993611726484,
+  "state_rev": 0.6776469290622239,
+  "instr_fwd": 0.244141187149901,
+  "instr_rev": 0.3776661755217991
+ },
+ {
+  "kind": "quiet",
+  "query": "What's a good synonym for 'quick'?",
+  "state_fwd": 0.8463739715708153,
+  "state_rev": 0.829140473302479,
+  "instr_fwd": 0.12309772762540974,
+  "instr_rev": 0.17498585285567725
+ },
+ {
+  "kind": "quiet",
+  "query": "Write me a two-line poem about rain.",
+  "state_fwd": 0.6720042790259331,
+  "state_rev": 0.771280741588211,
+  "instr_fwd": 0.2659880850907127,
+  "instr_rev": 0.439881731142612
+ },
+ {
+  "kind": "quiet",
+  "query": "How many ounces are in a cup?",
+  "state_fwd": 0.889487042298899,
+  "state_rev": 0.8409767910454989,
+  "instr_fwd": 0.9147869799006896,
+  "instr_rev": 0.7991828624941323
+ },
+ {
+  "kind": "quiet",
+  "query": "What's a good synonym for 'quick'?",
+  "state_fwd": 0.8737315002827252,
+  "state_rev": 0.7289691768431147,
+  "instr_fwd": 0.7676745569530882,
+  "instr_rev": 0.6627934826276796
+ },
+ {
+  "kind": "quiet",
+  "query": "Write me a two-line poem about rain.",
+  "state_fwd": 0.5184652236596466,
+  "state_rev": 0.6030203883563936,
+  "instr_fwd": 0.03386505929755606,
+  "instr_rev": 0.1925785036944652
+ },
+ {
+  "kind": "quiet",
+  "query": "How many ounces are in a cup?",
+  "state_fwd": 0.7571159738872572,
+  "state_rev": 0.6687450463009463,
+  "instr_fwd": 0.19515810497920122,
+  "instr_rev": 0.3760926333033127
+ },
+ {
+  "kind": "quiet",
+  "query": "What's a good synonym for 'quick'?",
+  "state_fwd": 0.7984435072867984,
+  "state_rev": 0.7497090444953879,
+  "instr_fwd": 0.557701809364848,
+  "instr_rev": 0.7716869317933295
+ },
+ {
+  "kind": "quiet",
+  "query": "Write me a two-line poem about rain.",
+  "state_fwd": 0.6665251903943742,
+  "state_rev": 0.5492000600114403,
+  "instr_fwd": 0.28704906740797265,
+  "instr_rev": 0.5688177029044332
+ },
+ {
+  "kind": "quiet",
+  "query": "How many ounces are in a cup?",
+  "state_fwd": 0.7402873134069337,
+  "state_rev": 0.3821765561409612,
+  "instr_fwd": 0.7017917265256333,
+  "instr_rev": 0.5914227709937979
+ },
+ {
+  "kind": "quiet",
+  "query": "What's a good synonym for 'quick'?",
+  "state_fwd": 0.8981505313541525,
+  "state_rev": 0.6442933077590691,
+  "instr_fwd": 0.6560714811121361,
+  "instr_rev": 0.7258023878763907
+ },
+ {
+  "kind": "quiet",
+  "query": "Write me a two-line poem about rain.",
+  "state_fwd": 0.7193027547126937,
+  "state_rev": 0.6166238529517594,
+  "instr_fwd": 0.1496735832651461,
+  "instr_rev": 0.3083684000244816
+ },
+ {
+  "kind": "quiet",
+  "query": "How many ounces are in a cup?",
+  "state_fwd": 0.6840356896550409,
+  "state_rev": 0.5082857026594266,
+  "instr_fwd": 0.3217487981193718,
+  "instr_rev": 0.566650481124165
+ },
+ {
+  "kind": "quiet",
+  "query": "What's a good synonym for 'quick'?",
+  "state_fwd": 0.7396446993789031,
+  "state_rev": 0.8000642490590564,
+  "instr_fwd": 0.1991649741101309,
+  "instr_rev": 0.36584378782817706
+ },
+ {
+  "kind": "quiet",
+  "query": "Write me a two-line poem about rain.",
+  "state_fwd": 0.8469566065959293,
+  "state_rev": 0.6822583209865696,
+  "instr_fwd": 0.26077717524704797,
+  "instr_rev": 0.4356295336007232
+ },
+ {
+  "kind": "quiet",
+  "query": "How many ounces are in a cup?",
+  "state_fwd": 0.705545747420975,
+  "state_rev": 0.6154021099584845,
+  "instr_fwd": 0.4448370096066994,
+  "instr_rev": 0.549481059544421
+ },
+ {
+  "kind": "quiet",
+  "query": "What's a good synonym for 'quick'?",
+  "state_fwd": 0.5917882103671422,
+  "state_rev": 0.47984357879319073,
+  "instr_fwd": 0.14842094799827116,
+  "instr_rev": 0.1780586239537617
+ },
+ {
+  "kind": "quiet",
+  "query": "Write me a two-line poem about rain.",
+  "state_fwd": 0.6712197467012415,
+  "state_rev": 0.5215221046008252,
+  "instr_fwd": 0.08085586563144423,
+  "instr_rev": 0.23643359052324664
+ },
+ {
+  "kind": "quiet",
+  "query": "How many ounces are in a cup?",
+  "state_fwd": 0.7938076903428055,
+  "state_rev": 0.5834509013559782,
+  "instr_fwd": 0.3934514735003451,
+  "instr_rev": 0.4786330881157327
+ },
+ {
+  "kind": "quiet",
+  "query": "What's a good synonym for 'quick'?",
+  "state_fwd": 0.8383995744741419,
+  "state_rev": 0.8396081403485034,
+  "instr_fwd": 0.5849895755877625,
+  "instr_rev": 0.7675973173596452
+ },
+ {
+  "kind": "quiet",
+  "query": "Write me a two-line poem about rain.",
+  "state_fwd": 0.6586559611730562,
+  "state_rev": 0.7267397231013951,
+  "instr_fwd": 0.046887321513798756,
+  "instr_rev": 0.18589984320653266
+ },
+ {
+  "kind": "quiet",
+  "query": "How many ounces are in a cup?",
+  "state_fwd": 0.5720052436955376,
+  "state_rev": 0.2917854676572026,
+  "instr_fwd": 0.47682134346484056,
+  "instr_rev": 0.6503154563406428
+ },
+ {
+  "kind": "quiet",
+  "query": "What's a good synonym for 'quick'?",
+  "state_fwd": 0.819503185367098,
+  "state_rev": 0.7600097126246221,
+  "instr_fwd": 0.49367080164756394,
+  "instr_rev": 0.5598888941855128
+ },
+ {
+  "kind": "quiet",
+  "query": "Write me a two-line poem about rain.",
+  "state_fwd": 0.6087348986361945,
+  "state_rev": 0.6201018992292788,
+  "instr_fwd": 0.05085099366983508,
+  "instr_rev": 0.2429310180643081
+ },
+ {
+  "kind": "quiet",
+  "query": "How many ounces are in a cup?",
+  "state_fwd": 0.5480504304218767,
+  "state_rev": 0.522695194667054,
+  "instr_fwd": 0.792121791985788,
+  "instr_rev": 0.7520435239928888
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline go to the LGBTQ support group?",
+  "state_fwd": 0.9317641128725772,
+  "state_rev": 0.8783503165864639,
+  "instr_fwd": 0.9772922845795003,
+  "instr_rev": 0.9909274331973839
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Melanie paint a sunrise?",
+  "state_fwd": 0.8297920480514304,
+  "state_rev": 0.8900042080036124,
+  "instr_fwd": 0.7258748831648114,
+  "instr_rev": 0.9440718143437092
+ },
+ {
+  "kind": "locomo",
+  "query": "What fields would Caroline be likely to pursue in her educaton?",
+  "state_fwd": 0.8234232463003032,
+  "state_rev": 0.8623038755635364,
+  "instr_fwd": 0.9782933570708733,
+  "instr_rev": 0.9845418087711314
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Caroline research?",
+  "state_fwd": 0.9169823376557494,
+  "state_rev": 0.8780853292848436,
+  "instr_fwd": 0.8610761391107226,
+  "instr_rev": 0.8554225976373867
+ },
+ {
+  "kind": "locomo",
+  "query": "What is Caroline's identity?",
+  "state_fwd": 0.8343093650858231,
+  "state_rev": 0.8120774506090584,
+  "instr_fwd": 0.7178590679524475,
+  "instr_rev": 0.877929647193249
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Melanie run a charity race?",
+  "state_fwd": 0.9481560333148633,
+  "state_rev": 0.9505164093443043,
+  "instr_fwd": 0.9612808792935249,
+  "instr_rev": 0.9906268433984342
+ },
+ {
+  "kind": "locomo",
+  "query": "When is Melanie planning on going camping?",
+  "state_fwd": 0.9194953918507205,
+  "state_rev": 0.8433216170455853,
+  "instr_fwd": 0.8100102928307849,
+  "instr_rev": 0.9013093867338879
+ },
+ {
+  "kind": "locomo",
+  "query": "What is Caroline's relationship status?",
+  "state_fwd": 0.5649621690780913,
+  "state_rev": 0.3816182813165649,
+  "instr_fwd": 0.11462418307448036,
+  "instr_rev": 0.29275995330091437
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline give a speech at a school?",
+  "state_fwd": 0.5868849865009672,
+  "state_rev": 0.5613547699737551,
+  "instr_fwd": 0.19737948619906437,
+  "instr_rev": 0.25448583045678413
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline meet up with her friends, family, and mentors?",
+  "state_fwd": 0.8659483901202629,
+  "state_rev": 0.9067850784157981,
+  "instr_fwd": 0.7839632668949608,
+  "instr_rev": 0.9119880159077293
+ },
+ {
+  "kind": "locomo",
+  "query": "How long has Caroline had her current group of friends for?",
+  "state_fwd": 0.8985966682391141,
+  "state_rev": 0.9578674896654911,
+  "instr_fwd": 0.8675499096002138,
+  "instr_rev": 0.9702558217490531
+ },
+ {
+  "kind": "locomo",
+  "query": "Where did Caroline move from 4 years ago?",
+  "state_fwd": 0.8129470985321715,
+  "state_rev": 0.8669011425864613,
+  "instr_fwd": 0.551264249148566,
+  "instr_rev": 0.5515812796627028
+ },
+ {
+  "kind": "locomo",
+  "query": "How long ago was Caroline's 18th birthday?",
+  "state_fwd": 0.8447982748234246,
+  "state_rev": 0.8934997684636867,
+  "instr_fwd": 0.7497673841026036,
+  "instr_rev": 0.960006623723544
+ },
+ {
+  "kind": "locomo",
+  "query": "What career path has Caroline decided to persue?",
+  "state_fwd": 0.9256945386620314,
+  "state_rev": 0.9292196839485574,
+  "instr_fwd": 0.9814537137777867,
+  "instr_rev": 0.9886087507403302
+ },
+ {
+  "kind": "locomo",
+  "query": "Would Caroline still want to pursue counseling as a career if she hadn't received support growing up?",
+  "state_fwd": 0.7993481107680268,
+  "state_rev": 0.8647656834263208,
+  "instr_fwd": 0.9503573784717323,
+  "instr_rev": 0.9776679691499374
+ },
+ {
+  "kind": "locomo",
+  "query": "What activities does Melanie partake in?",
+  "state_fwd": 0.9644294379868612,
+  "state_rev": 0.915445117078356,
+  "instr_fwd": 0.9206408321481235,
+  "instr_rev": 0.9107716589956527
+ },
+ {
+  "kind": "locomo",
+  "query": "When is Caroline going to the transgender conference?",
+  "state_fwd": 0.8293111872389324,
+  "state_rev": 0.8374837137292475,
+  "instr_fwd": 0.7994533412566533,
+  "instr_rev": 0.9298057707530101
+ },
+ {
+  "kind": "locomo",
+  "query": "Where has Melanie camped?",
+  "state_fwd": 0.891601453981645,
+  "state_rev": 0.8501901994866287,
+  "instr_fwd": 0.9272282769528285,
+  "instr_rev": 0.9245923993076544
+ },
+ {
+  "kind": "locomo",
+  "query": "What do Melanie's kids like?",
+  "state_fwd": 0.9181710986557263,
+  "state_rev": 0.9524794251972676,
+  "instr_fwd": 0.9418971145605426,
+  "instr_rev": 0.9476797530132093
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Melanie go to the museum?",
+  "state_fwd": 0.9342401864120886,
+  "state_rev": 0.9420376706775565,
+  "instr_fwd": 0.6509805290147624,
+  "instr_rev": 0.8373395867282887
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline have a picnic?",
+  "state_fwd": 0.9466440904375748,
+  "state_rev": 0.9462343232695929,
+  "instr_fwd": 0.8535392704918897,
+  "instr_rev": 0.9525867025156829
+ },
+ {
+  "kind": "locomo",
+  "query": "Would Caroline likely have Dr. Seuss books on her bookshelf?",
+  "state_fwd": 0.6057534941928466,
+  "state_rev": 0.7780161690653102,
+  "instr_fwd": 0.40437421193186596,
+  "instr_rev": 0.5342366702592487
+ },
+ {
+  "kind": "locomo",
+  "query": "What books has Melanie read?",
+  "state_fwd": 0.7846238022691656,
+  "state_rev": 0.8724049133567101,
+  "instr_fwd": 0.8927745198842622,
+  "instr_rev": 0.8496846838635222
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Melanie do to destress?",
+  "state_fwd": 0.9703691084922009,
+  "state_rev": 0.9765623358548602,
+  "instr_fwd": 0.9763330178129181,
+  "instr_rev": 0.9848979514218416
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline go to the LGBTQ conference?",
+  "state_fwd": 0.9406367770969588,
+  "state_rev": 0.9632337016813476,
+  "instr_fwd": 0.959949470648407,
+  "instr_rev": 0.9851272935880313
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Melanie read the book \"nothing is impossible\"?",
+  "state_fwd": 0.8210460652800138,
+  "state_rev": 0.8860043830200143,
+  "instr_fwd": 0.8816692431963806,
+  "instr_rev": 0.9277860131093975
+ },
+ {
+  "kind": "locomo",
+  "query": "Would Caroline pursue writing as a career option?",
+  "state_fwd": 0.8318357510696467,
+  "state_rev": 0.8191581693492882,
+  "instr_fwd": 0.8640586079448146,
+  "instr_rev": 0.879750576130748
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline go to the adoption meeting?",
+  "state_fwd": 0.9053716626962416,
+  "state_rev": 0.904525269094042,
+  "instr_fwd": 0.9162224185633924,
+  "instr_rev": 0.961004281756344
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Melanie go to the pottery workshop?",
+  "state_fwd": 0.8551128297117738,
+  "state_rev": 0.8309419248864387,
+  "instr_fwd": 0.8480088197794083,
+  "instr_rev": 0.9146579994015164
+ },
+ {
+  "kind": "locomo",
+  "query": "Would Melanie be considered a member of the LGBTQ community?",
+  "state_fwd": 0.9123573533586238,
+  "state_rev": 0.8167783161958868,
+  "instr_fwd": 0.9710181335766745,
+  "instr_rev": 0.9473818076721743
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Melanie go camping in June?",
+  "state_fwd": 0.8731223081966942,
+  "state_rev": 0.8398096734949618,
+  "instr_fwd": 0.6643306639566167,
+  "instr_rev": 0.7408245671135643
+ },
+ {
+  "kind": "locomo",
+  "query": "What LGBTQ+ events has Caroline participated in?",
+  "state_fwd": 0.9606120575192932,
+  "state_rev": 0.9436999445625026,
+  "instr_fwd": 0.9870176894530647,
+  "instr_rev": 0.9812641125767275
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline go to a pride parade during the summer?",
+  "state_fwd": 0.8797427097405368,
+  "state_rev": 0.8749243870842406,
+  "instr_fwd": 0.7724961323678617,
+  "instr_rev": 0.8825991300555488
+ },
+ {
+  "kind": "locomo",
+  "query": "What events has Caroline participated in to help children?",
+  "state_fwd": 0.8015107452743396,
+  "state_rev": 0.7053638467363914,
+  "instr_fwd": 0.30736898042310773,
+  "instr_rev": 0.5252099809391975
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Melanie go camping in July?",
+  "state_fwd": 0.9112991195391427,
+  "state_rev": 0.7692089215039022,
+  "instr_fwd": 0.8812962163230227,
+  "instr_rev": 0.8569746228876425
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline join a mentorship program?",
+  "state_fwd": 0.9534373777168805,
+  "state_rev": 0.9340134434878097,
+  "instr_fwd": 0.960222322848201,
+  "instr_rev": 0.9886674771597467
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Melanie paint recently?",
+  "state_fwd": 0.9225490150467132,
+  "state_rev": 0.9195488856467744,
+  "instr_fwd": 0.8933148722637746,
+  "instr_rev": 0.928936650560294
+ },
+ {
+  "kind": "locomo",
+  "query": "What activities has Melanie done with her family?",
+  "state_fwd": 0.9215774894927105,
+  "state_rev": 0.8818945140989494,
+  "instr_fwd": 0.7074339207090854,
+  "instr_rev": 0.9396231469834734
+ },
+ {
+  "kind": "locomo",
+  "query": "In what ways is Caroline participating in the LGBTQ community?",
+  "state_fwd": 0.9243426859385616,
+  "state_rev": 0.9191727512099372,
+  "instr_fwd": 0.9939963813667283,
+  "instr_rev": 0.9957217366673932
+ },
+ {
+  "kind": "locomo",
+  "query": "How many times has Melanie gone to the beach in 2023?",
+  "state_fwd": 0.7928438687449312,
+  "state_rev": 0.828782708729063,
+  "instr_fwd": 0.8427390808756112,
+  "instr_rev": 0.8777562343609855
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline join a new activist group?",
+  "state_fwd": 0.901683186706701,
+  "state_rev": 0.9176044152959504,
+  "instr_fwd": 0.9573284035256419,
+  "instr_rev": 0.9781056077416276
+ },
+ {
+  "kind": "locomo",
+  "query": "Would Melanie be more interested in going to a national park or a theme park?",
+  "state_fwd": 0.8533169088028867,
+  "state_rev": 0.7475209486252872,
+  "instr_fwd": 0.8156363687628335,
+  "instr_rev": 0.8563429523374435
+ },
+ {
+  "kind": "locomo",
+  "query": "What kind of art does Caroline make?",
+  "state_fwd": 0.8516041144097749,
+  "state_rev": 0.7975454203037017,
+  "instr_fwd": 0.9510792511384251,
+  "instr_rev": 0.9533918878006822
+ },
+ {
+  "kind": "locomo",
+  "query": "When is Melanie's daughter's birthday?",
+  "state_fwd": 0.9336363856567477,
+  "state_rev": 0.9728784194252738,
+  "instr_fwd": 0.3618568156498095,
+  "instr_rev": 0.7483023831488653
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline attend a pride parade in August?",
+  "state_fwd": 0.8657636383760412,
+  "state_rev": 0.7429961487338317,
+  "instr_fwd": 0.8198747393435784,
+  "instr_rev": 0.9508257143767477
+ },
+ {
+  "kind": "locomo",
+  "query": "Would Melanie be considered an ally to the transgender community?",
+  "state_fwd": 0.9205527248785953,
+  "state_rev": 0.917125814547976,
+  "instr_fwd": 0.9627827603301268,
+  "instr_rev": 0.976529225136249
+ },
+ {
+  "kind": "locomo",
+  "query": "Who supports Caroline when she has a negative experience?",
+  "state_fwd": 0.834282982320755,
+  "state_rev": 0.8428530434976585,
+  "instr_fwd": 0.9303289270045054,
+  "instr_rev": 0.9790568486758735
+ },
+ {
+  "kind": "locomo",
+  "query": "What types of pottery have Melanie and her kids made?",
+  "state_fwd": 0.8890678736610402,
+  "state_rev": 0.8066730071803944,
+  "instr_fwd": 0.9044524231151911,
+  "instr_rev": 0.8401670490532466
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline and Melanie go to a pride fesetival together?",
+  "state_fwd": 0.7586213279592596,
+  "state_rev": 0.7046255915216321,
+  "instr_fwd": 0.30632760422949074,
+  "instr_rev": 0.584566739385083
+ },
+ {
+  "kind": "locomo",
+  "query": "What would Caroline's political leaning likely be?",
+  "state_fwd": 0.7582733172782864,
+  "state_rev": 0.5222392921790973,
+  "instr_fwd": 0.07510734354297183,
+  "instr_rev": 0.08889780705715483
+ },
+ {
+  "kind": "locomo",
+  "query": "What has Melanie painted?",
+  "state_fwd": 0.9467482268988884,
+  "state_rev": 0.9089713879571367,
+  "instr_fwd": 0.9365842889384981,
+  "instr_rev": 0.9835775358473852
+ },
+ {
+  "kind": "locomo",
+  "query": "What are Melanie's pets' names?",
+  "state_fwd": 0.8741445940030902,
+  "state_rev": 0.8706939224381284,
+  "instr_fwd": 0.9072181699170048,
+  "instr_rev": 0.9034725112721597
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline apply to adoption agencies?",
+  "state_fwd": 0.9762218734015002,
+  "state_rev": 0.9562861439417083,
+  "instr_fwd": 0.9917216686884364,
+  "instr_rev": 0.9909473220491185
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline draw a self-portrait?",
+  "state_fwd": 0.8822149728157451,
+  "state_rev": 0.9445661312326361,
+  "instr_fwd": 0.7820837598166612,
+  "instr_rev": 0.8541037175626524
+ },
+ {
+  "kind": "locomo",
+  "query": "What subject have Caroline and Melanie both painted?",
+  "state_fwd": 0.8520206361808937,
+  "state_rev": 0.8363155333760054,
+  "instr_fwd": 0.8583240571099331,
+  "instr_rev": 0.9086495715328886
+ },
+ {
+  "kind": "locomo",
+  "query": "What symbols are important to Caroline?",
+  "state_fwd": 0.9053523683615213,
+  "state_rev": 0.9082971686684305,
+  "instr_fwd": 0.8386358877955407,
+  "instr_rev": 0.846108665054729
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline encounter people on a hike and have a negative experience?",
+  "state_fwd": 0.9460484874122533,
+  "state_rev": 0.947823591267165,
+  "instr_fwd": 0.9380260633350702,
+  "instr_rev": 0.9522083902111158
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Melanie make a plate in pottery class?",
+  "state_fwd": 0.9251837591138846,
+  "state_rev": 0.8423648506131945,
+  "instr_fwd": 0.933488502517279,
+  "instr_rev": 0.8520783348857982
+ },
+ {
+  "kind": "locomo",
+  "query": "Would Caroline be considered religious?",
+  "state_fwd": 0.7479897088029943,
+  "state_rev": 0.8969607649893885,
+  "instr_fwd": 0.27802511209187036,
+  "instr_rev": 0.6176847097212831
+ },
+ {
+  "kind": "locomo",
+  "query": "What instruments does Melanie play?",
+  "state_fwd": 0.9463854014111213,
+  "state_rev": 0.9561000657812997,
+  "instr_fwd": 0.9872096034590186,
+  "instr_rev": 0.9854763392081305
+ },
+ {
+  "kind": "locomo",
+  "query": "What musical artists/bands has Melanie seen?",
+  "state_fwd": 0.8341645552459864,
+  "state_rev": 0.7954434428968101,
+  "instr_fwd": 0.5235802271596874,
+  "instr_rev": 0.6983294466317415
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Melanie go to the park?",
+  "state_fwd": 0.8992824893265409,
+  "state_rev": 0.8987465671564683,
+  "instr_fwd": 0.8500611468431267,
+  "instr_rev": 0.8820196158602815
+ },
+ {
+  "kind": "locomo",
+  "query": "When is Caroline's youth center putting on a talent show?",
+  "state_fwd": 0.781945917731683,
+  "state_rev": 0.8757558665317517,
+  "instr_fwd": 0.5357588384649293,
+  "instr_rev": 0.7041335348451296
+ },
+ {
+  "kind": "locomo",
+  "query": "Would Melanie likely enjoy the song \"The Four Seasons\" by Vivaldi?",
+  "state_fwd": 0.8255210613225205,
+  "state_rev": 0.9180710168351757,
+  "instr_fwd": 0.8944785935698673,
+  "instr_rev": 0.8841832986127915
+ },
+ {
+  "kind": "locomo",
+  "query": "What are some changes Caroline has faced during her transition journey?",
+  "state_fwd": 0.9489204983455566,
+  "state_rev": 0.9343858045003182,
+  "instr_fwd": 0.9411983239585676,
+  "instr_rev": 0.9672299791359354
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Melanie do with her family on hikes?",
+  "state_fwd": 0.9491526968145464,
+  "state_rev": 0.9019078402633198,
+  "instr_fwd": 0.6460547197748265,
+  "instr_rev": 0.8456095510086741
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline go biking with friends?",
+  "state_fwd": 0.9073196077259206,
+  "state_rev": 0.9760348101888984,
+  "instr_fwd": 0.8229424325059286,
+  "instr_rev": 0.8890627974064225
+ },
+ {
+  "kind": "locomo",
+  "query": "How long has Melanie been practicing art?",
+  "state_fwd": 0.670684106440057,
+  "state_rev": 0.8438274821901902,
+  "instr_fwd": 0.9033097033114045,
+  "instr_rev": 0.9251915450825297
+ },
+ {
+  "kind": "locomo",
+  "query": "What personality traits might Melanie say Caroline has?",
+  "state_fwd": 0.9198965819262178,
+  "state_rev": 0.8630553963225741,
+  "instr_fwd": 0.8130712036312155,
+  "instr_rev": 0.9201899730069103
+ },
+ {
+  "kind": "locomo",
+  "query": "What transgender-specific events has Caroline attended?",
+  "state_fwd": 0.9341843886630238,
+  "state_rev": 0.9119583211179731,
+  "instr_fwd": 0.9620385291197847,
+  "instr_rev": 0.9805630995887921
+ },
+ {
+  "kind": "locomo",
+  "query": "What book did Melanie read from Caroline's suggestion?",
+  "state_fwd": 0.8933063156693851,
+  "state_rev": 0.8552146572855333,
+  "instr_fwd": 0.7194729459765674,
+  "instr_rev": 0.6585170481645904
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Melanie's friend adopt a child?",
+  "state_fwd": 0.6731648229794986,
+  "state_rev": 0.7560769603233911,
+  "instr_fwd": 0.4177608384649535,
+  "instr_rev": 0.46933642985961205
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Melanie get hurt?",
+  "state_fwd": 0.9368116055889836,
+  "state_rev": 0.946127388873201,
+  "instr_fwd": 0.9310562876145809,
+  "instr_rev": 0.9765702832648563
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Melanie's family go on a roadtrip?",
+  "state_fwd": 0.9333822038986459,
+  "state_rev": 0.9115068774138438,
+  "instr_fwd": 0.256777381348845,
+  "instr_rev": 0.4879607736230867
+ },
+ {
+  "kind": "locomo",
+  "query": "How many children does Melanie have?",
+  "state_fwd": 0.7001265098431754,
+  "state_rev": 0.5149148399511303,
+  "instr_fwd": 0.3003069648414308,
+  "instr_rev": 0.3707365148835779
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Melanie go on a hike after the roadtrip?",
+  "state_fwd": 0.9043247603439503,
+  "state_rev": 0.9583742939073754,
+  "instr_fwd": 0.9536967269287342,
+  "instr_rev": 0.9852752867085156
+ },
+ {
+  "kind": "locomo",
+  "query": "Would Melanie go on another roadtrip soon?",
+  "state_fwd": 0.9338124806315113,
+  "state_rev": 0.8849203577787671,
+  "instr_fwd": 0.8370645534700494,
+  "instr_rev": 0.9415319577528743
+ },
+ {
+  "kind": "locomo",
+  "query": "What items has Melanie bought?",
+  "state_fwd": 0.9111536063547352,
+  "state_rev": 0.8323423583743145,
+  "instr_fwd": 0.6674055529936305,
+  "instr_rev": 0.6342088691283285
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Caroline pass the adoption interview?",
+  "state_fwd": 0.9347561088257551,
+  "state_rev": 0.9563278190019133,
+  "instr_fwd": 0.9741908582845975,
+  "instr_rev": 0.9902096516086478
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Melanie buy the figurines?",
+  "state_fwd": 0.8073583243612562,
+  "state_rev": 0.8669277730455466,
+  "instr_fwd": 0.9041422749816287,
+  "instr_rev": 0.9705932413098678
+ },
+ {
+  "kind": "locomo",
+  "query": "Would Caroline want to move back to her home country soon?",
+  "state_fwd": 0.7636583517561352,
+  "state_rev": 0.8528560228999993,
+  "instr_fwd": 0.5926914500903021,
+  "instr_rev": 0.8733931480598699
+ },
+ {
+  "kind": "locomo",
+  "query": "What did the charity race raise awareness for?",
+  "state_fwd": 0.9281632245844463,
+  "state_rev": 0.9575126005947432,
+  "instr_fwd": 0.9625040095818439,
+  "instr_rev": 0.9623941957709278
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Melanie realize after the charity race?",
+  "state_fwd": 0.9480435029796236,
+  "state_rev": 0.9447377563616655,
+  "instr_fwd": 0.8149824134449432,
+  "instr_rev": 0.9474824054022087
+ },
+ {
+  "kind": "locomo",
+  "query": "What are Caroline's plans for the summer?",
+  "state_fwd": 0.9165678665498016,
+  "state_rev": 0.8958494968956118,
+  "instr_fwd": 0.7760692030193356,
+  "instr_rev": 0.8652876833429134
+ },
+ {
+  "kind": "locomo",
+  "query": "What type of individuals does the adoption agency Caroline is considering support?",
+  "state_fwd": 0.9099965635143936,
+  "state_rev": 0.9558283545781575,
+  "instr_fwd": 0.9559422424401164,
+  "instr_rev": 0.985697914114115
+ },
+ {
+  "kind": "locomo",
+  "query": "Why did Caroline choose the adoption agency?",
+  "state_fwd": 0.965449815908986,
+  "state_rev": 0.8950869790212383,
+  "instr_fwd": 0.9633137389080627,
+  "instr_rev": 0.9697099825373782
+ },
+ {
+  "kind": "locomo",
+  "query": "What is Caroline excited about in the adoption process?",
+  "state_fwd": 0.8679421498199917,
+  "state_rev": 0.941035134046312,
+  "instr_fwd": 0.7201223045780912,
+  "instr_rev": 0.9120877755551062
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Melanie think about Caroline's decision to adopt?",
+  "state_fwd": 0.8877139849389377,
+  "state_rev": 0.8410553515750171,
+  "instr_fwd": 0.6447355413896219,
+  "instr_rev": 0.7611496418274597
+ },
+ {
+  "kind": "locomo",
+  "query": "How long have Mel and her husband been married?",
+  "state_fwd": 0.813294036572514,
+  "state_rev": 0.6286701631021893,
+  "instr_fwd": 0.8178226776078741,
+  "instr_rev": 0.5404682233331731
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Caroline's necklace symbolize?",
+  "state_fwd": 0.9521839977356811,
+  "state_rev": 0.9688894749014467,
+  "instr_fwd": 0.9758626670997772,
+  "instr_rev": 0.9909158493198446
+ },
+ {
+  "kind": "locomo",
+  "query": "What country is Caroline's grandma from?",
+  "state_fwd": 0.9133904119694988,
+  "state_rev": 0.9752935546586377,
+  "instr_fwd": 0.9661449841617393,
+  "instr_rev": 0.9928251700523846
+ },
+ {
+  "kind": "locomo",
+  "query": "What was grandma's gift to Caroline?",
+  "state_fwd": 0.8891677047652586,
+  "state_rev": 0.9706115313607453,
+  "instr_fwd": 0.7212043140246913,
+  "instr_rev": 0.9581957972750345
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Melanie and her family do while camping?",
+  "state_fwd": 0.9410740661660597,
+  "state_rev": 0.9432805666407825,
+  "instr_fwd": 0.9380468111503774,
+  "instr_rev": 0.9751277444832268
+ },
+ {
+  "kind": "locomo",
+  "query": "What kind of counseling and mental health services is Caroline interested in pursuing?",
+  "state_fwd": 0.9549426345459066,
+  "state_rev": 0.9445465576350355,
+  "instr_fwd": 0.9906997942263467,
+  "instr_rev": 0.9961295791780073
+ },
+ {
+  "kind": "locomo",
+  "query": "What workshop did Caroline attend recently?",
+  "state_fwd": 0.9053371680178292,
+  "state_rev": 0.9021943499986009,
+  "instr_fwd": 0.7701475542373067,
+  "instr_rev": 0.8483497323352881
+ },
+ {
+  "kind": "locomo",
+  "query": "What was discussed in the LGBTQ+ counseling workshop?",
+  "state_fwd": 0.9038325236515118,
+  "state_rev": 0.9535689539019597,
+  "instr_fwd": 0.9020092142015771,
+  "instr_rev": 0.9630570672399522
+ },
+ {
+  "kind": "locomo",
+  "query": "What motivated Caroline to pursue counseling?",
+  "state_fwd": 0.9724240282271327,
+  "state_rev": 0.9597532188756075,
+  "instr_fwd": 0.9701763957716368,
+  "instr_rev": 0.9776431364083792
+ },
+ {
+  "kind": "locomo",
+  "query": "What kind of place does Caroline want to create for people?",
+  "state_fwd": 0.9494932984995816,
+  "state_rev": 0.9433528800191521,
+  "instr_fwd": 0.9736998971562736,
+  "instr_rev": 0.9912139480865497
+ },
+ {
+  "kind": "locomo",
+  "query": "Did Melanie make the black and white bowl in the photo?",
+  "state_fwd": 0.9359720736274727,
+  "state_rev": 0.9370516691616394,
+  "instr_fwd": 0.9716572960306179,
+  "instr_rev": 0.9707895113283738
+ },
+ {
+  "kind": "locomo",
+  "query": "What kind of books does Caroline have in her library?",
+  "state_fwd": 0.8911152981266054,
+  "state_rev": 0.7919266874405281,
+  "instr_fwd": 0.49344101921690814,
+  "instr_rev": 0.6357963356468088
+ },
+ {
+  "kind": "locomo",
+  "query": "What was Melanie's favorite book from her childhood?",
+  "state_fwd": 0.8420690495766545,
+  "state_rev": 0.9547860338307362,
+  "instr_fwd": 0.9470933531182317,
+  "instr_rev": 0.9802696981337976
+ },
+ {
+  "kind": "locomo",
+  "query": "What book did Caroline recommend to Melanie?",
+  "state_fwd": 0.8598663570779288,
+  "state_rev": 0.8666471583928311,
+  "instr_fwd": 0.36192420540995557,
+  "instr_rev": 0.7509107506914446
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Caroline take away from the book \"Becoming Nicole\"?",
+  "state_fwd": 0.756492848783744,
+  "state_rev": 0.8990580515571572,
+  "instr_fwd": 0.7136710008092861,
+  "instr_rev": 0.9066112926269737
+ },
+ {
+  "kind": "locomo",
+  "query": "What are the new shoes that Melanie got used for?",
+  "state_fwd": 0.9234108078159948,
+  "state_rev": 0.9176081606846868,
+  "instr_fwd": 0.9655654137474399,
+  "instr_rev": 0.9816154636357802
+ },
+ {
+  "kind": "locomo",
+  "query": "What is Melanie's reason for getting into running?",
+  "state_fwd": 0.9450874409010519,
+  "state_rev": 0.9106480431766143,
+  "instr_fwd": 0.8908629788422598,
+  "instr_rev": 0.8713791220622997
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Melanie say running has been great for?",
+  "state_fwd": 0.9160317555722124,
+  "state_rev": 0.8750543660993699,
+  "instr_fwd": 0.9722977210530347,
+  "instr_rev": 0.9775691848293274
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Mel and her kids make during the pottery workshop?",
+  "state_fwd": 0.8880669458472896,
+  "state_rev": 0.8998437738822972,
+  "instr_fwd": 0.9207959271221287,
+  "instr_rev": 0.9571672877287132
+ },
+ {
+  "kind": "locomo",
+  "query": "What kind of pot did Mel and her kids make with clay?",
+  "state_fwd": 0.8563694684514869,
+  "state_rev": 0.8532168626414874,
+  "instr_fwd": 0.836346848748187,
+  "instr_rev": 0.8355068542654298
+ },
+ {
+  "kind": "locomo",
+  "query": "What creative project do Mel and her kids do together besides pottery?",
+  "state_fwd": 0.7638527849722924,
+  "state_rev": 0.7015457607339272,
+  "instr_fwd": 0.8051266498754985,
+  "instr_rev": 0.8782563468598911
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Mel and her kids paint in their latest project in July 2023?",
+  "state_fwd": 0.7789644080653052,
+  "state_rev": 0.85169568074425,
+  "instr_fwd": 0.8671096197130745,
+  "instr_rev": 0.9094399738600957
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Caroline see at the council meeting for adoption?",
+  "state_fwd": 0.9200388417496852,
+  "state_rev": 0.9082889089768594,
+  "instr_fwd": 0.8557859558120334,
+  "instr_rev": 0.9594256414916094
+ },
+ {
+  "kind": "locomo",
+  "query": "What do sunflowers represent according to Caroline?",
+  "state_fwd": 0.904476649690867,
+  "state_rev": 0.9628132195045598,
+  "instr_fwd": 0.8526754702001105,
+  "instr_rev": 0.9627757135477143
+ },
+ {
+  "kind": "locomo",
+  "query": "Why are flowers important to Melanie?",
+  "state_fwd": 0.9480147521739879,
+  "state_rev": 0.978793562768553,
+  "instr_fwd": 0.9794776566277683,
+  "instr_rev": 0.9875476777002181
+ },
+ {
+  "kind": "locomo",
+  "query": "What inspired Caroline's painting for the art show?",
+  "state_fwd": 0.8764878469636339,
+  "state_rev": 0.8683255762418111,
+  "instr_fwd": 0.8526663501474733,
+  "instr_rev": 0.8843226907605464
+ },
+ {
+  "kind": "locomo",
+  "query": "How often does Melanie go to the beach with her kids?",
+  "state_fwd": 0.908356567973389,
+  "state_rev": 0.9421308091483537,
+  "instr_fwd": 0.9735215174226347,
+  "instr_rev": 0.9858073647846869
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Melanie and her family see during their camping trip last year?",
+  "state_fwd": 0.9691152589173448,
+  "state_rev": 0.8971173797709299,
+  "instr_fwd": 0.9853313294980851,
+  "instr_rev": 0.9181954577105889
+ },
+ {
+  "kind": "locomo",
+  "query": "How did Melanie feel while watching the meteor shower?",
+  "state_fwd": 0.960037445835753,
+  "state_rev": 0.9664623360460433,
+  "instr_fwd": 0.8851609853527719,
+  "instr_rev": 0.9438565154630109
+ },
+ {
+  "kind": "locomo",
+  "query": "Whose birthday did Melanie celebrate recently?",
+  "state_fwd": 0.8812625003154956,
+  "state_rev": 0.913950969778762,
+  "instr_fwd": 0.6096231207885161,
+  "instr_rev": 0.6091463901772131
+ },
+ {
+  "kind": "locomo",
+  "query": "Who performed at the concert at Melanie's daughter's birthday?",
+  "state_fwd": 0.7356516392823156,
+  "state_rev": 0.6876394248837463,
+  "instr_fwd": 0.7530373413446618,
+  "instr_rev": 0.8462821724681234
+ },
+ {
+  "kind": "locomo",
+  "query": "Why did Melanie choose to use colors and patterns in her pottery project?",
+  "state_fwd": 0.8425787494625896,
+  "state_rev": 0.8025854439330523,
+  "instr_fwd": 0.5900919607823043,
+  "instr_rev": 0.65709418607279
+ },
+ {
+  "kind": "locomo",
+  "query": "What pet does Caroline have?",
+  "state_fwd": 0.8298561340019569,
+  "state_rev": 0.8243315974369854,
+  "instr_fwd": 0.8382899911944776,
+  "instr_rev": 0.9108604266427407
+ },
+ {
+  "kind": "locomo",
+  "query": "What pets does Melanie have?",
+  "state_fwd": 0.9484008497196598,
+  "state_rev": 0.8761463392004998,
+  "instr_fwd": 0.9856551492818661,
+  "instr_rev": 0.9663443659600214
+ },
+ {
+  "kind": "locomo",
+  "query": "Where did Oliver hide his bone once?",
+  "state_fwd": 0.9195921898426366,
+  "state_rev": 0.9603823597477521,
+  "instr_fwd": 0.7855978560173018,
+  "instr_rev": 0.9649291324179258
+ },
+ {
+  "kind": "locomo",
+  "query": "What activity did Caroline used to do with her dad?",
+  "state_fwd": 0.9337692135655699,
+  "state_rev": 0.9707478940306075,
+  "instr_fwd": 0.9622415481485747,
+  "instr_rev": 0.996332016993173
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Caroline make for a local church?",
+  "state_fwd": 0.9525343905922977,
+  "state_rev": 0.964022186878203,
+  "instr_fwd": 0.9845210455434039,
+  "instr_rev": 0.9920552133189698
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Caroline find in her neighborhood during her walk?",
+  "state_fwd": 0.845695193680716,
+  "state_rev": 0.959177216556638,
+  "instr_fwd": 0.6749231738095643,
+  "instr_rev": 0.9554282612934794
+ },
+ {
+  "kind": "locomo",
+  "query": "Which song motivates Caroline to be courageous?",
+  "state_fwd": 0.9374436270638581,
+  "state_rev": 0.9445142771387212,
+  "instr_fwd": 0.9527688325628331,
+  "instr_rev": 0.9102637913991635
+ },
+ {
+  "kind": "locomo",
+  "query": "Which  classical musicians does Melanie enjoy listening to?",
+  "state_fwd": 0.9273747420977649,
+  "state_rev": 0.963910281241485,
+  "instr_fwd": 0.9101216096736295,
+  "instr_rev": 0.9884781745349647
+ },
+ {
+  "kind": "locomo",
+  "query": "Who is Melanie a fan of in terms of modern music?",
+  "state_fwd": 0.9374491150533891,
+  "state_rev": 0.9700740157911374,
+  "instr_fwd": 0.9278040310215043,
+  "instr_rev": 0.9637822065558725
+ },
+ {
+  "kind": "locomo",
+  "query": "How long has Melanie been creating art?",
+  "state_fwd": 0.8524054636468321,
+  "state_rev": 0.8227875669720432,
+  "instr_fwd": 0.9093752263730784,
+  "instr_rev": 0.9543036420093434
+ },
+ {
+  "kind": "locomo",
+  "query": "What precautionary sign did Melanie see at the caf\u00e9?",
+  "state_fwd": 0.9421212346860406,
+  "state_rev": 0.8902653497855165,
+  "instr_fwd": 0.9462398563402005,
+  "instr_rev": 0.9803687594524981
+ },
+ {
+  "kind": "locomo",
+  "query": "What advice does Caroline give for getting started with adoption?",
+  "state_fwd": 0.9623258617254028,
+  "state_rev": 0.9482734864188251,
+  "instr_fwd": 0.9758424863603845,
+  "instr_rev": 0.9858640169580148
+ },
+ {
+  "kind": "locomo",
+  "query": "What setback did Melanie face in October 2023?",
+  "state_fwd": 0.9628975371387616,
+  "state_rev": 0.9621801724930984,
+  "instr_fwd": 0.9731169529312431,
+  "instr_rev": 0.9839305251135828
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Melanie do to keep herself busy during her pottery break?",
+  "state_fwd": 0.8457395022486146,
+  "state_rev": 0.8388628924229939,
+  "instr_fwd": 0.8200191990928712,
+  "instr_rev": 0.8321708555505558
+ },
+ {
+  "kind": "locomo",
+  "query": "What painting did Melanie show to Caroline on October 13, 2023?",
+  "state_fwd": 0.7839975069401146,
+  "state_rev": 0.9127100660118991,
+  "instr_fwd": 0.7425030415691314,
+  "instr_rev": 0.8590704139160624
+ },
+ {
+  "kind": "locomo",
+  "query": "What kind of painting did Caroline share with Melanie on October 13, 2023?",
+  "state_fwd": 0.7495941449614458,
+  "state_rev": 0.8424767615725955,
+  "instr_fwd": 0.8438317787497807,
+  "instr_rev": 0.942300705184392
+ },
+ {
+  "kind": "locomo",
+  "query": "What was the poetry reading that Caroline attended about?",
+  "state_fwd": 0.9356406953166825,
+  "state_rev": 0.9402584112796184,
+  "instr_fwd": 0.9808226155881759,
+  "instr_rev": 0.9927633578755307
+ },
+ {
+  "kind": "locomo",
+  "query": "What did the posters at the poetry reading say?",
+  "state_fwd": 0.9594231861139543,
+  "state_rev": 0.9092868662276906,
+  "instr_fwd": 0.9557050629863055,
+  "instr_rev": 0.8789476271678593
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Caroline's drawing symbolize for her?",
+  "state_fwd": 0.9578163545669645,
+  "state_rev": 0.9265961625789937,
+  "instr_fwd": 0.9347997148387569,
+  "instr_rev": 0.8728532868912325
+ },
+ {
+  "kind": "locomo",
+  "query": "How do Melanie and Caroline describe their journey through life together?",
+  "state_fwd": 0.9715380830402844,
+  "state_rev": 0.9637509045992518,
+  "instr_fwd": 0.9838225383471322,
+  "instr_rev": 0.9857914496447999
+ },
+ {
+  "kind": "locomo",
+  "query": "What happened to Melanie's son on their road trip?",
+  "state_fwd": 0.9687399319100272,
+  "state_rev": 0.94984112578281,
+  "instr_fwd": 0.9534927216175685,
+  "instr_rev": 0.9629288722482766
+ },
+ {
+  "kind": "locomo",
+  "query": "How did Melanie's son handle the accident?",
+  "state_fwd": 0.9544958945070624,
+  "state_rev": 0.8765807361976681,
+  "instr_fwd": 0.9065563797599725,
+  "instr_rev": 0.9251650218803522
+ },
+ {
+  "kind": "locomo",
+  "query": "How did Melanie feel about her family after the accident?",
+  "state_fwd": 0.9630688745126662,
+  "state_rev": 0.9480977832926117,
+  "instr_fwd": 0.9877963508020093,
+  "instr_rev": 0.9911247212909392
+ },
+ {
+  "kind": "locomo",
+  "query": "How did Melanie's children handle the accident?",
+  "state_fwd": 0.9491078492334335,
+  "state_rev": 0.9397360227140061,
+  "instr_fwd": 0.9351314062684027,
+  "instr_rev": 0.9576945769885591
+ },
+ {
+  "kind": "locomo",
+  "query": "How did Melanie feel after the accident?",
+  "state_fwd": 0.9722200432055184,
+  "state_rev": 0.9785747593341771,
+  "instr_fwd": 0.9552894808139551,
+  "instr_rev": 0.9661606413132491
+ },
+ {
+  "kind": "locomo",
+  "query": "What was Melanie's reaction to her children enjoying the Grand Canyon?",
+  "state_fwd": 0.9441974665841006,
+  "state_rev": 0.9318344033300564,
+  "instr_fwd": 0.9684124629860823,
+  "instr_rev": 0.9749066853067468
+ },
+ {
+  "kind": "locomo",
+  "query": "What do Melanie's family give her?",
+  "state_fwd": 0.8849737508933537,
+  "state_rev": 0.8681138884738424,
+  "instr_fwd": 0.38635682861091525,
+  "instr_rev": 0.549367692571163
+ },
+ {
+  "kind": "locomo",
+  "query": "How did Melanie feel about her family supporting her?",
+  "state_fwd": 0.9489492471286731,
+  "state_rev": 0.9467342863497742,
+  "instr_fwd": 0.9706882617009971,
+  "instr_rev": 0.9738154104127866
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Melanie do after the road trip to relax?",
+  "state_fwd": 0.8729662868277668,
+  "state_rev": 0.8956623169562428,
+  "instr_fwd": 0.8686575714470928,
+  "instr_rev": 0.9574709097223894
+ },
+ {
+  "kind": "locomo",
+  "query": "When Jon has lost his job as a banker?",
+  "state_fwd": 0.9494197118602615,
+  "state_rev": 0.9489914579038468,
+  "instr_fwd": 0.9287855441127164,
+  "instr_rev": 0.9565320918057467
+ },
+ {
+  "kind": "locomo",
+  "query": "When Gina has lost her job at Door Dash?",
+  "state_fwd": 0.9248996857056284,
+  "state_rev": 0.9652909121210931,
+  "instr_fwd": 0.9688566901279564,
+  "instr_rev": 0.977440760849962
+ },
+ {
+  "kind": "locomo",
+  "query": "How do Jon and Gina both like to destress?",
+  "state_fwd": 0.9694684926883538,
+  "state_rev": 0.934946276526756,
+  "instr_fwd": 0.9888491224204354,
+  "instr_rev": 0.9902575765357206
+ },
+ {
+  "kind": "locomo",
+  "query": "What do Jon and Gina both have in common?",
+  "state_fwd": 0.8946036646356942,
+  "state_rev": 0.8873209628385381,
+  "instr_fwd": 0.26539307965427494,
+  "instr_rev": 0.6025732825964297
+ },
+ {
+  "kind": "locomo",
+  "query": "Why did Jon decide to start his dance studio?",
+  "state_fwd": 0.9460294029501912,
+  "state_rev": 0.940886249880612,
+  "instr_fwd": 0.9486513517680247,
+  "instr_rev": 0.9376071744256874
+ },
+ {
+  "kind": "locomo",
+  "query": "What Jon thinks the ideal dance studio should look like?",
+  "state_fwd": 0.8861585866193143,
+  "state_rev": 0.9658921607100981,
+  "instr_fwd": 0.9321558594741488,
+  "instr_rev": 0.9766480127700325
+ },
+ {
+  "kind": "locomo",
+  "query": "When is Jon's group performing at a festival?",
+  "state_fwd": 0.8698932060735981,
+  "state_rev": 0.8040617857520509,
+  "instr_fwd": 0.8780056988719949,
+  "instr_rev": 0.9418535722160158
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Gina launch an ad campaign for her store?",
+  "state_fwd": 0.9023371364544407,
+  "state_rev": 0.9090769221462079,
+  "instr_fwd": 0.9234295580798716,
+  "instr_rev": 0.9743345775230408
+ },
+ {
+  "kind": "locomo",
+  "query": "When was Jon in Paris?",
+  "state_fwd": 0.7846453819160186,
+  "state_rev": 0.7331929830099416,
+  "instr_fwd": 0.1586890636347824,
+  "instr_rev": 0.4690438283202965
+ },
+ {
+  "kind": "locomo",
+  "query": "Which city have both Jean and John visited?",
+  "state_fwd": 0.8133452562958041,
+  "state_rev": 0.6555165120074131,
+  "instr_fwd": 0.7898016897619522,
+  "instr_rev": 0.8592499809583617
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Gina team up with a local artist for some cool designs?",
+  "state_fwd": 0.9587888929016849,
+  "state_rev": 0.9508083174635215,
+  "instr_fwd": 0.9578260611138031,
+  "instr_rev": 0.9898159913926265
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Gina get her tattoo?",
+  "state_fwd": 0.9399318808622509,
+  "state_rev": 0.929504165026175,
+  "instr_fwd": 0.8024334170640586,
+  "instr_rev": 0.9430721412882043
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Jon start to go to the gym?",
+  "state_fwd": 0.8302503170937832,
+  "state_rev": 0.92410691424023,
+  "instr_fwd": 0.6357667505184496,
+  "instr_rev": 0.9200622636055183
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Gina open her online clothing store?",
+  "state_fwd": 0.9328862901981583,
+  "state_rev": 0.9005342388712698,
+  "instr_fwd": 0.9457398447084927,
+  "instr_rev": 0.9504267970644937
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Jon start expanding his studio's social media presence?",
+  "state_fwd": 0.7964446384221084,
+  "state_rev": 0.881778251424865,
+  "instr_fwd": 0.8754022160164913,
+  "instr_rev": 0.955049530037932
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Jon host a dance competition?",
+  "state_fwd": 0.9251708207329972,
+  "state_rev": 0.92478539766952,
+  "instr_fwd": 0.6778327373151285,
+  "instr_rev": 0.8339401560270252
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Jon go to a fair to get more exposure for his dance studio?",
+  "state_fwd": 0.8532906513366955,
+  "state_rev": 0.8648992335444605,
+  "instr_fwd": 0.9031106247823053,
+  "instr_rev": 0.8505336134386378
+ },
+ {
+  "kind": "locomo",
+  "query": "Why did Gina decide to start her own clothing store?",
+  "state_fwd": 0.9357810254442537,
+  "state_rev": 0.8534154836441525,
+  "instr_fwd": 0.9532132325963342,
+  "instr_rev": 0.9658800938944581
+ },
+ {
+  "kind": "locomo",
+  "query": "Do Jon and Gina start businesses out of what they love?",
+  "state_fwd": 0.9046564590846037,
+  "state_rev": 0.910315205223819,
+  "instr_fwd": 0.9125654570416744,
+  "instr_rev": 0.9242857078498229
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Gina interview for a design internship?",
+  "state_fwd": 0.9251503511366224,
+  "state_rev": 0.9250336448539643,
+  "instr_fwd": 0.863065973625082,
+  "instr_rev": 0.9604261663929498
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Gina get accepted for the design internship?",
+  "state_fwd": 0.9366663557923562,
+  "state_rev": 0.7711427757334717,
+  "instr_fwd": 0.9353439767354198,
+  "instr_rev": 0.7696603217528557
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Jon start reading \"The Lean Startup\"?",
+  "state_fwd": 0.8027126527987731,
+  "state_rev": 0.901600982817605,
+  "instr_fwd": 0.8548666622975718,
+  "instr_rev": 0.9764401839850902
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Gina develop a video presentation to teach how to style her fashion pieces? ",
+  "state_fwd": 0.9560506444761613,
+  "state_rev": 0.9645336531722482,
+  "instr_fwd": 0.9032961949908271,
+  "instr_rev": 0.9761867844997991
+ },
+ {
+  "kind": "locomo",
+  "query": "How did Gina promote her clothes store?",
+  "state_fwd": 0.960003771781913,
+  "state_rev": 0.8871606824074033,
+  "instr_fwd": 0.7647046065056268,
+  "instr_rev": 0.8378120924682848
+ },
+ {
+  "kind": "locomo",
+  "query": "Which events has Jon participated in to promote his business venture?",
+  "state_fwd": 0.8281902360390511,
+  "state_rev": 0.8705031246259274,
+  "instr_fwd": 0.9180204953654538,
+  "instr_rev": 0.9464218820001807
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Jon's dance studio offer?",
+  "state_fwd": 0.8846469673698464,
+  "state_rev": 0.909773387122326,
+  "instr_fwd": 0.4839956615528937,
+  "instr_rev": 0.6395399833898725
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Jon receive mentorship to promote his venture?",
+  "state_fwd": 0.7593362739555042,
+  "state_rev": 0.8070522917169703,
+  "instr_fwd": 0.45040374905545383,
+  "instr_rev": 0.7455232387412195
+ },
+ {
+  "kind": "locomo",
+  "query": "Did Jon and Gina both participate in dance competitions?",
+  "state_fwd": 0.9251093996009645,
+  "state_rev": 0.8817000848741732,
+  "instr_fwd": 0.6886177076017383,
+  "instr_rev": 0.6305903013388213
+ },
+ {
+  "kind": "locomo",
+  "query": "When was Jon in Rome?",
+  "state_fwd": 0.9430453967938166,
+  "state_rev": 0.9685880099547549,
+  "instr_fwd": 0.9029855283781792,
+  "instr_rev": 0.9374968443565619
+ },
+ {
+  "kind": "locomo",
+  "query": "Which cities has Jon visited?",
+  "state_fwd": 0.6018358387646797,
+  "state_rev": 0.8735466109137122,
+  "instr_fwd": 0.06940524146878137,
+  "instr_rev": 0.18586377014508995
+ },
+ {
+  "kind": "locomo",
+  "query": "When Jon is planning to open his dance studio?",
+  "state_fwd": 0.8790425691037543,
+  "state_rev": 0.8550733613563942,
+  "instr_fwd": 0.7248147418576733,
+  "instr_rev": 0.8467772711120388
+ },
+ {
+  "kind": "locomo",
+  "query": "How long did it take for Jon to open his studio?",
+  "state_fwd": 0.7892003777963525,
+  "state_rev": 0.8165621254854648,
+  "instr_fwd": 0.29933077194907215,
+  "instr_rev": 0.42353719021114006
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Gina design a limited collection of hoodies?",
+  "state_fwd": 0.9223589569363148,
+  "state_rev": 0.9632959349815907,
+  "instr_fwd": 0.9632252620155247,
+  "instr_rev": 0.973580258873416
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Jon visit networking events for his store?",
+  "state_fwd": 0.8185544310409517,
+  "state_rev": 0.7871275601111563,
+  "instr_fwd": 0.4480578493163267,
+  "instr_rev": 0.6454910186630944
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Gina start being recognized by fashion editors?",
+  "state_fwd": 0.9439389282149357,
+  "state_rev": 0.9584098876187445,
+  "instr_fwd": 0.7900238931887571,
+  "instr_rev": 0.8634352561334743
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Jon start learning marketing and analytics tools?",
+  "state_fwd": 0.8570802598531876,
+  "state_rev": 0.9637182387695015,
+  "instr_fwd": 0.9445071806321789,
+  "instr_rev": 0.9950373403866808
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Jon and Gina decide to collaborate to create dance content?",
+  "state_fwd": 0.9193084066956811,
+  "state_rev": 0.9117630106329717,
+  "instr_fwd": 0.667231962505867,
+  "instr_rev": 0.7982832329089019
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Gina go to a dance class with a group of friends?",
+  "state_fwd": 0.9458055666827203,
+  "state_rev": 0.9408729865652027,
+  "instr_fwd": 0.7658465508159165,
+  "instr_rev": 0.9606848115184105
+ },
+ {
+  "kind": "locomo",
+  "query": "What is Gina's favorite style of dance?",
+  "state_fwd": 0.957674174192957,
+  "state_rev": 0.9553873075817785,
+  "instr_fwd": 0.8850719648921199,
+  "instr_rev": 0.8762644615808919
+ },
+ {
+  "kind": "locomo",
+  "query": "What is Jon's favorite style of dance?",
+  "state_fwd": 0.9649280395251048,
+  "state_rev": 0.9352884734900174,
+  "instr_fwd": 0.9695178550927152,
+  "instr_rev": 0.8939403514942735
+ },
+ {
+  "kind": "locomo",
+  "query": "What was Gina's favorite dancing memory?",
+  "state_fwd": 0.8846837451743504,
+  "state_rev": 0.9676735120063866,
+  "instr_fwd": 0.9666690758947686,
+  "instr_rev": 0.9934722291110155
+ },
+ {
+  "kind": "locomo",
+  "query": "What kind of dance piece did Gina's team perform to win first place?",
+  "state_fwd": 0.7581810089575772,
+  "state_rev": 0.8258949123400411,
+  "instr_fwd": 0.5676257948741978,
+  "instr_rev": 0.8112169783546628
+ },
+ {
+  "kind": "locomo",
+  "query": "What do the dancers in the photo represent?",
+  "state_fwd": 0.8224313137324003,
+  "state_rev": 0.7271860930843682,
+  "instr_fwd": 0.8864000597418843,
+  "instr_rev": 0.9659306008514228
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Gina say about the dancers in the photo?",
+  "state_fwd": 0.8699536399356176,
+  "state_rev": 0.9078098591142243,
+  "instr_fwd": 0.8829441410212504,
+  "instr_rev": 0.9474620938246382
+ },
+ {
+  "kind": "locomo",
+  "query": "What is Jon's attitude towards being part of the dance festival?",
+  "state_fwd": 0.915245147812985,
+  "state_rev": 0.9576282224387438,
+  "instr_fwd": 0.961960436629202,
+  "instr_rev": 0.9787767301614071
+ },
+ {
+  "kind": "locomo",
+  "query": "What kind of flooring is Jon looking for in his dance studio?",
+  "state_fwd": 0.9468654245354805,
+  "state_rev": 0.9686589670650182,
+  "instr_fwd": 0.9547323148194583,
+  "instr_rev": 0.9865540958309931
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Gina find for her clothing store on 1 February, 2023?",
+  "state_fwd": 0.8998513352015328,
+  "state_rev": 0.8537961175897627,
+  "instr_fwd": 0.7149375424903356,
+  "instr_rev": 0.8833963959945765
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Gina design for her store?",
+  "state_fwd": 0.9451351276104539,
+  "state_rev": 0.9375735874379086,
+  "instr_fwd": 0.6972889480422443,
+  "instr_rev": 0.6766874841961336
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Gina want her customers to feel in her store?",
+  "state_fwd": 0.9441234551313912,
+  "state_rev": 0.9641078219370256,
+  "instr_fwd": 0.9758781149501304,
+  "instr_rev": 0.9889031886786135
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Jon say about Gina's progress with her store?",
+  "state_fwd": 0.92852344539918,
+  "state_rev": 0.861214580766348,
+  "instr_fwd": 0.8663627842838727,
+  "instr_rev": 0.9341231502616812
+ },
+ {
+  "kind": "locomo",
+  "query": "What made Gina choose the furniture and decor for her store?",
+  "state_fwd": 0.9332889205728486,
+  "state_rev": 0.9239978192783496,
+  "instr_fwd": 0.9717059000467658,
+  "instr_rev": 0.9457098779894016
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Jon say about creating a special experience for customers?",
+  "state_fwd": 0.9297529816265998,
+  "state_rev": 0.9687789570118003,
+  "instr_fwd": 0.9546616156120195,
+  "instr_rev": 0.9916344801654474
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Gina say about creating an experience for her customers?",
+  "state_fwd": 0.9479466526171046,
+  "state_rev": 0.9487596708808508,
+  "instr_fwd": 0.9598385185849112,
+  "instr_rev": 0.9501572270045776
+ },
+ {
+  "kind": "locomo",
+  "query": "How is Gina's store doing?",
+  "state_fwd": 0.9209113215717968,
+  "state_rev": 0.9431975422851286,
+  "instr_fwd": 0.9656289107334882,
+  "instr_rev": 0.967377044212849
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Gina's tattoo symbolize?",
+  "state_fwd": 0.9582385608224686,
+  "state_rev": 0.9825844595500889,
+  "instr_fwd": 0.9480900829522735,
+  "instr_rev": 0.9841683145992502
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Jon and Gina compare their entrepreneurial journeys to?",
+  "state_fwd": 0.9284128567107571,
+  "state_rev": 0.8968866915974644,
+  "instr_fwd": 0.4552350262184952,
+  "instr_rev": 0.5462961534388021
+ },
+ {
+  "kind": "locomo",
+  "query": "What advice does Gina give to Jon about running a successful business?",
+  "state_fwd": 0.9665813906680499,
+  "state_rev": 0.9288380083474916,
+  "instr_fwd": 0.9765975860869146,
+  "instr_rev": 0.9741655739436251
+ },
+ {
+  "kind": "locomo",
+  "query": "Why did Jon shut down his bank account?",
+  "state_fwd": 0.8596660443666885,
+  "state_rev": 0.9179410822759851,
+  "instr_fwd": 0.928168695891857,
+  "instr_rev": 0.9771964281233516
+ },
+ {
+  "kind": "locomo",
+  "query": "Why did Gina combine her clothing business with dance?",
+  "state_fwd": 0.9173582064136204,
+  "state_rev": 0.8998392896279297,
+  "instr_fwd": 0.8443350630066412,
+  "instr_rev": 0.9333228874622383
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Jon's dance make him?",
+  "state_fwd": 0.9111817094890122,
+  "state_rev": 0.9111684450086264,
+  "instr_fwd": 0.9483249102524284,
+  "instr_rev": 0.9279647218160377
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Gina receive from a dance contest?",
+  "state_fwd": 0.9346219812937976,
+  "state_rev": 0.9623417646089918,
+  "instr_fwd": 0.9710412618415252,
+  "instr_rev": 0.9825084146618139
+ },
+ {
+  "kind": "locomo",
+  "query": "How does Gina stay confident in her business?",
+  "state_fwd": 0.8894504753154153,
+  "state_rev": 0.9470637118222959,
+  "instr_fwd": 0.9613853864336347,
+  "instr_rev": 0.9769061329022573
+ },
+ {
+  "kind": "locomo",
+  "query": "What kind of professional experience did Gina get accepted for on May 23, 2023?",
+  "state_fwd": 0.9128626820488891,
+  "state_rev": 0.9035739289484485,
+  "instr_fwd": 0.8548287803505427,
+  "instr_rev": 0.8932777677782593
+ },
+ {
+  "kind": "locomo",
+  "query": "Where is Gina's fashion internship?",
+  "state_fwd": 0.9324654360917146,
+  "state_rev": 0.9569674481190157,
+  "instr_fwd": 0.9046918258308966,
+  "instr_rev": 0.9393288060136491
+ },
+ {
+  "kind": "locomo",
+  "query": "What book is Jon currently reading?",
+  "state_fwd": 0.7139503441735581,
+  "state_rev": 0.6921398729982335,
+  "instr_fwd": 0.10856530086304389,
+  "instr_rev": 0.2492266040335829
+ },
+ {
+  "kind": "locomo",
+  "query": "What is Jon offering to the dancers at his dance studio?",
+  "state_fwd": 0.9592217062755878,
+  "state_rev": 0.8908744787441608,
+  "instr_fwd": 0.9573242728424649,
+  "instr_rev": 0.9023257001836835
+ },
+ {
+  "kind": "locomo",
+  "query": "How does Jon use the clipboard with a notepad attached to it?",
+  "state_fwd": 0.9260764517191111,
+  "state_rev": 0.9475159077174122,
+  "instr_fwd": 0.5942036190114239,
+  "instr_rev": 0.9306442500298199
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Jon tell Gina he won't do?",
+  "state_fwd": 0.7865978648380356,
+  "state_rev": 0.7788409081733215,
+  "instr_fwd": 0.41689587847495924,
+  "instr_rev": 0.6755518665778065
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Jon take a trip to Rome for?",
+  "state_fwd": 0.9355003206450866,
+  "state_rev": 0.960681563697688,
+  "instr_fwd": 0.9548211844797797,
+  "instr_rev": 0.9888163064823627
+ },
+ {
+  "kind": "locomo",
+  "query": "What is Jon working on opening?",
+  "state_fwd": 0.9196015097088261,
+  "state_rev": 0.9201476662568047,
+  "instr_fwd": 0.9346118260241638,
+  "instr_rev": 0.9646800476773495
+ },
+ {
+  "kind": "locomo",
+  "query": "How does Gina describe the studio that Jon has opened?",
+  "state_fwd": 0.9292762475864814,
+  "state_rev": 0.9292465264166639,
+  "instr_fwd": 0.8917270874630971,
+  "instr_rev": 0.9106606006468192
+ },
+ {
+  "kind": "locomo",
+  "query": "How does Jon feel about the opening night of his dance studio?",
+  "state_fwd": 0.9139389635337577,
+  "state_rev": 0.895843286842431,
+  "instr_fwd": 0.6691260800920085,
+  "instr_rev": 0.7816335422011906
+ },
+ {
+  "kind": "locomo",
+  "query": "How does Gina describe the feeling that dance brings?",
+  "state_fwd": 0.9523225770080938,
+  "state_rev": 0.9243122591934144,
+  "instr_fwd": 0.9870272703894688,
+  "instr_rev": 0.9734921487956424
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Jon plan to do at the grand opening of his dance studio?",
+  "state_fwd": 0.8211710272646134,
+  "state_rev": 0.8162708349741487,
+  "instr_fwd": 0.3797458266379985,
+  "instr_rev": 0.548545950479325
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Gina say to Jon about the grand opening?",
+  "state_fwd": 0.9559368648020892,
+  "state_rev": 0.9353070465194353,
+  "instr_fwd": 0.9382697784744719,
+  "instr_rev": 0.9643280807276471
+ },
+ {
+  "kind": "locomo",
+  "query": "What is the general sentiment about the upcoming grand opening?",
+  "state_fwd": 0.9561558367399637,
+  "state_rev": 0.9177175506724662,
+  "instr_fwd": 0.9685888859708973,
+  "instr_rev": 0.9795366947318075
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Gina make a limited edition line of?",
+  "state_fwd": 0.9647404300525771,
+  "state_rev": 0.9809510957401133,
+  "instr_fwd": 0.9767972721365674,
+  "instr_rev": 0.9884329909543907
+ },
+ {
+  "kind": "locomo",
+  "query": "According to Gina, what makes Jon a perfect mentor and guide?",
+  "state_fwd": 0.8778143408133198,
+  "state_rev": 0.9204305774815995,
+  "instr_fwd": 0.9485285732033231,
+  "instr_rev": 0.9856817169173834
+ },
+ {
+  "kind": "locomo",
+  "query": "What plans does Jon have after receiving advice at the networking event?",
+  "state_fwd": 0.9204654811428522,
+  "state_rev": 0.9109506805958016,
+  "instr_fwd": 0.9518662032643598,
+  "instr_rev": 0.9494762928536858
+ },
+ {
+  "kind": "locomo",
+  "query": "What offer does Gina make to Jon regarding social media?",
+  "state_fwd": 0.9253457241330615,
+  "state_rev": 0.9387773172129561,
+  "instr_fwd": 0.9499724513998783,
+  "instr_rev": 0.9247100021885494
+ },
+ {
+  "kind": "locomo",
+  "query": "Who did Maria have dinner with on May 3, 2023?",
+  "state_fwd": 0.7378833338737089,
+  "state_rev": 0.34259214633136437,
+  "instr_fwd": 0.2089937970951827,
+  "instr_rev": 0.2424269307938525
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Maria donate her car?",
+  "state_fwd": 0.8793520959685179,
+  "state_rev": 0.9605132850484179,
+  "instr_fwd": 0.9139194639967537,
+  "instr_rev": 0.9484914087760893
+ },
+ {
+  "kind": "locomo",
+  "query": "What martial arts has John done?",
+  "state_fwd": 0.8509184972572376,
+  "state_rev": 0.7768336368221587,
+  "instr_fwd": 0.8024331123218783,
+  "instr_rev": 0.6731043849135929
+ },
+ {
+  "kind": "locomo",
+  "query": "What type of volunteering have John and Maria both done?",
+  "state_fwd": 0.8709391561079052,
+  "state_rev": 0.8161082825820909,
+  "instr_fwd": 0.9002382763219123,
+  "instr_rev": 0.7797840164485325
+ },
+ {
+  "kind": "locomo",
+  "query": "When did John join the online support group?",
+  "state_fwd": 0.8555086599414745,
+  "state_rev": 0.9257264051640357,
+  "instr_fwd": 0.5959707470087583,
+  "instr_rev": 0.8769175249775211
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Maria go to the beach?",
+  "state_fwd": 0.936613508957726,
+  "state_rev": 0.9043439159014571,
+  "instr_fwd": 0.7627645570798399,
+  "instr_rev": 0.7935190781702018
+ },
+ {
+  "kind": "locomo",
+  "query": "Where has Maria made friends?",
+  "state_fwd": 0.9258887353736569,
+  "state_rev": 0.9202515799807582,
+  "instr_fwd": 0.8174065808297165,
+  "instr_rev": 0.8139725284185785
+ },
+ {
+  "kind": "locomo",
+  "query": "What items des John mention having as a child?",
+  "state_fwd": 0.6075972322523792,
+  "state_rev": 0.659244929466346,
+  "instr_fwd": 0.23587484077977267,
+  "instr_rev": 0.4441786024550632
+ },
+ {
+  "kind": "locomo",
+  "query": "What might John's financial status be?",
+  "state_fwd": 0.6298235455280276,
+  "state_rev": 0.35954816094527464,
+  "instr_fwd": 0.1358851748879353,
+  "instr_rev": 0.1419614865208763
+ },
+ {
+  "kind": "locomo",
+  "query": "Who gave Maria's family money when she was younger and her family was going through tough times?",
+  "state_fwd": 0.9511882894830284,
+  "state_rev": 0.8706604359611194,
+  "instr_fwd": 0.9689975510513231,
+  "instr_rev": 0.9168128731007295
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Maria meet Jean?",
+  "state_fwd": 0.9309294537514391,
+  "state_rev": 0.9545230532348181,
+  "instr_fwd": 0.5745528173597636,
+  "instr_rev": 0.8479387292731752
+ },
+ {
+  "kind": "locomo",
+  "query": "What people has Maria met and helped while volunteering?",
+  "state_fwd": 0.7693179237197624,
+  "state_rev": 0.7412941416926933,
+  "instr_fwd": 0.4330596535691653,
+  "instr_rev": 0.4790324077180828
+ },
+ {
+  "kind": "locomo",
+  "query": "What test has John taken multiple times?",
+  "state_fwd": 0.8893360304279126,
+  "state_rev": 0.857686185715474,
+  "instr_fwd": 0.7670493813562831,
+  "instr_rev": 0.8195844379544726
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Maria's grandmother pass away?",
+  "state_fwd": 0.8057922352749686,
+  "state_rev": 0.9220096566141688,
+  "instr_fwd": 0.7807317146452369,
+  "instr_rev": 0.9237516679877785
+ },
+ {
+  "kind": "locomo",
+  "query": "Would John be considered a patriotic person?",
+  "state_fwd": 0.8778711869488485,
+  "state_rev": 0.910431299908229,
+  "instr_fwd": 0.9299182298773719,
+  "instr_rev": 0.985476312441942
+ },
+ {
+  "kind": "locomo",
+  "query": "What writing classes has Maria taken?",
+  "state_fwd": 0.9204255539301379,
+  "state_rev": 0.8982187329375251,
+  "instr_fwd": 0.927609462260093,
+  "instr_rev": 0.9321928804949979
+ },
+ {
+  "kind": "locomo",
+  "query": "When did John get his degree?",
+  "state_fwd": 0.9494444447119506,
+  "state_rev": 0.9383286299754894,
+  "instr_fwd": 0.8559988546977961,
+  "instr_rev": 0.818174519653613
+ },
+ {
+  "kind": "locomo",
+  "query": "What might John's degree be in?",
+  "state_fwd": 0.8723813610441756,
+  "state_rev": 0.926012450145638,
+  "instr_fwd": 0.6959353385129742,
+  "instr_rev": 0.7425631961860923
+ },
+ {
+  "kind": "locomo",
+  "query": "Who did John go to yoga with?",
+  "state_fwd": 0.9574449695702549,
+  "state_rev": 0.8901137710266672,
+  "instr_fwd": 0.9253704956484728,
+  "instr_rev": 0.8175866993797817
+ },
+ {
+  "kind": "locomo",
+  "query": "What damages have happened to John's car?",
+  "state_fwd": 0.8550915659890928,
+  "state_rev": 0.8729914619023964,
+  "instr_fwd": 0.8974167825950219,
+  "instr_rev": 0.9248971663831252
+ },
+ {
+  "kind": "locomo",
+  "query": "When did John take a road trip to the Pacific Northwest?",
+  "state_fwd": 0.9297395230939801,
+  "state_rev": 0.9754392898593669,
+  "instr_fwd": 0.8760272752502508,
+  "instr_rev": 0.9828716838807325
+ },
+ {
+  "kind": "locomo",
+  "query": "What areas of the U.S. has John been to or is planning to go to?",
+  "state_fwd": 0.6011445518625973,
+  "state_rev": 0.6710648357617983,
+  "instr_fwd": 0.39364221174990033,
+  "instr_rev": 0.6443435618944175
+ },
+ {
+  "kind": "locomo",
+  "query": "When did John go to a convention with colleagues?",
+  "state_fwd": 0.9087320143624738,
+  "state_rev": 0.9419396979020724,
+  "instr_fwd": 0.82595577948959,
+  "instr_rev": 0.9601852993913398
+ },
+ {
+  "kind": "locomo",
+  "query": "What desserts has Maria made?",
+  "state_fwd": 0.929459542459884,
+  "state_rev": 0.9005612158815904,
+  "instr_fwd": 0.9107826600223848,
+  "instr_rev": 0.9603699448474563
+ },
+ {
+  "kind": "locomo",
+  "query": "When did John start boot camp with his family?",
+  "state_fwd": 0.8126655884506924,
+  "state_rev": 0.9281509025514254,
+  "instr_fwd": 0.8524783903850721,
+  "instr_rev": 0.9741817423087379
+ },
+ {
+  "kind": "locomo",
+  "query": "What European countries has Maria been to?",
+  "state_fwd": 0.5387908106377144,
+  "state_rev": 0.25592109531973034,
+  "instr_fwd": 0.1128845756275566,
+  "instr_rev": 0.32855886720450805
+ },
+ {
+  "kind": "locomo",
+  "query": "What has Maria done to feel closer to her faith?",
+  "state_fwd": 0.9526202045533942,
+  "state_rev": 0.9585325030088289,
+  "instr_fwd": 0.9783312790899511,
+  "instr_rev": 0.9922677656408027
+ },
+ {
+  "kind": "locomo",
+  "query": "When did John have a party with veterans?",
+  "state_fwd": 0.935740910883139,
+  "state_rev": 0.9375489069935584,
+  "instr_fwd": 0.9511277736176227,
+  "instr_rev": 0.9742557595660537
+ },
+ {
+  "kind": "locomo",
+  "query": "What causes does John feel passionate about supporting?",
+  "state_fwd": 0.8367792427915096,
+  "state_rev": 0.7285024252343766,
+  "instr_fwd": 0.2903154956202274,
+  "instr_rev": 0.3747732666189259
+ },
+ {
+  "kind": "locomo",
+  "query": "What events is Maria planning for the homeless shelter funraiser?",
+  "state_fwd": 0.9238479289152572,
+  "state_rev": 0.9853321817622275,
+  "instr_fwd": 0.955007584286194,
+  "instr_rev": 0.9862720676254134
+ },
+ {
+  "kind": "locomo",
+  "query": "What shelters does Maria volunteer at?",
+  "state_fwd": 0.9136378429664829,
+  "state_rev": 0.9069827125914498,
+  "instr_fwd": 0.9750540844926928,
+  "instr_rev": 0.9909001274048149
+ },
+ {
+  "kind": "locomo",
+  "query": "When did John get his dog Max?",
+  "state_fwd": 0.6024810400800642,
+  "state_rev": 0.5626383989392156,
+  "instr_fwd": 0.265278540584684,
+  "instr_rev": 0.39879781235289424
+ },
+ {
+  "kind": "locomo",
+  "query": "What outdoor activities has John done with his colleagues?",
+  "state_fwd": 0.6051571084852004,
+  "state_rev": 0.5329602159238557,
+  "instr_fwd": 0.11296787391713199,
+  "instr_rev": 0.18680940873002444
+ },
+ {
+  "kind": "locomo",
+  "query": "What types of yoga has Maria practiced?",
+  "state_fwd": 0.9346840629299872,
+  "state_rev": 0.908176834708166,
+  "instr_fwd": 0.930151302580322,
+  "instr_rev": 0.9487448346137302
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Maria join a gym?",
+  "state_fwd": 0.8863821961445856,
+  "state_rev": 0.8907213906862028,
+  "instr_fwd": 0.5941930553931903,
+  "instr_rev": 0.7256786130445825
+ },
+ {
+  "kind": "locomo",
+  "query": "What states has Maria vacationed at?",
+  "state_fwd": 0.9175100422439814,
+  "state_rev": 0.8188400796238161,
+  "instr_fwd": 0.944819963447635,
+  "instr_rev": 0.848451544823252
+ },
+ {
+  "kind": "locomo",
+  "query": "What music events has John attended?",
+  "state_fwd": 0.8904316337632266,
+  "state_rev": 0.8321690095768027,
+  "instr_fwd": 0.7333384852502798,
+  "instr_rev": 0.7762325857085451
+ },
+ {
+  "kind": "locomo",
+  "query": "What events for veterans has John participated in?",
+  "state_fwd": 0.9135081900086914,
+  "state_rev": 0.9048385869786738,
+  "instr_fwd": 0.968743280801257,
+  "instr_rev": 0.961627879352656
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Maria get in a car accident?",
+  "state_fwd": 0.9398674451688577,
+  "state_rev": 0.90711699215473,
+  "instr_fwd": 0.901864141577333,
+  "instr_rev": 0.8851516732943026
+ },
+ {
+  "kind": "locomo",
+  "query": "Around which US holiday did Maria get into a car accident?",
+  "state_fwd": 0.8458586457004156,
+  "state_rev": 0.8282203592200807,
+  "instr_fwd": 0.3786830051674515,
+  "instr_rev": 0.5450265387113657
+ },
+ {
+  "kind": "locomo",
+  "query": "What are the names of John's children?",
+  "state_fwd": 0.5205467947323471,
+  "state_rev": 0.26536815443527006,
+  "instr_fwd": 0.07800103826718523,
+  "instr_rev": 0.12091303217755307
+ },
+ {
+  "kind": "locomo",
+  "query": "Does John live close to a beach or the mountains?",
+  "state_fwd": 0.8598293452491045,
+  "state_rev": 0.7950809816919372,
+  "instr_fwd": 0.31073482459948215,
+  "instr_rev": 0.46326829325089164
+ },
+ {
+  "kind": "locomo",
+  "query": "What area was hit by a flood?",
+  "state_fwd": 0.9551814267557679,
+  "state_rev": 0.961845531650474,
+  "instr_fwd": 0.9626511728646865,
+  "instr_rev": 0.978812161495682
+ },
+ {
+  "kind": "locomo",
+  "query": "When was John's old area hit with a flood?",
+  "state_fwd": 0.9340284805855144,
+  "state_rev": 0.9694124355517858,
+  "instr_fwd": 0.9368200651236481,
+  "instr_rev": 0.981710293094056
+ },
+ {
+  "kind": "locomo",
+  "query": "What activities has Maria done with her church friends?",
+  "state_fwd": 0.908520930817798,
+  "state_rev": 0.8994199312834883,
+  "instr_fwd": 0.9571716674975999,
+  "instr_rev": 0.9766408792334967
+ },
+ {
+  "kind": "locomo",
+  "query": "Would John be open to moving to another country?",
+  "state_fwd": 0.5618365801754642,
+  "state_rev": 0.5615726643557182,
+  "instr_fwd": 0.1794513322440345,
+  "instr_rev": 0.2649567444110957
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Maria go hiking with her church friends?",
+  "state_fwd": 0.8927796250812021,
+  "state_rev": 0.9312031852745979,
+  "instr_fwd": 0.7936531382344899,
+  "instr_rev": 0.8881957892292743
+ },
+ {
+  "kind": "locomo",
+  "query": "What exercises has John done?",
+  "state_fwd": 0.9157993611936699,
+  "state_rev": 0.9432029582056864,
+  "instr_fwd": 0.5608033316633141,
+  "instr_rev": 0.923004195873714
+ },
+ {
+  "kind": "locomo",
+  "query": "When did John have his first firefighter call-out?",
+  "state_fwd": 0.8988496285173212,
+  "state_rev": 0.9322265067888604,
+  "instr_fwd": 0.8606216832361188,
+  "instr_rev": 0.9705572914060873
+ },
+ {
+  "kind": "locomo",
+  "query": "What food item did Maria drop off at the homeless shelter?",
+  "state_fwd": 0.7450362149028773,
+  "state_rev": 0.897099073185587,
+  "instr_fwd": 0.9021295378115298,
+  "instr_rev": 0.9748965633709574
+ },
+ {
+  "kind": "locomo",
+  "query": "What attributes describe John?",
+  "state_fwd": 0.8332700207226094,
+  "state_rev": 0.8670871966288716,
+  "instr_fwd": 0.7082803567367135,
+  "instr_rev": 0.8408188515593408
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Maria start volunteering at the homeless shelter?",
+  "state_fwd": 0.8621089896230919,
+  "state_rev": 0.9363407347794315,
+  "instr_fwd": 0.9736026206894335,
+  "instr_rev": 0.991241317003443
+ },
+ {
+  "kind": "locomo",
+  "query": "Who have written notes of gratitude to Maria?",
+  "state_fwd": 0.8789565562177994,
+  "state_rev": 0.9083765756417796,
+  "instr_fwd": 0.9010564773577588,
+  "instr_rev": 0.9325529399898334
+ },
+ {
+  "kind": "locomo",
+  "query": "When did John help renovate his hometown community center?",
+  "state_fwd": 0.9128021111671769,
+  "state_rev": 0.9394936056895392,
+  "instr_fwd": 0.9644162874878552,
+  "instr_rev": 0.9863958095547188
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Maria take up community work with her church friends?",
+  "state_fwd": 0.8534791870440129,
+  "state_rev": 0.9371710418931818,
+  "instr_fwd": 0.7222328775782677,
+  "instr_rev": 0.9112078087079113
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Maria receive a medal from the homeless shelter?",
+  "state_fwd": 0.9448624035151603,
+  "state_rev": 0.9714387593281112,
+  "instr_fwd": 0.9430405908841003,
+  "instr_rev": 0.9762638101004237
+ },
+ {
+  "kind": "locomo",
+  "query": "When did John participate in a 5K charity run?",
+  "state_fwd": 0.8749838597886298,
+  "state_rev": 0.9042539462939411,
+  "instr_fwd": 0.6940925250131946,
+  "instr_rev": 0.8104704168510486
+ },
+ {
+  "kind": "locomo",
+  "query": "What causes has John done events for?",
+  "state_fwd": 0.8384378167614277,
+  "state_rev": 0.8565410977021981,
+  "instr_fwd": 0.6077204499186772,
+  "instr_rev": 0.6461371204581838
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Maria get Coco?",
+  "state_fwd": 0.9102402836454653,
+  "state_rev": 0.8380941616485055,
+  "instr_fwd": 0.23461002371573283,
+  "instr_rev": 0.4065526826426628
+ },
+ {
+  "kind": "locomo",
+  "query": "When did John go on a camping trip with Max?",
+  "state_fwd": 0.9301925693025304,
+  "state_rev": 0.9419695193394352,
+  "instr_fwd": 0.8249684355095612,
+  "instr_rev": 0.9555590913050604
+ },
+ {
+  "kind": "locomo",
+  "query": "What are Maria's dogs' names?",
+  "state_fwd": 0.959101495859763,
+  "state_rev": 0.7904251362410248,
+  "instr_fwd": 0.8999684999689472,
+  "instr_rev": 0.947526044974723
+ },
+ {
+  "kind": "locomo",
+  "query": "When did Maria adopt Shadow?",
+  "state_fwd": 0.9113576886500816,
+  "state_rev": 0.9207202234354659,
+  "instr_fwd": 0.8635894638650884,
+  "instr_rev": 0.9512270664296006
+ },
+ {
+  "kind": "locomo",
+  "query": "How many dogs has Maria adopted from the dog shelter she volunteers at?",
+  "state_fwd": 0.9462886454260824,
+  "state_rev": 0.81635205935245,
+  "instr_fwd": 0.8723992006278802,
+  "instr_rev": 0.8320685554329748
+ },
+ {
+  "kind": "locomo",
+  "query": "How many weeks passed between Maria adopting Coco and Shadow?",
+  "state_fwd": 0.7861899863640411,
+  "state_rev": 0.7332325316011983,
+  "instr_fwd": 0.679237315673142,
+  "instr_rev": 0.6940297552672747
+ },
+ {
+  "kind": "locomo",
+  "query": "What job might Maria pursue in the future?",
+  "state_fwd": 0.8176185700115853,
+  "state_rev": 0.7041573757073663,
+  "instr_fwd": 0.26590282283232114,
+  "instr_rev": 0.327294878756118
+ },
+ {
+  "kind": "locomo",
+  "query": "What is John's main focus in local politics?",
+  "state_fwd": 0.9040033094769824,
+  "state_rev": 0.9457750598859147,
+  "instr_fwd": 0.9807065370868827,
+  "instr_rev": 0.9867793676426799
+ },
+ {
+  "kind": "locomo",
+  "query": "What sparked John's interest in improving education and infrastructure in the community?",
+  "state_fwd": 0.9495255838526364,
+  "state_rev": 0.912829301069104,
+  "instr_fwd": 0.9799138122981024,
+  "instr_rev": 0.9903475881219067
+ },
+ {
+  "kind": "locomo",
+  "query": "How did the extra funding help the school shown in the photo shared by John?",
+  "state_fwd": 0.7932029369853542,
+  "state_rev": 0.7358685929208356,
+  "instr_fwd": 0.6341823059752751,
+  "instr_rev": 0.6793324523627761
+ },
+ {
+  "kind": "locomo",
+  "query": "What type of workout class did Maria start doing in December 2023?",
+  "state_fwd": 0.7016807266474666,
+  "state_rev": 0.8027978356191433,
+  "instr_fwd": 0.7968840060361797,
+  "instr_rev": 0.9320850104073061
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Maria donate to a homeless shelter in December 2023?",
+  "state_fwd": 0.5893032579589871,
+  "state_rev": 0.5419813454466609,
+  "instr_fwd": 0.48649118362199145,
+  "instr_rev": 0.6303730005667337
+ },
+ {
+  "kind": "locomo",
+  "query": "What kind of meal did John and his family make together in the photo shared by John?",
+  "state_fwd": 0.9266480411095653,
+  "state_rev": 0.9184749648696993,
+  "instr_fwd": 0.6392255186280608,
+  "instr_rev": 0.8175431774921672
+ },
+ {
+  "kind": "locomo",
+  "query": "What kind of online group did John join?",
+  "state_fwd": 0.9120883986568104,
+  "state_rev": 0.911591618515474,
+  "instr_fwd": 0.9429829767666061,
+  "instr_rev": 0.9812031391949727
+ },
+ {
+  "kind": "locomo",
+  "query": "What kind of activities did John and his mates from the online group do as part of their service efforts?",
+  "state_fwd": 0.8284511560769536,
+  "state_rev": 0.78852877208421,
+  "instr_fwd": 0.8644582468532833,
+  "instr_rev": 0.9234140546928025
+ },
+ {
+  "kind": "locomo",
+  "query": "Who inspired Maria to start volunteering?",
+  "state_fwd": 0.8993192896663653,
+  "state_rev": 0.987831042120128,
+  "instr_fwd": 0.8600967090015208,
+  "instr_rev": 0.9845058332065263
+ },
+ {
+  "kind": "locomo",
+  "query": "Why did Maria sit with the little girl at the shelter event in February 2023?",
+  "state_fwd": 0.795569101416501,
+  "state_rev": 0.8980910302264646,
+  "instr_fwd": 0.9071507409981349,
+  "instr_rev": 0.9666605344322472
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Jean go through before meeting Maria?",
+  "state_fwd": 0.973999975958478,
+  "state_rev": 0.9178768399050058,
+  "instr_fwd": 0.9792236228597212,
+  "instr_rev": 0.9822426432707785
+ },
+ {
+  "kind": "locomo",
+  "query": "Why did John decide to run for office again?",
+  "state_fwd": 0.8422196568777743,
+  "state_rev": 0.8799413425934971,
+  "instr_fwd": 0.979165491729227,
+  "instr_rev": 0.9916347202728439
+ },
+ {
+  "kind": "locomo",
+  "query": "What activity did John's colleague, Rob, invite him to?",
+  "state_fwd": 0.9156886936168303,
+  "state_rev": 0.9427726893122591,
+  "instr_fwd": 0.8575506352631304,
+  "instr_rev": 0.9783020671203849
+ },
+ {
+  "kind": "locomo",
+  "query": "What is the name of John's one-year-old child?",
+  "state_fwd": 0.959478915714877,
+  "state_rev": 0.9407140595409046,
+  "instr_fwd": 0.9449161336278639,
+  "instr_rev": 0.9823113817141788
+ },
+ {
+  "kind": "locomo",
+  "query": "How often does John take his kids to the park?",
+  "state_fwd": 0.8895830090519211,
+  "state_rev": 0.8460413394934703,
+  "instr_fwd": 0.9295025397643383,
+  "instr_rev": 0.9665057077477924
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Maria make for her home to remind her of a trip to England?",
+  "state_fwd": 0.9252795611178847,
+  "state_rev": 0.9402941908064395,
+  "instr_fwd": 0.9270945745505047,
+  "instr_rev": 0.976832520451301
+ },
+ {
+  "kind": "locomo",
+  "query": "Where did Maria get the idea for the castle shadow box in her home?",
+  "state_fwd": 0.9689995601543617,
+  "state_rev": 0.96092572282697,
+  "instr_fwd": 0.9640139788264019,
+  "instr_rev": 0.9675394156397468
+ },
+ {
+  "kind": "locomo",
+  "query": "What did John receive a certificate for?",
+  "state_fwd": 0.8473036513784167,
+  "state_rev": 0.9074167516447047,
+  "instr_fwd": 0.9044997297095011,
+  "instr_rev": 0.986194952162504
+ },
+ {
+  "kind": "locomo",
+  "query": "What areas is John particularly interested in for policymaking?",
+  "state_fwd": 0.9430901514061444,
+  "state_rev": 0.908822766656598,
+  "instr_fwd": 0.9805725494121377,
+  "instr_rev": 0.9747508853257588
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Maria participate in last weekend before April 10, 2023?",
+  "state_fwd": 0.35880842424061943,
+  "state_rev": 0.3050144069584402,
+  "instr_fwd": 0.10009093523453626,
+  "instr_rev": 0.05921821774625644
+ },
+ {
+  "kind": "locomo",
+  "query": "What event did John volunteer at last weekend?",
+  "state_fwd": 0.8446937222543824,
+  "state_rev": 0.9094596115181578,
+  "instr_fwd": 0.4363954556860599,
+  "instr_rev": 0.6386332825499721
+ },
+ {
+  "kind": "locomo",
+  "query": "What did John do that put a strain on his wallet?",
+  "state_fwd": 0.9594600009716676,
+  "state_rev": 0.90536494927509,
+  "instr_fwd": 0.7331213324997153,
+  "instr_rev": 0.7324535658767752
+ },
+ {
+  "kind": "locomo",
+  "query": "Where did John explore on a road trip last year?",
+  "state_fwd": 0.7923101754160395,
+  "state_rev": 0.8201095608674032,
+  "instr_fwd": 0.450604891126595,
+  "instr_rev": 0.6292011945147428
+ },
+ {
+  "kind": "locomo",
+  "query": "What topic has John been blogging about recently?",
+  "state_fwd": 0.9351000483068098,
+  "state_rev": 0.9831722748176389,
+  "instr_fwd": 0.869476450569346,
+  "instr_rev": 0.9874283386725371
+ },
+ {
+  "kind": "locomo",
+  "query": "Why did John start blogging about politics and policies?",
+  "state_fwd": 0.9280298327027104,
+  "state_rev": 0.9233799192911191,
+  "instr_fwd": 0.9325351984465071,
+  "instr_rev": 0.9739055240539215
+ },
+ {
+  "kind": "locomo",
+  "query": "What was the focus of John's recent research and writing on his blog?",
+  "state_fwd": 0.946412401820707,
+  "state_rev": 0.8881597908387444,
+  "instr_fwd": 0.8322680802779345,
+  "instr_rev": 0.7082831215519246
+ },
+ {
+  "kind": "locomo",
+  "query": "What did John attend with his colleagues in March 2023?",
+  "state_fwd": 0.5021858076087061,
+  "state_rev": 0.6275719371290235,
+  "instr_fwd": 0.1285567686244321,
+  "instr_rev": 0.5563765114248913
+ },
+ {
+  "kind": "locomo",
+  "query": "How often does John work out with his family?",
+  "state_fwd": 0.9797281563424168,
+  "state_rev": 0.845216700156755,
+  "instr_fwd": 0.9504121484242566,
+  "instr_rev": 0.8825848872004638
+ },
+ {
+  "kind": "locomo",
+  "query": "How has John's fitness improved since starting boot camps with his family?",
+  "state_fwd": 0.9375703512271425,
+  "state_rev": 0.8905625760997372,
+  "instr_fwd": 0.9559434489609642,
+  "instr_rev": 0.9708142778009933
+ },
+ {
+  "kind": "locomo",
+  "query": "What kind of food did Maria have on her dinner spread iwth her mother?",
+  "state_fwd": 0.913778325866493,
+  "state_rev": 0.9329365481982459,
+  "instr_fwd": 0.9387693111855315,
+  "instr_rev": 0.9611344443977367
+ },
+ {
+  "kind": "locomo",
+  "query": "What activity did Maria and her mom do together in May 2023?",
+  "state_fwd": 0.8100816123689565,
+  "state_rev": 0.949923573953966,
+  "instr_fwd": 0.49111409175846527,
+  "instr_rev": 0.7141598950428547
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Maria do to feel closer to a community and her faith?",
+  "state_fwd": 0.8958454169143332,
+  "state_rev": 0.9571992647962375,
+  "instr_fwd": 0.9731464254531933,
+  "instr_rev": 0.9956764039752054
+ },
+ {
+  "kind": "locomo",
+  "query": "Why did Maria join a nearby church recently?",
+  "state_fwd": 0.966393277381096,
+  "state_rev": 0.9800872286771206,
+  "instr_fwd": 0.9584973782467735,
+  "instr_rev": 0.9891706872930266
+ },
+ {
+  "kind": "locomo",
+  "query": "What did John host for the veterans in May 2023 as part of the project?",
+  "state_fwd": 0.9127711402271205,
+  "state_rev": 0.9351538468464118,
+  "instr_fwd": 0.8515951862805701,
+  "instr_rev": 0.8491095877465253
+ },
+ {
+  "kind": "locomo",
+  "query": "What did John and the veterans do during the small party?",
+  "state_fwd": 0.8758183175169834,
+  "state_rev": 0.9462236499914004,
+  "instr_fwd": 0.8999640226903807,
+  "instr_rev": 0.974043994280874
+ },
+ {
+  "kind": "locomo",
+  "query": "What emotions did John feel during the small party with the veterans?",
+  "state_fwd": 0.9173966596534526,
+  "state_rev": 0.9108488135267576,
+  "instr_fwd": 0.48347503007915005,
+  "instr_rev": 0.7373768894757651
+ },
+ {
+  "kind": "locomo",
+  "query": "What event is Maria getting ready for at the shelter on May 25, 2023?",
+  "state_fwd": 0.8625959991603497,
+  "state_rev": 0.8639743417652311,
+  "instr_fwd": 0.9599308351599558,
+  "instr_rev": 0.9531084945217567
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Maria need to spread the word about for the fundraiser for the volunteer shelter?",
+  "state_fwd": 0.8574550524507386,
+  "state_rev": 0.9038104758215229,
+  "instr_fwd": 0.8775161538443247,
+  "instr_rev": 0.9300885705159846
+ },
+ {
+  "kind": "locomo",
+  "query": "What was the name of the pet that John had to say goodbye to on 3 June, 2023?",
+  "state_fwd": 0.8948610800018187,
+  "state_rev": 0.9003587924005068,
+  "instr_fwd": 0.9161472702541933,
+  "instr_rev": 0.9271164835688603
+ },
+ {
+  "kind": "locomo",
+  "query": "How long was Max a part of John's family?",
+  "state_fwd": 0.8576177197683255,
+  "state_rev": 0.9084349637572595,
+  "instr_fwd": 0.43156033752165757,
+  "instr_rev": 0.805219989940336
+ },
+ {
+  "kind": "locomo",
+  "query": "How does John plan to honor the memories of his beloved pet?",
+  "state_fwd": 0.8509593761460816,
+  "state_rev": 0.8638741126143487,
+  "instr_fwd": 0.9734115567726119,
+  "instr_rev": 0.9844605858282703
+ },
+ {
+  "kind": "locomo",
+  "query": "What important values does John want to teach his kids through adopting a rescue dog?",
+  "state_fwd": 0.8809243809892771,
+  "state_rev": 0.9207802242861404,
+  "instr_fwd": 0.9794228335519141,
+  "instr_rev": 0.9920420946597112
+ },
+ {
+  "kind": "locomo",
+  "query": "What new activity did Maria start recently, as mentioned on 3 June, 2023?",
+  "state_fwd": 0.6747009303017909,
+  "state_rev": 0.4484899575193459,
+  "instr_fwd": 0.05516959550545273,
+  "instr_rev": 0.12862280856900968
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Maria say it was like being at the waterfall in Oregon?",
+  "state_fwd": 0.9834192058480415,
+  "state_rev": 0.962556634224153,
+  "instr_fwd": 0.9821487199653685,
+  "instr_rev": 0.9865883132593768
+ },
+ {
+  "kind": "locomo",
+  "query": "What does Maria say she feels when doing upside-down yoga poses?",
+  "state_fwd": 0.935581762966646,
+  "state_rev": 0.9769480528986614,
+  "instr_fwd": 0.9723164706735409,
+  "instr_rev": 0.9863354780395373
+ },
+ {
+  "kind": "locomo",
+  "query": "What exciting news did Maria share on 16 June, 2023?",
+  "state_fwd": 0.9576828293983667,
+  "state_rev": 0.9136873530076375,
+  "instr_fwd": 0.8586354886809177,
+  "instr_rev": 0.8160593517682575
+ },
+ {
+  "kind": "locomo",
+  "query": "What yoga activity has Maria been trying to improve her strength and endurance?",
+  "state_fwd": 0.9392015054494262,
+  "state_rev": 0.9659353673665483,
+  "instr_fwd": 0.9620539986814601,
+  "instr_rev": 0.9847865629498708
+ },
+ {
+  "kind": "locomo",
+  "query": "What did John recently get promoted to?",
+  "state_fwd": 0.7600646750571719,
+  "state_rev": 0.7986334582685319,
+  "instr_fwd": 0.9330722234928036,
+  "instr_rev": 0.9405309313210446
+ },
+ {
+  "kind": "locomo",
+  "query": "What was one of the biggest challenges John faced in his journey to becoming assistant manager?",
+  "state_fwd": 0.9755941751997277,
+  "state_rev": 0.9051220055391835,
+  "instr_fwd": 0.9802130275972066,
+  "instr_rev": 0.9769289726597423
+ },
+ {
+  "kind": "locomo",
+  "query": "How does John describe the support he received during his journey to becoming assistant manager?",
+  "state_fwd": 0.9466191379971725,
+  "state_rev": 0.9182498799927552,
+  "instr_fwd": 0.95558297685594,
+  "instr_rev": 0.9702237634704007
+ },
+ {
+  "kind": "locomo",
+  "query": "What kind of event did John and his family attend in June 2023?",
+  "state_fwd": 0.9221746399771782,
+  "state_rev": 0.9406985208631963,
+  "instr_fwd": 0.9135996284927429,
+  "instr_rev": 0.9145641433103306
+ },
+ {
+  "kind": "locomo",
+  "query": "Why did Maria need to help her cousin find a new place to live?",
+  "state_fwd": 0.9760235651483663,
+  "state_rev": 0.9213166974500684,
+  "instr_fwd": 0.9786815514484049,
+  "instr_rev": 0.9607324692325144
+ },
+ {
+  "kind": "locomo",
+  "query": "What event did John participate in to show support for veterans' rights?",
+  "state_fwd": 0.9701391776442037,
+  "state_rev": 0.8631288667258583,
+  "instr_fwd": 0.9761222314090429,
+  "instr_rev": 0.9683929719909429
+ },
+ {
+  "kind": "locomo",
+  "query": "What inspired John to join the marching event for veterans' rights?",
+  "state_fwd": 0.9413372972941509,
+  "state_rev": 0.9173386849892411,
+  "instr_fwd": 0.9653505498569988,
+  "instr_rev": 0.9760271352922748
+ },
+ {
+  "kind": "locomo",
+  "query": "How often does John get to see sunsets like the one he shared with Maria?",
+  "state_fwd": 0.8856268469337744,
+  "state_rev": 0.7831947590123951,
+  "instr_fwd": 0.569000137191547,
+  "instr_rev": 0.5231315360288028
+ },
+ {
+  "kind": "locomo",
+  "query": "What natural disaster affected John's old area on 7 July, 2023?",
+  "state_fwd": 0.880977993618149,
+  "state_rev": 0.8929234077170569,
+  "instr_fwd": 0.9452170652770342,
+  "instr_rev": 0.9847037625411047
+ },
+ {
+  "kind": "locomo",
+  "query": "How did the flood impact the homes in John's old area?",
+  "state_fwd": 0.9395158224272127,
+  "state_rev": 0.9638553688384837,
+  "instr_fwd": 0.9400674148706452,
+  "instr_rev": 0.9840821988672223
+ },
+ {
+  "kind": "locomo",
+  "query": "What motivated Maria and John to discuss potential solutions for their community on 7 July, 2023?",
+  "state_fwd": 0.9274693488432012,
+  "state_rev": 0.8793950074876397,
+  "instr_fwd": 0.9726707545577779,
+  "instr_rev": 0.9808809376266076
+ },
+ {
+  "kind": "locomo",
+  "query": "What did Maria plan to do later on the evening of 7 July, 2023?",
+  "state_fwd": 0.7614352636580869,
+  "state_rev": 0.8828005682326773,
+  "instr_fwd": 0.37887015828679116,
+  "instr_rev": 0.7664473094844145
+ },
+ {
+  "kind": "locomo",
+  "query": "What kind of activities did Maria do at the picnic with her church friends?",
+  "state_fwd": 0.8793751672100617,
+  "state_rev": 0.890306691024615,
+  "instr_fwd": 0.943462651037239,
+  "instr_rev": 0.9805707708670387
+ },
+ {
+  "kind": "locomo",
+  "query": "What does John appreciate about the veteran's hospital visit?",
+  "state_fwd": 0.9447477200768978,
+  "state_rev": 0.9499134893534888,
+  "instr_fwd": 0.9731641151788726,
+  "instr_rev": 0.9761418291129756
+ },
+ {
+  "kind": "locomo",
+  "query": "What did John take away from visiting the veteran's hospital?",
+  "state_fwd": 0.7613974906411503,
+  "state_rev": 0.7536402248500602,
+  "instr_fwd": 0.7136904577932113,
+  "instr_rev": 0.838647490460632
+ },
+ {
+  "kind": "locomo",
+  "query": "Why did John feel inspired to join the military after the visit to the hospital?",
+  "state_fwd": 0.946460357937036,
+  "state_rev": 0.9592102964717633,
+  "instr_fwd": 0.979466992863529,
+  "instr_rev": 0.9795418174107039
+ },
+ {
+  "kind": "locomo",
+  "query": "In what activity did Maria and her church friends participate in July 2023?",
+  "state_fwd": 0.9206944774994843,
+  "state_rev": 0.8021466091089445,
+  "instr_fwd": 0.8283842057414842,
+  "instr_rev": 0.8860132322763241
+ },
+ {
+  "kind": "locomo",
+  "query": "What does John think about trying new classes at the yoga studio?",
+  "state_fwd": 0.8689469205760889,
+  "state_rev": 0.8736755060085193,
+  "instr_fwd": 0.9204959178141545,
+  "instr_rev": 0.9641447648622276
+ },
+ {
+  "kind": "locomo",
+  "query": "Which activity has John done apart from yoga at the studio?",
+  "state_fwd": 0.9117531924307319,
+  "state_rev": 0.893194105202712,
+  "instr_fwd": 0.9523272527802333,
+  "instr_rev": 0.9666705516167692
+ },
+ {
+  "kind": "locomo",
+  "query": "What community service did Maria mention that she was involved in on 31 July, 2023?",
+  "state_fwd": 0.9232258027176393,
+  "state_rev": 0.9326837142312135,
+  "instr_fwd": 0.9407203388842225,
+  "instr_rev": 0.9040170488840016
+ },
+ {
+  "kind": "locomo",
+  "query": "How did Maria start volunteering at the homeless shelter?",
+  "state_fwd": 0.9363370996833362,
+  "state_rev": 0.9773297625054549,
+  "instr_fwd": 0.9678150352619748,
+  "instr_rev": 0.9912166906466621
+ },
+ {
+  "kind": "locomo",
+  "query": "What did John do the week before August 3, 2023 involving his kids?",
+  "state_fwd": 0.7106745761105825,
+  "state_rev": 0.6980424688163778,
+  "instr_fwd": 0.23708019016255685,
+  "instr_rev": 0.34784596644465243
+ },
+ {
+  "kind": "locomo",
+  "query": "How did John describe his kids' reaction at the military memorial?",
+  "state_fwd": 0.8784861951766304,
+  "state_rev": 0.8832902676226296,
+  "instr_fwd": 0.6249943236426424,
+  "instr_rev": 0.5528490537194573
+ },
+ {
+  "kind": "locomo",
+  "query": "What happened to John's job in August 2023?",
+  "state_fwd": 0.9146585856353144,
+  "state_rev": 0.9531044099401471,
+  "instr_fwd": 0.970656601456068,
+  "instr_rev": 0.9712083467920128
+ },
+ {
+  "kind": "locomo",
+  "query": "What activity did Maria take up with her friends from church in August 2023?",
+  "state_fwd": 0.9043930718044881,
+  "state_rev": 0.9592693533159149,
+  "instr_fwd": 0.8205798448579772,
+  "instr_rev": 0.9622016101639496
+ },
+ {
+  "kind": "locomo",
+  "query": "What did John do to help his community last year in his hometown?",
+  "state_fwd": 0.9328171182760864,
+  "state_rev": 0.9213184970753667,
+  "instr_fwd": 0.9869705145417965,
+  "instr_rev": 0.9860878683826356
+ },
+ {
+  "kind": "locomo",
+  "query": "What cause did the 5K charity run organized by John support?",
+  "state_fwd": 0.9145736932074864,
+  "state_rev": 0.9497055493956568,
+  "instr_fwd": 0.9050710457677954,
+  "instr_rev": 0.9833678706990063
+ },
+ {
+  "kind": "locomo",
+  "query": "Who did John work with to raise awareness and funds for victims of domestic abuse?",
+  "state_fwd": 0.9159538020995265,
+  "state_rev": 0.9222813357232922,
+  "instr_fwd": 0.9164157682425795,
+  "instr_rev": 0.979296177189609
+ },
+ {
+  "kind": "locomo",
+  "query": "What recognition did Maria receive at the homeless shelter in August 2023?",
+  "state_fwd": 0.8710673361947399,
+  "state_rev": 0.9561621520202284,
+  "instr_fwd": 0.9493420867507404,
+  "instr_rev": 0.9776027450477274
+ },
+ {
+  "kind": "locomo",
+  "query": "What is the name of Maria's puppy she got two weeks before August 11, 2023?",
+  "state_fwd": 0.8714517783383898,
+  "state_rev": 0.8130320583833538,
+  "instr_fwd": 0.9562882171035497,
+  "instr_rev": 0.9293792119039057
+ },
+ {
+  "kind": "locomo",
+  "query": "What activity did John and Max enjoy together last summer?",
+  "state_fwd": 0.8352778933220653,
+  "state_rev": 0.8828102468647716,
+  "instr_fwd": 0.8758529452374743,
+  "instr_rev": 0.9550261842791574
+ },
+ {
+  "kind": "locomo",
+  "query": "How does John describe the camping trip with Max?",
+  "state_fwd": 0.8679541699072167,
+  "state_rev": 0.9054356941978613,
+  "instr_fwd": 0.8717559629777631,
+  "instr_rev": 0.9354843260060214
+ },
+ {
+  "kind": "locomo",
+  "query": "Why does John say he feels stuck and questioning his decisions and goals?",
+  "state_fwd": 0.9068495534718747,
+  "state_rev": 0.9187273890178331,
+  "instr_fwd": 0.9438160680011757,
+  "instr_rev": 0.9872684236364196
+ },
+ {
+  "kind": "locomo",
+  "query": "What is the name of Maria's second puppy?",
+  "state_fwd": 0.8208217633153084,
+  "state_rev": 0.7407044238988368,
+  "instr_fwd": 0.9039955335294956,
+  "instr_rev": 0.9482794677182135
+ },
+ {
+  "kind": "locomo",
+  "query": "How is Maria's new puppy adjusting to its new home?",
+  "state_fwd": 0.9135386262693498,
+  "state_rev": 0.9160226534577771,
+  "instr_fwd": 0.9438288071190317,
+  "instr_rev": 0.9473667816414937
+ },
+ {
+  "kind": "locomo",
+  "query": "What is John currently doing as a volunteer in August 2023?",
+  "state_fwd": 0.847064635327395,
+  "state_rev": 0.6895494229123634,
+  "instr_fwd": 0.31287333605767775,
+  "instr_rev": 0.2757757194359327
+ },
+ {
+  "kind": "locomo",
+  "query": "What activities does John's family enjoy doing together?",
+  "state_fwd": 0.8999683249056707,
+  "state_rev": 0.7203148578865368,
+  "instr_fwd": 0.9107070000687346,
+  "instr_rev": 0.9112584084392752
+ },
+ {
+  "kind": "locomo",
+  "query": "What did the donations help John's community acquire on 16 August, 2023?",
+  "state_fwd": 0.8932317639512579,
+  "state_rev": 0.8152890876813236,
+  "instr_fwd": 0.9862127787907544,
+  "instr_rev": 0.9605642534550165
+ }
+]

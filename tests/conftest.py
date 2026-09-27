@@ -66,7 +66,7 @@ def fake():
 
 @pytest.fixture
 def engine(tmp_path, fake):
-    cfg = dict(DEFAULTS, user_name="Joey", agent_name="Hermes", junk_floor=0.05, skip_gate=0.99,
+    cfg = dict(DEFAULTS, user_name="Joey", agent_name="Hermes", junk_floor=0.05, skip_gate=0.99, gate_floor=0.05,
                sleep_guard_models=["qwen/qwen3.8-27b"])
     e = Engine(cfg, tmp_path / "sophia.db", client=fake)
     yield e

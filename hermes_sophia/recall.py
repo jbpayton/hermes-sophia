@@ -30,8 +30,8 @@ _ASKS_AGENT = re.compile(r"\b(?:you|you've|you had)\s+(?:said|told|recommended|s
                          r"\bdid you\s+(?:say|tell|recommend|suggest|mention|give|list)\b|"
                          r"\byour\s+(?:answer|suggestions?|recommendations?|advice|list|reply|explanation)\b", re.I)
 
-GATE_INSTRUCTIONS = ("At least one memory item is directly relevant to the message: it answers it, or states a fact "
-                     "the reply should take into account.")
+GATE_INSTRUCTIONS = ("The message is about the user's own life, plans, preferences or past conversations, or one of these "
+                     "memories says something about the user that should change the reply.")
 
 
 def _date(ts: Optional[float]) -> str:
@@ -398,12 +398,14 @@ class Recall:
         top = items[:cfg["gate_top"]]
         gate, decision_id, passed = "none", "", False
         if top:
-            if top[0]["sim"] >= cfg["skip_gate"]:
+            if cfg["gate"] == "similarity":                # no model call: the search's own best score decides
+                passed, gate = top[0]["sim"] >= cfg["gate_floor"], f"similarity:{top[0]['sim']:.2f}"
+            elif top[0]["sim"] >= cfg["skip_gate"]:
                 passed, gate = True, f"skip:{top[0]['sim']:.2f}"
             else:
                 try:
                     state = {"message": query, "memories": [self.short(it) for it in top]}
-                    ans = e.decider.noul(state, GATE_INSTRUCTIONS)
+                    ans = e.decider.noul(state, GATE_INSTRUCTIONS, permutations=cfg["gate_permutations"])
                     decision_id = ans.decision_id
                     passed = ans.noul >= cfg["gate_threshold"]
                     gate = f"decider:{ans.noul:.2f}"
