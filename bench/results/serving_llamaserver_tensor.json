@@ -1,0 +1,12 @@
+{
+ "label": "llamaserver_tensor",
+ "chat": {
+  "prompt_tokens": 6113,
+  "fresh_ttft_ms": 5602.1,
+  "fresh_gen_tps": 50.0,
+  "cached_ttft_ms": 470.6,
+  "cached_gen_tps": 49.6,
+  "two_at_once_gen_tps_each": 42.2,
+  "two_at_once_total_tps": 29.4
+ }
+}

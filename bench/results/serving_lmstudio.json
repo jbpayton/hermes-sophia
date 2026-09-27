@@ -1,0 +1,16 @@
+{
+ "label": "lmstudio",
+ "chat": {
+  "prompt_tokens": 6112,
+  "fresh_ttft_ms": 6476.2,
+  "fresh_gen_tps": 43.6,
+  "cached_ttft_ms": 454.4,
+  "cached_gen_tps": 41.2,
+  "two_at_once_gen_tps_each": 29.4,
+  "two_at_once_total_tps": 24.1
+ },
+ "embed": {
+  "batch64_ms": 571.1,
+  "one_query_ms": 13.1
+ }
+}
