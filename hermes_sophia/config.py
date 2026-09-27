@@ -44,10 +44,10 @@ DEFAULTS: Dict[str, Any] = {
     "inject_top": 50,                 # injection may draw from this deep in the ranking (the gate sees gate_top)
     "skip_gate": 0.82,
     "gate_threshold": 0.5,
-    "gate": "similarity",            # similarity: inject when the best match reaches gate_floor (no model call);
-                                     # decider: the decider judges relevance (slower, filters more)
-    "gate_floor": 0.60,              # gate=similarity: the best match's cosine needed to inject anything
-    "gate_permutations": 2,           # both option orders, read in parallel: one order passed nearly every message
+    "gate": "decider",               # decider: the decider judges relevance (~0.5 s on LM Studio); similarity: inject
+                                     # whenever the best match reaches gate_floor (no model call, filters almost nothing)
+    "gate_floor": 0.50,              # gate=similarity: the best match's cosine needed to inject anything
+    "gate_permutations": 1,
     "junk_floor": 0.5,
     "inject_chars": 9000,
     "recency_bonus": 0.01,
@@ -129,7 +129,7 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
     ("lms_cli", "Path to LM Studio's lms CLI (used to see whether a model is busy)", {"when": _ADVANCED}),
     ("skip_gate", "Inject without asking the decider at or above this top-1 cosine", {"when": _ADVANCED}),
     ("gate_threshold", "Decider probability needed to inject", {"when": _ADVANCED}),
-    ("gate_permutations", "Option orders averaged per gate decision (2 cancels position bias; read in parallel)",
+    ("gate_permutations", "Option orders averaged per gate decision (2 cancels position bias, at twice the time on LM Studio)",
      {"when": _ADVANCED}),
     ("recall_k", "Candidates fetched per recall", {"when": _ADVANCED}),
     ("gate_top", "Candidates the gate looks at", {"when": _ADVANCED}),

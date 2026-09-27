@@ -340,7 +340,8 @@ def test_two_option_orders_are_read_in_parallel(engine, fake):
 
 
 def test_similarity_gate_needs_no_model_call(engine, fake):
-    """The default gate injects when the best match reaches gate_floor, without asking the decider."""
+    """gate=similarity injects when the best match reaches gate_floor, without asking the decider."""
+    engine.cfg["gate"] = "similarity"
     engine.capture.remember("Dr. Alvarez moved her clinic to 240 Willow Street in Mountain View.", speaker="Joey")
     before = fake.calls["readout"]
     out = engine.prefetch("Where did Dr. Alvarez move her clinic?", "s9")

@@ -30,8 +30,8 @@ _ASKS_AGENT = re.compile(r"\b(?:you|you've|you had)\s+(?:said|told|recommended|s
                          r"\bdid you\s+(?:say|tell|recommend|suggest|mention|give|list)\b|"
                          r"\byour\s+(?:answer|suggestions?|recommendations?|advice|list|reply|explanation)\b", re.I)
 
-GATE_INSTRUCTIONS = ("The message is about the user's own life, plans, preferences or past conversations, or one of these "
-                     "memories says something about the user that should change the reply.")
+GATE_INSTRUCTIONS = ("At least one memory item is directly relevant to the message: it answers it, or states a fact "
+                     "the reply should take into account.")
 
 
 def _date(ts: Optional[float]) -> str:

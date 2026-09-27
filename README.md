@@ -251,7 +251,7 @@ The data model (three clocks, supersession, provenance, triples indexing passage
 **Benchmarks** (held-out data, local models as reader and judge; [docs/BENCHMARKS.md](docs/BENCHMARKS.md)). *Passive* means injection only; *active* means the agent also uses Sophia's tools:
 - **LoCoMo, 7 conversations:** active recall with a 27B reader scores J 0.869, on par with the same reader given the whole conversation (0.853). Passive: 0.806 with the 27B reader, 0.789 with the 9B.
 - **LongMemEval-S:** 0.802 on all 500 questions (9B reader, passive). On the 60 held-out questions, passive scores 0.867 with the 27B reader, against 0.900 when it's handed just the evidence sessions.
-- **Response time:** passive recall adds about 0.65 s per message on a 2,000-window memory, almost all of it one relevance check.
+- **Response time:** passive recall adds about 0.65 s per message on a 2,000-window memory, almost all of it one relevance check. `gate: similarity` cuts that to under 0.1 s, at the cost of letting memory through on nearly every message.
 - **[Almanac](https://github.com/jbpayton/almanac)** (a benchmark of time, plans, provenance, absence, tasks and memory hygiene, written alongside Sophia): passive, by day, 1.000, against 0.945 for full context and 0.899 for RAG. It also found a secret-redaction bug, now fixed.
 
 These aren't directly comparable with published GPT-4o-judged numbers. The comparison and sources are in [docs/COMPARISON.md](docs/COMPARISON.md).

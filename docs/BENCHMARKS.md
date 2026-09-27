@@ -46,6 +46,8 @@ Passive is allowed to be the weaker of the two: it is the floor the agent gets f
 
 ### All 500 questions
 
+With `gate: similarity` (floor 0.60): 0.798 (4 won, 6 lost against v6; memory kept out of 7 of the 500 questions). On the 60 held-out questions: 0.683 (9B), 0.850 (27B passive), 0.850 (27B active).
+
 Sophia with resolved dates, 9B reader and judge, passive, day memory: **0.804** (task-averaged 0.795; abstention 25/30). **v6: 0.802** (task-averaged 0.782; abstention 23/30): 29 questions won, 30 lost. Within that, the held-out 60 fall from 0.800 to 0.700 and the other 440 rise from about 0.805 to 0.816. Runs with the same settings agree question for question (temperature 0), so these differences are the change, not noise.
 
 | Type | n | Accuracy |
@@ -100,6 +102,9 @@ Each LongMemEval question has its own haystack of about 50 sessions, so the rows
 | Sophia v6: evidence listed by date, advice mode (same memories) | 9B | passive | 0.789 | 0.745 | 0.693 | 0.387 | 0.885 |
 | Sophia v6 | 27B | passive | 0.806 | 0.769 | 0.740 | 0.493 | 0.878 |
 | **Sophia v6** | 27B | **active** | **0.869** | 0.870 | 0.796 | 0.613 | 0.925 |
+| Sophia v6 with `gate: similarity` (floor 0.60) | 9B | passive | 0.788 | 0.731 | 0.688 | 0.440 | 0.883 |
+| Sophia v6 with `gate: similarity` | 27B | passive | 0.807 | 0.774 | 0.740 | 0.493 | 0.878 |
+| Sophia v6 with `gate: similarity` | 27B | active | 0.867 | 0.865 | 0.796 | 0.627 | 0.920 |
 
 - **Scale:** 1,155 questions over 7 conversations (roughly 700–950 windows each), scored with Mem0's J prompt; category 5 excluded, as is conventional.
 - **v6 on the same memories:**
@@ -108,6 +113,7 @@ Each LongMemEval question has its own haystack of about 50 sessions, so the rows
   - Active with the 27B: 0.858 → 0.869 (50 won, 37 lost).
   - Both passive gains are significant (sign test p < 0.005). They held from the development conversations (0.730 → 0.790, 42 won, 19 lost), and multi-hop, temporal and single-hop questions all gain.
   - Active recall is now 0.869 against 0.853 for the same reader with the whole conversation in context (better on 73 questions, worse on 54; p ≈ 0.09): on par, slightly ahead.
+- **The similarity gate** gave the same held-out scores (within 2 questions of v6 in each setting), with lower time per question: passive recall itself takes 0.04 s instead of 0.65 s.
 - **Active recall matches full context.** With the 27B reader and Sophia's tools, J is 0.858 against 0.853 with the whole conversation in context, a tie within noise. It gets there from recalled passages, not the whole ~70,000-character conversation.
   - Against passive on the same memories: 114 questions won and 24 lost.
   - The agent used a tool on a third of the questions (589 `sophia_recall`, 196 `sophia_browse` and 27 `sophia_query` calls), at 15 s per question against 8 s for passive.
@@ -148,6 +154,7 @@ Each LongMemEval question has its own haystack of about 50 sessions, so the rows
 
 - **It found a real bug.** A pasted key was redacted in its own message but survived in the next reply's context header and in the injection log (14 of 19 databases). Fixed, and existing databases are scrubbed on first open. The rows above are from the fixed code.
 - **It found a real weakness.** Memory reaches some questions that need none (5 of 16 by day, 9 of 16 after a night), usually through a word they share with old small talk. It is not tuned here, because tuning on the test lives would be teaching to the test.
+- **The similarity gate (`gate: similarity`, floor 0.60) did worse here:** passive by day scored 0.975. Four relevant questions got nothing because their best match scored under 0.60, and memory reached 12 of 16 off-topic questions. With a night it scored 0.990, and active 0.995. That's why the decider gate stays the default.
 - **Its limits.** v0.1 lives are short, so a 27B with everything in context is near the ceiling too. See Almanac's README.
 
 ## Response time
@@ -162,6 +169,21 @@ Passive recall runs on every message, before the agent reads it, so it has to be
 - **The gate is the cost:** one decision call, asked on 50 of 60 messages; a very strong match (cosine ≥ 0.82) skips it.
 - **Most of that is LM Studio's fixed cost per uncached request.** The same call with no memories in it takes 0.38 s, with 3 memories 0.43 s, and with the usual 10 memories 0.57 s. Trimming what the gate sees would save little.
 - **Every accuracy change in v6 is ranking or formatting.** No model calls were added, and passive time didn't change.
+
+### The relevance gate: what it filters, and at what cost
+
+The gate should let memory through when it bears on the message, and keep it out of small talk and general questions. Tested on development data (`bench/gate_variants.py`, `bench/gate_wording.py`; 60 plainly impersonal requests in `bench/gate_offtopic.json`):
+
+- **In large memories (about 2,000 windows), the one-order gate filters almost nothing.** It passed 453 of 455 relevant questions and 29 of 30 off-topic ones: there is always something vaguely similar, and a single reading leans towards "yes".
+- **In small memories it does filter.** On Almanac, the default gate kept memory out of 11 of 16 off-topic questions and passed every relevant one.
+- **A sharper wording read in both orders** separates better in large memories: 98.9% of relevant passed, 50 of 120 off-topic. But LM Studio runs the two long prompts one after the other, so passive time doubled (0.65 → 1.21 s), and it turned away 2% of real questions (LoCoMo development 0.790 → 0.771). Not adopted.
+- **Similarity alone can't do it.** In large memories a floor of 0.60 keeps about 99% of relevant messages and turns away 20–33% of off-topic ones. In small memories, off-topic questions score as high as relevant ones: on Almanac's development lives, relevant questions went as low as 0.55 and off-topic ones were 0.59–0.66. On the Almanac test lives, 0.60 blocked 4 relevant questions ("Which city do I live in now?" went unanswered) and let 12 of 16 off-topic ones through.
+
+**Settings:**
+- **`gate: decider`** (the default, one order): about 0.65 s per message on LM Studio; it filters well in small memories and hardly at all in large ones.
+- **`gate: similarity`** with `gate_floor: 0.50`: under 0.1 s; it lets memory through on nearly every message. On held-out data it scored the same as the default, apart from the Almanac misses above at 0.60.
+
+**Also tested and rejected:** the gate through the chat endpoint (top letter only), which was 0.2 s faster but turned away 17% of relevant messages.
 - **Active recall** averaged 10 s per LoCoMo question with the 27B reader. On the LongMemEval development set its 90th percentile was about 30 s, most of it the reader's own tool rounds.
 
 ## Judge agreement
@@ -192,6 +214,7 @@ Each change was found stage by stage on the development data (`bench/stages.py`,
 | Relative dates | The reader had to work out which date "last Saturday" meant from the line's date, and often got it wrong | Injected lines label relative time words with the date they mean (`show_resolved_dates`). LoCoMo development conversation: 0.645 → 0.684, temporal 0.51 → 0.70 |
 | The agent's own words | "What did you recommend?" needs the agent's lines, which recall normally ranks down so the agent doesn't quote itself as fact | When the user asks about the agent's words, agent lines are evidence: no penalty, no cap |
 | Who judges at night | Every night threshold was measured on the 9B's one-token readouts | The night model writes; its yes/no judgments go to the decider (`night_judge: decider`) |
+| Two option orders | Read one after the other: two round trips per decision | Read in parallel; on LM Studio this helps short prompts most, since it runs long prompts for one model largely one at a time |
 | Order of the injected evidence | Ranked best first, the reader had to put events in order and tell separate occasions apart itself | Still chosen best first, then listed by date under a heading per day (`inject_order: time`). Development: LongMemEval 0.717 → 0.783, LoCoMo 0.730 → 0.790. Held-out: LoCoMo up in all three settings, LongMemEval-500 flat (see above) |
 | "Can you suggest…" | Present-tense "you suggest" matched the pattern for asking about the agent's own words, which switched off the assistant penalty on exactly the requests that need it | Only past forms ("you suggested", "did you recommend") count |
 | Advice requests | Asked for suggestions, the top slots went to the assistant's earlier generic advice rather than what the user had said about themselves | Advice requests rank the agent's lines a further 0.06 lower and keep the user's own past questions (which describe them) at full rank (`advice_penalty`, `advice_keeps_questions`). On the 26 preference questions outside the held-out set: evidence injected 0.69 → 0.89, answers 0.42 → 0.50 |
