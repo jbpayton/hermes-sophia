@@ -50,8 +50,13 @@ def main():
     args = ap.parse_args()
     work = RESULTS.parent / "work"
     clean, db = work / "follow_up_clean.db", work / "follow_up_check.db"
-    with sqlite3.connect(work / "locomo_sophia_dev_v5_conv-26.db") as src, sqlite3.connect(clean) as dst:
-        src.backup(dst)                                   # consistent even while the WAL is in use
+    src, dst = sqlite3.connect(work / "locomo_sophia_dev_v5_conv-26.db"), sqlite3.connect(clean)
+    try:                                                  # consistent even while the WAL is in use; closed before
+        src.backup(dst)                                   # the copies below, and one file with no WAL beside it
+        dst.execute("PRAGMA journal_mode=DELETE")
+    finally:
+        dst.close()
+        src.close()
     rows = []
     try:
         for kind, pairs in (("general", GENERAL), ("about them", ABOUT_THEM)):
