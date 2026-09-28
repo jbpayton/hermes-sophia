@@ -33,8 +33,9 @@ NIGHT_STEPS = ["settle", "sort", "contextualize", "relate", "integrate", "index"
 
 
 def add_model_args(ap) -> None:
-    ap.add_argument("--url", default="http://127.0.0.1:1234", help="model server for reader, judge and memory")
-    ap.add_argument("--api", default="lmstudio", choices=["lmstudio", "openai"])
+    ap.add_argument("--url", default=os.environ.get("SOPHIA_BENCH_URL", "http://127.0.0.1:1234"),
+                    help="model server for reader, judge and memory (default: $SOPHIA_BENCH_URL or LM Studio's)")
+    ap.add_argument("--api", default=os.environ.get("SOPHIA_BENCH_API", "lmstudio"), choices=["lmstudio", "openai"])
     ap.add_argument("--reader", default="qwen35-9b")
     ap.add_argument("--judge", default="qwen35-9b")
     ap.add_argument("--embed", default="nomic-embed")
@@ -50,7 +51,8 @@ def add_model_args(ap) -> None:
                     help="start from the memories another run built (same mode), skipping ingestion and the night")
     ap.add_argument("--tag", default="", help="suffix for the results file")
     ap.add_argument("--yield-to", default="qwen/qwen3.8-27b",
-                    help="pause while this LM Studio model is generating (someone's chat); '' to never pause")
+                    help="pause while this model is generating (someone's chat): LM Studio's status, or a "
+                         "llama-server router's /slots; '' to never pause")
 
 
 class Models:
@@ -64,8 +66,11 @@ class Models:
             return
         waited = 0
         while True:
-            st = self.server.model_status() or {}
-            if st.get(self.args.yield_to) != "generating":
+            if self.args.api == "openai":
+                busy = bool(self.server.server_busy(model=self.args.yield_to))
+            else:
+                busy = (self.server.model_status() or {}).get(self.args.yield_to) == "generating"
+            if not busy:
                 if waited:
                     print(f"  (resumed after yielding {waited}s to {self.args.yield_to})", flush=True)
                 return

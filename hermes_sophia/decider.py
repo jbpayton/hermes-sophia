@@ -118,7 +118,10 @@ class Decider:
                 self._pool = ThreadPoolExecutor(max_workers=8, thread_name_prefix="sophia-orders")
             return self._pool
 
-    def ask(self, state: Any, q, permutations: Optional[int] = None) -> Answer:
+    def ask(self, state: Any, q, permutations: Optional[int] = None,
+            recheck: Optional[Callable[[Dict[str, float]], bool]] = None) -> Answer:
+        """permutations=2 averages both option orders. With one order, recheck (given the first reading's
+        probabilities by key) can ask for the reverse order too: the second read only when the first is unsure."""
         keys, descs, qtype = _options(q)
         k = len(keys)
         if not 2 <= k <= len(LETTERS):
@@ -135,9 +138,8 @@ class Decider:
                 return self.client.first_token_logprobs(self.model, prompt, max(self.top_logprobs, k), self.timeout)[1]
             except LMStudioError as e:
                 raise DeciderError(str(e)) from e
-        # the two orders don't depend on each other: one round trip instead of two
-        readings = list(self._orders_pool().map(read, orders)) if len(orders) > 1 else [read(orders[0])]
-        for order, tops in zip(orders, readings):
+
+        def declare(order, tops):
             letter_lp: Dict[str, float] = {}
             for tok, lp in tops:
                 t = tok.strip()
@@ -151,6 +153,13 @@ class Decider:
             for j, oi in enumerate(order):
                 declared[oi] = probs[j]
             per_order.append(declared)
+        # the two orders don't depend on each other: one round trip instead of two
+        readings = list(self._orders_pool().map(read, orders)) if len(orders) > 1 else [read(orders[0])]
+        for order, tops in zip(orders, readings):
+            declare(order, tops)
+        if len(orders) == 1 and recheck and recheck({keys[i]: per_order[0][i] for i in range(k)}):
+            order = list(range(k))[::-1]                      # only when the first reading asks for it
+            declare(order, read(order))
         probs = [sum(p[i] for p in per_order) / len(per_order) for i in range(k)]
         flip = len(per_order) > 1 and (max(range(k), key=lambda i: per_order[0][i]) !=
                                        max(range(k), key=lambda i: per_order[1][i]))

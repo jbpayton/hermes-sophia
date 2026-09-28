@@ -1,0 +1,6498 @@
+[
+ {
+  "kind": "relevant",
+  "query": "How many bikes do I own?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.99",
+   "uncertain": false,
+   "split": null,
+   "ms": 558.1418031360954
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.03,n0.01,m0.96",
+   "uncertain": false,
+   "split": [
+    2,
+    18
+   ],
+   "ms": 911.2545929383487
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What was my previous stance on spirituality?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    1,
+    25
+   ],
+   "ms": 1510.9854231122881
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.74",
+   "uncertain": false,
+   "split": null,
+   "ms": 535.3668020106852
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Where did I buy my new bookshelf from?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.97",
+   "uncertain": false,
+   "split": null,
+   "ms": 606.8034321069717
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    20
+   ],
+   "ms": 622.482055099681
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Where did I attend my cousin's wedding?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    1,
+    28
+   ],
+   "ms": 310.89131091721356
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 547.7577729616314
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What brand of shampoo do I currently use?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.95",
+   "uncertain": false,
+   "split": null,
+   "ms": 595.4110389575362
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.01,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    16
+   ],
+   "ms": 594.2824329249561
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What color did I repaint my bedroom walls?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    1,
+    17
+   ],
+   "ms": 668.179044034332
+  },
+  "decider": {
+   "injected": true,
+   "gate": "skip:0.83",
+   "uncertain": false,
+   "split": null,
+   "ms": 39.8797900415957
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How long did Alex marinate the BBQ ribs in special sauce?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "skip:0.83",
+   "uncertain": false,
+   "split": null,
+   "ms": 88.34507293067873
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    6
+   ],
+   "ms": 642.9441189393401
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What size is my new Samsung TV?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    1,
+    12
+   ],
+   "ms": 643.1509170215577
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.74",
+   "uncertain": false,
+   "split": null,
+   "ms": 551.7274290323257
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm planning to visit Bandung again and I was wondering if you could remind me of the name of that restaurant in Cihampelas Walk that serves a great Nasi Goreng?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.98",
+   "uncertain": false,
+   "split": null,
+   "ms": 564.6829989273101
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    18
+   ],
+   "ms": 600.0393149442971
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I wanted to follow up on our previous conversation about natural remedies for dark circles under the eyes. You mentioned applying tomato juice mixed with lemon juice, how long did you say I should leave it on for?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    1,
+    27
+   ],
+   "ms": 694.330797996372
+  },
+  "decider": {
+   "injected": true,
+   "gate": "skip:0.84",
+   "uncertain": false,
+   "split": null,
+   "ms": 42.46891615912318
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you remind me what was the average improvement in framerate when using the Hardware-Aware Modular Training (HAMT) agent in the 'To Adapt or Not to Adapt? Real-Time Adaptation for Semantic Segmentation' submission?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "skip:0.89",
+   "uncertain": false,
+   "split": null,
+   "ms": 93.52373401634395
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    10
+   ],
+   "ms": 633.2667171955109
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I wanted to follow up on our previous conversation about private sector businesses in Chaudhary. Can you remind me of the company that employs over 40,000 people in the rug-manufacturing industry?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    13
+   ],
+   "ms": 659.6245241817087
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.90",
+   "uncertain": false,
+   "split": null,
+   "ms": 549.7826249338686
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm going back to our previous conversation about the children's book on dinosaurs. Can you remind me what color was the scaly body of the Plesiosaur in the image?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "skip:0.82",
+   "uncertain": false,
+   "split": null,
+   "ms": 91.15667594596744
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    14
+   ],
+   "ms": 637.1419350616634
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I wanted to follow up on our previous conversation about the fusion breakthrough at Lawrence Livermore National Laboratory. Can you remind me who is the President's Chief Advisor for Science and Technology mentioned in the article?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    15
+   ],
+   "ms": 698.2384680304676
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.95",
+   "uncertain": false,
+   "split": null,
+   "ms": 573.4891828615218
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I wanted to follow up on our previous conversation about front-end and back-end development. Can you remind me of the specific back-end programming languages you recommended I learn?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "skip:0.87",
+   "uncertain": false,
+   "split": null,
+   "ms": 85.21788381040096
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    39
+   ],
+   "ms": 647.9447889141738
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I am planning another theme park weekend; do you have any suggestions?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.17,n0.03,m0.80",
+   "uncertain": false,
+   "split": [
+    2,
+    41
+   ],
+   "ms": 952.4744481313974
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 567.3530478961766
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you suggest a hotel for my upcoming trip to Miami?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.56",
+   "uncertain": false,
+   "split": null,
+   "ms": 580.3450930397958
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.24,n0.08,m0.68",
+   "uncertain": false,
+   "split": [
+    4,
+    27
+   ],
+   "ms": 881.7701160442084
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been having trouble with the battery life on my phone lately. Any tips?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.69,n0.23,m0.08",
+   "uncertain": true,
+   "split": null,
+   "ms": 954.7112369909883
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.62",
+   "uncertain": false,
+   "split": null,
+   "ms": 584.4553038477898
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been feeling a bit stuck with my paintings lately. Do you have any ideas on how I can find new inspiration?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 600.2390140201896
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.08,n0.05,m0.87",
+   "uncertain": false,
+   "split": [
+    4,
+    37
+   ],
+   "ms": 899.6534978505224
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the total number of online courses I've completed?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    33
+   ],
+   "ms": 732.0154330227524
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "uncertain": false,
+   "split": null,
+   "ms": 575.0913280062377
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many babies were born to friends and family members in the last few months?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.85",
+   "uncertain": false,
+   "split": null,
+   "ms": 578.2899730838835
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.15,n0.28,m0.57",
+   "uncertain": false,
+   "split": [
+    5,
+    36
+   ],
+   "ms": 925.4390900023282
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many pages do I have left to read in 'The Nightingale'?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.98",
+   "uncertain": false,
+   "split": [
+    3,
+    16
+   ],
+   "ms": 716.079279081896
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 576.4527420978993
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many bikes did I service or plan to service in March?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.76",
+   "uncertain": false,
+   "split": null,
+   "ms": 641.002994030714
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.03,m0.96",
+   "uncertain": false,
+   "split": [
+    2,
+    30
+   ],
+   "ms": 636.6948301438242
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many total pieces of writing have I completed since I started writing again three weeks ago, including short stories, poems, and pieces for the writing challenge?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.03,n0.01,m0.96",
+   "uncertain": false,
+   "split": [
+    3,
+    17
+   ],
+   "ms": 685.3382298722863
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.62",
+   "uncertain": false,
+   "split": null,
+   "ms": 584.2647310346365
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the average age of me, my parents, and my grandparents?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 572.411211906001
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.09,n0.15,m0.76",
+   "uncertain": false,
+   "split": [
+    3,
+    29
+   ],
+   "ms": 926.1451940983534
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many rare items do I have in total?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.07,n0.03,m0.90",
+   "uncertain": false,
+   "split": [
+    4,
+    22
+   ],
+   "ms": 976.7151791602373
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 598.6615389119834
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many different cuisines have I learned to cook or tried out in the past few months?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.87",
+   "uncertain": false,
+   "split": null,
+   "ms": 575.0062970910221
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.09,n0.07,m0.84",
+   "uncertain": false,
+   "split": [
+    6,
+    23
+   ],
+   "ms": 915.2608918957412
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many items of clothing do I need to pick up or return from a store?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    3,
+    20
+   ],
+   "ms": 730.7377369143069
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.89",
+   "uncertain": false,
+   "split": null,
+   "ms": 567.1063710469753
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many music albums or EPs have I purchased or downloaded?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.71",
+   "uncertain": false,
+   "split": null,
+   "ms": 593.5756370890886
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.05,m0.94",
+   "uncertain": false,
+   "split": [
+    5,
+    28
+   ],
+   "ms": 610.7294589746743
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the total cost of the new food bowl, measuring cup, dental chews, and flea and tick collar I got for Max?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.01,m0.97",
+   "uncertain": false,
+   "split": [
+    2,
+    7
+   ],
+   "ms": 656.5045639872551
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 564.1732630319893
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the minimum amount I could get if I sold the vintage diamond necklace and the antique vanity?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.95",
+   "uncertain": false,
+   "split": null,
+   "ms": 608.715123962611
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.98",
+   "uncertain": false,
+   "split": [
+    2,
+    14
+   ],
+   "ms": 640.2789079584181
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the total number of views on my most popular videos on YouTube and TikTok?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.40,n0.27,m0.34",
+   "uncertain": false,
+   "split": [
+    2,
+    22
+   ],
+   "ms": 972.594470018521
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.65",
+   "uncertain": false,
+   "split": null,
+   "ms": 592.3446780070662
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many fish are there in my 30-gallon tank?",
+  "cold": "decider",
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.44",
+   "uncertain": false,
+   "split": null,
+   "ms": 589.112970046699
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.39,n0.27,m0.34",
+   "uncertain": false,
+   "split": [
+    5,
+    15
+   ],
+   "ms": 913.5237841401249
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many online courses have I completed in total?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.03,n0.04,m0.94",
+   "uncertain": false,
+   "split": [
+    3,
+    38
+   ],
+   "ms": 704.3476661201566
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 553.0299011152238
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What was the page count of the two novels I finished in January and March?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.51",
+   "uncertain": false,
+   "split": null,
+   "ms": 647.8014409076422
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.24,n0.31,m0.46",
+   "uncertain": false,
+   "split": [
+    3,
+    23
+   ],
+   "ms": 934.0900219976902
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many weeks passed between the day I bought my new tennis racket and the day I received it?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    18
+   ],
+   "ms": 1101.1533890850842
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 1390.6686340924352
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many months have passed since I last visited a museum with a friend?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.86",
+   "uncertain": false,
+   "split": null,
+   "ms": 715.1596809271723
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    1,
+    27
+   ],
+   "ms": 630.0945891998708
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the order of the concerts and musical events I attended in the past two months, starting from the earliest?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.04,m0.95",
+   "uncertain": false,
+   "split": [
+    3,
+    24
+   ],
+   "ms": 673.0248180683702
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.65",
+   "uncertain": false,
+   "split": null,
+   "ms": 580.0636569038033
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I mentioned that I participated in an art-related event two weeks ago. Where was that event held at?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.78",
+   "uncertain": false,
+   "split": null,
+   "ms": 614.9923841003329
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    29
+   ],
+   "ms": 617.6648980472237
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days had passed since I started taking ukulele lessons when I decided to take my acoustic guitar to the guitar tech for servicing?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.02,m0.97",
+   "uncertain": false,
+   "split": [
+    3,
+    21
+   ],
+   "ms": 685.1500940974802
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 576.4496310148388
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many weeks had passed since I recovered from the flu when I went on my 10th jog outdoors?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.97",
+   "uncertain": false,
+   "split": null,
+   "ms": 581.3097679056227
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.01,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    20
+   ],
+   "ms": 612.8243929706514
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days did it take for me to find a house I loved after starting to work with Rachel?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.03,m0.95",
+   "uncertain": false,
+   "split": [
+    5,
+    22
+   ],
+   "ms": 678.9579321630299
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.84",
+   "uncertain": false,
+   "split": null,
+   "ms": 565.2508737985045
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many charity events did I participate in before the 'Run for the Cure' event?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "skip:0.82",
+   "uncertain": false,
+   "split": null,
+   "ms": 74.98445780947804
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.05,m0.94",
+   "uncertain": false,
+   "split": [
+    2,
+    15
+   ],
+   "ms": 648.3150420244783
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What was the airline that I flied with on Valentine's day?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.04,n0.10,m0.86",
+   "uncertain": false,
+   "split": [
+    2,
+    28
+   ],
+   "ms": 683.9843129273504
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.78",
+   "uncertain": false,
+   "split": null,
+   "ms": 577.034326037392
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days before I bought the iPhone 13 Pro did I attend the Holiday Market?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 591.632042080164
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.01,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    35
+   ],
+   "ms": 640.3628110419959
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days passed between the day I replaced my spark plugs and the day I participated in the Turbocharged Tuesdays auto racking event?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.03,m0.96",
+   "uncertain": false,
+   "split": [
+    2,
+    25
+   ],
+   "ms": 678.7976860068738
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.84",
+   "uncertain": false,
+   "split": null,
+   "ms": 577.4965288583189
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days had passed since I finished reading 'The Seven Husbands of Evelyn Hugo' when I attended the book reading event at the local library, where the author of 'The Silent Patient' is discussing her latest thriller novel?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.72",
+   "uncertain": false,
+   "split": null,
+   "ms": 629.902530927211
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.15,n0.28,m0.56",
+   "uncertain": false,
+   "split": [
+    3,
+    6
+   ],
+   "ms": 882.0106328930706
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days ago did I participate in the 5K charity run?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    30
+   ],
+   "ms": 731.2792500015348
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.80",
+   "uncertain": false,
+   "split": null,
+   "ms": 557.3527670931071
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Which event happened first, my cousin's wedding or Michael's engagement party?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.79",
+   "uncertain": false,
+   "split": null,
+   "ms": 576.5173879917711
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.06,n0.05,m0.89",
+   "uncertain": false,
+   "split": [
+    3,
+    14
+   ],
+   "ms": 904.1190950665623
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the order of the three events: 'I signed up for the rewards program at ShopRite', 'I used a Buy One Get One Free coupon on Luvs diapers at Walmart', and 'I redeemed $12 cashback for a $10 Amazon gift card from Ibotta'?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.12,n0.06,m0.83",
+   "uncertain": false,
+   "split": [
+    4,
+    13
+   ],
+   "ms": 1024.0811200346798
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "uncertain": false,
+   "split": null,
+   "ms": 612.0247740764171
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the order of the sports events I watched in January?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.82",
+   "uncertain": false,
+   "split": null,
+   "ms": 613.9755488839
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.06,m0.93",
+   "uncertain": false,
+   "split": [
+    4,
+    20
+   ],
+   "ms": 642.7574639674276
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many Crash Course videos have I watched in the past few weeks?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.02,m0.98",
+   "uncertain": false,
+   "split": [
+    4,
+    31
+   ],
+   "ms": 642.7462780848145
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 542.3190058209002
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How often do I play tennis with my friends at the local park previously? How often do I play now?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "skip:0.83",
+   "uncertain": false,
+   "split": null,
+   "ms": 83.20826501585543
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.04,m0.95",
+   "uncertain": false,
+   "split": [
+    3,
+    23
+   ],
+   "ms": 616.9499938841909
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "For the coffee-to-water ratio in my French press, did I switch to more water per tablespoon of coffee, or less?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.12,n0.01,m0.86",
+   "uncertain": false,
+   "split": [
+    1,
+    15
+   ],
+   "ms": 953.4714568872005
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.72",
+   "uncertain": false,
+   "split": null,
+   "ms": 619.7028181049973
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many free night's stays can I redeem at any Hilton property with my accumulated points?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "skip:0.89",
+   "uncertain": false,
+   "split": null,
+   "ms": 81.38006716035306
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.49,n0.10,m0.42",
+   "uncertain": false,
+   "split": [
+    3,
+    6
+   ],
+   "ms": 938.1915889680386
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What was my previous personal best time for the charity 5K run?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.01,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    24
+   ],
+   "ms": 717.4830581061542
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 572.4608900491148
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many new postcards have I added to my collection since I started collecting again?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "skip:0.85",
+   "uncertain": false,
+   "split": null,
+   "ms": 88.89360795728862
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    2,
+    13
+   ],
+   "ms": 612.2610359452665
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many bikes do I currently own?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    23
+   ],
+   "ms": 694.5464408490807
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.98",
+   "uncertain": false,
+   "split": null,
+   "ms": 599.6266801375896
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Where do I currently keep my old sneakers?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "uncertain": false,
+   "split": null,
+   "ms": 551.7221128102392
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.06,m0.93",
+   "uncertain": false,
+   "split": [
+    4,
+    15
+   ],
+   "ms": 579.5973360072821
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How often do I play table tennis with my friends at the local park?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    22
+   ],
+   "ms": 641.9460200704634
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 540.3236600104719
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you suggest some accessories that would complement my current photography setup?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 563.737221993506
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.19,n0.03,m0.77",
+   "uncertain": false,
+   "split": [
+    6,
+    22
+   ],
+   "ms": 876.9816278945655
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What should I serve for dinner this weekend with my homegrown ingredients?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.11,n0.08,m0.81",
+   "uncertain": false,
+   "split": [
+    5,
+    18
+   ],
+   "ms": 978.2056850381196
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.81",
+   "uncertain": false,
+   "split": null,
+   "ms": 575.2182761207223
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you suggest some useful accessories for my phone?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.89",
+   "uncertain": false,
+   "split": null,
+   "ms": 592.4396601039916
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.02,m0.96",
+   "uncertain": false,
+   "split": [
+    2,
+    32
+   ],
+   "ms": 590.5895729083568
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been having trouble with the battery life on my phone lately. Any tips?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.69,n0.23,m0.08",
+   "uncertain": true,
+   "split": null,
+   "ms": 867.4876079894602
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.64",
+   "uncertain": false,
+   "split": null,
+   "ms": 572.5719318725169
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I\u2019m a bit anxious about getting around Tokyo. Do you have any helpful tips?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.83",
+   "uncertain": false,
+   "split": null,
+   "ms": 560.8420439530164
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.18,n0.10,m0.72",
+   "uncertain": false,
+   "split": [
+    6,
+    30
+   ],
+   "ms": 860.0773951038718
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you suggest a hotel for my upcoming trip to Miami?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.19,n0.07,m0.74",
+   "uncertain": false,
+   "split": [
+    4,
+    27
+   ],
+   "ms": 897.0346881542355
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.57",
+   "uncertain": false,
+   "split": null,
+   "ms": 564.0283301472664
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you suggest some activities that I can do in the evening?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.89",
+   "uncertain": false,
+   "split": null,
+   "ms": 563.7767878361046
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.01,m0.98",
+   "uncertain": false,
+   "split": [
+    1,
+    25
+   ],
+   "ms": 600.0281129963696
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been thinking about making a cocktail for an upcoming get-together, but I'm not sure which one to choose. Any suggestions?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.03,n0.02,m0.95",
+   "uncertain": false,
+   "split": [
+    3,
+    48
+   ],
+   "ms": 668.9776300918311
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 553.0862638261169
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I noticed my bike seems to be performing even better during my Sunday group rides. Could there be a reason for this?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.85",
+   "uncertain": false,
+   "split": null,
+   "ms": 592.7160759456456
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.98",
+   "uncertain": false,
+   "split": [
+    2,
+    14
+   ],
+   "ms": 609.013575129211
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you recommend a show or movie for me to watch tonight?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.56,n0.06,m0.38",
+   "uncertain": false,
+   "split": [
+    3,
+    32
+   ],
+   "ms": 913.4126850403845
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.82",
+   "uncertain": false,
+   "split": null,
+   "ms": 589.69820686616
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you recommend some interesting cultural events happening around me this weekend?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.85",
+   "uncertain": false,
+   "split": null,
+   "ms": 562.6960499212146
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.21,n0.06,m0.73",
+   "uncertain": false,
+   "split": [
+    4,
+    32
+   ],
+   "ms": 1730.2516959607601
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been feeling like my chocolate chip cookies need something extra. Any advice?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.81,n0.13,m0.06",
+   "uncertain": false,
+   "split": null,
+   "ms": 1775.408634915948
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.52",
+   "uncertain": false,
+   "split": null,
+   "ms": 588.7950079049915
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I was thinking of trying a new coffee creamer recipe. Any recommendations?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.96",
+   "uncertain": false,
+   "split": null,
+   "ms": 571.0541179869324
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    1,
+    33
+   ],
+   "ms": 623.5787179321051
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I was thinking about rearranging the furniture in my bedroom this weekend. Any tips?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.09,n0.03,m0.89",
+   "uncertain": false,
+   "split": [
+    4,
+    38
+   ],
+   "ms": 985.196006949991
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.83",
+   "uncertain": false,
+   "split": null,
+   "ms": 601.7333930358291
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been feeling a bit stuck with my paintings lately. Do you have any ideas on how I can find new inspiration?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 557.1849578991532
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.08,n0.05,m0.87",
+   "uncertain": false,
+   "split": [
+    4,
+    37
+   ],
+   "ms": 905.2819551434368
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you recommend some recent publications or conferences that I might find interesting?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.14,n0.01,m0.86",
+   "uncertain": false,
+   "split": [
+    2,
+    45
+   ],
+   "ms": 974.7986600268632
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 335.1789100561291
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been sneezing quite a bit lately. Do you think it might be my living room?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 594.3820760585368
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.04,n0.05,m0.91",
+   "uncertain": false,
+   "split": [
+    3,
+    30
+   ],
+   "ms": 590.9656030125916
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you recommend some resources where I can learn more about video editing?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.03,n0.00,m0.96",
+   "uncertain": false,
+   "split": [
+    2,
+    30
+   ],
+   "ms": 638.3291380479932
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 527.9286210425198
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm getting excited about my visit to the music store this weekend. Any tips on what to look for in a new guitar?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.90",
+   "uncertain": false,
+   "split": null,
+   "ms": 584.7457100171596
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.04,n0.02,m0.93",
+   "uncertain": false,
+   "split": [
+    3,
+    33
+   ],
+   "ms": 601.1056650895625
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm planning a trip to Denver soon. Any suggestions on what to do there?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.04,n0.01,m0.95",
+   "uncertain": false,
+   "split": [
+    4,
+    34
+   ],
+   "ms": 655.4018061142415
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 555.5737039539963
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "My kitchen's becoming a bit of a mess again. Any tips for keeping it clean?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.86",
+   "uncertain": false,
+   "split": null,
+   "ms": 627.4890440981835
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.42,n0.22,m0.36",
+   "uncertain": false,
+   "split": [
+    4,
+    26
+   ],
+   "ms": 893.9946449827403
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I've got some free time tonight, any documentary recommendations?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    1,
+    39
+   ],
+   "ms": 732.0900850463659
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.87",
+   "uncertain": false,
+   "split": null,
+   "ms": 617.5250709056854
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm planning my meal prep next week, any suggestions for new recipes?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "uncertain": false,
+   "split": null,
+   "ms": 553.064436884597
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.09,n0.05,m0.87",
+   "uncertain": false,
+   "split": [
+    5,
+    35
+   ],
+   "ms": 868.5842589475214
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been struggling with my slow cooker recipes. Any advice on getting better results?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.25,n0.07,m0.68",
+   "uncertain": false,
+   "split": [
+    3,
+    29
+   ],
+   "ms": 955.4937100037932
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 550.8496160618961
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm thinking of inviting my colleagues over for a small gathering. Any tips on what to bake?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 576.9002989400178
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.97",
+   "uncertain": false,
+   "split": [
+    2,
+    36
+   ],
+   "ms": 607.3725039605051
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "I am planning another theme park weekend; do you have any suggestions?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.17,n0.03,m0.80",
+   "uncertain": false,
+   "split": [
+    2,
+    41
+   ],
+   "ms": 892.3911680467427
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 579.1380479931831
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did John join the online support group?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.80",
+   "uncertain": false,
+   "split": null,
+   "ms": 523.1308480724692
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 564.2566210590303
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Maria make for her home to remind her of a trip to England?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 583.0369789618999
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.89",
+   "uncertain": false,
+   "split": null,
+   "ms": 510.85507893003523
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What is Gina's favorite style of dance?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.96",
+   "uncertain": false,
+   "split": null,
+   "ms": 496.39937095344067
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 510.591683909297
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Melanie do to keep herself busy during her pottery break?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 584.4176399987191
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.87",
+   "uncertain": false,
+   "split": null,
+   "ms": 502.28118197992444
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What transgender-specific events has Caroline attended?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 500.12528197839856
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.03,n0.05,m0.92",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 576.0590438731015
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Melanie and her family do while camping?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.05,n0.02,m0.94",
+   "uncertain": false,
+   "split": [
+    8,
+    50
+   ],
+   "ms": 840.692481957376
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "uncertain": false,
+   "split": null,
+   "ms": 516.926595941186
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What was one of the biggest challenges John faced in his journey to becoming assistant manager?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.97",
+   "uncertain": false,
+   "split": null,
+   "ms": 516.9606560375541
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 563.64537589252
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Caroline research?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.04,n0.03,m0.93",
+   "uncertain": false,
+   "split": [
+    5,
+    50
+   ],
+   "ms": 558.6427210364491
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "uncertain": false,
+   "split": null,
+   "ms": 463.73132709413767
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Jon start reading \"The Lean Startup\"?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.84",
+   "uncertain": false,
+   "split": null,
+   "ms": 443.17931891418993
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 511.38992398045957
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did John start boot camp with his family?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 559.1199269983917
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.86",
+   "uncertain": false,
+   "split": null,
+   "ms": 495.2893990557641
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did the donations help John's community acquire on 16 August, 2023?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.90",
+   "uncertain": false,
+   "split": null,
+   "ms": 477.4321971926838
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 550.2023668959737
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Why did John decide to run for office again?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.05,n0.01,m0.94",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 848.6679829657078
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.85",
+   "uncertain": false,
+   "split": null,
+   "ms": 529.7378548420966
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline join a new activist group?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.89",
+   "uncertain": false,
+   "split": null,
+   "ms": 475.5244611296803
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 560.8128169551492
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Gina interview for a design internship?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 508.69914004579186
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.90",
+   "uncertain": false,
+   "split": null,
+   "ms": 482.71719994954765
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What attributes describe John?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.86",
+   "uncertain": false,
+   "split": null,
+   "ms": 391.44122204743326
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.36,n0.07,m0.57",
+   "uncertain": false,
+   "split": [
+    5,
+    50
+   ],
+   "ms": 776.1605461128056
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did John receive a certificate for?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 579.4928360264748
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.81",
+   "uncertain": false,
+   "split": null,
+   "ms": 461.18711796589196
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What does John appreciate about the veteran's hospital visit?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 516.3242719136178
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 572.906024986878
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie go to the museum?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 573.7238582223654
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "uncertain": false,
+   "split": null,
+   "ms": 481.46097478456795
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of dance piece did Gina's team perform to win first place?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.81",
+   "uncertain": false,
+   "split": null,
+   "ms": 463.41093303635716
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    49
+   ],
+   "ms": 532.9597441013902
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What type of individuals does the adoption agency Caroline is considering support?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 552.3867059964687
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 513.4339481592178
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Why did John feel inspired to join the military after the visit to the hospital?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.95",
+   "uncertain": false,
+   "split": null,
+   "ms": 504.64553316123784
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 564.6174100693315
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What plans does Jon have after receiving advice at the networking event?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    49
+   ],
+   "ms": 550.1685559283942
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 486.5813769865781
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Where is Gina's fashion internship?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 437.96847690828145
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 544.1120159812272
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie buy the figurines?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 557.1429410483688
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.79",
+   "uncertain": false,
+   "split": null,
+   "ms": 506.1378120444715
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How did Maria start volunteering at the homeless shelter?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "uncertain": false,
+   "split": null,
+   "ms": 530.5603421293199
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 549.6186108794063
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Who performed at the concert at Melanie's daughter's birthday?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.16,n0.04,m0.81",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 1609.4589040149003
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.74",
+   "uncertain": false,
+   "split": null,
+   "ms": 1440.2838260866702
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie read the book \"nothing is impossible\"?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.85",
+   "uncertain": false,
+   "split": null,
+   "ms": 497.3131080623716
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.02,m0.97",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 567.496710922569
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What symbols are important to Caroline?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.03,n0.03,m0.94",
+   "uncertain": false,
+   "split": [
+    5,
+    50
+   ],
+   "ms": 537.3573938850313
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "uncertain": false,
+   "split": null,
+   "ms": 490.0387651287019
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline go biking with friends?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "uncertain": false,
+   "split": null,
+   "ms": 494.66026783920825
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 554.9266110174358
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What has Maria done to feel closer to her faith?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.02,m0.98",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 553.0338580720127
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.96",
+   "uncertain": false,
+   "split": null,
+   "ms": 491.0694540012628
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Maria donate to a homeless shelter in December 2023?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.55",
+   "uncertain": false,
+   "split": null,
+   "ms": 495.4137490130961
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.26,n0.39,m0.35",
+   "uncertain": true,
+   "split": null,
+   "ms": 855.1544218789786
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What LGBTQ+ events has Caroline participated in?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.10,n0.07,m0.83",
+   "uncertain": false,
+   "split": [
+    7,
+    50
+   ],
+   "ms": 885.2700048591942
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.96",
+   "uncertain": false,
+   "split": null,
+   "ms": 541.913348948583
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How often does John get to see sunsets like the one he shared with Maria?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "uncertain": false,
+   "split": null,
+   "ms": 513.2964998483658
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.01,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 556.5139460377395
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Gina say about the dancers in the photo?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.29,n0.04,m0.67",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 815.2291129808873
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.90",
+   "uncertain": false,
+   "split": null,
+   "ms": 503.4858270082623
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What are Melanie's pets' names?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.85",
+   "uncertain": false,
+   "split": null,
+   "ms": 473.4070869162679
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    49
+   ],
+   "ms": 553.2622740138322
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What do Melanie's family give her?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.07,n0.13,m0.81",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 803.0879308935255
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.87",
+   "uncertain": false,
+   "split": null,
+   "ms": 450.6413789931685
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What book did Caroline recommend to Melanie?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.89",
+   "uncertain": false,
+   "split": null,
+   "ms": 439.2415089532733
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.03,n0.00,m0.97",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 551.0646239854395
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did John recently get promoted to?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.11,n0.05,m0.84",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 835.9714760445058
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.75",
+   "uncertain": false,
+   "split": null,
+   "ms": 519.0607830882072
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What do sunflowers represent according to Caroline?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 478.7010499276221
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 545.318596996367
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of professional experience did Gina get accepted for on May 23, 2023?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 522.3534170072526
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.90",
+   "uncertain": false,
+   "split": null,
+   "ms": 474.3050830438733
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When is Melanie's daughter's birthday?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.90",
+   "uncertain": false,
+   "split": null,
+   "ms": 411.157603841275
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.06,n0.00,m0.93",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 740.2170840650797
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How is Maria's new puppy adjusting to its new home?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.04,n0.01,m0.95",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 608.9939589146525
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "uncertain": false,
+   "split": null,
+   "ms": 499.59541810676455
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What is Melanie's reason for getting into running?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.95",
+   "uncertain": false,
+   "split": null,
+   "ms": 460.8719639945775
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.02,m0.98",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 541.0111299715936
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What made Gina choose the furniture and decor for her store?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 542.3702918924391
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 457.82452798448503
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What happened to Melanie's son on their road trip?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.96",
+   "uncertain": false,
+   "split": null,
+   "ms": 463.951030978933
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.98",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 550.358375068754
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Gina develop a video presentation to teach how to style her fashion pieces? ",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 532.2485340293497
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "uncertain": false,
+   "split": null,
+   "ms": 465.6589028891176
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Would Caroline likely have Dr. Seuss books on her bookshelf?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.70",
+   "uncertain": false,
+   "split": null,
+   "ms": 517.2186980489641
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.16,n0.07,m0.77",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 844.7218488436192
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of books does Caroline have in her library?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.05,m0.93",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 581.3079657964408
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.90",
+   "uncertain": false,
+   "split": null,
+   "ms": 532.7426439616829
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What fields would Caroline be likely to pursue in her educaton?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.79",
+   "uncertain": false,
+   "split": null,
+   "ms": 489.51856000348926
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.98",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 545.4863111954182
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Why did Jon shut down his bank account?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 535.1563859730959
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.84",
+   "uncertain": false,
+   "split": null,
+   "ms": 438.4231341537088
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline go to the adoption meeting?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 465.69223888218403
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.98",
+   "uncertain": false,
+   "split": [
+    2,
+    49
+   ],
+   "ms": 560.7655812054873
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What was Gina's favorite dancing memory?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 529.1976898442954
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 510.64941799268126
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Who did John go to yoga with?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "uncertain": false,
+   "split": null,
+   "ms": 521.790532162413
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 550.8256738539785
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What book did Melanie read from Caroline's suggestion?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 598.7159612122923
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 516.7375057935715
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How long ago was Caroline's 18th birthday?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.85",
+   "uncertain": false,
+   "split": null,
+   "ms": 482.7991360798478
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    49
+   ],
+   "ms": 571.515338961035
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did John take away from visiting the veteran's hospital?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.23,n0.28,m0.49",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 897.7042289916426
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.82",
+   "uncertain": false,
+   "split": null,
+   "ms": 541.4157940540463
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What book is Jon currently reading?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.76",
+   "uncertain": false,
+   "split": null,
+   "ms": 448.6287268809974
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 523.336686193943
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline encounter people on a hike and have a negative experience?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 569.7335980366915
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "uncertain": false,
+   "split": null,
+   "ms": 527.6870911475271
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of activities did John and his mates from the online group do as part of their service efforts?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.83",
+   "uncertain": false,
+   "split": null,
+   "ms": 531.1720999889076
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.03,n0.05,m0.92",
+   "uncertain": false,
+   "split": [
+    5,
+    50
+   ],
+   "ms": 578.525303862989
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie paint a sunrise?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.00,m0.97",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 575.1959979534149
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.85",
+   "uncertain": false,
+   "split": null,
+   "ms": 532.4058360420167
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie go to the park?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.89",
+   "uncertain": false,
+   "split": null,
+   "ms": 488.35968296043575
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.01,m0.97",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 577.0208099856973
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How many weeks passed between Maria adopting Coco and Shadow?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.03,m0.95",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 578.9362280629575
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.78",
+   "uncertain": false,
+   "split": null,
+   "ms": 483.88870782218874
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Did Melanie make the black and white bowl in the photo?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 486.62901809439063
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.98",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 577.0735039841384
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What was Melanie's favorite book from her childhood?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 614.2893768846989
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 564.8715470451862
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Why did Gina decide to start her own clothing store?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "uncertain": false,
+   "split": null,
+   "ms": 500.4079691134393
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.03,m0.97",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 539.7969500627369
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What is Caroline's identity?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.24,n0.13,m0.62",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 889.5971248857677
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.83",
+   "uncertain": false,
+   "split": null,
+   "ms": 528.933553956449
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Would Melanie be more interested in going to a national park or a theme park?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.87",
+   "uncertain": false,
+   "split": null,
+   "ms": 494.2575900349766
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.98",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 596.6352850664407
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How long has Melanie been practicing art?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    49
+   ],
+   "ms": 595.1307720970362
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.75",
+   "uncertain": false,
+   "split": null,
+   "ms": 525.6293150596321
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When was John's old area hit with a flood?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 561.7133490741253
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 622.2030259668827
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline give a speech at a school?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.03,n0.01,m0.97",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 571.036898996681
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.65",
+   "uncertain": false,
+   "split": null,
+   "ms": 530.6626008823514
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What desserts has Maria made?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "uncertain": false,
+   "split": null,
+   "ms": 536.2644519191235
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.98",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 557.5972830411047
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of art does Caroline make?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.12,n0.06,m0.82",
+   "uncertain": false,
+   "split": [
+    6,
+    50
+   ],
+   "ms": 881.5838869195431
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 528.6922031082213
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What are Maria's dogs' names?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "uncertain": false,
+   "split": null,
+   "ms": 428.7092019803822
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    49
+   ],
+   "ms": 944.1774529404938
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What areas of the U.S. has John been to or is planning to go to?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.08,n0.02,m0.90",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 1829.8581750132143
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.69",
+   "uncertain": false,
+   "split": null,
+   "ms": 592.9223420098424
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What area was hit by a flood?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "uncertain": false,
+   "split": null,
+   "ms": 505.19052892923355
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.03,n0.01,m0.95",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 603.394860168919
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Why did John start blogging about politics and policies?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.13,n0.03,m0.84",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 851.8972059246153
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 556.1646451242268
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How does John describe the support he received during his journey to becoming assistant manager?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.95",
+   "uncertain": false,
+   "split": null,
+   "ms": 528.8406871259212
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.02,m0.97",
+   "uncertain": false,
+   "split": [
+    6,
+    50
+   ],
+   "ms": 570.0197559781373
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie go camping in July?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 584.4944061245769
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.90",
+   "uncertain": false,
+   "split": null,
+   "ms": 519.1062360536307
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Maria say it was like being at the waterfall in Oregon?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.98",
+   "uncertain": false,
+   "split": null,
+   "ms": 478.1344800721854
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 563.1191139109433
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What was discussed in the LGBTQ+ counseling workshop?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    49
+   ],
+   "ms": 598.1249841861427
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "uncertain": false,
+   "split": null,
+   "ms": 536.9960870593786
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Who supports Caroline when she has a negative experience?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.84",
+   "uncertain": false,
+   "split": null,
+   "ms": 503.27235204167664
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.06,n0.11,m0.83",
+   "uncertain": false,
+   "split": [
+    5,
+    50
+   ],
+   "ms": 871.9417680986226
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What was the focus of John's recent research and writing on his blog?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 605.554549023509
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 504.4255000539124
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie's family go on a roadtrip?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.96",
+   "uncertain": false,
+   "split": null,
+   "ms": 511.5009560249746
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 542.8062051068991
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What is Caroline excited about in the adoption process?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.03,n0.01,m0.96",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 553.2385690603405
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 529.3137091211975
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline have a picnic?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.95",
+   "uncertain": false,
+   "split": null,
+   "ms": 499.60241187363863
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 590.709560085088
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Would Caroline pursue writing as a career option?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.03,m0.95",
+   "uncertain": false,
+   "split": [
+    6,
+    50
+   ],
+   "ms": 582.7668239362538
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.79",
+   "uncertain": false,
+   "split": null,
+   "ms": 478.99153898470104
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of painting did Caroline share with Melanie on October 13, 2023?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.72",
+   "uncertain": false,
+   "split": null,
+   "ms": 486.3513149321079
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.01,m0.97",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 587.8008480649441
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Maria start volunteering at the homeless shelter?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 589.3743322230875
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.85",
+   "uncertain": false,
+   "split": null,
+   "ms": 544.5604049600661
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie go on a hike after the roadtrip?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.95",
+   "uncertain": false,
+   "split": null,
+   "ms": 500.7337839342654
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 555.3432088345289
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What painting did Melanie show to Caroline on October 13, 2023?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.03,n0.01,m0.96",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 593.6480050440878
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.81",
+   "uncertain": false,
+   "split": null,
+   "ms": 503.6408060695976
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Maria adopt Shadow?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 493.92807111144066
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 603.9596709888428
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When is Caroline going to the transgender conference?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.11,n0.07,m0.82",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 886.5390829741955
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.76",
+   "uncertain": false,
+   "split": null,
+   "ms": 567.7099910099059
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did John attend with his colleagues in March 2023?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.54",
+   "uncertain": false,
+   "split": null,
+   "ms": 530.2689531818032
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.04,n0.01,m0.95",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 590.0426937732846
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How is Gina's store doing?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 505.7321060448885
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 455.02897701226175
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Maria do to feel closer to a community and her faith?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.87",
+   "uncertain": false,
+   "split": null,
+   "ms": 516.1965370643884
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 558.2111941184849
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did the charity race raise awareness for?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 594.6526781190187
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "uncertain": false,
+   "split": null,
+   "ms": 529.708833200857
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What European countries has Maria been to?",
+  "cold": "decider",
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.46",
+   "uncertain": false,
+   "split": null,
+   "ms": 393.9461649861187
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.51,n0.45,m0.04",
+   "uncertain": true,
+   "split": null,
+   "ms": 857.2058719582856
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How does John plan to honor the memories of his beloved pet?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.01,m0.98",
+   "uncertain": false,
+   "split": [
+    5,
+    50
+   ],
+   "ms": 593.45513000153
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.86",
+   "uncertain": false,
+   "split": null,
+   "ms": 511.42064901068807
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Jon start learning marketing and analytics tools?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.87",
+   "uncertain": false,
+   "split": null,
+   "ms": 485.6422059237957
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 551.57475406304
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Maria join a gym?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 550.3607189748436
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.84",
+   "uncertain": false,
+   "split": null,
+   "ms": 518.5388410463929
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What yoga activity has Maria been trying to improve her strength and endurance?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 531.0710892081261
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 570.9661759901792
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Jon's dance studio offer?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.05,n0.01,m0.94",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 555.9015031903982
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.87",
+   "uncertain": false,
+   "split": null,
+   "ms": 481.5395250916481
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of activities did Maria do at the picnic with her church friends?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.89",
+   "uncertain": false,
+   "split": null,
+   "ms": 501.7889749724418
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 590.8819502219558
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did John help renovate his hometown community center?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 580.7942780666053
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 511.3492840901017
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Which activity has John done apart from yoga at the studio?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 509.9446021486074
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.99",
+   "uncertain": false,
+   "split": [
+    5,
+    50
+   ],
+   "ms": 577.1681398618966
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Maria say she feels when doing upside-down yoga poses?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 566.3244831375778
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 557.7926270198077
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Gina say about creating an experience for her customers?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.96",
+   "uncertain": false,
+   "split": null,
+   "ms": 514.3202100880444
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.01,m0.99",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 529.8917731270194
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What cause did the 5K charity run organized by John support?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 592.951089842245
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 537.5783080235124
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline meet up with her friends, family, and mentors?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.85",
+   "uncertain": false,
+   "split": null,
+   "ms": 507.2911358438432
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.04,n0.01,m0.95",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 883.6540018673986
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did John do the week before August 3, 2023 involving his kids?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.05,m0.93",
+   "uncertain": false,
+   "split": [
+    5,
+    50
+   ],
+   "ms": 572.351637063548
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.72",
+   "uncertain": false,
+   "split": null,
+   "ms": 460.2145329117775
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Jon go to a fair to get more exposure for his dance studio?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.84",
+   "uncertain": false,
+   "split": null,
+   "ms": 479.94982986710966
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 536.8191241286695
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline go to the LGBTQ support group?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 567.4857841804624
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 527.7343799825758
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Jon take a trip to Rome for?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "uncertain": false,
+   "split": null,
+   "ms": 463.8766930438578
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 505.82386599853635
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of food did Maria have on her dinner spread iwth her mother?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 595.5241960473359
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.90",
+   "uncertain": false,
+   "split": null,
+   "ms": 526.0041081346571
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Mel and her kids make during the pottery workshop?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.89",
+   "uncertain": false,
+   "split": null,
+   "ms": 530.4921620991081
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.98",
+   "uncertain": false,
+   "split": [
+    4,
+    49
+   ],
+   "ms": 585.2937118615955
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Caroline see at the council meeting for adoption?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 592.2550759278238
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "uncertain": false,
+   "split": null,
+   "ms": 525.2171470783651
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Gina say to Jon about the grand opening?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.96",
+   "uncertain": false,
+   "split": null,
+   "ms": 476.1041780002415
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.02,m0.96",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 568.2590319775045
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What is John's main focus in local politics?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 593.7501010484993
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "uncertain": false,
+   "split": null,
+   "ms": 560.2928709704429
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Jon start expanding his studio's social media presence?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.85",
+   "uncertain": false,
+   "split": null,
+   "ms": 489.6588621195406
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 585.3079380467534
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline attend a pride parade in August?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 606.2038000673056
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.78",
+   "uncertain": false,
+   "split": null,
+   "ms": 521.9881939701736
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What Jon thinks the ideal dance studio should look like?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 940.1449859142303
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 932.0350610651076
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How did Melanie feel about her family after the accident?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 1491.6764430236071
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.97",
+   "uncertain": false,
+   "split": null,
+   "ms": 488.4176340419799
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What event did John participate in to show support for veterans' rights?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.97",
+   "uncertain": false,
+   "split": null,
+   "ms": 527.8574049007148
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 562.3362909536809
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What event is Maria getting ready for at the shelter on May 25, 2023?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    5,
+    50
+   ],
+   "ms": 567.1270492020994
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.84",
+   "uncertain": false,
+   "split": null,
+   "ms": 523.2402568217367
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What career path has Caroline decided to persue?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 475.2317850943655
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 557.8648338560015
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What do the dancers in the photo represent?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.76,n0.07,m0.17",
+   "uncertain": false,
+   "split": [
+    5,
+    50
+   ],
+   "ms": 802.3762758821249
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.84",
+   "uncertain": false,
+   "split": null,
+   "ms": 475.0012189615518
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How does Jon use the clipboard with a notepad attached to it?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 453.3706351649016
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.05,n0.01,m0.94",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 830.2124049514532
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the name of John's one-year-old child?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 572.6347700692713
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.96",
+   "uncertain": false,
+   "split": null,
+   "ms": 451.5901100821793
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What happened to John's job in August 2023?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 444.4165478926152
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 496.0019609425217
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Caroline make for a local church?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 550.009632948786
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.97",
+   "uncertain": false,
+   "split": null,
+   "ms": 522.3527350462973
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How did Melanie's son handle the accident?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "uncertain": false,
+   "split": null,
+   "ms": 485.2117251139134
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.99",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 529.8756819684058
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Jon and Gina decide to collaborate to create dance content?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.12,n0.17,m0.71",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 843.1130307726562
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "uncertain": false,
+   "split": null,
+   "ms": 489.42348500713706
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie sign up for a pottery class?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "skip:0.83",
+   "uncertain": false,
+   "split": null,
+   "ms": 44.091216986998916
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    49
+   ],
+   "ms": 546.0195040795952
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Melanie say running has been great for?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.01,m0.99",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 574.7674619778991
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 478.0566848348826
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Gina open her online clothing store?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 453.15681700594723
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.98",
+   "uncertain": false,
+   "split": [
+    5,
+    50
+   ],
+   "ms": 539.1847190912813
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Would Caroline be considered religious?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.14,n0.12,m0.74",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 828.8618118967861
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.66",
+   "uncertain": false,
+   "split": null,
+   "ms": 522.0159240998328
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Melanie do to destress?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.98",
+   "uncertain": false,
+   "split": null,
+   "ms": 437.45158496312797
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    50
+   ],
+   "ms": 501.0734749957919
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Maria's grandmother pass away?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 526.111408136785
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.83",
+   "uncertain": false,
+   "split": null,
+   "ms": 445.32014010474086
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What activity did John's colleague, Rob, invite him to?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 455.34689421765506
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 545.2662080060691
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How long was Max a part of John's family?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.03,n0.00,m0.96",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 569.976189173758
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.89",
+   "uncertain": false,
+   "split": null,
+   "ms": 475.1078439876437
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Which  classical musicians does Melanie enjoy listening to?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.90",
+   "uncertain": false,
+   "split": null,
+   "ms": 479.1009249165654
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.00,m0.98",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 567.1809948980808
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Why does John say he feels stuck and questioning his decisions and goals?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.05,n0.04,m0.90",
+   "uncertain": false,
+   "split": [
+    6,
+    50
+   ],
+   "ms": 868.0987050756812
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.90",
+   "uncertain": false,
+   "split": null,
+   "ms": 552.2808791138232
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Jon tell Gina he won't do?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.81",
+   "uncertain": false,
+   "split": null,
+   "ms": 409.94084090925753
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.10,n0.27,m0.63",
+   "uncertain": false,
+   "split": [
+    8,
+    50
+   ],
+   "ms": 719.7154930327088
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What new activity did Maria start recently, as mentioned on 3 June, 2023?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.08,m0.90",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 553.6859589628875
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.62",
+   "uncertain": false,
+   "split": null,
+   "ms": 457.23943412303925
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What is Melanie's hand-painted bowl a reminder of?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "skip:0.83",
+   "uncertain": false,
+   "split": null,
+   "ms": 45.599355129525065
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 503.7428620271385
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Why did Maria sit with the little girl at the shelter event in February 2023?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.98",
+   "uncertain": false,
+   "split": [
+    4,
+    50
+   ],
+   "ms": 571.9597628340125
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.81",
+   "uncertain": false,
+   "split": null,
+   "ms": 512.3211718164384
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Do Jon and Gina start businesses out of what they love?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 443.4549149591476
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.02,m0.97",
+   "uncertain": false,
+   "split": [
+    5,
+    50
+   ],
+   "ms": 502.3513310588896
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "How did the flood impact the homes in John's old area?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.00,m0.99",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 596.4923268184066
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "uncertain": false,
+   "split": null,
+   "ms": 513.6812368873507
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "What activities does John's family enjoy doing together?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.89",
+   "uncertain": false,
+   "split": null,
+   "ms": 459.6578781493008
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.13,n0.26,m0.62",
+   "uncertain": false,
+   "split": [
+    4,
+    49
+   ],
+   "ms": 856.7650350742042
+  }
+ },
+ {
+  "kind": "relevant",
+  "query": "Where did Maria get the idea for the castle shadow box in her home?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.00,m1.00",
+   "uncertain": false,
+   "split": [
+    1,
+    50
+   ],
+   "ms": 621.4891520794481
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.96",
+   "uncertain": false,
+   "split": null,
+   "ms": 532.4416011571884
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Write a cover letter opening line for a software engineering job.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.81",
+   "uncertain": false,
+   "split": null,
+   "ms": 562.743301037699
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.39,n0.05,m0.56",
+   "uncertain": false,
+   "split": [
+    1,
+    13
+   ],
+   "ms": 905.4450469557196
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Proofread this: 'Their going to the park tomorow.'",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.99,n0.00,m0.01",
+   "uncertain": false,
+   "split": null,
+   "ms": 630.3407449740916
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.67",
+   "uncertain": false,
+   "split": null,
+   "ms": 544.8574980255216
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Come up with a slogan for a recycling campaign.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.83",
+   "uncertain": false,
+   "split": null,
+   "ms": 524.238133104518
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.20,n0.03,m0.77",
+   "uncertain": false,
+   "split": [
+    3,
+    17
+   ],
+   "ms": 875.2383310347795
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Brainstorm three plot twists for a mystery novel.",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.91,n0.03,m0.06",
+   "uncertain": false,
+   "split": null,
+   "ms": 937.4978858977556
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.80",
+   "uncertain": false,
+   "split": null,
+   "ms": 591.0555380396545
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "How do I change a flat tyre?",
+  "cold": "decider",
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.33",
+   "uncertain": false,
+   "split": null,
+   "ms": 539.6023280918598
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.98,n0.00,m0.01",
+   "uncertain": false,
+   "split": null,
+   "ms": 655.571382958442
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "How do I make a paper airplane that flies far?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 619.192220037803
+  },
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.22",
+   "uncertain": false,
+   "split": null,
+   "ms": 553.7508230190724
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Explain how the stock market works in simple terms.",
+  "cold": "decider",
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.31",
+   "uncertain": false,
+   "split": null,
+   "ms": 511.2561609130353
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 554.1677591390908
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "What is the greenhouse effect?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 518.36072281003
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.54",
+   "uncertain": false,
+   "split": null,
+   "ms": 465.44100693427026
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Compare cats and dogs as pets.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.81",
+   "uncertain": false,
+   "split": null,
+   "ms": 462.2817779891193
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.88,n0.04,m0.08",
+   "uncertain": false,
+   "split": null,
+   "ms": 814.0409379266202
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "What's the difference between baking soda and baking powder?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.99,n0.01,m0.01",
+   "uncertain": false,
+   "split": null,
+   "ms": 621.7910198029131
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.81",
+   "uncertain": false,
+   "split": null,
+   "ms": 541.9221690390259
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Who was the first person to walk on the moon?",
+  "cold": "decider",
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.30",
+   "uncertain": false,
+   "split": null,
+   "ms": 539.4761750940233
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 636.7708849720657
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "What happened at the Boston Tea Party?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.99,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 633.2721880171448
+  },
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.36",
+   "uncertain": false,
+   "split": null,
+   "ms": 568.402610020712
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "How do magnets work?",
+  "cold": "decider",
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.12",
+   "uncertain": false,
+   "split": null,
+   "ms": 577.9258960392326
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 601.3254278805107
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Why does ice float on water?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.99,n0.00,m0.01",
+   "uncertain": false,
+   "split": null,
+   "ms": 596.7520549893379
+  },
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.40",
+   "uncertain": false,
+   "split": null,
+   "ms": 571.3217870797962
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "What's the origin of the phrase 'break a leg'?",
+  "cold": "decider",
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.37",
+   "uncertain": false,
+   "split": null,
+   "ms": 500.13885693624616
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 543.2167029939592
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Is it 'fewer' or 'less' with countable nouns?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.98,n0.01,m0.01",
+   "uncertain": false,
+   "split": null,
+   "ms": 571.7178238555789
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.70",
+   "uncertain": false,
+   "split": null,
+   "ms": 480.3758398629725
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Solve for x: 3x + 7 = 22.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.62",
+   "uncertain": false,
+   "split": null,
+   "ms": 443.03337787277997
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.99,n0.01,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 531.8202238995582
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "What is the derivative of x squared?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 547.7613781113178
+  },
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.43",
+   "uncertain": false,
+   "split": null,
+   "ms": 480.8420080225915
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Write a Python function that checks whether a number is prime.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.72",
+   "uncertain": false,
+   "split": null,
+   "ms": 542.3459268640727
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.99,n0.00,m0.01",
+   "uncertain": false,
+   "split": null,
+   "ms": 582.4425418395549
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "What does 'git rebase' do?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.51,n0.00,m0.49",
+   "uncertain": false,
+   "split": [
+    2,
+    11
+   ],
+   "ms": 877.961492864415
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.66",
+   "uncertain": false,
+   "split": null,
+   "ms": 1008.4036330226809
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Which country has the largest population?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.52",
+   "uncertain": false,
+   "split": null,
+   "ms": 950.0795111525804
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.99,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 1499.5701329316944
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "How many strings does a standard guitar have?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.99,n0.00,m0.01",
+   "uncertain": false,
+   "split": null,
+   "ms": 626.5967818908393
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.51",
+   "uncertain": false,
+   "split": null,
+   "ms": 611.3526641856879
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Give me a simple recipe for pancakes.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.86",
+   "uncertain": false,
+   "split": null,
+   "ms": 514.0573941171169
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.05,n0.02,m0.94",
+   "uncertain": false,
+   "split": [
+    2,
+    15
+   ],
+   "ms": 578.0397090129554
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "How long should I boil pasta for?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.89,n0.06,m0.05",
+   "uncertain": false,
+   "split": null,
+   "ms": 923.061041161418
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.63",
+   "uncertain": false,
+   "split": null,
+   "ms": 586.3339530769736
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "What's proper etiquette for tipping in restaurants in the US?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.57",
+   "uncertain": false,
+   "split": null,
+   "ms": 487.50508995726705
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 605.9965309686959
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "How should you address a formal letter to someone you don't know?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.97,n0.02,m0.01",
+   "uncertain": false,
+   "split": null,
+   "ms": 525.8489660918713
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.53",
+   "uncertain": false,
+   "split": null,
+   "ms": 455.3489778190851
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Summarize the theory of evolution in three sentences.",
+  "cold": "decider",
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.46",
+   "uncertain": false,
+   "split": null,
+   "ms": 543.2776231318712
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 543.2103129569441
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "What is the difference between a simile and a metaphor?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.98,n0.00,m0.01",
+   "uncertain": false,
+   "split": null,
+   "ms": 583.1447620876133
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.62",
+   "uncertain": false,
+   "split": null,
+   "ms": 570.6221060827374
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Suggest a name for a fantasy kingdom.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.59",
+   "uncertain": false,
+   "split": null,
+   "ms": 504.4122349936515
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.99,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 560.8636850956827
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Write a riddle whose answer is 'time'.",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.92,n0.03,m0.05",
+   "uncertain": false,
+   "split": null,
+   "ms": 950.621300144121
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.79",
+   "uncertain": false,
+   "split": null,
+   "ms": 580.856679007411
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "What are the rules of chess castling?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.53",
+   "uncertain": false,
+   "split": null,
+   "ms": 526.2735791038722
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 617.1776440460235
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "How do airplanes stay in the air?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 586.3663679920137
+  },
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.25",
+   "uncertain": false,
+   "split": null,
+   "ms": 529.7717750072479
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Write a motivational quote about perseverance.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "uncertain": false,
+   "split": null,
+   "ms": 549.7063731309026
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.04,n0.03,m0.93",
+   "uncertain": false,
+   "split": [
+    1,
+    21
+   ],
+   "ms": 581.8128429818898
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Explain the difference between RAM and storage.",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 570.5853241961449
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.54",
+   "uncertain": false,
+   "split": null,
+   "ms": 511.67197502218187
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "What is the capital of Canada?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.51",
+   "uncertain": false,
+   "split": null,
+   "ms": 383.253431878984
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 453.04971002042294
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "How do I remove rust from a bike chain?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 603.3134260214865
+  },
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.39",
+   "uncertain": false,
+   "split": null,
+   "ms": 494.58690802566707
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "What were the main achievements of the Roman Empire?",
+  "cold": "decider",
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.44",
+   "uncertain": false,
+   "split": null,
+   "ms": 530.5371470749378
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 645.1670229434967
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "Turn this into a bulleted list: eggs, milk, bread, butter.",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.57,n0.19,m0.24",
+   "uncertain": false,
+   "split": [
+    3,
+    16
+   ],
+   "ms": 916.257896926254
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.77",
+   "uncertain": false,
+   "split": null,
+   "ms": 607.6399059966207
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "What is a black swan event?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.57",
+   "uncertain": false,
+   "split": null,
+   "ms": 595.1031891163439
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 644.7451040148735
+  }
+ },
+ {
+  "kind": "general (held out)",
+  "query": "How are rainbows formed?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "uncertain": false,
+   "split": null,
+   "ms": 579.4456580188125
+  },
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.20",
+   "uncertain": false,
+   "split": null,
+   "ms": 533.4551730193198
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "What should I have for lunch today?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.77",
+   "uncertain": false,
+   "split": null,
+   "ms": 526.9603189080954
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.26,n0.18,m0.56",
+   "uncertain": false,
+   "split": [
+    4,
+    16
+   ],
+   "ms": 895.7058649975806
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "Can you suggest something fun for me to do this weekend?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.15,n0.07,m0.78",
+   "uncertain": false,
+   "split": [
+    3,
+    37
+   ],
+   "ms": 914.8792640771717
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.80",
+   "uncertain": false,
+   "split": null,
+   "ms": 556.8278930149972
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "Recommend a TV series for me.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.68",
+   "uncertain": false,
+   "split": null,
+   "ms": 513.7514460366219
+  },
+  "choice-recheck": {
+   "injected": false,
+   "gate": "choice:g0.89,n0.05,m0.06",
+   "uncertain": false,
+   "split": null,
+   "ms": 888.7431360781193
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "What should I work on first tomorrow morning?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.07,n0.03,m0.90",
+   "uncertain": false,
+   "split": [
+    3,
+    33
+   ],
+   "ms": 918.757843086496
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.77",
+   "uncertain": false,
+   "split": null,
+   "ms": 573.1616169214249
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "Help me pick a gift for my best friend.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.73",
+   "uncertain": false,
+   "split": null,
+   "ms": 571.7683371622115
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.40,n0.22,m0.38",
+   "uncertain": false,
+   "split": [
+    5,
+    28
+   ],
+   "ms": 869.918768061325
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "Any advice for my upcoming trip?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.99",
+   "uncertain": false,
+   "split": [
+    2,
+    37
+   ],
+   "ms": 640.1019238401204
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.98",
+   "uncertain": false,
+   "split": null,
+   "ms": 576.6114429570735
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "What should I cook for my family this Sunday?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.81",
+   "uncertain": false,
+   "split": null,
+   "ms": 480.7376239914447
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.51,n0.25,m0.24",
+   "uncertain": true,
+   "split": null,
+   "ms": 835.1152848917991
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "Which workout should I do after my rest day?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.03,m0.96",
+   "uncertain": false,
+   "split": [
+    2,
+    49
+   ],
+   "ms": 538.9328289311379
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.77",
+   "uncertain": false,
+   "split": null,
+   "ms": 395.11526585556567
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "Suggest a new recipe I haven't tried yet.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.89",
+   "uncertain": false,
+   "split": null,
+   "ms": 447.33360782265663
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.39,n0.07,m0.54",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 838.1827918346971
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "What should I read next?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.10,n0.06,m0.84",
+   "uncertain": false,
+   "split": [
+    6,
+    21
+   ],
+   "ms": 892.8231648169458
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.89",
+   "uncertain": false,
+   "split": null,
+   "ms": 588.372671045363
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "Help me plan a date night.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.85",
+   "uncertain": false,
+   "split": null,
+   "ms": 570.9818738978356
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.51,n0.09,m0.40",
+   "uncertain": false,
+   "split": [
+    4,
+    33
+   ],
+   "ms": 878.6570909433067
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "How can I make progress on my goals this month?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.15,n0.06,m0.79",
+   "uncertain": false,
+   "split": [
+    3,
+    12
+   ],
+   "ms": 925.6896041333675
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "uncertain": false,
+   "split": null,
+   "ms": 611.1097119282931
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "Recommend some music I might like.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.87",
+   "uncertain": false,
+   "split": null,
+   "ms": 547.9697661940008
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.56,n0.11,m0.33",
+   "uncertain": false,
+   "split": [
+    8,
+    34
+   ],
+   "ms": 882.2086458094418
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "What should I pack for the weekend?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.29,n0.22,m0.50",
+   "uncertain": false,
+   "split": [
+    4,
+    15
+   ],
+   "ms": 920.7652769982815
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.72",
+   "uncertain": false,
+   "split": null,
+   "ms": 555.1018980331719
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "Plan my meals for tomorrow.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.86",
+   "uncertain": false,
+   "split": null,
+   "ms": 539.5704791881144
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.09,n0.07,m0.85",
+   "uncertain": false,
+   "split": [
+    4,
+    14
+   ],
+   "ms": 883.1969921011478
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "What's a good way for me to unwind after work today?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.07,n0.06,m0.87",
+   "uncertain": false,
+   "split": [
+    5,
+    50
+   ],
+   "ms": 873.9500320516527
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "uncertain": false,
+   "split": null,
+   "ms": 545.7407520152628
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "Suggest a birthday party theme for my kid.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "uncertain": false,
+   "split": null,
+   "ms": 525.1925140619278
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.16,n0.03,m0.81",
+   "uncertain": false,
+   "split": [
+    3,
+    50
+   ],
+   "ms": 818.9879569690675
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "What should I say in my speech on Friday?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.14,n0.11,m0.75",
+   "uncertain": false,
+   "split": [
+    6,
+    50
+   ],
+   "ms": 895.3930030111223
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "uncertain": false,
+   "split": null,
+   "ms": 536.7413209751248
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "Help me decide what to do with my Saturday.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.93",
+   "uncertain": false,
+   "split": null,
+   "ms": 516.5758761577308
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.01,m0.98",
+   "uncertain": false,
+   "split": [
+    2,
+    32
+   ],
+   "ms": 632.7736061066389
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "Is there anything I should follow up on this week?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.09,n0.05,m0.87",
+   "uncertain": false,
+   "split": [
+    5,
+    24
+   ],
+   "ms": 980.8386678341776
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.86",
+   "uncertain": false,
+   "split": null,
+   "ms": 609.8002090584487
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "What would be a thoughtful thank-you gift for my neighbour?",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.59",
+   "uncertain": false,
+   "split": null,
+   "ms": 544.6157900150865
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.73,n0.11,m0.16",
+   "uncertain": false,
+   "split": [
+    2,
+    13
+   ],
+   "ms": 952.4491641204804
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "Suggest a hike I'd enjoy.",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.62,n0.30,m0.08",
+   "uncertain": true,
+   "split": null,
+   "ms": 904.3785200919956
+  },
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.63",
+   "uncertain": false,
+   "split": null,
+   "ms": 557.426136918366
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "Where should we go for dinner tonight?",
+  "cold": "decider",
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.49",
+   "uncertain": false,
+   "split": null,
+   "ms": 572.30817200616
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.11,n0.01,m0.88",
+   "uncertain": false,
+   "split": [
+    1,
+    19
+   ],
+   "ms": 914.3514770548791
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "What should I practise on the guitar today?",
+  "cold": "choice-recheck",
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.20,n0.05,m0.76",
+   "uncertain": false,
+   "split": [
+    5,
+    13
+   ],
+   "ms": 903.0640600249171
+  },
+  "decider": {
+   "injected": false,
+   "gate": "decider:0.44",
+   "uncertain": false,
+   "split": null,
+   "ms": 557.4360368773341
+  }
+ },
+ {
+  "kind": "personal (held out)",
+  "query": "Pick a board game for our game night.",
+  "cold": "decider",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.86",
+   "uncertain": false,
+   "split": null,
+   "ms": 955.807777820155
+  },
+  "choice-recheck": {
+   "injected": true,
+   "gate": "choice:g0.12,n0.19,m0.70",
+   "uncertain": false,
+   "split": [
+    5,
+    50
+   ],
+   "ms": 1893.8208969775587
+  }
+ }
+]

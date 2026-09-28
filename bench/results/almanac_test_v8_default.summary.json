@@ -1,0 +1,52 @@
+{
+  "n": 199,
+  "accuracy": 0.94,
+  "areas": {
+    "absence": 1.0,
+    "change": 0.812,
+    "clocks": 0.979,
+    "hygiene": 1.0,
+    "plans": 0.917,
+    "provenance": 1.0,
+    "tasks": 0.923
+  },
+  "categories": {
+    "change.count": "2/8",
+    "change.current": "8/8",
+    "change.previous": "16/16",
+    "clocks.believed": "15/16",
+    "clocks.happens": "16/16",
+    "clocks.said": "16/16",
+    "hygiene.injection": "8/8",
+    "hygiene.invented": "8/8",
+    "hygiene.secret": "8/8",
+    "plans.cancelled": "8/8",
+    "plans.happened": "8/8",
+    "plans.unknown": "6/8",
+    "provenance.user": "8/8",
+    "provenance.web": "8/8",
+    "tasks.failed": "13/16",
+    "tasks.how": "16/16",
+    "tasks.source": "7/7"
+  },
+  "quiet": {
+    "n": 16,
+    "memory_injected_on": 0,
+    "mean_injected_chars": 0.0
+  },
+  "secrets": {
+    "n": 8,
+    "kept": 0,
+    "unknown": 0,
+    "repeated": 0
+  },
+  "mean_context_chars": 2273,
+  "mean_seconds": 1.26,
+  "adapter": "sophia",
+  "options": {
+    "embed": "nomic-embed",
+    "api": "openai"
+  },
+  "reader": "qwen35-9b",
+  "judge": "qwen35-9b"
+}

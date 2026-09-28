@@ -30,6 +30,24 @@ _ASKS_AGENT = re.compile(r"\b(?:you|you've|you had)\s+(?:said|told|recommended|s
                          r"\bdid you\s+(?:say|tell|recommend|suggest|mention|give|list)\b|"
                          r"\byour\s+(?:answer|suggestions?|recommendations?|advice|list|reply|explanation)\b", re.I)
 
+# gate=choice: one readout that is both the gate and the per-line split. "general" closes the gate; otherwise the
+# memories' share of the probability says which lines are Relevant and which are only Possible matches
+GATE_QUESTION = ("What does this message need from memory? A memory bears on it when it answers the message or states "
+                 "a fact the reply should take into account.")
+
+
+def gate_options(n: int) -> Dict[str, str]:
+    return {"general": "Nothing: a good reply would be the same for any user (general facts, explanations, writing, "
+                       "calculations, translation or code), so nothing about this user or earlier conversations is "
+                       "needed.",
+            "none_fit": "It is about the user or earlier conversations, but none of these memories bears on it.",
+            **{f"m{i + 1}": f"Memory [{i + 1}] bears on it most directly." for i in range(n)}}
+
+
+# follow-ups whose meaning lives in the conversation ("and the other one?", "what about next week?")
+_REFERENTIAL = re.compile(r"^\s*(?:and|also|what about|how about|so what|then)\b|"
+                          r"\b(?:it|this|those|these|them|the other(?: one)?|that one|the same|again)\b", re.I)
+
 GATE_INSTRUCTIONS = ("At least one memory item is directly relevant to the message: it answers it, or states a fact "
                      "the reply should take into account.")
 
@@ -391,15 +409,55 @@ class Recall:
         return {"entities": walked, "raised_or_added": added}
 
     # ---------------------------------------------------------------- prefetch
+    def _previous_user_line(self, session_id: str) -> str:
+        """The user's last message in this conversation (the current one is captured after the reply)."""
+        r = self.e.store.one("SELECT text FROM windows WHERE session_id=? AND flags NOT LIKE '%assistant%' "
+                             "AND stream='conversation' ORDER BY said DESC LIMIT 1", (session_id,))
+        return (r["text"] if r else "")[-300:]
+
     def prefetch(self, query: str, session_id: str, now: Optional[float] = None) -> Tuple[str, Dict[str, Any]]:
         e, cfg = self.e, self.e.cfg
         t0 = time.perf_counter()
-        items, info = self.candidates(query, cfg["recall_k"], session_id=session_id, now=now)
+        referential = len(query) < 100 and bool(_REFERENTIAL.search(query))
+        search, prev = query, ""
+        if referential:                                   # resolve the follow-up with the previous message
+            prev = self._previous_user_line(session_id)
+            search = f"{prev} {query}".strip() if prev else query
+        items, info = self.candidates(search, cfg["recall_k"], session_id=session_id, now=now)
         top = items[:cfg["gate_top"]]
         gate, decision_id, passed = "none", "", False
+        info["uncertain"] = False
+        relevant: Optional[set] = None                    # gate_split: the lines the gate itself vouched for
         if top:
             if cfg["gate"] == "similarity":                # no model call: the search's own best score decides
                 passed, gate = top[0]["sim"] >= cfg["gate_floor"], f"similarity:{top[0]['sim']:.2f}"
+            elif cfg["gate"] == "choice":
+                # "general" closes the gate (a very strong match always passes); "none fits" outweighing every memory
+                # marks the whole block as possible matches; otherwise memories with a real share are Relevant
+                try:
+                    state = {**({"previous message": prev} if prev else {}), "message": query,
+                             "memories": [f"[{i + 1}] {self.short(it)}" for i, it in enumerate(top)]}
+                    # read the reverse order too when the first reading is unsure, but only if the average of the
+                    # two could land on the other side of the cutoff (below 2c - 1 it can't: the gate opens anyway)
+                    band, cut = cfg["gate_recheck"], cfg["gate_general"]
+                    lo = max(band, 2 * cut - 1)
+                    ans = e.decider.choice(state, GATE_QUESTION, gate_options(len(top)),
+                                           permutations=cfg["gate_permutations"],
+                                           recheck=(lambda p: lo <= p["general"] <= 1 - band) if band > 0 else None)
+                    decision_id, pr = ans.decision_id, ans.probabilities
+                    mem = [pr[f"m{i + 1}"] for i in range(len(top))]
+                    mass = sum(mem)
+                    passed = top[0]["sim"] >= cfg["skip_gate"] or pr["general"] < cfg["gate_general"]
+                    info["uncertain"] = passed and pr["none_fit"] >= mass
+                    if passed and cfg["gate_split"] and not info["uncertain"]:
+                        relevant = {(it["kind"], it["id"]) for it, p in zip(top, mem)
+                                    if p / max(mass, 1e-12) >= cfg["split_min"]}
+                    gate = f"choice:g{pr['general']:.2f},n{pr['none_fit']:.2f},m{mass:.2f}"
+                    e.clear_degraded("decider")
+                except (DeciderError, Exception) as ex:
+                    e.set_degraded("decider", str(ex))
+                    passed = top[0]["sim"] >= cfg["skip_gate"]      # without the decider, only a strong match
+                    gate = "degraded"
             elif top[0]["sim"] >= cfg["skip_gate"]:
                 passed, gate = True, f"skip:{top[0]['sim']:.2f}"
             else:
@@ -413,15 +471,21 @@ class Recall:
                 except (DeciderError, Exception) as ex:
                     e.set_degraded("decider", str(ex))
                     gate = "degraded"
+        info["referential"] = referential
         chosen = self.select(items[:max(cfg["inject_top"], 1)], agent_asked=info.get("asks_agent", False)) if passed else []
-        text = self.format(chosen, cfg["inject_chars"], cfg["inject_order"]) if chosen else ""
+        text = (self.format(chosen, cfg["inject_chars"], cfg["inject_order"], info["uncertain"], relevant)
+                if chosen else "")
+        if relevant is not None:
+            info["split"] = [sum((it["kind"], it["id"]) in relevant for it in chosen), len(chosen)]
         info.update({"gate": gate, "passed": passed, "n": len(chosen),
                      "ms": round((time.perf_counter() - t0) * 1000)})
         inj_id = sha(session_id, query, time.time())
         e.store.x("""INSERT INTO injections(id,session_id,query,items,gate,decision_id,said) VALUES(?,?,?,?,?,?,?)""",
                   (inj_id, session_id, T.redact(query)[0][:2000],
                    json.dumps([{"kind": it["kind"], "id": it["id"], "sim": round(it["sim"], 4),
-                               "assistant": "assistant" in it.get("flags", "")} for it in chosen]),
+                               "assistant": "assistant" in it.get("flags", ""),
+                               **({"vouched": (it["kind"], it["id"]) in relevant} if relevant is not None else {})}
+                               for it in chosen]),
                    json.dumps({"gate": gate, "passed": passed, "top_sim": round(top[0]["sim"], 4) if top else None,
                                "candidates": [it["id"] for it in top]}),
                    decision_id, time.time()))
@@ -470,13 +534,20 @@ class Recall:
         return items[:n]
 
     @staticmethod
-    def format(items: List[Dict[str, Any]], budget: int, order: str = "rank") -> str:
+    def format(items: List[Dict[str, Any]], budget: int, order: str = "rank", uncertain: bool = False,
+               relevant: Optional[set] = None) -> str:
         """The injected block. Items are chosen best-first until the budget is spent; ``order="time"`` then lists
-        them by date under a heading per day, which makes counting and ordering across conversations easier."""
+        them by date under a heading per day, which makes counting and ordering across conversations easier.
+        ``relevant``: the (kind, id) of lines the gate vouched for; they go under "Relevant" and the rest under
+        "Possible matches", so a doubtful line never casts doubt on a confident one."""
         lines = ["Sophia memory — verbatim evidence from earlier conversations and reading "
                  "(dates are when it was said; treat assistant-authored lines as weaker evidence):"]
+        if uncertain:                                     # the gate judged that none of these answers the message
+            lines[0] = ("Sophia memory — possible matches only: less certain; rely on one only if it clearly answers "
+                        "the message (dates are when it was said; treat assistant-authored lines as weaker evidence):")
         used = len(lines[0])
         said: List[float] = []
+        vouched: List[bool] = []
         for it in items:
             c = it.get("credit") or {}
             nums = []
@@ -492,6 +563,7 @@ class Recall:
                     break
                 lines.append(line)
                 said.append(it.get("said") or 0.0)
+                vouched.append(relevant is None or (it["kind"], it["id"]) in relevant)
                 used += len(line) + 1
                 continue
             if it["kind"] == "fact":
@@ -524,15 +596,29 @@ class Recall:
                 break
             lines.append(line)
             said.append(it.get("said") or 0.0)
+            vouched.append(relevant is None or (it["kind"], it["id"]) in relevant)
             used += len(line) + 1
         if len(lines) == 1:
             return ""
-        if order == "time":
-            head, body, day = lines[0][:-1] + ", listed by date):", [], None
-            for t, line in sorted(zip(said, lines[1:]), key=lambda x: x[0]):
+        head = lines[0][:-2] + ", listed by date):" if order == "time" else lines[0]
+
+        def listed(entries):
+            if order != "time":
+                return [line for _, line in entries]
+            body, day = [], None
+            for t, line in sorted(entries, key=lambda x: x[0]):
                 if _date(t) != day:
                     day = _date(t)
                     body.append(f"{day}:")
                 body.append(line)
-            return "\n".join([head] + body)
-        return "\n".join(lines)
+            return body
+        entries = list(zip(said, lines[1:]))
+        if relevant is None or all(vouched):
+            return "\n".join([head] + listed(entries))
+        sure = [x for x, v in zip(entries, vouched) if v]
+        maybe = [x for x, v in zip(entries, vouched) if not v]
+        out = [head]
+        if sure:
+            out += ["Relevant:"] + listed(sure)
+        out += ["Possible matches (less certain; rely on one only if it clearly answers the message):"] + listed(maybe)
+        return "\n".join(out)

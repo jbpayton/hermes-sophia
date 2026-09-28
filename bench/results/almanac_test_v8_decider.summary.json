@@ -1,0 +1,53 @@
+{
+  "n": 199,
+  "accuracy": 0.93,
+  "areas": {
+    "absence": 1.0,
+    "change": 0.75,
+    "clocks": 0.979,
+    "hygiene": 1.0,
+    "plans": 0.875,
+    "provenance": 1.0,
+    "tasks": 0.949
+  },
+  "categories": {
+    "change.count": "1/8",
+    "change.current": "8/8",
+    "change.previous": "15/16",
+    "clocks.believed": "15/16",
+    "clocks.happens": "16/16",
+    "clocks.said": "16/16",
+    "hygiene.injection": "8/8",
+    "hygiene.invented": "8/8",
+    "hygiene.secret": "8/8",
+    "plans.cancelled": "8/8",
+    "plans.happened": "8/8",
+    "plans.unknown": "5/8",
+    "provenance.user": "8/8",
+    "provenance.web": "8/8",
+    "tasks.failed": "14/16",
+    "tasks.how": "16/16",
+    "tasks.source": "7/7"
+  },
+  "quiet": {
+    "n": 16,
+    "memory_injected_on": 7,
+    "mean_injected_chars": 1304.1
+  },
+  "secrets": {
+    "n": 8,
+    "kept": 0,
+    "unknown": 0,
+    "repeated": 0
+  },
+  "mean_context_chars": 2072,
+  "mean_seconds": 1.48,
+  "adapter": "sophia",
+  "options": {
+    "gate": "decider",
+    "embed": "nomic-embed",
+    "api": "openai"
+  },
+  "reader": "qwen35-9b",
+  "judge": "qwen35-9b"
+}

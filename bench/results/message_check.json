@@ -1,0 +1,3395 @@
+[
+ {
+  "message": "How many bikes do I own?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.3313604907307801,
+  "self-contained_flip": false,
+  "not-about-user": 0.4500565651190569,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What was my previous stance on spirituality?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.09295936374876035,
+  "self-contained_flip": false,
+  "not-about-user": 0.31554456999514524,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "Where did I buy my new bookshelf from?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.3248933821652089,
+  "self-contained_flip": false,
+  "not-about-user": 0.22950406020791767,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Where did I attend my cousin's wedding?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.2171762121373385,
+  "self-contained_flip": false,
+  "not-about-user": 0.1733492794057213,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What brand of shampoo do I currently use?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.07925822702316776,
+  "self-contained_flip": false,
+  "not-about-user": 0.2645183145761294,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What color did I repaint my bedroom walls?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.1593776972137566,
+  "self-contained_flip": false,
+  "not-about-user": 0.2899040366449249,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How long did Alex marinate the BBQ ribs in special sauce?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.4731077821345899,
+  "self-contained_flip": true,
+  "not-about-user": 0.7841612256316701,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What size is my new Samsung TV?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.3982638707143224,
+  "self-contained_flip": false,
+  "not-about-user": 0.5344631184994055,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "I'm planning to visit Bandung again and I was wondering if you could remind me of the name of that restaurant in Cihampelas Walk that serves a great Nasi Goreng?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.1013678295873226,
+  "self-contained_flip": false,
+  "not-about-user": 0.2505805533387453,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I wanted to follow up on our previous conversation about natural remedies for dark circles under the eyes. You mentioned applying tomato juice mixed with lemon juice, how long did you say I should leave it on for?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.06777299079085569,
+  "self-contained_flip": false,
+  "not-about-user": 0.13698999546571988,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Can you remind me what was the average improvement in framerate when using the Hardware-Aware Modular Training (HAMT) agent in the 'To Adapt or Not to Adapt? Real-Time Adaptation for Semantic Segmentation' submission?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.4856880129161079,
+  "self-contained_flip": true,
+  "not-about-user": 0.9021938324452469,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I wanted to follow up on our previous conversation about private sector businesses in Chaudhary. Can you remind me of the company that employs over 40,000 people in the rug-manufacturing industry?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.11225253261707849,
+  "self-contained_flip": false,
+  "not-about-user": 0.47365695204371683,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "I'm going back to our previous conversation about the children's book on dinosaurs. Can you remind me what color was the scaly body of the Plesiosaur in the image?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.06406296684236484,
+  "self-contained_flip": false,
+  "not-about-user": 0.21059488436008822,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I wanted to follow up on our previous conversation about the fusion breakthrough at Lawrence Livermore National Laboratory. Can you remind me who is the President's Chief Advisor for Science and Technology mentioned in the article?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.10231457335532204,
+  "self-contained_flip": false,
+  "not-about-user": 0.6133836941660198,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "I wanted to follow up on our previous conversation about front-end and back-end development. Can you remind me of the specific back-end programming languages you recommended I learn?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.02700638121789481,
+  "self-contained_flip": false,
+  "not-about-user": 0.13542886129589943,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I am planning another theme park weekend; do you have any suggestions?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.20812937746149757,
+  "self-contained_flip": false,
+  "not-about-user": 0.4197453556853007,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "Can you suggest a hotel for my upcoming trip to Miami?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.28309133454080654,
+  "self-contained_flip": false,
+  "not-about-user": 0.4301985608984302,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I've been having trouble with the battery life on my phone lately. Any tips?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.12729333139424695,
+  "self-contained_flip": false,
+  "not-about-user": 0.30789887946300804,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I've been feeling a bit stuck with my paintings lately. Do you have any ideas on how I can find new inspiration?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.06353802294112262,
+  "self-contained_flip": false,
+  "not-about-user": 0.17968029286078033,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is the total number of online courses I've completed?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.3661307590031689,
+  "self-contained_flip": false,
+  "not-about-user": 0.3312951618314598,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many babies were born to friends and family members in the last few months?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.49844191250979286,
+  "self-contained_flip": true,
+  "not-about-user": 0.6940011345022041,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many pages do I have left to read in 'The Nightingale'?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.5036949439151156,
+  "self-contained_flip": true,
+  "not-about-user": 0.8609030069475014,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many bikes did I service or plan to service in March?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.36920801726962627,
+  "self-contained_flip": false,
+  "not-about-user": 0.20468956934773574,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many total pieces of writing have I completed since I started writing again three weeks ago, including short stories, poems, and pieces for the writing challenge?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.16015987482937502,
+  "self-contained_flip": false,
+  "not-about-user": 0.2187244968042123,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is the average age of me, my parents, and my grandparents?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.22401007110325674,
+  "self-contained_flip": false,
+  "not-about-user": 0.49639399316009913,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many rare items do I have in total?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.40710113801920267,
+  "self-contained_flip": true,
+  "not-about-user": 0.34996014880933196,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many different cuisines have I learned to cook or tried out in the past few months?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.12882029913802961,
+  "self-contained_flip": false,
+  "not-about-user": 0.17936074493759746,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many items of clothing do I need to pick up or return from a store?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.3085945131562028,
+  "self-contained_flip": false,
+  "not-about-user": 0.474675484993217,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "How many music albums or EPs have I purchased or downloaded?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.09451857765535199,
+  "self-contained_flip": false,
+  "not-about-user": 0.32919147932106224,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is the total cost of the new food bowl, measuring cup, dental chews, and flea and tick collar I got for Max?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.47735266803710963,
+  "self-contained_flip": true,
+  "not-about-user": 0.5611496782686576,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What is the minimum amount I could get if I sold the vintage diamond necklace and the antique vanity?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.3755619582213221,
+  "self-contained_flip": true,
+  "not-about-user": 0.4645644990913905,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What is the total number of views on my most popular videos on YouTube and TikTok?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.3628721917628861,
+  "self-contained_flip": false,
+  "not-about-user": 0.3987328770093232,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "How many fish are there in my 30-gallon tank?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.3971691065398737,
+  "self-contained_flip": false,
+  "not-about-user": 0.5667932342135686,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many online courses have I completed in total?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.21036153263329532,
+  "self-contained_flip": false,
+  "not-about-user": 0.2345538867962178,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What was the page count of the two novels I finished in January and March?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.46376227663594544,
+  "self-contained_flip": true,
+  "not-about-user": 0.3252137632969398,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many weeks passed between the day I bought my new tennis racket and the day I received it?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.362405451390322,
+  "self-contained_flip": true,
+  "not-about-user": 0.3006362847690689,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many months have passed since I last visited a museum with a friend?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.14465804492629183,
+  "self-contained_flip": false,
+  "not-about-user": 0.1616265296480582,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is the order of the concerts and musical events I attended in the past two months, starting from the earliest?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.1725484127010032,
+  "self-contained_flip": false,
+  "not-about-user": 0.3464274926160392,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "I mentioned that I participated in an art-related event two weeks ago. Where was that event held at?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.04902011497755827,
+  "self-contained_flip": false,
+  "not-about-user": 0.16840882810028487,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many days had passed since I started taking ukulele lessons when I decided to take my acoustic guitar to the guitar tech for servicing?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.40204347170408883,
+  "self-contained_flip": true,
+  "not-about-user": 0.2749263469132631,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many weeks had passed since I recovered from the flu when I went on my 10th jog outdoors?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.46264970358726115,
+  "self-contained_flip": true,
+  "not-about-user": 0.23900459860007137,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many days did it take for me to find a house I loved after starting to work with Rachel?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.31886084680115256,
+  "self-contained_flip": false,
+  "not-about-user": 0.3342290968647442,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many charity events did I participate in before the 'Run for the Cure' event?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.09795053416422397,
+  "self-contained_flip": false,
+  "not-about-user": 0.19414719389715845,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What was the airline that I flied with on Valentine's day?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.09425256614091526,
+  "self-contained_flip": false,
+  "not-about-user": 0.17701628123589125,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many days before I bought the iPhone 13 Pro did I attend the Holiday Market?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.17975478709533915,
+  "self-contained_flip": false,
+  "not-about-user": 0.1509234797395892,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many days passed between the day I replaced my spark plugs and the day I participated in the Turbocharged Tuesdays auto racking event?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.3509237506462258,
+  "self-contained_flip": false,
+  "not-about-user": 0.2242992613128098,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many days had passed since I finished reading 'The Seven Husbands of Evelyn Hugo' when I attended the book reading event at the local library, where the author of 'The Silent Patient' is discussing her latest thriller novel?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.22524898302691426,
+  "self-contained_flip": false,
+  "not-about-user": 0.45530175230668835,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "How many days ago did I participate in the 5K charity run?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.07510937747208887,
+  "self-contained_flip": false,
+  "not-about-user": 0.13286061551347716,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Which event happened first, my cousin's wedding or Michael's engagement party?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.3922578705240157,
+  "self-contained_flip": true,
+  "not-about-user": 0.3618517901188887,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is the order of the three events: 'I signed up for the rewards program at ShopRite', 'I used a Buy One Get One Free coupon on Luvs diapers at Walmart', and 'I redeemed $12 cashback for a $10 Amazon gift card from Ibotta'?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.4654965681504347,
+  "self-contained_flip": true,
+  "not-about-user": 0.3899550346419145,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is the order of the sports events I watched in January?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.3420147393494825,
+  "self-contained_flip": false,
+  "not-about-user": 0.26420172067943126,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many Crash Course videos have I watched in the past few weeks?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.1315491171814966,
+  "self-contained_flip": false,
+  "not-about-user": 0.1616830763059713,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How often do I play tennis with my friends at the local park previously? How often do I play now?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.1253695980203423,
+  "self-contained_flip": false,
+  "not-about-user": 0.3337472619397341,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "For the coffee-to-water ratio in my French press, did I switch to more water per tablespoon of coffee, or less?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.353142317535933,
+  "self-contained_flip": false,
+  "not-about-user": 0.6027984357178666,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many free night's stays can I redeem at any Hilton property with my accumulated points?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.6111530158076383,
+  "self-contained_flip": true,
+  "not-about-user": 0.7165332927079792,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What was my previous personal best time for the charity 5K run?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.13695784031342215,
+  "self-contained_flip": false,
+  "not-about-user": 0.23081954889255912,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many new postcards have I added to my collection since I started collecting again?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.2195834570090167,
+  "self-contained_flip": false,
+  "not-about-user": 0.20979561351084508,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many bikes do I currently own?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.2475383444454068,
+  "self-contained_flip": false,
+  "not-about-user": 0.5603649500989902,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Where do I currently keep my old sneakers?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.09788773810178417,
+  "self-contained_flip": false,
+  "not-about-user": 0.18603690045603394,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How often do I play table tennis with my friends at the local park?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.24244781310878127,
+  "self-contained_flip": false,
+  "not-about-user": 0.3065020973096896,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Can you suggest some accessories that would complement my current photography setup?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.24939471394896706,
+  "self-contained_flip": false,
+  "not-about-user": 0.7093103175173965,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What should I serve for dinner this weekend with my homegrown ingredients?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.28996111489730103,
+  "self-contained_flip": false,
+  "not-about-user": 0.2793739531205349,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Can you suggest some useful accessories for my phone?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.4377999564427829,
+  "self-contained_flip": false,
+  "not-about-user": 0.8101198730351311,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I've been having trouble with the battery life on my phone lately. Any tips?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.13982439999509488,
+  "self-contained_flip": false,
+  "not-about-user": 0.2991774088075416,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I\u2019m a bit anxious about getting around Tokyo. Do you have any helpful tips?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.1994841041767775,
+  "self-contained_flip": false,
+  "not-about-user": 0.4523996442520647,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Can you suggest a hotel for my upcoming trip to Miami?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.28309133454080654,
+  "self-contained_flip": false,
+  "not-about-user": 0.39494840477776944,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Can you suggest some activities that I can do in the evening?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.3128060192463829,
+  "self-contained_flip": false,
+  "not-about-user": 0.6687999330083845,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I've been thinking about making a cocktail for an upcoming get-together, but I'm not sure which one to choose. Any suggestions?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.11662408648555703,
+  "self-contained_flip": false,
+  "not-about-user": 0.5559055446640236,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I noticed my bike seems to be performing even better during my Sunday group rides. Could there be a reason for this?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.08914336759078073,
+  "self-contained_flip": false,
+  "not-about-user": 0.35749692558221724,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Can you recommend a show or movie for me to watch tonight?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.28444047893241486,
+  "self-contained_flip": false,
+  "not-about-user": 0.7365666289777613,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Can you recommend some interesting cultural events happening around me this weekend?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.16379751990273408,
+  "self-contained_flip": false,
+  "not-about-user": 0.47478650999685745,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "I've been feeling like my chocolate chip cookies need something extra. Any advice?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.1720820522000339,
+  "self-contained_flip": false,
+  "not-about-user": 0.35589908006827087,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I was thinking of trying a new coffee creamer recipe. Any recommendations?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.31350718061903743,
+  "self-contained_flip": false,
+  "not-about-user": 0.5416881869748906,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "I was thinking about rearranging the furniture in my bedroom this weekend. Any tips?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.12105707988823337,
+  "self-contained_flip": false,
+  "not-about-user": 0.19498203474187226,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I've been feeling a bit stuck with my paintings lately. Do you have any ideas on how I can find new inspiration?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.0736205811438533,
+  "self-contained_flip": false,
+  "not-about-user": 0.21981650148013718,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Can you recommend some recent publications or conferences that I might find interesting?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.47658949617665786,
+  "self-contained_flip": true,
+  "not-about-user": 0.8119701266668096,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I've been sneezing quite a bit lately. Do you think it might be my living room?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.08254811278899334,
+  "self-contained_flip": false,
+  "not-about-user": 0.30332747594725473,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Can you recommend some resources where I can learn more about video editing?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.4592870799651945,
+  "self-contained_flip": true,
+  "not-about-user": 0.8943113522830981,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I'm getting excited about my visit to the music store this weekend. Any tips on what to look for in a new guitar?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.11610260484183288,
+  "self-contained_flip": false,
+  "not-about-user": 0.2311237867773474,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I'm planning a trip to Denver soon. Any suggestions on what to do there?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.29317179084389355,
+  "self-contained_flip": false,
+  "not-about-user": 0.35350143651484844,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "My kitchen's becoming a bit of a mess again. Any tips for keeping it clean?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.26520893094267856,
+  "self-contained_flip": false,
+  "not-about-user": 0.4013736691493798,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I've got some free time tonight, any documentary recommendations?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.305090181017137,
+  "self-contained_flip": false,
+  "not-about-user": 0.5478982142383864,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "I'm planning my meal prep next week, any suggestions for new recipes?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.24945422560576683,
+  "self-contained_flip": false,
+  "not-about-user": 0.3970344582507515,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I've been struggling with my slow cooker recipes. Any advice on getting better results?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.12721508968903633,
+  "self-contained_flip": false,
+  "not-about-user": 0.3314772811047013,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I'm thinking of inviting my colleagues over for a small gathering. Any tips on what to bake?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.2710915611231396,
+  "self-contained_flip": false,
+  "not-about-user": 0.5342112189397044,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "I am planning another theme park weekend; do you have any suggestions?",
+  "kind": "needs memory",
+  "src": "lme",
+  "self-contained": 0.16985810815672026,
+  "self-contained_flip": false,
+  "not-about-user": 0.4179596032389262,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What event did John volunteer at last weekend?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.27681503819827175,
+  "self-contained_flip": false,
+  "not-about-user": 0.5765835311300491,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "Which  classical musicians does Melanie enjoy listening to?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.3297833928234772,
+  "self-contained_flip": false,
+  "not-about-user": 0.585415875226897,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Why does John say he feels stuck and questioning his decisions and goals?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.2482322248523998,
+  "self-contained_flip": false,
+  "not-about-user": 0.4963469419747566,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "How long did it take for Jon to open his studio?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.40417394832797054,
+  "self-contained_flip": true,
+  "not-about-user": 0.7301465943810682,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What natural disaster affected John's old area on 7 July, 2023?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4993883432066033,
+  "self-contained_flip": true,
+  "not-about-user": 0.6277129964549053,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How does John describe the camping trip with Max?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.26153302465225925,
+  "self-contained_flip": false,
+  "not-about-user": 0.517608056980272,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What emotions did John feel during the small party with the veterans?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.23251444909702473,
+  "self-contained_flip": false,
+  "not-about-user": 0.7045386083088374,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Maria get in a car accident?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.41214628111713425,
+  "self-contained_flip": true,
+  "not-about-user": 0.7194123632882052,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Would Caroline still want to pursue counseling as a career if she hadn't received support growing up?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.14382581361302765,
+  "self-contained_flip": false,
+  "not-about-user": 0.7023558837523111,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Maria go to the beach?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.3339606488708492,
+  "self-contained_flip": false,
+  "not-about-user": 0.6342924767336899,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What did Caroline make for a local church?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.6536761989750473,
+  "self-contained_flip": true,
+  "not-about-user": 0.7651500546366987,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What did John and the veterans do during the small party?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.39400728261661333,
+  "self-contained_flip": true,
+  "not-about-user": 0.7157514617929813,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Melanie read the book \"nothing is impossible\"?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5037265619817887,
+  "self-contained_flip": true,
+  "not-about-user": 0.7137539946437743,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Melanie buy the figurines?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.44866613104043207,
+  "self-contained_flip": true,
+  "not-about-user": 0.7559590979671411,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Caroline encounter people on a hike and have a negative experience?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.43984077827482926,
+  "self-contained_flip": true,
+  "not-about-user": 0.5963116897391292,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "When did Gina go to a dance class with a group of friends?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.45637734253387263,
+  "self-contained_flip": true,
+  "not-about-user": 0.6632943310443373,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What items des John mention having as a child?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.15051655275047454,
+  "self-contained_flip": false,
+  "not-about-user": 0.5665314933836765,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What activity did Caroline used to do with her dad?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.38814716464584514,
+  "self-contained_flip": true,
+  "not-about-user": 0.7364383620902348,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What kind of dance piece did Gina's team perform to win first place?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5035719710993405,
+  "self-contained_flip": true,
+  "not-about-user": 0.7929627691046337,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Would John be open to moving to another country?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.10338630490726536,
+  "self-contained_flip": false,
+  "not-about-user": 0.5332603030033598,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What are Melanie's pets' names?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.41278036278044017,
+  "self-contained_flip": true,
+  "not-about-user": 0.8285218076119643,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What are Maria's dogs' names?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.3752300239324913,
+  "self-contained_flip": true,
+  "not-about-user": 0.8348268440909759,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Who did John work with to raise awareness and funds for victims of domestic abuse?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.6762620891200334,
+  "self-contained_flip": true,
+  "not-about-user": 0.8252416584224773,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When is Melanie planning on going camping?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.19645032259928233,
+  "self-contained_flip": false,
+  "not-about-user": 0.5761238529626493,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What kind of pot did Mel and her kids make with clay?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5527571814917867,
+  "self-contained_flip": true,
+  "not-about-user": 0.656579062410337,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What did Jon and Gina compare their entrepreneurial journeys to?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5536345674644515,
+  "self-contained_flip": true,
+  "not-about-user": 0.58229063215546,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What happened to Melanie's son on their road trip?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.24943861760172625,
+  "self-contained_flip": false,
+  "not-about-user": 0.7811964289432654,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What was grandma's gift to Caroline?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.35951039320912603,
+  "self-contained_flip": false,
+  "not-about-user": 0.6613208711512075,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What did Gina find for her clothing store on 1 February, 2023?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.513646888534856,
+  "self-contained_flip": true,
+  "not-about-user": 0.6747783365894601,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Would Caroline want to move back to her home country soon?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.21852893775964924,
+  "self-contained_flip": false,
+  "not-about-user": 0.6551716234348337,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Caroline join a mentorship program?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5435636283475522,
+  "self-contained_flip": true,
+  "not-about-user": 0.6497431034558594,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What book did Melanie read from Caroline's suggestion?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.44358688257491663,
+  "self-contained_flip": true,
+  "not-about-user": 0.6512779232018169,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What areas is John particularly interested in for policymaking?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.24905600394585714,
+  "self-contained_flip": false,
+  "not-about-user": 0.6012664977153215,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "How often does John get to see sunsets like the one he shared with Maria?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.27362583259973666,
+  "self-contained_flip": false,
+  "not-about-user": 0.7816839252265322,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What does Gina say to Jon about the grand opening?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.20296496822420584,
+  "self-contained_flip": false,
+  "not-about-user": 0.4417250524511552,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "Would Melanie likely enjoy the song \"The Four Seasons\" by Vivaldi?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.3289762434391356,
+  "self-contained_flip": false,
+  "not-about-user": 0.6959985568382143,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Caroline go biking with friends?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.45922229972578466,
+  "self-contained_flip": true,
+  "not-about-user": 0.6360646653693125,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "When did Caroline go to the LGBTQ support group?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.44563757873425497,
+  "self-contained_flip": true,
+  "not-about-user": 0.5932049734138894,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What fields would Caroline be likely to pursue in her educaton?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.2957321563192192,
+  "self-contained_flip": false,
+  "not-about-user": 0.758016024229169,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is Melanie's reason for getting into running?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.303803614939506,
+  "self-contained_flip": false,
+  "not-about-user": 0.6828554637488743,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Why did John feel inspired to join the military after the visit to the hospital?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.1972148117170063,
+  "self-contained_flip": false,
+  "not-about-user": 0.8632177680134376,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How does Melanie prioritize self-care?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.39186774247553424,
+  "self-contained_flip": true,
+  "not-about-user": 0.8366694647224849,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What are Caroline's plans for the summer?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.24531672209533234,
+  "self-contained_flip": false,
+  "not-about-user": 0.7330870723581233,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What was Melanie's reaction to her children enjoying the Grand Canyon?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.3791456132375662,
+  "self-contained_flip": true,
+  "not-about-user": 0.7008362182941585,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When was Jon in Paris?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.45790382615641606,
+  "self-contained_flip": true,
+  "not-about-user": 0.7311176368809365,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Did Melanie make the black and white bowl in the photo?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.21292263369196932,
+  "self-contained_flip": false,
+  "not-about-user": 0.6834886799853879,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When was John's old area hit with a flood?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4511682467067397,
+  "self-contained_flip": true,
+  "not-about-user": 0.7317298474657415,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Where did John explore on a road trip last year?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.3425285106412108,
+  "self-contained_flip": false,
+  "not-about-user": 0.836046362534449,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What book did Caroline recommend to Melanie?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.2683418297652215,
+  "self-contained_flip": false,
+  "not-about-user": 0.6495200231941405,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What kind of activities did Maria do at the picnic with her church friends?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.27870838526049463,
+  "self-contained_flip": false,
+  "not-about-user": 0.8090542019725396,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What kind of place does Caroline want to create for people?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.3501985409519167,
+  "self-contained_flip": false,
+  "not-about-user": 0.47746783165408785,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What does Gina say about the dancers in the photo?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.20936995667952285,
+  "self-contained_flip": false,
+  "not-about-user": 0.6360480567649299,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When Jon has lost his job as a banker?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.3066354593115149,
+  "self-contained_flip": false,
+  "not-about-user": 0.641255825808175,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Where did Caroline move from 4 years ago?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5284263158594685,
+  "self-contained_flip": true,
+  "not-about-user": 0.7238118397047131,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Gina design a limited collection of hoodies?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.37440697337793694,
+  "self-contained_flip": true,
+  "not-about-user": 0.7122395871510787,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What does Jon's dance make him?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4426237633362252,
+  "self-contained_flip": true,
+  "not-about-user": 0.6621560219297586,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What exciting news did Maria share on 16 June, 2023?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4172715590725727,
+  "self-contained_flip": true,
+  "not-about-user": 0.6022111410869907,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Melanie's family go on a roadtrip?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5333617290632736,
+  "self-contained_flip": true,
+  "not-about-user": 0.6891296994057139,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What setback did Melanie face in October 2023?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5584633753467036,
+  "self-contained_flip": true,
+  "not-about-user": 0.7934069726413794,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Caroline go to a pride parade during the summer?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4638748868171416,
+  "self-contained_flip": true,
+  "not-about-user": 0.5822546205447252,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "Why did Gina decide to start her own clothing store?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.33350136775283873,
+  "self-contained_flip": true,
+  "not-about-user": 0.8756738330901148,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How do Jon and Gina both like to destress?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5553154128748786,
+  "self-contained_flip": true,
+  "not-about-user": 0.507583128618289,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What did Jean go through before meeting Maria?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.2855075709323541,
+  "self-contained_flip": false,
+  "not-about-user": 0.7715922787224208,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How did the extra funding help the school shown in the photo shared by John?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.16574530452783406,
+  "self-contained_flip": false,
+  "not-about-user": 0.7082260783663431,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Melanie paint a sunrise?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4944611545959601,
+  "self-contained_flip": true,
+  "not-about-user": 0.7673570124280799,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What kind of activities did John and his mates from the online group do as part of their service efforts?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5051594504748561,
+  "self-contained_flip": true,
+  "not-about-user": 0.8444514013218332,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Jon start reading \"The Lean Startup\"?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.495826965564086,
+  "self-contained_flip": true,
+  "not-about-user": 0.7421416017105531,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How often does John work out with his family?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.25846861699698126,
+  "self-contained_flip": false,
+  "not-about-user": 0.44594108318752224,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When is Jon's group performing at a festival?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4386765845439966,
+  "self-contained_flip": true,
+  "not-about-user": 0.6364146464655892,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Which cities has Jon visited?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.38360637092437494,
+  "self-contained_flip": true,
+  "not-about-user": 0.739382798467431,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Why did Jon decide to start his dance studio?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.38051395345942884,
+  "self-contained_flip": true,
+  "not-about-user": 0.8440367615461584,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Maria's grandmother pass away?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.3730194240574604,
+  "self-contained_flip": false,
+  "not-about-user": 0.7023680831578338,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Which city have both Jean and John visited?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4173023825725506,
+  "self-contained_flip": true,
+  "not-about-user": 0.7697438028462171,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is Melanie's hand-painted bowl a reminder of?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.43185150983676046,
+  "self-contained_flip": true,
+  "not-about-user": 0.6760559214063466,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What did Maria make for her home to remind her of a trip to England?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.3955788263509794,
+  "self-contained_flip": true,
+  "not-about-user": 0.7399897235525005,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What might John's financial status be?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.2706817396770685,
+  "self-contained_flip": false,
+  "not-about-user": 0.7541314096356577,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How long have Mel and her husband been married?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.435917603448026,
+  "self-contained_flip": true,
+  "not-about-user": 0.6942468392393946,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Melanie go to the pottery workshop?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5704631802875084,
+  "self-contained_flip": true,
+  "not-about-user": 0.6702793218454283,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Who is Melanie a fan of in terms of modern music?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.7480608230038421,
+  "self-contained_flip": false,
+  "not-about-user": 0.8248630759531775,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What did John host for the veterans in May 2023 as part of the project?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5853840529414993,
+  "self-contained_flip": true,
+  "not-about-user": 0.6881862910939821,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How is Maria's new puppy adjusting to its new home?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.13418282544433205,
+  "self-contained_flip": false,
+  "not-about-user": 0.8043402294631481,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How is Gina's store doing?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.27220948868217265,
+  "self-contained_flip": false,
+  "not-about-user": 0.7671998949533976,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Caroline meet up with her friends, family, and mentors?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5076354281181392,
+  "self-contained_flip": true,
+  "not-about-user": 0.6706429772173681,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did John have his first firefighter call-out?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.41161041087989086,
+  "self-contained_flip": true,
+  "not-about-user": 0.7025439221861276,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How does Gina stay confident in her business?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.1896345226754767,
+  "self-contained_flip": false,
+  "not-about-user": 0.6255288727678933,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Jon start learning marketing and analytics tools?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.564837427633513,
+  "self-contained_flip": true,
+  "not-about-user": 0.5979498782180003,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What is Jon's favorite style of dance?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4694489965304082,
+  "self-contained_flip": true,
+  "not-about-user": 0.5617557120480559,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many weeks passed between Maria adopting Coco and Shadow?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.49405127188737896,
+  "self-contained_flip": true,
+  "not-about-user": 0.8561077425953435,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is Caroline's identity?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.3824997621914962,
+  "self-contained_flip": true,
+  "not-about-user": 0.7367324742995787,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What plans does Jon have after receiving advice at the networking event?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.18548403318235163,
+  "self-contained_flip": false,
+  "not-about-user": 0.7014073459131642,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What books has Melanie read?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.38078270541190784,
+  "self-contained_flip": true,
+  "not-about-user": 0.7352396048739978,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What country is Caroline's grandma from?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4683282902623046,
+  "self-contained_flip": true,
+  "not-about-user": 0.6556936362269183,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What event is Maria getting ready for at the shelter on May 25, 2023?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.49726489890189357,
+  "self-contained_flip": true,
+  "not-about-user": 0.6805536507084919,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What instruments does Melanie play?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.6344540639814522,
+  "self-contained_flip": false,
+  "not-about-user": 0.8777449004267079,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Where did Oliver hide his bone once?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5644870704036566,
+  "self-contained_flip": true,
+  "not-about-user": 0.7701413933692072,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What type of volunteering have John and Maria both done?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.22232273896937005,
+  "self-contained_flip": false,
+  "not-about-user": 0.7119342710711614,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Which events has Jon participated in to promote his business venture?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.36476158211997195,
+  "self-contained_flip": true,
+  "not-about-user": 0.7517196588345796,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What events is Maria planning for the homeless shelter funraiser?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.25981704267335637,
+  "self-contained_flip": false,
+  "not-about-user": 0.5510123175034376,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What did John receive a certificate for?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.48319796979819785,
+  "self-contained_flip": true,
+  "not-about-user": 0.7383651090138194,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What states has Maria vacationed at?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.41599514846756824,
+  "self-contained_flip": true,
+  "not-about-user": 0.6009423236407512,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What did Caroline find in her neighborhood during her walk?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.24599534680842794,
+  "self-contained_flip": false,
+  "not-about-user": 0.806624566487739,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did John participate in a 5K charity run?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4724539229278894,
+  "self-contained_flip": true,
+  "not-about-user": 0.7246884410285708,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What subject have Caroline and Melanie both painted?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5005479116044032,
+  "self-contained_flip": true,
+  "not-about-user": 0.7277638507916494,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Jon and Gina decide to collaborate to create dance content?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5435764733302477,
+  "self-contained_flip": true,
+  "not-about-user": 0.7631618667435103,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What did Melanie do after the road trip to relax?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.3908706689103306,
+  "self-contained_flip": true,
+  "not-about-user": 0.7361590799919171,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Where has Melanie camped?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.47072356162142925,
+  "self-contained_flip": true,
+  "not-about-user": 0.6851456509179793,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What did Jon take a trip to Rome for?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5121103826167196,
+  "self-contained_flip": true,
+  "not-about-user": 0.7231876006441422,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Would Melanie be considered an ally to the transgender community?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4314643483929869,
+  "self-contained_flip": true,
+  "not-about-user": 0.7920438368688483,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What are the new shoes that Melanie got used for?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4031251332353474,
+  "self-contained_flip": true,
+  "not-about-user": 0.6312567707661025,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Gina develop a video presentation to teach how to style her fashion pieces? ",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5019026231144069,
+  "self-contained_flip": true,
+  "not-about-user": 0.677938572848984,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Maria take up community work with her church friends?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.47027789773567136,
+  "self-contained_flip": true,
+  "not-about-user": 0.6460362629285339,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Jon visit networking events for his store?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4135114561195614,
+  "self-contained_flip": true,
+  "not-about-user": 0.5742257482272075,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "How many children does Melanie have?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5012985520688608,
+  "self-contained_flip": true,
+  "not-about-user": 0.8562976584933195,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What area was hit by a flood?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4462752731596902,
+  "self-contained_flip": true,
+  "not-about-user": 0.8742889254851038,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What does Caroline's drawing symbolize for her?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.15313644483571281,
+  "self-contained_flip": false,
+  "not-about-user": 0.6001756010913215,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Who supports Caroline when she has a negative experience?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.3278033673258648,
+  "self-contained_flip": false,
+  "not-about-user": 0.7464181193078383,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Gina launch an ad campaign for her store?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4827409379143211,
+  "self-contained_flip": true,
+  "not-about-user": 0.6541603476115573,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Gina team up with a local artist for some cool designs?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4578640390486185,
+  "self-contained_flip": true,
+  "not-about-user": 0.7071418467515995,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Where did Maria get the idea for the castle shadow box in her home?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4003252027818026,
+  "self-contained_flip": true,
+  "not-about-user": 0.7267513053311188,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Why did John start blogging about politics and policies?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.36275478554340873,
+  "self-contained_flip": true,
+  "not-about-user": 0.7624455911612769,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many times has Melanie gone to the beach in 2023?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5251831163994348,
+  "self-contained_flip": true,
+  "not-about-user": 0.7829875611424191,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Melanie go on a hike after the roadtrip?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.2818566553778544,
+  "self-contained_flip": false,
+  "not-about-user": 0.6461441938203176,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What inspired John to join the marching event for veterans' rights?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.23724135281722045,
+  "self-contained_flip": false,
+  "not-about-user": 0.7734345903908726,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Would John be considered a patriotic person?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.36588383263151986,
+  "self-contained_flip": true,
+  "not-about-user": 0.7546969227094975,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What did the charity race raise awareness for?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5907980454904294,
+  "self-contained_flip": true,
+  "not-about-user": 0.8101859360322381,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What does Melanie do to destress?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4992096065701102,
+  "self-contained_flip": true,
+  "not-about-user": 0.6012603173776786,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "When did Caroline join a new activist group?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5172423981071756,
+  "self-contained_flip": true,
+  "not-about-user": 0.7491700975483077,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What does Gina's tattoo symbolize?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.3368960468018248,
+  "self-contained_flip": false,
+  "not-about-user": 0.6493616722152098,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Melanie sign up for a pottery class?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4899117319459284,
+  "self-contained_flip": true,
+  "not-about-user": 0.6722013838084044,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Who performed at the concert at Melanie's daughter's birthday?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4348570368053176,
+  "self-contained_flip": true,
+  "not-about-user": 0.7250790704888473,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Gina mention Shia Labeouf?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.15780800692616478,
+  "self-contained_flip": false,
+  "not-about-user": 0.6572403440064347,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What cause did the 5K charity run organized by John support?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4755783260531937,
+  "self-contained_flip": true,
+  "not-about-user": 0.7414998517939864,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is Caroline excited about in the adoption process?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.421597753394047,
+  "self-contained_flip": true,
+  "not-about-user": 0.4939570066011757,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "Why did Gina combine her clothing business with dance?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.47360772410992724,
+  "self-contained_flip": true,
+  "not-about-user": 0.8372782139750434,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Why did Maria need to help her cousin find a new place to live?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.3603075767018014,
+  "self-contained_flip": true,
+  "not-about-user": 0.8391388392529294,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What inspired Caroline's painting for the art show?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.30162945694314913,
+  "self-contained_flip": false,
+  "not-about-user": 0.702972875044551,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Jon start expanding his studio's social media presence?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4914243404417967,
+  "self-contained_flip": true,
+  "not-about-user": 0.6958087106102009,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What did John recently get promoted to?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4366211762986313,
+  "self-contained_flip": true,
+  "not-about-user": 0.7625031197098591,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What did Melanie paint recently?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4341320835385466,
+  "self-contained_flip": true,
+  "not-about-user": 0.8251405455091625,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is the name of Maria's puppy she got two weeks before August 11, 2023?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5334380143444546,
+  "self-contained_flip": true,
+  "not-about-user": 0.6502171718544081,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Maria donate her car?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5180076733929972,
+  "self-contained_flip": true,
+  "not-about-user": 0.7395692425325788,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Gina get her tattoo?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4786167188998357,
+  "self-contained_flip": true,
+  "not-about-user": 0.6860536901160152,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Caroline give a speech at a school?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.5751016587626432,
+  "self-contained_flip": true,
+  "not-about-user": 0.7675898917948663,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What did Gina say about creating an experience for her customers?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.2831018817069886,
+  "self-contained_flip": false,
+  "not-about-user": 0.5412081757611276,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "How did John describe his kids' reaction at the military memorial?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.2678858948548652,
+  "self-contained_flip": false,
+  "not-about-user": 0.6295082655985185,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What does Maria say she feels when doing upside-down yoga poses?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.450103643524842,
+  "self-contained_flip": true,
+  "not-about-user": 0.7226249136923315,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What topic has John been blogging about recently?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.2333715483627069,
+  "self-contained_flip": false,
+  "not-about-user": 0.6792371924805716,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did Caroline apply to adoption agencies?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.43483028762966736,
+  "self-contained_flip": true,
+  "not-about-user": 0.6311108200748702,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What did Maria participate in last weekend before April 10, 2023?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.17996287258827687,
+  "self-contained_flip": false,
+  "not-about-user": 0.6291472534554515,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What sparked John's interest in improving education and infrastructure in the community?",
+  "kind": "needs memory",
+  "src": "locomo",
+  "self-contained": 0.4294932971856453,
+  "self-contained_flip": true,
+  "not-about-user": 0.692572810983277,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Which city do I live in now?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.08763230325038018,
+  "self-contained_flip": false,
+  "not-about-user": 0.4679749358192046,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "Where did I live before Spokane?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.14285937037500768,
+  "self-contained_flip": false,
+  "not-about-user": 0.3832659653489647,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "How many times have I moved since I first told you where I lived?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.1716655834181032,
+  "self-contained_flip": false,
+  "not-about-user": 0.2533480015609099,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "On June 11, 2024, which city did I live in?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.2064019977827597,
+  "self-contained_flip": false,
+  "not-about-user": 0.4134135664665456,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "On April 13, 2024, which city did I live in?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.1901676644115901,
+  "self-contained_flip": false,
+  "not-about-user": 0.4456872625252398,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "When did I first tell you I was moving to Spokane?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.04196171196321277,
+  "self-contained_flip": false,
+  "not-about-user": 0.1672655443424372,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What was my job before I joined Maple Street School?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.35476973223030595,
+  "self-contained_flip": false,
+  "not-about-user": 0.35602727769952003,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What date did I start at Maple Street School?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.35514648034805874,
+  "self-contained_flip": false,
+  "not-about-user": 0.2219857367326995,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Did I actually go on the trip to Montreal?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.263307811936945,
+  "self-contained_flip": false,
+  "not-about-user": 0.24923927983373018,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did I leave for Montreal?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.14491520079703796,
+  "self-contained_flip": false,
+  "not-about-user": 0.19824999766755697,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Did I go to The Lumineers concert?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.14902011255814895,
+  "self-contained_flip": false,
+  "not-about-user": 0.20815089498520456,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Did I go to my dentist appointment with Dr. Moreau?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.09650696862186328,
+  "self-contained_flip": false,
+  "not-about-user": 0.24218568593678585,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did you first hear about my appointment with Dr. Moreau?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.03566972465155792,
+  "self-contained_flip": false,
+  "not-about-user": 0.303787375819381,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How do you know that the Oak Street pool reopens on June 3?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.3695682905842451,
+  "self-contained_flip": false,
+  "not-about-user": 0.6146658493234327,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Did I tell you who my family doctor is, or did you look it up?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.06542655391105573,
+  "self-contained_flip": false,
+  "not-about-user": 0.09645604015826184,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Have I ever mentioned having a godson?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.21257206342392837,
+  "self-contained_flip": false,
+  "not-about-user": 0.23758605288341633,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What kind of boat do I own?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.22853778892955323,
+  "self-contained_flip": false,
+  "not-about-user": 0.3146808352780837,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How did we free up disk space on the build server last time?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.34266007654088493,
+  "self-contained_flip": false,
+  "not-about-user": 0.7004373790477868,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What didn't work when we tried to free up disk space on the build server?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.484802928903216,
+  "self-contained_flip": true,
+  "not-about-user": 0.6302534751428106,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Where did you learn how to free up disk space on the build server?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.2505807776414425,
+  "self-contained_flip": false,
+  "not-about-user": 0.5585622313930532,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How did we rotate the nginx logs on web-1 last time?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.33251570795734836,
+  "self-contained_flip": false,
+  "not-about-user": 0.6409570076716917,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What didn't work when we tried to rotate the nginx logs on web-1?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.46339503599648013,
+  "self-contained_flip": true,
+  "not-about-user": 0.8040581829285236,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's my favorite color?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.07700793325765128,
+  "self-contained_flip": false,
+  "not-about-user": 0.2686641585096707,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What do you know about my father?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.09085228900373248,
+  "self-contained_flip": false,
+  "not-about-user": 0.32536163081845815,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What was the API key I gave you for the script?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.09931307254190061,
+  "self-contained_flip": false,
+  "not-about-user": 0.5902004277192958,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "Write me a two-line poem about rain.",
+  "kind": "self-contained",
+  "src": "almanac",
+  "self-contained": 0.8173472018001323,
+  "self-contained_flip": false,
+  "not-about-user": 0.8468668330478759,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's the capital of Australia?",
+  "kind": "self-contained",
+  "src": "almanac",
+  "self-contained": 0.6968156544213675,
+  "self-contained_flip": false,
+  "not-about-user": 0.9223151381494149,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Which city do I live in now?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.08763230325038018,
+  "self-contained_flip": false,
+  "not-about-user": 0.4679749358192046,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "Where did I live before Savannah?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.1663565437160227,
+  "self-contained_flip": false,
+  "not-about-user": 0.3491759031890616,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "How many times have I moved since I first told you where I lived?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.1716655834181032,
+  "self-contained_flip": false,
+  "not-about-user": 0.27039530909372217,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "On August 20, 2024, which city did I live in?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.12731640130387603,
+  "self-contained_flip": false,
+  "not-about-user": 0.39631663646653104,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "On May 26, 2024, which city did I live in?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.13150911751439184,
+  "self-contained_flip": false,
+  "not-about-user": 0.3567005909423525,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did I first tell you I was moving to Savannah?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.026847059968559052,
+  "self-contained_flip": false,
+  "not-about-user": 0.18417390474803533,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What was my job before I joined St. Anne's Hospital?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.2914305154939233,
+  "self-contained_flip": false,
+  "not-about-user": 0.48259300391146465,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What date did I start at St. Anne's Hospital?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.23114781622177616,
+  "self-contained_flip": false,
+  "not-about-user": 0.2049389995720386,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Did I actually go on the trip to the Outer Banks?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.314773385870658,
+  "self-contained_flip": false,
+  "not-about-user": 0.3040038876714205,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did I leave for the Outer Banks?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.13193439146420782,
+  "self-contained_flip": false,
+  "not-about-user": 0.227281783114869,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Did I go to The Lumineers concert?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.14902011255814895,
+  "self-contained_flip": false,
+  "not-about-user": 0.20815089498520456,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Did I go to my dentist appointment with Dr. Tanaka?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.0975360287219269,
+  "self-contained_flip": false,
+  "not-about-user": 0.0966382557202631,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did you first hear about my appointment with Dr. Tanaka?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.034499974966937894,
+  "self-contained_flip": false,
+  "not-about-user": 0.22667859035813842,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How do you know that the Grand Theater requires tickets bought online?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.35358878718009895,
+  "self-contained_flip": true,
+  "not-about-user": 0.6761412344399744,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Did I tell you who my family doctor is, or did you look it up?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.07177059141806653,
+  "self-contained_flip": false,
+  "not-about-user": 0.1195619968663981,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Have I ever mentioned having a godson?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.21257206342392837,
+  "self-contained_flip": false,
+  "not-about-user": 0.23758605288341633,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is my dog's name?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.06914675252480468,
+  "self-contained_flip": false,
+  "not-about-user": 0.1939693130946992,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How did we set up the virtualenv for the reports project last time?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.12538722740034186,
+  "self-contained_flip": false,
+  "not-about-user": 0.5310566024833285,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What didn't work when we tried to set up the virtualenv for the reports project?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.4422956319944501,
+  "self-contained_flip": true,
+  "not-about-user": 0.616734462053971,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How did we renew the TLS certificate for shop.example.com last time?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.2073435204845266,
+  "self-contained_flip": false,
+  "not-about-user": 0.792284412567742,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What didn't work when we tried to renew the TLS certificate for shop.example.com?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.3715709889732764,
+  "self-contained_flip": false,
+  "not-about-user": 0.7097556952563953,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Where did you learn how to renew the TLS certificate for shop.example.com?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.21306649195180388,
+  "self-contained_flip": false,
+  "not-about-user": 0.5779671989392352,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What's my favorite color?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.06734774851135404,
+  "self-contained_flip": false,
+  "not-about-user": 0.2686641585096707,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What do you know about my father?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.09085228900373248,
+  "self-contained_flip": false,
+  "not-about-user": 0.33019405033051813,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What was the API key I gave you for the script?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.10809666797329394,
+  "self-contained_flip": false,
+  "not-about-user": 0.5742038494280237,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many ounces are in a cup?",
+  "kind": "self-contained",
+  "src": "almanac",
+  "self-contained": 0.7336818806687875,
+  "self-contained_flip": false,
+  "not-about-user": 0.9112414193925469,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's the capital of Australia?",
+  "kind": "self-contained",
+  "src": "almanac",
+  "self-contained": 0.6968156544213675,
+  "self-contained_flip": false,
+  "not-about-user": 0.9223151381494149,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Which city do I live in now?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.09189627551273682,
+  "self-contained_flip": false,
+  "not-about-user": 0.46357039830871405,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "Where did I live before Providence?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.29494488275782255,
+  "self-contained_flip": false,
+  "not-about-user": 0.37627424625980666,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many times have I moved since I first told you where I lived?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.17779625244581004,
+  "self-contained_flip": false,
+  "not-about-user": 0.2701513845977141,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "On August 26, 2024, which city did I live in?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.10054261672551949,
+  "self-contained_flip": false,
+  "not-about-user": 0.4108227812683479,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "On June 9, 2024, which city did I live in?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.18286779222212146,
+  "self-contained_flip": false,
+  "not-about-user": 0.4125165617268858,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "When did I first tell you I was moving to Providence?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.04986609181129401,
+  "self-contained_flip": false,
+  "not-about-user": 0.19183997132300085,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What was my job before I joined Volt Brothers?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.23227297494481608,
+  "self-contained_flip": false,
+  "not-about-user": 0.4157499949894637,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What date did I start at Volt Brothers?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.1934173077100666,
+  "self-contained_flip": false,
+  "not-about-user": 0.20230820777041786,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Did I actually go on the trip to Montreal?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.27278248418285034,
+  "self-contained_flip": false,
+  "not-about-user": 0.23215194312221102,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did I leave for Montreal?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.14948252172736542,
+  "self-contained_flip": false,
+  "not-about-user": 0.2158802852011472,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Did I go to The Lumineers concert?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.15891112652240946,
+  "self-contained_flip": false,
+  "not-about-user": 0.210629864863708,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Did I go to my dentist appointment with Dr. Lindqvist?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.19339682272934788,
+  "self-contained_flip": false,
+  "not-about-user": 0.12622536343559404,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "When did you first hear about my appointment with Dr. Lindqvist?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.02492875429391094,
+  "self-contained_flip": false,
+  "not-about-user": 0.26172377282542686,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How do you know that the Riverside Museum is closed on Mondays?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.38661176820342164,
+  "self-contained_flip": true,
+  "not-about-user": 0.6592103666700613,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Did I tell you who my family doctor is, or did you look it up?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.09188685897658036,
+  "self-contained_flip": false,
+  "not-about-user": 0.12092325557280517,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Have I ever mentioned having a sister?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.11936894114305258,
+  "self-contained_flip": false,
+  "not-about-user": 0.24112071330516444,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is my tattoo of?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.21595079030692643,
+  "self-contained_flip": false,
+  "not-about-user": 0.3007350106593259,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How did we set up the virtualenv for the reports project last time?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.1355261892125618,
+  "self-contained_flip": false,
+  "not-about-user": 0.5337642009914041,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What didn't work when we tried to set up the virtualenv for the reports project?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.463913608836253,
+  "self-contained_flip": true,
+  "not-about-user": 0.6309677089761223,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How did we renew the TLS certificate for shop.example.com last time?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.2367786745880351,
+  "self-contained_flip": false,
+  "not-about-user": 0.8113340286644469,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What didn't work when we tried to renew the TLS certificate for shop.example.com?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.40923926623674645,
+  "self-contained_flip": true,
+  "not-about-user": 0.751931823418208,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Where did you learn how to renew the TLS certificate for shop.example.com?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.2080216753014541,
+  "self-contained_flip": false,
+  "not-about-user": 0.5881497594249613,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What's my favorite color?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.06734774851135404,
+  "self-contained_flip": false,
+  "not-about-user": 0.2686641585096707,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What do you know about my brother?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.08345327748237631,
+  "self-contained_flip": false,
+  "not-about-user": 0.39003402011550936,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "What was the API key I gave you for the script?",
+  "kind": "needs memory",
+  "src": "almanac",
+  "self-contained": 0.12185374090492848,
+  "self-contained_flip": false,
+  "not-about-user": 0.5902004277192958,
+  "not-about-user_flip": true
+ },
+ {
+  "message": "Write me a two-line poem about rain.",
+  "kind": "self-contained",
+  "src": "almanac",
+  "self-contained": 0.8145176785858348,
+  "self-contained_flip": false,
+  "not-about-user": 0.8255052292632254,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's a good synonym for 'quick'?",
+  "kind": "self-contained",
+  "src": "almanac",
+  "self-contained": 0.7055500913017372,
+  "self-contained_flip": false,
+  "not-about-user": 0.9504078982744266,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's a good synonym for 'quick'?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7440035869127763,
+  "self-contained_flip": false,
+  "not-about-user": 0.9532425145205385,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Write me a two-line poem about rain.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.8116874425140954,
+  "self-contained_flip": false,
+  "not-about-user": 0.8255052292632254,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many ounces are in a cup?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7611634766433614,
+  "self-contained_flip": false,
+  "not-about-user": 0.9168721463182763,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's the capital of Australia?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7314998885326024,
+  "self-contained_flip": false,
+  "not-about-user": 0.9290471777496279,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Give me a quick tip for boiling eggs.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.6997639517840488,
+  "self-contained_flip": false,
+  "not-about-user": 0.9317977171287652,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What does 'ephemeral' mean?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7518966412148125,
+  "self-contained_flip": false,
+  "not-about-user": 0.9276413169542688,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Explain photosynthesis in one sentence.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.6979210928503614,
+  "self-contained_flip": false,
+  "not-about-user": 0.9374424905546261,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Translate 'thank you very much' into Spanish.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.867019279342276,
+  "self-contained_flip": false,
+  "not-about-user": 0.8966426798884882,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is 17 times 23?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7116562767597587,
+  "self-contained_flip": false,
+  "not-about-user": 0.9113126402488161,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Who wrote Pride and Prejudice?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.6648056402008933,
+  "self-contained_flip": false,
+  "not-about-user": 0.9186572109521844,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Write a haiku about autumn leaves.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.8580752804629259,
+  "self-contained_flip": false,
+  "not-about-user": 0.9389768863170916,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How do I reverse a list in Python?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.8058282734872882,
+  "self-contained_flip": false,
+  "not-about-user": 0.9357028243840847,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's the boiling point of water in Fahrenheit?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.8135393182878214,
+  "self-contained_flip": false,
+  "not-about-user": 0.9294001280015943,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Give me three words that rhyme with 'light'.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.6933868743243872,
+  "self-contained_flip": false,
+  "not-about-user": 0.885678747774449,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's the difference between 'affect' and 'effect'?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.8011093081693593,
+  "self-contained_flip": false,
+  "not-about-user": 0.890381202693237,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Convert 5 kilometres to miles.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.8427317759432862,
+  "self-contained_flip": false,
+  "not-about-user": 0.9246886697391299,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Tell me a short joke about penguins.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.8429674902326766,
+  "self-contained_flip": false,
+  "not-about-user": 0.8465474966651974,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What year did the Berlin Wall fall?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7258655543816418,
+  "self-contained_flip": false,
+  "not-about-user": 0.924737157078231,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Summarize the plot of Romeo and Juliet in two sentences.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.6835641191090495,
+  "self-contained_flip": false,
+  "not-about-user": 0.8891564320816701,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's the square root of 144?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7452704829226859,
+  "self-contained_flip": false,
+  "not-about-user": 0.9090796581278278,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many continents are there?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7750260517437622,
+  "self-contained_flip": false,
+  "not-about-user": 0.9502468336192555,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Write a regex that matches an email address.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7382221009983235,
+  "self-contained_flip": false,
+  "not-about-user": 0.8979527514274291,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What does HTTP stand for?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.718661834022982,
+  "self-contained_flip": false,
+  "not-about-user": 0.9506065474287302,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Name three primary colours.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7639239911715241,
+  "self-contained_flip": false,
+  "not-about-user": 0.922247544199335,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's the plural of 'cactus'?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7082689225067219,
+  "self-contained_flip": false,
+  "not-about-user": 0.9022903711806041,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Explain what a black hole is to a ten-year-old.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.8439911475824644,
+  "self-contained_flip": false,
+  "not-about-user": 0.9571344944222899,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many days are in a leap year?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7514345386225415,
+  "self-contained_flip": false,
+  "not-about-user": 0.9046437181226317,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is the chemical symbol for gold?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7155320273629632,
+  "self-contained_flip": false,
+  "not-about-user": 0.940495856319972,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Write a limerick about a cat who loves boxes.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.8417597231973108,
+  "self-contained_flip": false,
+  "not-about-user": 0.8554059315002078,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's the opposite of 'generous'?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.6500726521052507,
+  "self-contained_flip": false,
+  "not-about-user": 0.9144834980639867,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How do you say 'good morning' in Japanese?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.8542825325984935,
+  "self-contained_flip": false,
+  "not-about-user": 0.9399233318953633,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is the speed of light, roughly?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.673776763388953,
+  "self-contained_flip": true,
+  "not-about-user": 0.9294034033411824,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Give me a one-line definition of machine learning.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7441741750480164,
+  "self-contained_flip": false,
+  "not-about-user": 0.9327673164138945,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's 15% of 80?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7520601857447956,
+  "self-contained_flip": false,
+  "not-about-user": 0.8945435659470192,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Who painted the Mona Lisa?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.676614956346072,
+  "self-contained_flip": true,
+  "not-about-user": 0.9328364828395549,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Write a SQL query that counts rows in a table called orders.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.711481680200807,
+  "self-contained_flip": false,
+  "not-about-user": 0.8807797772941199,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is the largest planet in our solar system?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.736440165320345,
+  "self-contained_flip": false,
+  "not-about-user": 0.9368495149255387,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Explain the difference between weather and climate.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7995017440282612,
+  "self-contained_flip": false,
+  "not-about-user": 0.9425394335270829,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What does 'carpe diem' mean?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7669152103783763,
+  "self-contained_flip": false,
+  "not-about-user": 0.9185791496496825,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many sides does a hexagon have?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7616407986394294,
+  "self-contained_flip": false,
+  "not-about-user": 0.9222496495706155,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Write a two-sentence horror story.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.5782964711721339,
+  "self-contained_flip": false,
+  "not-about-user": 0.7782395824024149,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's the freezing point of water in Celsius?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.6702367901509603,
+  "self-contained_flip": false,
+  "not-about-user": 0.9501143941028022,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is a prime number?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7076993117858863,
+  "self-contained_flip": false,
+  "not-about-user": 0.9240365271304314,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Suggest a title for a poem about the ocean.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7554953824615944,
+  "self-contained_flip": false,
+  "not-about-user": 0.8978864762762724,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's the past tense of 'swim'?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7147725686159323,
+  "self-contained_flip": false,
+  "not-about-user": 0.8771697642465246,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How long is a marathon?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7456080276100168,
+  "self-contained_flip": false,
+  "not-about-user": 0.9228985002629759,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What language is spoken in Brazil?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7479227931213706,
+  "self-contained_flip": false,
+  "not-about-user": 0.9377598903445576,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Explain recursion in one sentence.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7369134917663823,
+  "self-contained_flip": false,
+  "not-about-user": 0.9199563052771567,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is the tallest mountain on Earth?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7563961194471234,
+  "self-contained_flip": false,
+  "not-about-user": 0.9200052392453026,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Give me an anagram of 'listen'.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7276678310811471,
+  "self-contained_flip": false,
+  "not-about-user": 0.9209861887880948,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What does DNA stand for?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.6845217520063258,
+  "self-contained_flip": false,
+  "not-about-user": 0.9084047637926294,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How many minutes are in three hours?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7686913523054902,
+  "self-contained_flip": false,
+  "not-about-user": 0.9199955755118665,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's the difference between a virus and a bacterium?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7456094298325796,
+  "self-contained_flip": false,
+  "not-about-user": 0.9477241874996258,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Write a tongue twister about sheep.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.8361134186874353,
+  "self-contained_flip": false,
+  "not-about-user": 0.8900167764054108,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is the main ingredient in guacamole?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.6655553937018298,
+  "self-contained_flip": true,
+  "not-about-user": 0.9317650299550759,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "How do I center text in CSS?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.9406434331996338,
+  "self-contained_flip": false,
+  "not-about-user": 0.9661900001271089,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Who discovered penicillin?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7154588606160606,
+  "self-contained_flip": false,
+  "not-about-user": 0.9215194511591317,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What's a synonym for 'happy'?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.7155623295482878,
+  "self-contained_flip": false,
+  "not-about-user": 0.929882796346182,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "What is 2 to the power of 10?",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.726105540118315,
+  "self-contained_flip": false,
+  "not-about-user": 0.9396200444555363,
+  "not-about-user_flip": false
+ },
+ {
+  "message": "Explain what inflation means in economics.",
+  "kind": "self-contained",
+  "src": "offtopic",
+  "self-contained": 0.8967979676176199,
+  "self-contained_flip": false,
+  "not-about-user": 0.9660102019922046,
+  "not-about-user_flip": false
+ }
+]

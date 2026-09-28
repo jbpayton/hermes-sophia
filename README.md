@@ -24,23 +24,31 @@ Each time you send a message, before the agent's model sees it, Sophia:
 
 1. **Searches** everything it has recorded: conversations, pages the agent read, and facts extracted overnight. It combines vector search, keyword search, and date scoping for "last week" style questions.
 2. **Follows the graph** one hop from the people and things in the best matches that the question itself doesn't name. The question "Where does Sam's sister live?" matches `Sam | has a sister named | Lily`, and the hop through Lily reaches `Lily | moved to | Denver`, which similarity alone ranked too low to inject.
-3. **Checks** whether any of it actually bears on your message. A very strong match (cosine ≥ 0.82) passes straight through. Anything weaker goes to a small local model that answers yes or no by reading the probability of its first token, without generating any text. That check takes about 0.3 s.
-4. **Injects** what passed into the agent's context, or nothing.
+3. **Checks** what, if anything, bears on your message. A small local model reads the message, and the previous one if this is a short follow-up like "and the other one?". It also reads the top 10 matches, then picks one answer:
+   - nothing is needed: a general request, where the reply would be the same for anyone;
+   - it's about you, but none of these fits;
+   - this memory bears on it most directly.
 
-This is a real injection from the test profile, for "Which camera am I taking on the Yosemite trip?". It is an excerpt: 4 of the 8 items, in the order they were injected.
+   It answers by reading the probability of its first token, without generating any text, in about half a second.
+4. **Injects** nothing for a general request. Otherwise it injects the matches as dated quotes. When none of them fits, the block is headed *possible matches only*, so the agent doesn't take a near-miss for an answer.
+
+This is a real injection from the test profile, for "Which camera am I taking on the Yosemite trip?". The gate read it as about Joey, with the memories bearing on it (`choice:g0.00,n0.00,m1.00`, 448 ms). It is an excerpt: 3 of the 7 items, listed by date as injected.
 
 ```text
-Sophia memory — verbatim evidence from earlier conversations and reading (dates are when it was said;
-treat assistant-authored lines as weaker evidence):
-- [2026-09-23 · fact · planned · happens 2027-05-08/2027-05-15 · used +0.25] Sam | is coming on the trip to |
-  Yosemite — "Hi, some context for later. I'm Joey. For the Yosemite trip in the second week of May I'm
-  bringing my Fujifilm X-T5, Sam is coming along, and we're staying at Curry Village again."
-  · evidence later changed: Joey is bringing Fujifilm X-T5 → Sony A7 IV to Yosemite (2026-09-23)
-- [2026-09-23 · fact · planned] Joey | is not bringing | Fujifilm camera to Yosemite — "Change of plans for
-  Yosemite: I'm bringing the Sony A7 IV instead of the Fujifilm, the Fujifilm's sensor is acting up. …"
-- [2026-09-23 · fact · planned] Joey | is bringing | Sony A7 IV to Yosemite — "Change of plans for Yosemite: …"
-- [2026-09-23 · Hermes (assistant said)] Got it — Yosemite trip in early May, bringing the Sony A7 IV instead of
-  the Fujifilm X-T5 (sensor acting up), Sam coming along, staying at Curry Village again.
+Sophia memory — verbatim evidence from earlier conversations and reading (dates are when it was said; treat
+assistant-authored lines as weaker evidence, listed by date):
+2026-09-23:
+- [2026-09-23 · Joey · used +2 · later changed: Joey is bringing Fujifilm X-T5 → Sony A7 IV to Yosemite
+  (2026-09-23) · fact: Sam is coming on the trip to Yosemite (planned, happens 2027-05-08/2027-05-15); Joey is
+  staying at Curry Village (planned, happens 2027-05-08/2027-05-15) · "second week of May" = 2027-05-08/2027-05-15]
+  Hi, some context for later. I'm Joey. For the Yosemite trip in the second week of May I'm bringing my Fujifilm
+  X-T5, Sam is coming along, and we're staying at Curry Village again.
+- [2026-09-23 · Joey · fact: Joey is not bringing Fujifilm camera to Yosemite (planned); Joey is bringing Sony A7 IV
+  to Yosemite (planned)] Change of plans for Yosemite: I'm bringing the Sony A7 IV instead of the Fujifilm, the
+  Fujifilm's sensor is acting up. Just acknowledge.
+2026-09-24:
+- [2026-09-24 · Joey · used +1 · linked via Sam · fact: Sam has a sister named Lily (asserted)] By the way, Sam's
+  sister is named Lily. Just acknowledge briefly.
 ```
 
 What the agent is told about each item:
@@ -200,8 +208,8 @@ flowchart LR
     T["turn: user, agent,<br/>tool results"] --> C["capture<br/>verbatim windows · heuristic header<br/>typed spans · events"]
     Q["next user message"] --> R["search<br/>vectors + keywords + time scope"]
     R --> G{"check<br/>first-token logprob decider"}
-    G -- "relevant" --> I["inject dated,<br/>verbatim evidence"]
-    G -- "not relevant" --> N["inject nothing"]
+    G -- "about you" --> I["inject dated,<br/>verbatim evidence"]
+    G -- "general request" --> N["inject nothing"]
   end
   subgraph asleep["Asleep — nightly, yields to chat"]
     direction TB
@@ -244,14 +252,14 @@ The night waits while the big model is serving chat, and yields rather than comp
 
 The data model (three clocks, supersession, provenance, triples indexing passages) has converged with the best graph memories: Graphiti/Zep, SodaMem, HippoRAG 2 and Hindsight. What's different is how Sophia behaves:
 - it makes no model calls when something is saved;
-- it checks relevance and can inject nothing;
+- it checks relevance, can inject nothing, and says so when nothing it found fits;
 - its own invented claims can't become memory;
 - a night tests and repairs its own recall.
 
 **Benchmarks** (held-out data, local models as reader and judge; [docs/BENCHMARKS.md](docs/BENCHMARKS.md)). *Passive* means injection only; *active* means the agent also uses Sophia's tools:
 - **LoCoMo, 7 conversations:** active recall with a 27B reader scores J 0.869, on par with the same reader given the whole conversation (0.853). Passive: 0.806 with the 27B reader, 0.789 with the 9B.
 - **LongMemEval-S:** 0.802 on all 500 questions (9B reader, passive). On the 60 held-out questions, passive scores 0.867 with the 27B reader, against 0.900 when it's handed just the evidence sessions.
-- **Response time:** passive recall adds about 0.65 s per message on a 2,000-window memory, almost all of it one relevance check. `gate: similarity` cuts that to under 0.1 s, at the cost of letting memory through on nearly every message.
+- **Response time:** passive recall adds about 0.6 s per message on a 2,000-window memory with llama-server, almost all of it one relevance check. That check keeps memory out of 34 of 40 held-out general requests and 9 of 10 follow-ups to them. `gate: similarity` cuts the time to under 0.1 s, at the cost of letting memory through on nearly every message.
 - **[Almanac](https://github.com/jbpayton/almanac)** (a benchmark of time, plans, provenance, absence, tasks and memory hygiene, written alongside Sophia): passive, by day, 1.000, against 0.945 for full context and 0.899 for RAG. It also found a secret-redaction bug, now fixed.
 
 These aren't directly comparable with published GPT-4o-judged numbers. The comparison and sources are in [docs/COMPARISON.md](docs/COMPARISON.md).

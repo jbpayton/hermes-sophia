@@ -60,7 +60,8 @@ def _models(fake, outcome="succeeded", card=None):
     def readout(prompt):
         opts = dict(re.findall(r"^([A-Z])\) (.*)$", prompt, re.M))
         want = OUTCOMES[outcome] if "How did the task turn out" in prompt else "false"
-        letter = next(l for l, d in opts.items() if want.lower() in d.lower())
+        letter = next((l for l, d in opts.items() if want.lower() in d.lower()),
+                      next((l for l, d in opts.items() if d.startswith("m1:")), "A"))    # the gate: memory 1
         return [(letter, -0.05)] + [(l, -4.0) for l in opts if l != letter]
     fake.readout = readout
     fake.chat_fn = lambda p: (card or "GOAL: Rotate the nginx logs on web-1\nWHERE: web-1\nWORKED: a2, a9\n"

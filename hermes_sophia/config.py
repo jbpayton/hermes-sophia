@@ -44,9 +44,17 @@ DEFAULTS: Dict[str, Any] = {
     "inject_top": 50,                 # injection may draw from this deep in the ranking (the gate sees gate_top)
     "skip_gate": 0.82,
     "gate_threshold": 0.5,
-    "gate": "decider",               # decider: the decider judges relevance (~0.5 s on LM Studio); similarity: inject
-                                     # whenever the best match reaches gate_floor (no model call, filters almost nothing)
+    "gate": "choice",                # choice: one question (nothing needed / about the user but nothing fits / which
+                                     # memory bears on it); decider: the older yes/no, which in a large memory lets
+                                     # nearly everything through; similarity: no model call, filters little
     "gate_floor": 0.50,              # gate=similarity: the best match's cosine needed to inject anything
+    "gate_general": 0.8,             # gate=choice: inject unless "nothing needed" gets this much
+    "gate_recheck": 0.05,            # gate=choice: read the reverse option order too when "general" is in [x, 1-x]
+                                     # and the second reading could still change the decision
+    "gate_split": False,             # gate=choice: list the lines the gate vouched for under Relevant, the rest under
+                                     # Possible matches (off by default: on held-out LoCoMo the reader dropped answers
+                                     # the split had misfiled)
+    "split_min": 0.02,               # ... a memory is vouched for with this share of the memories' probability
     "gate_permutations": 1,
     "junk_floor": 0.5,
     "inject_chars": 9000,
@@ -133,10 +141,19 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
      {"when": _ADVANCED}),
     ("recall_k", "Candidates fetched per recall", {"when": _ADVANCED}),
     ("gate_top", "Candidates the gate looks at", {"when": _ADVANCED}),
-    ("gate", "How Sophia decides whether to inject anything: the best match's similarity (instant), or a decider "
-             "judgment (filters off-topic messages better, adds a model call)", {"when": _ADVANCED,
-                                                                                   "choices": ["similarity", "decider"]}),
+    ("gate", "How Sophia decides whether to inject anything: one decider question with an option per memory "
+             "(choice: closes on general requests, marks blocks where nothing fits), the older yes/no question "
+             "(decider), or the best match's similarity (instant, filters little)",
+     {"when": _ADVANCED, "choices": ["choice", "decider", "similarity"]}),
     ("gate_floor", "With gate=similarity: the best match's similarity needed to inject", {"when": _ADVANCED}),
+    ("gate_general", "With gate=choice: inject unless the decider is at least this sure the message needs nothing "
+                     "from memory", {"when": _ADVANCED}),
+    ("gate_recheck", "With gate=choice: ask again with the options reversed when the first reading's 'general' "
+                     "probability lies between this and 1 minus this (0 = never)", {"when": _ADVANCED}),
+    ("gate_split", "With gate=choice: list the memories the gate vouched for under Relevant and the rest under "
+                   "Possible matches", {"when": _ADVANCED}),
+    ("split_min", "With gate_split: the share of the memories' probability a line needs to count as Relevant",
+     {"when": _ADVANCED}),
     ("inject_top", "How deep in the ranking injection may draw from (still bounded by the relative floor and the "
                    "size cap)", {"when": _ADVANCED}),
     ("junk_floor", "Candidates below this cosine are never shown to the gate", {"when": _ADVANCED}),

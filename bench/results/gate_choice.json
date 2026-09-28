@@ -1,0 +1,5446 @@
+[
+ {
+  "kind": "relevant",
+  "query": "How many bikes do I own?",
+  "skip": false,
+  "yesno": 0.9867908328163215,
+  "ms_yesno": 627.0471028983593,
+  "c1": {
+   "general": 0.01390342785582312,
+   "none_fit": 0.00239819370694337,
+   "relevant": 0.9836983784372335
+  },
+  "ms_c1": 250.91709499247372,
+  "c2": {
+   "general": 0.013964618028363197,
+   "none_fit": 0.0036966076219562293,
+   "relevant": 0.9823387743496806
+  },
+  "ms_c2": 378.4792439546436
+ },
+ {
+  "kind": "relevant",
+  "query": "What was my previous stance on spirituality?",
+  "skip": false,
+  "yesno": 0.7662533445907481,
+  "ms_yesno": 468.39933190494776,
+  "c1": {
+   "general": 0.010174859357315382,
+   "none_fit": 0.13799819083354664,
+   "relevant": 0.851826949809138
+  },
+  "ms_c1": 245.44282001443207,
+  "c2": {
+   "general": 0.0527351763981074,
+   "none_fit": 0.16882720746701985,
+   "relevant": 0.7784376161348727
+  },
+  "ms_c2": 348.63120410591364
+ },
+ {
+  "kind": "relevant",
+  "query": "Where did I buy my new bookshelf from?",
+  "skip": false,
+  "yesno": 0.9796936913372984,
+  "ms_yesno": 490.57683697901666,
+  "c1": {
+   "general": 0.00040715271332723163,
+   "none_fit": 0.0003308321356020967,
+   "relevant": 0.9992620151510706
+  },
+  "ms_c1": 248.19627800025046,
+  "c2": {
+   "general": 0.000409606866739415,
+   "none_fit": 0.0005523620966797887,
+   "relevant": 0.9990380310365808
+  },
+  "ms_c2": 589.1197649762034
+ },
+ {
+  "kind": "relevant",
+  "query": "Where did I attend my cousin's wedding?",
+  "skip": false,
+  "yesno": 0.8517260375458516,
+  "ms_yesno": 630.8822350110859,
+  "c1": {
+   "general": 0.006880665854836376,
+   "none_fit": 0.3762704115644792,
+   "relevant": 0.6168489225806844
+  },
+  "ms_c1": 241.23219912871718,
+  "c2": {
+   "general": 0.00951236890702285,
+   "none_fit": 0.26503659089714293,
+   "relevant": 0.7254510401958342
+  },
+  "ms_c2": 383.72369413264096
+ },
+ {
+  "kind": "relevant",
+  "query": "What brand of shampoo do I currently use?",
+  "skip": false,
+  "yesno": 0.956199153469654,
+  "ms_yesno": 588.0732641089708,
+  "c1": {
+   "general": 0.00525883576507414,
+   "none_fit": 0.09347750866107721,
+   "relevant": 0.9012636555738486
+  },
+  "ms_c1": 248.1646309606731,
+  "c2": {
+   "general": 0.008357338066724626,
+   "none_fit": 0.14981991102474204,
+   "relevant": 0.8418227509085333
+  },
+  "ms_c2": 556.2408959958702
+ },
+ {
+  "kind": "relevant",
+  "skip": true
+ },
+ {
+  "kind": "relevant",
+  "skip": true
+ },
+ {
+  "kind": "relevant",
+  "query": "What size is my new Samsung TV?",
+  "skip": false,
+  "yesno": 0.7714637187955585,
+  "ms_yesno": 617.2543980646878,
+  "c1": {
+   "general": 0.008902124456520968,
+   "none_fit": 0.09940288135863616,
+   "relevant": 0.8916949941848428
+  },
+  "ms_c1": 238.21165598928928,
+  "c2": {
+   "general": 0.018906611243798707,
+   "none_fit": 0.26858296557912203,
+   "relevant": 0.7125104231770792
+  },
+  "ms_c2": 540.2724330779165
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm planning to visit Bandung again and I was wondering if you could remind me of the name of that restaurant in Cihampelas Walk that serves a great Nasi Goreng?",
+  "skip": false,
+  "yesno": 0.9829455419852964,
+  "ms_yesno": 603.8333871401846,
+  "c1": {
+   "general": 0.0007477629414759903,
+   "none_fit": 0.0025231682191421286,
+   "relevant": 0.996729068839382
+  },
+  "ms_c1": 236.36341001838446,
+  "c2": {
+   "general": 0.000873187748151293,
+   "none_fit": 0.004433751600217763,
+   "relevant": 0.994693060651631
+  },
+  "ms_c2": 374.1756249219179
+ },
+ {
+  "kind": "relevant",
+  "skip": true
+ },
+ {
+  "kind": "relevant",
+  "skip": true
+ },
+ {
+  "kind": "relevant",
+  "query": "I wanted to follow up on our previous conversation about private sector businesses in Chaudhary. Can you remind me of the company that employs over 40,000 people in the rug-manufacturing industry?",
+  "skip": false,
+  "yesno": 0.9195804959220066,
+  "ms_yesno": 590.6122720334679,
+  "c1": {
+   "general": 0.0009738128956999339,
+   "none_fit": 0.0004188716522356351,
+   "relevant": 0.9986073154520644
+  },
+  "ms_c1": 247.10412393324077,
+  "c2": {
+   "general": 0.005287363425710762,
+   "none_fit": 0.008540205525706288,
+   "relevant": 0.9861724310485829
+  },
+  "ms_c2": 384.14947991259396
+ },
+ {
+  "kind": "relevant",
+  "skip": true
+ },
+ {
+  "kind": "relevant",
+  "query": "I wanted to follow up on our previous conversation about the fusion breakthrough at Lawrence Livermore National Laboratory. Can you remind me who is the President's Chief Advisor for Science and Technology mentioned in the article?",
+  "skip": false,
+  "yesno": 0.9495293354038072,
+  "ms_yesno": 610.4304960463196,
+  "c1": {
+   "general": 0.0008013051374650355,
+   "none_fit": 9.503354454651291e-05,
+   "relevant": 0.9991036613179886
+  },
+  "ms_c1": 248.18769004195929,
+  "c2": {
+   "general": 0.010532702835105769,
+   "none_fit": 0.002071783064421116,
+   "relevant": 0.9873955141004731
+  },
+  "ms_c2": 588.4376540780067
+ },
+ {
+  "kind": "relevant",
+  "skip": true
+ },
+ {
+  "kind": "relevant",
+  "query": "I am planning another theme park weekend; do you have any suggestions?",
+  "skip": false,
+  "yesno": 0.899875563458364,
+  "ms_yesno": 613.158734049648,
+  "c1": {
+   "general": 0.02525782997620513,
+   "none_fit": 0.2072911205386111,
+   "relevant": 0.7674510494851837
+  },
+  "ms_c1": 248.5092431306839,
+  "c2": {
+   "general": 0.031606106567713364,
+   "none_fit": 0.16572350840315508,
+   "relevant": 0.8026703850291315
+  },
+  "ms_c2": 550.2360530663282
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you suggest a hotel for my upcoming trip to Miami?",
+  "skip": false,
+  "yesno": 0.5674155993571804,
+  "ms_yesno": 623.6348678357899,
+  "c1": {
+   "general": 0.006797953344090694,
+   "none_fit": 0.7977692669500727,
+   "relevant": 0.19543277970583675
+  },
+  "ms_c1": 237.0494520291686,
+  "c2": {
+   "general": 0.01674695053465941,
+   "none_fit": 0.780063435024331,
+   "relevant": 0.20318961444100964
+  },
+  "ms_c2": 533.7437291163951
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been having trouble with the battery life on my phone lately. Any tips?",
+  "skip": false,
+  "yesno": 0.6873620028746034,
+  "ms_yesno": 613.2980310358107,
+  "c1": {
+   "general": 0.00766138286629342,
+   "none_fit": 0.8488316396561134,
+   "relevant": 0.14350697747759317
+  },
+  "ms_c1": 248.16258694045246,
+  "c2": {
+   "general": 0.006656045752216393,
+   "none_fit": 0.6310164788393057,
+   "relevant": 0.362327475408478
+  },
+  "ms_c2": 524.9294571112841
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been feeling a bit stuck with my paintings lately. Do you have any ideas on how I can find new inspiration?",
+  "skip": false,
+  "yesno": 0.8974494597338759,
+  "ms_yesno": 621.0023439489305,
+  "c1": {
+   "general": 0.005139824957154467,
+   "none_fit": 0.020566418435114264,
+   "relevant": 0.9742937566077313
+  },
+  "ms_c1": 241.57521012239158,
+  "c2": {
+   "general": 0.00857868292467449,
+   "none_fit": 0.03870961325810754,
+   "relevant": 0.9527117038172179
+  },
+  "ms_c2": 393.32684595137835
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the total number of online courses I've completed?",
+  "skip": false,
+  "yesno": 0.9352079600833872,
+  "ms_yesno": 641.6054298169911,
+  "c1": {
+   "general": 0.004046546801488415,
+   "none_fit": 0.011840046218426985,
+   "relevant": 0.9841134069800846
+  },
+  "ms_c1": 248.5473300330341,
+  "c2": {
+   "general": 0.010737059121032863,
+   "none_fit": 0.01490521979517559,
+   "relevant": 0.9743577210837916
+  },
+  "ms_c2": 394.11156601272523
+ },
+ {
+  "kind": "relevant",
+  "query": "How many babies were born to friends and family members in the last few months?",
+  "skip": false,
+  "yesno": 0.8892911450418547,
+  "ms_yesno": 472.0262121409178,
+  "c1": {
+   "general": 0.015067474094271739,
+   "none_fit": 0.42942412633872634,
+   "relevant": 0.5555083995670018
+  },
+  "ms_c1": 239.64935913681984,
+  "c2": {
+   "general": 0.02479739098324838,
+   "none_fit": 0.3748174527932116,
+   "relevant": 0.60038515622354
+  },
+  "ms_c2": 564.6313379984349
+ },
+ {
+  "kind": "relevant",
+  "query": "How many pages do I have left to read in 'The Nightingale'?",
+  "skip": false,
+  "yesno": 0.8948688074191561,
+  "ms_yesno": 652.8602370526642,
+  "c1": {
+   "general": 0.006355418603420376,
+   "none_fit": 0.0052427230876468745,
+   "relevant": 0.9884018583089327
+  },
+  "ms_c1": 245.34620600752532,
+  "c2": {
+   "general": 0.03663811624270522,
+   "none_fit": 0.06073127056149838,
+   "relevant": 0.9026306131957964
+  },
+  "ms_c2": 404.2303441092372
+ },
+ {
+  "kind": "relevant",
+  "query": "How many bikes did I service or plan to service in March?",
+  "skip": false,
+  "yesno": 0.7681738957405354,
+  "ms_yesno": 616.6397060733289,
+  "c1": {
+   "general": 0.001958729958081808,
+   "none_fit": 0.6857136673522278,
+   "relevant": 0.3123276026896904
+  },
+  "ms_c1": 247.82231403514743,
+  "c2": {
+   "general": 0.004492489850239013,
+   "none_fit": 0.6857253305327538,
+   "relevant": 0.30978217961700727
+  },
+  "ms_c2": 381.90774200484157
+ },
+ {
+  "kind": "relevant",
+  "query": "How many total pieces of writing have I completed since I started writing again three weeks ago, including short stories, poems, and pieces for the writing challenge?",
+  "skip": false,
+  "yesno": 0.6048475865816926,
+  "ms_yesno": 493.22704086080194,
+  "c1": {
+   "general": 0.005111674342897239,
+   "none_fit": 0.020468807192176343,
+   "relevant": 0.9744195184649264
+  },
+  "ms_c1": 249.30733116343617,
+  "c2": {
+   "general": 0.009209765718804271,
+   "none_fit": 0.04168142313694606,
+   "relevant": 0.9491088111442496
+  },
+  "ms_c2": 377.8803402092308
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the average age of me, my parents, and my grandparents?",
+  "skip": false,
+  "yesno": 0.9375060109945887,
+  "ms_yesno": 485.3836309630424,
+  "c1": {
+   "general": 0.004254224780162745,
+   "none_fit": 0.015652277170798912,
+   "relevant": 0.9800934980490383
+  },
+  "ms_c1": 239.65081898495555,
+  "c2": {
+   "general": 0.025401511124233823,
+   "none_fit": 0.1502697328693395,
+   "relevant": 0.8243287560064267
+  },
+  "ms_c2": 388.0667849443853
+ },
+ {
+  "kind": "relevant",
+  "query": "How many rare items do I have in total?",
+  "skip": false,
+  "yesno": 0.8922513729942944,
+  "ms_yesno": 592.8477409761399,
+  "c1": {
+   "general": 0.0019619757654690444,
+   "none_fit": 0.0076906741953763616,
+   "relevant": 0.9903473500391545
+  },
+  "ms_c1": 239.97375019825995,
+  "c2": {
+   "general": 0.004446266643831506,
+   "none_fit": 0.009216900281792187,
+   "relevant": 0.9863368330743763
+  },
+  "ms_c2": 392.6182221621275
+ },
+ {
+  "kind": "relevant",
+  "query": "How many different cuisines have I learned to cook or tried out in the past few months?",
+  "skip": false,
+  "yesno": 0.843642656676987,
+  "ms_yesno": 602.9737880453467,
+  "c1": {
+   "general": 0.005963912990582369,
+   "none_fit": 0.016230097715407323,
+   "relevant": 0.9778059892940104
+  },
+  "ms_c1": 249.12006012164056,
+  "c2": {
+   "general": 0.006810817290945828,
+   "none_fit": 0.021662071689379434,
+   "relevant": 0.9715271110196748
+  },
+  "ms_c2": 567.7845841273665
+ },
+ {
+  "kind": "relevant",
+  "query": "How many items of clothing do I need to pick up or return from a store?",
+  "skip": false,
+  "yesno": 0.8877069606879158,
+  "ms_yesno": 665.2870429679751,
+  "c1": {
+   "general": 0.012366734057810537,
+   "none_fit": 0.11030973076750979,
+   "relevant": 0.8773235351746795
+  },
+  "ms_c1": 245.90989504940808,
+  "c2": {
+   "general": 0.01657980437594677,
+   "none_fit": 0.0869575502128753,
+   "relevant": 0.8964626454111779
+  },
+  "ms_c2": 379.4495069887489
+ },
+ {
+  "kind": "relevant",
+  "query": "How many music albums or EPs have I purchased or downloaded?",
+  "skip": false,
+  "yesno": 0.6836212648192092,
+  "ms_yesno": 456.98684896342456,
+  "c1": {
+   "general": 0.009462171863096227,
+   "none_fit": 0.7393608005815465,
+   "relevant": 0.2511770275553573
+  },
+  "ms_c1": 236.2443709280342,
+  "c2": {
+   "general": 0.03608801065472285,
+   "none_fit": 0.6006856394977697,
+   "relevant": 0.36322634984750746
+  },
+  "ms_c2": 387.8973419778049
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the total cost of the new food bowl, measuring cup, dental chews, and flea and tick collar I got for Max?",
+  "skip": false,
+  "yesno": 0.8965482409458333,
+  "ms_yesno": 602.7208580635488,
+  "c1": {
+   "general": 0.0033123755912903784,
+   "none_fit": 0.0004922608641216182,
+   "relevant": 0.9961953635445879
+  },
+  "ms_c1": 246.21044611558318,
+  "c2": {
+   "general": 0.005262604374255293,
+   "none_fit": 0.003909269938485437,
+   "relevant": 0.9908281256872592
+  },
+  "ms_c2": 356.31370614282787
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the minimum amount I could get if I sold the vintage diamond necklace and the antique vanity?",
+  "skip": false,
+  "yesno": 0.9380325023046968,
+  "ms_yesno": 502.038222970441,
+  "c1": {
+   "general": 0.0013469227249314304,
+   "none_fit": 0.0008182161744051288,
+   "relevant": 0.9978348611006633
+  },
+  "ms_c1": 247.87552398629487,
+  "c2": {
+   "general": 0.008492533937349146,
+   "none_fit": 0.004508391128686098,
+   "relevant": 0.9869990749339647
+  },
+  "ms_c2": 404.3844030238688
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the total number of views on my most popular videos on YouTube and TikTok?",
+  "skip": false,
+  "yesno": 0.6372989001335467,
+  "ms_yesno": 621.2107068859041,
+  "c1": {
+   "general": 0.008106832008297758,
+   "none_fit": 0.6783214291302629,
+   "relevant": 0.3135717388614394
+  },
+  "ms_c1": 243.43845690600574,
+  "c2": {
+   "general": 0.05109077059917695,
+   "none_fit": 0.611097329863115,
+   "relevant": 0.33781189953770807
+  },
+  "ms_c2": 579.9791850149632
+ },
+ {
+  "kind": "relevant",
+  "query": "How many fish are there in my 30-gallon tank?",
+  "skip": false,
+  "yesno": 0.3986597293962835,
+  "ms_yesno": 635.6210850644857,
+  "c1": {
+   "general": 0.004016113383295583,
+   "none_fit": 0.6003420626487932,
+   "relevant": 0.39564182396791125
+  },
+  "ms_c1": 247.00011499226093,
+  "c2": {
+   "general": 0.027858674874238498,
+   "none_fit": 0.7094651271760319,
+   "relevant": 0.2626761979497295
+  },
+  "ms_c2": 566.941318102181
+ },
+ {
+  "kind": "relevant",
+  "query": "How many online courses have I completed in total?",
+  "skip": false,
+  "yesno": 0.9104880534555894,
+  "ms_yesno": 638.6846781242639,
+  "c1": {
+   "general": 0.0037880693037817665,
+   "none_fit": 0.002611257574589057,
+   "relevant": 0.9936006731216293
+  },
+  "ms_c1": 239.96832384727895,
+  "c2": {
+   "general": 0.008568843830991584,
+   "none_fit": 0.006976992424533886,
+   "relevant": 0.9844541637444746
+  },
+  "ms_c2": 587.6679869834334
+ },
+ {
+  "kind": "relevant",
+  "query": "What was the page count of the two novels I finished in January and March?",
+  "skip": false,
+  "yesno": 0.613818166787706,
+  "ms_yesno": 696.85949687846,
+  "c1": {
+   "general": 0.003252581750171195,
+   "none_fit": 0.012602455325654658,
+   "relevant": 0.9841449629241743
+  },
+  "ms_c1": 250.76271500438452,
+  "c2": {
+   "general": 0.008744164726602412,
+   "none_fit": 0.024499139975539756,
+   "relevant": 0.9667566952978579
+  },
+  "ms_c2": 436.10871909186244
+ },
+ {
+  "kind": "relevant",
+  "query": "How many weeks passed between the day I bought my new tennis racket and the day I received it?",
+  "skip": false,
+  "yesno": 0.9106037971635609,
+  "ms_yesno": 628.1583069358021,
+  "c1": {
+   "general": 0.012009771692666012,
+   "none_fit": 0.025238188407121477,
+   "relevant": 0.9627520399002125
+  },
+  "ms_c1": 248.5679059755057,
+  "c2": {
+   "general": 0.10263961471785976,
+   "none_fit": 0.07952940259081925,
+   "relevant": 0.8178309826913209
+  },
+  "ms_c2": 565.3129848651588
+ },
+ {
+  "kind": "relevant",
+  "query": "How many months have passed since I last visited a museum with a friend?",
+  "skip": false,
+  "yesno": 0.8940742853511432,
+  "ms_yesno": 643.5678089037538,
+  "c1": {
+   "general": 0.002477107475485136,
+   "none_fit": 0.3363172247472136,
+   "relevant": 0.6612056677773013
+  },
+  "ms_c1": 240.1441929396242,
+  "c2": {
+   "general": 0.07802014183458379,
+   "none_fit": 0.31738323599577584,
+   "relevant": 0.6045966221696404
+  },
+  "ms_c2": 406.116615049541
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the order of the concerts and musical events I attended in the past two months, starting from the earliest?",
+  "skip": false,
+  "yesno": 0.6524231054128239,
+  "ms_yesno": 617.7260489203036,
+  "c1": {
+   "general": 0.0031896838409797338,
+   "none_fit": 0.03766592969497814,
+   "relevant": 0.9591443864640421
+  },
+  "ms_c1": 248.34055895917118,
+  "c2": {
+   "general": 0.006355891110056716,
+   "none_fit": 0.03650497181984389,
+   "relevant": 0.9571391370700993
+  },
+  "ms_c2": 570.9478431381285
+ },
+ {
+  "kind": "relevant",
+  "query": "I mentioned that I participated in an art-related event two weeks ago. Where was that event held at?",
+  "skip": false,
+  "yesno": 0.8321538103740687,
+  "ms_yesno": 660.226316889748,
+  "c1": {
+   "general": 0.0016661116663351688,
+   "none_fit": 0.04078728750183511,
+   "relevant": 0.9575466008318299
+  },
+  "ms_c1": 242.92959203012288,
+  "c2": {
+   "general": 0.0023977401189760462,
+   "none_fit": 0.03667217915591338,
+   "relevant": 0.9609300807251107
+  },
+  "ms_c2": 385.5099631473422
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days had passed since I started taking ukulele lessons when I decided to take my acoustic guitar to the guitar tech for servicing?",
+  "skip": false,
+  "yesno": 0.9142015912111486,
+  "ms_yesno": 635.7652919832617,
+  "c1": {
+   "general": 0.003762189064075206,
+   "none_fit": 0.0023968863149892564,
+   "relevant": 0.9938409246209354
+  },
+  "ms_c1": 247.44973587803543,
+  "c2": {
+   "general": 0.016123155945740854,
+   "none_fit": 0.012601301784190534,
+   "relevant": 0.9712755422700685
+  },
+  "ms_c2": 405.9682071674615
+ },
+ {
+  "kind": "relevant",
+  "query": "How many weeks had passed since I recovered from the flu when I went on my 10th jog outdoors?",
+  "skip": false,
+  "yesno": 0.975493242567022,
+  "ms_yesno": 515.4300541616976,
+  "c1": {
+   "general": 0.004835417633377859,
+   "none_fit": 0.005321496445965043,
+   "relevant": 0.9898430859206572
+  },
+  "ms_c1": 247.3116188775748,
+  "c2": {
+   "general": 0.013231178397177468,
+   "none_fit": 0.01196078670820305,
+   "relevant": 0.9748080348946195
+  },
+  "ms_c2": 368.9089559484273
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days did it take for me to find a house I loved after starting to work with Rachel?",
+  "skip": false,
+  "yesno": 0.8180238060516312,
+  "ms_yesno": 486.0688701737672,
+  "c1": {
+   "general": 0.004483911863687008,
+   "none_fit": 0.392631580911296,
+   "relevant": 0.602884507225017
+  },
+  "ms_c1": 249.4232200551778,
+  "c2": {
+   "general": 0.008911895435113892,
+   "none_fit": 0.21573713162853,
+   "relevant": 0.7753509729363561
+  },
+  "ms_c2": 603.530049091205
+ },
+ {
+  "kind": "relevant",
+  "skip": true
+ },
+ {
+  "kind": "relevant",
+  "query": "What was the airline that I flied with on Valentine's day?",
+  "skip": false,
+  "yesno": 0.8337942948214178,
+  "ms_yesno": 667.7191259805113,
+  "c1": {
+   "general": 0.0036494290607805985,
+   "none_fit": 0.3157550219244189,
+   "relevant": 0.6805955490148005
+  },
+  "ms_c1": 241.120302118361,
+  "c2": {
+   "general": 0.0044469750018929525,
+   "none_fit": 0.1981130637910954,
+   "relevant": 0.7974399612070118
+  },
+  "ms_c2": 592.6329880021513
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days before I bought the iPhone 13 Pro did I attend the Holiday Market?",
+  "skip": false,
+  "yesno": 0.8955933239389052,
+  "ms_yesno": 654.3993439991027,
+  "c1": {
+   "general": 0.002322853918102459,
+   "none_fit": 0.002588169485980452,
+   "relevant": 0.995088976595917
+  },
+  "ms_c1": 248.2717209495604,
+  "c2": {
+   "general": 0.008346357561467694,
+   "none_fit": 0.01991247018433018,
+   "relevant": 0.971741172254202
+  },
+  "ms_c2": 394.9028148781508
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days passed between the day I replaced my spark plugs and the day I participated in the Turbocharged Tuesdays auto racking event?",
+  "skip": false,
+  "yesno": 0.8422105499482215,
+  "ms_yesno": 633.9240609668195,
+  "c1": {
+   "general": 0.011089449819167574,
+   "none_fit": 0.004874606885974392,
+   "relevant": 0.984035943294858
+  },
+  "ms_c1": 248.95778601057827,
+  "c2": {
+   "general": 0.030372368234507292,
+   "none_fit": 0.008777273135964195,
+   "relevant": 0.9608503586295285
+  },
+  "ms_c2": 370.55006297305226
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days had passed since I finished reading 'The Seven Husbands of Evelyn Hugo' when I attended the book reading event at the local library, where the author of 'The Silent Patient' is discussing her latest thriller novel?",
+  "skip": false,
+  "yesno": 0.7078506072243307,
+  "ms_yesno": 504.444460850209,
+  "c1": {
+   "general": 0.009948977559940654,
+   "none_fit": 0.27505781746053415,
+   "relevant": 0.7149932049795251
+  },
+  "ms_c1": 246.96852103807032,
+  "c2": {
+   "general": 0.14246745769107613,
+   "none_fit": 0.33661694674180087,
+   "relevant": 0.520915595567123
+  },
+  "ms_c2": 385.7272299937904
+ },
+ {
+  "kind": "relevant",
+  "query": "How many days ago did I participate in the 5K charity run?",
+  "skip": false,
+  "yesno": 0.8479330900677632,
+  "ms_yesno": 610.314941033721,
+  "c1": {
+   "general": 0.002175032283265991,
+   "none_fit": 0.035744499301315624,
+   "relevant": 0.9620804684154184
+  },
+  "ms_c1": 248.44818282872438,
+  "c2": {
+   "general": 0.002743423233557399,
+   "none_fit": 0.03774458497847041,
+   "relevant": 0.9595119917879722
+  },
+  "ms_c2": 382.76605401188135
+ },
+ {
+  "kind": "relevant",
+  "query": "Which event happened first, my cousin's wedding or Michael's engagement party?",
+  "skip": false,
+  "yesno": 0.7769662049876107,
+  "ms_yesno": 482.0419210009277,
+  "c1": {
+   "general": 0.003669950335201561,
+   "none_fit": 0.015347064344435762,
+   "relevant": 0.9809829853203627
+  },
+  "ms_c1": 239.74770586937666,
+  "c2": {
+   "general": 0.011003343126363311,
+   "none_fit": 0.06064418412975475,
+   "relevant": 0.9283524727438819
+  },
+  "ms_c2": 382.51497596502304
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the order of the three events: 'I signed up for the rewards program at ShopRite', 'I used a Buy One Get One Free coupon on Luvs diapers at Walmart', and 'I redeemed $12 cashback for a $10 Amazon gift card from Ibotta'?",
+  "skip": false,
+  "yesno": 0.91763239015148,
+  "ms_yesno": 639.346688054502,
+  "c1": {
+   "general": 0.009356388399210588,
+   "none_fit": 0.006128490056700974,
+   "relevant": 0.9845151215440884
+  },
+  "ms_c1": 256.94108894094825,
+  "c2": {
+   "general": 0.01631453865094383,
+   "none_fit": 0.012350151465357293,
+   "relevant": 0.9713353098836989
+  },
+  "ms_c2": 421.65511893108487
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the order of the sports events I watched in January?",
+  "skip": false,
+  "yesno": 0.8255872477346811,
+  "ms_yesno": 620.1654139440507,
+  "c1": {
+   "general": 0.0069047563720937045,
+   "none_fit": 0.5759097760277471,
+   "relevant": 0.41718546760015923
+  },
+  "ms_c1": 267.0633860398084,
+  "c2": {
+   "general": 0.010771272660472703,
+   "none_fit": 0.39155448221287675,
+   "relevant": 0.5976742451266506
+  },
+  "ms_c2": 386.58338296227157
+ },
+ {
+  "kind": "relevant",
+  "query": "How many Crash Course videos have I watched in the past few weeks?",
+  "skip": false,
+  "yesno": 0.9282196767020781,
+  "ms_yesno": 463.05623301304877,
+  "c1": {
+   "general": 0.01653236273634126,
+   "none_fit": 0.0783486637044824,
+   "relevant": 0.9051189735591764
+  },
+  "ms_c1": 253.38246184401214,
+  "c2": {
+   "general": 0.16531396013565205,
+   "none_fit": 0.09940257091688541,
+   "relevant": 0.7352834689474625
+  },
+  "ms_c2": 525.4855470266193
+ },
+ {
+  "kind": "relevant",
+  "skip": true
+ },
+ {
+  "kind": "relevant",
+  "query": "For the coffee-to-water ratio in my French press, did I switch to more water per tablespoon of coffee, or less?",
+  "skip": false,
+  "yesno": 0.6017736630971598,
+  "ms_yesno": 656.4197828993201,
+  "c1": {
+   "general": 0.004531408848805882,
+   "none_fit": 0.18961752576373192,
+   "relevant": 0.8058510653874621
+  },
+  "ms_c1": 252.27987417019904,
+  "c2": {
+   "general": 0.01466399854271834,
+   "none_fit": 0.13531352988034928,
+   "relevant": 0.8500224715769323
+  },
+  "ms_c2": 424.85503386706114
+ },
+ {
+  "kind": "relevant",
+  "skip": true
+ },
+ {
+  "kind": "relevant",
+  "query": "What was my previous personal best time for the charity 5K run?",
+  "skip": false,
+  "yesno": 0.9407428795519971,
+  "ms_yesno": 511.7216110229492,
+  "c1": {
+   "general": 0.0011126098520002617,
+   "none_fit": 0.0006429240724645242,
+   "relevant": 0.9982444660755352
+  },
+  "ms_c1": 254.01474093087018,
+  "c2": {
+   "general": 0.002100275350181226,
+   "none_fit": 0.002678018031625928,
+   "relevant": 0.9952217066181929
+  },
+  "ms_c2": 394.4771680980921
+ },
+ {
+  "kind": "relevant",
+  "skip": true
+ },
+ {
+  "kind": "relevant",
+  "query": "How many bikes do I currently own?",
+  "skip": false,
+  "yesno": 0.9842107569674093,
+  "ms_yesno": 494.3644779268652,
+  "c1": {
+   "general": 0.0014683938808144601,
+   "none_fit": 0.00036813041345864676,
+   "relevant": 0.9981634757057268
+  },
+  "ms_c1": 249.54563402570784,
+  "c2": {
+   "general": 0.003105139121676556,
+   "none_fit": 0.002267529518557836,
+   "relevant": 0.9946273313597656
+  },
+  "ms_c2": 592.4493919592351
+ },
+ {
+  "kind": "relevant",
+  "query": "Where do I currently keep my old sneakers?",
+  "skip": false,
+  "yesno": 0.9093334228074879,
+  "ms_yesno": 625.1178388483822,
+  "c1": {
+   "general": 0.004030381688918621,
+   "none_fit": 0.020857419598207607,
+   "relevant": 0.9751121987128738
+  },
+  "ms_c1": 246.38912710361183,
+  "c2": {
+   "general": 0.006468483343823858,
+   "none_fit": 0.04428697460535586,
+   "relevant": 0.9492445420508203
+  },
+  "ms_c2": 370.199013967067
+ },
+ {
+  "kind": "relevant",
+  "query": "How often do I play table tennis with my friends at the local park?",
+  "skip": false,
+  "yesno": 0.9320408123632019,
+  "ms_yesno": 466.0314070060849,
+  "c1": {
+   "general": 0.004714871880409727,
+   "none_fit": 0.11463530421577835,
+   "relevant": 0.8806498239038119
+  },
+  "ms_c1": 246.95539916865528,
+  "c2": {
+   "general": 0.013603036713344405,
+   "none_fit": 0.1747030707181258,
+   "relevant": 0.8116938925685298
+  },
+  "ms_c2": 354.25857501104474
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you suggest some accessories that would complement my current photography setup?",
+  "skip": false,
+  "yesno": 0.794791219389475,
+  "ms_yesno": 435.4420800227672,
+  "c1": {
+   "general": 0.01634496929210781,
+   "none_fit": 0.22517021980377408,
+   "relevant": 0.7584848109041182
+  },
+  "ms_c1": 240.879527060315,
+  "c2": {
+   "general": 0.010299922273623948,
+   "none_fit": 0.18196019978488884,
+   "relevant": 0.8077398779414873
+  },
+  "ms_c2": 343.6233107931912
+ },
+ {
+  "kind": "relevant",
+  "query": "What should I serve for dinner this weekend with my homegrown ingredients?",
+  "skip": false,
+  "yesno": 0.8484993489255815,
+  "ms_yesno": 464.4918041303754,
+  "c1": {
+   "general": 0.005305851225364384,
+   "none_fit": 0.03620645937785825,
+   "relevant": 0.9584876893967773
+  },
+  "ms_c1": 239.77168509736657,
+  "c2": {
+   "general": 0.005311224801746766,
+   "none_fit": 0.06169744935859858,
+   "relevant": 0.9329913258396546
+  },
+  "ms_c2": 569.3824749905616
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you suggest some useful accessories for my phone?",
+  "skip": false,
+  "yesno": 0.860365926294374,
+  "ms_yesno": 635.1314699277282,
+  "c1": {
+   "general": 0.006370148045043345,
+   "none_fit": 0.23828697014907338,
+   "relevant": 0.7553428818058833
+  },
+  "ms_c1": 244.03903097845614,
+  "c2": {
+   "general": 0.008227865520116721,
+   "none_fit": 0.2586548981834162,
+   "relevant": 0.7331172362964671
+  },
+  "ms_c2": 374.30902291089296
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been having trouble with the battery life on my phone lately. Any tips?",
+  "skip": false,
+  "yesno": 0.6398718683249636,
+  "ms_yesno": 576.5908339526504,
+  "c1": {
+   "general": 0.008208848733855306,
+   "none_fit": 0.8667005978171209,
+   "relevant": 0.12509055344902384
+  },
+  "ms_c1": 236.5440959110856,
+  "c2": {
+   "general": 0.006538240060934096,
+   "none_fit": 0.653631289745174,
+   "relevant": 0.339830470193892
+  },
+  "ms_c2": 362.6086369622499
+ },
+ {
+  "kind": "relevant",
+  "query": "I\u2019m a bit anxious about getting around Tokyo. Do you have any helpful tips?",
+  "skip": false,
+  "yesno": 0.8273794239218526,
+  "ms_yesno": 465.7245040871203,
+  "c1": {
+   "general": 0.002547245210415096,
+   "none_fit": 0.025975304120056945,
+   "relevant": 0.9714774506695281
+  },
+  "ms_c1": 245.88550999760628,
+  "c2": {
+   "general": 0.0035343095215262603,
+   "none_fit": 0.023241126138359977,
+   "relevant": 0.9732245643401138
+  },
+  "ms_c2": 336.08317910693586
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you suggest a hotel for my upcoming trip to Miami?",
+  "skip": false,
+  "yesno": 0.5790512660721147,
+  "ms_yesno": 443.2711289264262,
+  "c1": {
+   "general": 0.004880092368540176,
+   "none_fit": 0.7741524988593801,
+   "relevant": 0.22096740877207965
+  },
+  "ms_c1": 230.27401813305914,
+  "c2": {
+   "general": 0.017836407108860006,
+   "none_fit": 0.7934646132742872,
+   "relevant": 0.18869897961685272
+  },
+  "ms_c2": 364.1421177890152
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you suggest some activities that I can do in the evening?",
+  "skip": false,
+  "yesno": 0.8874496288269224,
+  "ms_yesno": 586.1564038787037,
+  "c1": {
+   "general": 0.004002666481825789,
+   "none_fit": 0.006944622044307844,
+   "relevant": 0.9890527114738663
+  },
+  "ms_c1": 248.05235513485968,
+  "c2": {
+   "general": 0.0060151578773055756,
+   "none_fit": 0.025303227199966593,
+   "relevant": 0.9686816149227279
+  },
+  "ms_c2": 546.3529480621219
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been thinking about making a cocktail for an upcoming get-together, but I'm not sure which one to choose. Any suggestions?",
+  "skip": false,
+  "yesno": 0.8239027873400763,
+  "ms_yesno": 645.0282409787178,
+  "c1": {
+   "general": 0.009577828789627282,
+   "none_fit": 0.37964974812073027,
+   "relevant": 0.6107724230896425
+  },
+  "ms_c1": 250.23289606906474,
+  "c2": {
+   "general": 0.012079609237816247,
+   "none_fit": 0.30433133278142294,
+   "relevant": 0.6835890579807609
+  },
+  "ms_c2": 395.5469820648432
+ },
+ {
+  "kind": "relevant",
+  "query": "I noticed my bike seems to be performing even better during my Sunday group rides. Could there be a reason for this?",
+  "skip": false,
+  "yesno": 0.8409089442565274,
+  "ms_yesno": 620.3899409156293,
+  "c1": {
+   "general": 0.0015032129382518747,
+   "none_fit": 0.0012696647938768052,
+   "relevant": 0.9972271222678712
+  },
+  "ms_c1": 247.170050162822,
+  "c2": {
+   "general": 0.002011563579595535,
+   "none_fit": 0.011336565322387198,
+   "relevant": 0.9866518710980172
+  },
+  "ms_c2": 408.8644399307668
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you recommend a show or movie for me to watch tonight?",
+  "skip": false,
+  "yesno": 0.8822785710638379,
+  "ms_yesno": 586.3882340490818,
+  "c1": {
+   "general": 0.023137069128113218,
+   "none_fit": 0.6970627478551032,
+   "relevant": 0.27980018301678367
+  },
+  "ms_c1": 231.93820496089756,
+  "c2": {
+   "general": 0.022058438170735613,
+   "none_fit": 0.41298931079628515,
+   "relevant": 0.5649522510329793
+  },
+  "ms_c2": 546.1794009897858
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you recommend some interesting cultural events happening around me this weekend?",
+  "skip": false,
+  "yesno": 0.8154369533865276,
+  "ms_yesno": 621.2748000398278,
+  "c1": {
+   "general": 0.005862842164123774,
+   "none_fit": 0.09967504041397521,
+   "relevant": 0.894462117421901
+  },
+  "ms_c1": 247.762304963544,
+  "c2": {
+   "general": 0.005442617917943684,
+   "none_fit": 0.09710822610243947,
+   "relevant": 0.8974491559796168
+  },
+  "ms_c2": 346.2935339193791
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been feeling like my chocolate chip cookies need something extra. Any advice?",
+  "skip": false,
+  "yesno": 0.6283348071866695,
+  "ms_yesno": 499.1604220122099,
+  "c1": {
+   "general": 0.008592053836660533,
+   "none_fit": 0.8956868966428126,
+   "relevant": 0.09572104952052689
+  },
+  "ms_c1": 250.82484679296613,
+  "c2": {
+   "general": 0.008555803096202214,
+   "none_fit": 0.7579930815614468,
+   "relevant": 0.233451115342351
+  },
+  "ms_c2": 366.6798488702625
+ },
+ {
+  "kind": "relevant",
+  "query": "I was thinking of trying a new coffee creamer recipe. Any recommendations?",
+  "skip": false,
+  "yesno": 0.9549376295836141,
+  "ms_yesno": 489.8366208653897,
+  "c1": {
+   "general": 0.007269718860428113,
+   "none_fit": 0.00508299636551951,
+   "relevant": 0.9876472847740525
+  },
+  "ms_c1": 249.61219704709947,
+  "c2": {
+   "general": 0.008422100605431311,
+   "none_fit": 0.027189140267435265,
+   "relevant": 0.9643887591271334
+  },
+  "ms_c2": 385.76206495054066
+ },
+ {
+  "kind": "relevant",
+  "query": "I was thinking about rearranging the furniture in my bedroom this weekend. Any tips?",
+  "skip": false,
+  "yesno": 0.7523385964981811,
+  "ms_yesno": 623.3720120508224,
+  "c1": {
+   "general": 0.008754959230273389,
+   "none_fit": 0.556307447018873,
+   "relevant": 0.43493759375085356
+  },
+  "ms_c1": 251.09967892058194,
+  "c2": {
+   "general": 0.007639271664328931,
+   "none_fit": 0.458702024584501,
+   "relevant": 0.5336587037511701
+  },
+  "ms_c2": 408.182580024004
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been feeling a bit stuck with my paintings lately. Do you have any ideas on how I can find new inspiration?",
+  "skip": false,
+  "yesno": 0.8832631366642549,
+  "ms_yesno": 581.5663780085742,
+  "c1": {
+   "general": 0.004021493727970409,
+   "none_fit": 0.02577254165383702,
+   "relevant": 0.9702059646181926
+  },
+  "ms_c1": 239.43337704986334,
+  "c2": {
+   "general": 0.008425758172026943,
+   "none_fit": 0.06181895785472882,
+   "relevant": 0.9297552839732441
+  },
+  "ms_c2": 584.0505638625473
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you recommend some recent publications or conferences that I might find interesting?",
+  "skip": false,
+  "yesno": 0.9022111646341882,
+  "ms_yesno": 657.5666619464755,
+  "c1": {
+   "general": 0.005317461974373204,
+   "none_fit": 0.006818984524399324,
+   "relevant": 0.9878635535012275
+  },
+  "ms_c1": 249.66632016003132,
+  "c2": {
+   "general": 0.021070213237914987,
+   "none_fit": 0.02409031553834356,
+   "relevant": 0.9548394712237416
+  },
+  "ms_c2": 570.936321048066
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been sneezing quite a bit lately. Do you think it might be my living room?",
+  "skip": false,
+  "yesno": 0.9399602976780986,
+  "ms_yesno": 616.9423321262002,
+  "c1": {
+   "general": 0.005232852438055853,
+   "none_fit": 0.05811187380026893,
+   "relevant": 0.9366552737616752
+  },
+  "ms_c1": 248.75805084593594,
+  "c2": {
+   "general": 0.0054031184018202,
+   "none_fit": 0.0943519270973184,
+   "relevant": 0.9002449545008614
+  },
+  "ms_c2": 566.4516389369965
+ },
+ {
+  "kind": "relevant",
+  "query": "Can you recommend some resources where I can learn more about video editing?",
+  "skip": false,
+  "yesno": 0.9152081382321041,
+  "ms_yesno": 625.5794160533696,
+  "c1": {
+   "general": 0.009664208923977024,
+   "none_fit": 0.008108733911381146,
+   "relevant": 0.9822270571646419
+  },
+  "ms_c1": 248.9404750522226,
+  "c2": {
+   "general": 0.033630951733667466,
+   "none_fit": 0.024592963292578537,
+   "relevant": 0.941776084973754
+  },
+  "ms_c2": 547.0554681960493
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm getting excited about my visit to the music store this weekend. Any tips on what to look for in a new guitar?",
+  "skip": false,
+  "yesno": 0.8943097930865326,
+  "ms_yesno": 621.8902489636093,
+  "c1": {
+   "general": 0.004342928046665164,
+   "none_fit": 0.21916831973388712,
+   "relevant": 0.7764887522194477
+  },
+  "ms_c1": 268.74454808421433,
+  "c2": {
+   "general": 0.002790464040385986,
+   "none_fit": 0.14511916362276062,
+   "relevant": 0.8520903723368534
+  },
+  "ms_c2": 564.1555259935558
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm planning a trip to Denver soon. Any suggestions on what to do there?",
+  "skip": false,
+  "yesno": 0.920404593874837,
+  "ms_yesno": 646.4508948847651,
+  "c1": {
+   "general": 0.003062830656290933,
+   "none_fit": 0.0018611515139055883,
+   "relevant": 0.9950760178298035
+  },
+  "ms_c1": 250.44921808876097,
+  "c2": {
+   "general": 0.0032929546541039445,
+   "none_fit": 0.013109950410179415,
+   "relevant": 0.9835970949357167
+  },
+  "ms_c2": 575.6284010130912
+ },
+ {
+  "kind": "relevant",
+  "query": "My kitchen's becoming a bit of a mess again. Any tips for keeping it clean?",
+  "skip": false,
+  "yesno": 0.8456282357164034,
+  "ms_yesno": 623.7007190939039,
+  "c1": {
+   "general": 0.004018377713017489,
+   "none_fit": 0.7247442069627246,
+   "relevant": 0.2712374153242579
+  },
+  "ms_c1": 241.550117963925,
+  "c2": {
+   "general": 0.0041199090850304945,
+   "none_fit": 0.3569461471712839,
+   "relevant": 0.6389339437436856
+  },
+  "ms_c2": 549.8972318600863
+ },
+ {
+  "kind": "relevant",
+  "query": "I've got some free time tonight, any documentary recommendations?",
+  "skip": false,
+  "yesno": 0.8619027535040531,
+  "ms_yesno": 643.7034849077463,
+  "c1": {
+   "general": 0.005661113808089705,
+   "none_fit": 0.001688919329972244,
+   "relevant": 0.9926499668619381
+  },
+  "ms_c1": 248.74101113528013,
+  "c2": {
+   "general": 0.015366487670535042,
+   "none_fit": 0.058136952603408586,
+   "relevant": 0.9264965597260564
+  },
+  "ms_c2": 583.9166129007936
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm planning my meal prep next week, any suggestions for new recipes?",
+  "skip": false,
+  "yesno": 0.9294910389123677,
+  "ms_yesno": 642.8765361197293,
+  "c1": {
+   "general": 0.009582414919651347,
+   "none_fit": 0.08501092366707699,
+   "relevant": 0.9054066614132718
+  },
+  "ms_c1": 247.33345094136894,
+  "c2": {
+   "general": 0.01006818904076127,
+   "none_fit": 0.1482461963567529,
+   "relevant": 0.8416856146024858
+  },
+  "ms_c2": 557.0970079861581
+ },
+ {
+  "kind": "relevant",
+  "query": "I've been struggling with my slow cooker recipes. Any advice on getting better results?",
+  "skip": false,
+  "yesno": 0.9067636357848493,
+  "ms_yesno": 611.9705000892282,
+  "c1": {
+   "general": 0.0037898881906611673,
+   "none_fit": 0.008424447872195972,
+   "relevant": 0.9877856639371428
+  },
+  "ms_c1": 235.48403498716652,
+  "c2": {
+   "general": 0.0036828784595835454,
+   "none_fit": 0.01535302480735896,
+   "relevant": 0.9809640967330575
+  },
+  "ms_c2": 576.5536739490926
+ },
+ {
+  "kind": "relevant",
+  "query": "I'm thinking of inviting my colleagues over for a small gathering. Any tips on what to bake?",
+  "skip": false,
+  "yesno": 0.9299127618262641,
+  "ms_yesno": 605.8539631776512,
+  "c1": {
+   "general": 0.007881490279300655,
+   "none_fit": 0.13680377732854984,
+   "relevant": 0.8553147323921496
+  },
+  "ms_c1": 232.14126285165548,
+  "c2": {
+   "general": 0.0049509820141073,
+   "none_fit": 0.08264449485587935,
+   "relevant": 0.9124045231300133
+  },
+  "ms_c2": 348.2444849796593
+ },
+ {
+  "kind": "relevant",
+  "query": "I am planning another theme park weekend; do you have any suggestions?",
+  "skip": false,
+  "yesno": 0.899875563458364,
+  "ms_yesno": 485.64005782827735,
+  "c1": {
+   "general": 0.02525782997620513,
+   "none_fit": 0.2072911205386111,
+   "relevant": 0.7674510494851837
+  },
+  "ms_c1": 239.29006792604923,
+  "c2": {
+   "general": 0.031606106567713364,
+   "none_fit": 0.16572350840315508,
+   "relevant": 0.8026703850291315
+  },
+  "ms_c2": 555.2044881042093
+ },
+ {
+  "kind": "relevant",
+  "query": "When did John join the online support group?",
+  "skip": false,
+  "yesno": 0.8005638378345666,
+  "ms_yesno": 599.1527049336582,
+  "c1": {
+   "general": 0.006839755038544642,
+   "none_fit": 0.014944250501394701,
+   "relevant": 0.9782159944600607
+  },
+  "ms_c1": 251.6958019696176,
+  "c2": {
+   "general": 0.012749226382869438,
+   "none_fit": 0.018825981666076772,
+   "relevant": 0.9684247919510537
+  },
+  "ms_c2": 513.7141367886215
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Maria make for her home to remind her of a trip to England?",
+  "skip": false,
+  "yesno": 0.8949290744427926,
+  "ms_yesno": 580.5237609893084,
+  "c1": {
+   "general": 0.002543852875778621,
+   "none_fit": 0.0014403931239138038,
+   "relevant": 0.9960157540003076
+  },
+  "ms_c1": 236.40546388924122,
+  "c2": {
+   "general": 0.005126367802494604,
+   "none_fit": 0.004348326534950862,
+   "relevant": 0.9905253056625546
+  },
+  "ms_c2": 340.5627489555627
+ },
+ {
+  "kind": "relevant",
+  "query": "What is Gina's favorite style of dance?",
+  "skip": false,
+  "yesno": 0.9582475629230625,
+  "ms_yesno": 411.0271940007806,
+  "c1": {
+   "general": 0.00204601723380436,
+   "none_fit": 0.0008793669556700495,
+   "relevant": 0.9970746158105256
+  },
+  "ms_c1": 246.62387603893876,
+  "c2": {
+   "general": 0.0055690329596606355,
+   "none_fit": 0.004253106219656947,
+   "relevant": 0.9901778608206824
+  },
+  "ms_c2": 306.6370019223541
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Melanie do to keep herself busy during her pottery break?",
+  "skip": false,
+  "yesno": 0.8881046607008913,
+  "ms_yesno": 423.4423718880862,
+  "c1": {
+   "general": 0.005505718458998708,
+   "none_fit": 0.0038354234891865248,
+   "relevant": 0.9906588580518148
+  },
+  "ms_c1": 243.77013696357608,
+  "c2": {
+   "general": 0.007853803546613886,
+   "none_fit": 0.008428096313629578,
+   "relevant": 0.9837181001397566
+  },
+  "ms_c2": 332.06782513298094
+ },
+ {
+  "kind": "relevant",
+  "query": "What transgender-specific events has Caroline attended?",
+  "skip": false,
+  "yesno": 0.941881146130094,
+  "ms_yesno": 574.8790500219911,
+  "c1": {
+   "general": 0.00151150505466475,
+   "none_fit": 0.0004752924196291516,
+   "relevant": 0.998013202525706
+  },
+  "ms_c1": 250.5539369303733,
+  "c2": {
+   "general": 0.0019007378400170717,
+   "none_fit": 0.0011875952974974824,
+   "relevant": 0.9969116668624856
+  },
+  "ms_c2": 556.095166830346
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Melanie and her family do while camping?",
+  "skip": false,
+  "yesno": 0.9363805181047286,
+  "ms_yesno": 592.6929810084403,
+  "c1": {
+   "general": 0.002258309000076306,
+   "none_fit": 0.0008090289008770429,
+   "relevant": 0.9969326620990465
+  },
+  "ms_c1": 237.2935600578785,
+  "c2": {
+   "general": 0.002091357985942593,
+   "none_fit": 0.001037205495919996,
+   "relevant": 0.9968714365181375
+  },
+  "ms_c2": 533.3323539234698
+ },
+ {
+  "kind": "relevant",
+  "query": "What was one of the biggest challenges John faced in his journey to becoming assistant manager?",
+  "skip": false,
+  "yesno": 0.9668747693353418,
+  "ms_yesno": 576.069578062743,
+  "c1": {
+   "general": 0.0012147547921775809,
+   "none_fit": 0.0008259894769335174,
+   "relevant": 0.997959255730889
+  },
+  "ms_c1": 238.59552713111043,
+  "c2": {
+   "general": 0.002547905654816356,
+   "none_fit": 0.004823038847670184,
+   "relevant": 0.9926290554975135
+  },
+  "ms_c2": 542.8033601492643
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Caroline research?",
+  "skip": false,
+  "yesno": 0.9093646978924557,
+  "ms_yesno": 576.8821218516678,
+  "c1": {
+   "general": 0.009015544020043707,
+   "none_fit": 0.030620957257207895,
+   "relevant": 0.9603634987227485
+  },
+  "ms_c1": 240.52167986519635,
+  "c2": {
+   "general": 0.011616589718328072,
+   "none_fit": 0.03186366068524148,
+   "relevant": 0.9565197495964304
+  },
+  "ms_c2": 493.9437140710652
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Jon start reading \"The Lean Startup\"?",
+  "skip": false,
+  "yesno": 0.8614326205105793,
+  "ms_yesno": 544.2410479299724,
+  "c1": {
+   "general": 0.012896641643140363,
+   "none_fit": 0.008200231407535109,
+   "relevant": 0.9789031269493245
+  },
+  "ms_c1": 242.68398410640657,
+  "c2": {
+   "general": 0.022193714728914293,
+   "none_fit": 0.026853281811349522,
+   "relevant": 0.9509530034597361
+  },
+  "ms_c2": 350.8777238894254
+ },
+ {
+  "kind": "relevant",
+  "query": "When did John start boot camp with his family?",
+  "skip": false,
+  "yesno": 0.822218962608527,
+  "ms_yesno": 516.3461910560727,
+  "c1": {
+   "general": 0.002619371629042344,
+   "none_fit": 0.001644597395673067,
+   "relevant": 0.9957360309752847
+  },
+  "ms_c1": 236.52283591218293,
+  "c2": {
+   "general": 0.010070195999653442,
+   "none_fit": 0.015286118175423632,
+   "relevant": 0.974643685824923
+  },
+  "ms_c2": 309.04893996194005
+ },
+ {
+  "kind": "relevant",
+  "query": "What did the donations help John's community acquire on 16 August, 2023?",
+  "skip": false,
+  "yesno": 0.9008609246594051,
+  "ms_yesno": 405.4486989043653,
+  "c1": {
+   "general": 0.0011930056921180725,
+   "none_fit": 0.0004860616075449585,
+   "relevant": 0.998320932700337
+  },
+  "ms_c1": 232.60229779407382,
+  "c2": {
+   "general": 0.00465628481178285,
+   "none_fit": 0.0030530490751960217,
+   "relevant": 0.9922906661130212
+  },
+  "ms_c2": 495.23136112838984
+ },
+ {
+  "kind": "relevant",
+  "query": "Why did John decide to run for office again?",
+  "skip": false,
+  "yesno": 0.8509209149409175,
+  "ms_yesno": 561.8937038816512,
+  "c1": {
+   "general": 0.0038111593258846796,
+   "none_fit": 0.004182571339738983,
+   "relevant": 0.9920062693343764
+  },
+  "ms_c1": 249.27417584694922,
+  "c2": {
+   "general": 0.009810484688848906,
+   "none_fit": 0.020577906890598602,
+   "relevant": 0.9696116084205525
+  },
+  "ms_c2": 343.9384000375867
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline join a new activist group?",
+  "skip": false,
+  "yesno": 0.8869120300667481,
+  "ms_yesno": 533.5859549231827,
+  "c1": {
+   "general": 0.0021737391182907687,
+   "none_fit": 0.0007715704022671682,
+   "relevant": 0.9970546904794422
+  },
+  "ms_c1": 236.96101200766861,
+  "c2": {
+   "general": 0.0017475694010491657,
+   "none_fit": 0.002031303303214808,
+   "relevant": 0.9962211272957361
+  },
+  "ms_c2": 516.7006470728666
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Gina interview for a design internship?",
+  "skip": false,
+  "yesno": 0.8979846661679092,
+  "ms_yesno": 534.9055060651153,
+  "c1": {
+   "general": 0.0041854669718580685,
+   "none_fit": 0.0025570805684938785,
+   "relevant": 0.9932574524596481
+  },
+  "ms_c1": 238.45891002565622,
+  "c2": {
+   "general": 0.01879225462539908,
+   "none_fit": 0.01581891760307897,
+   "relevant": 0.965388827771522
+  },
+  "ms_c2": 329.15392983704805
+ },
+ {
+  "kind": "relevant",
+  "query": "What attributes describe John?",
+  "skip": false,
+  "yesno": 0.854860973503155,
+  "ms_yesno": 508.361142128706,
+  "c1": {
+   "general": 0.006305411347235445,
+   "none_fit": 0.0036844928637414552,
+   "relevant": 0.9900100957890231
+  },
+  "ms_c1": 229.31811399757862,
+  "c2": {
+   "general": 0.018461552780618482,
+   "none_fit": 0.011640811979281523,
+   "relevant": 0.9698976352401001
+  },
+  "ms_c2": 460.8943210914731
+ },
+ {
+  "kind": "relevant",
+  "query": "What did John receive a certificate for?",
+  "skip": false,
+  "yesno": 0.8100892349294401,
+  "ms_yesno": 549.862528918311,
+  "c1": {
+   "general": 0.0036330102509335082,
+   "none_fit": 0.006144381152987697,
+   "relevant": 0.9902226085960788
+  },
+  "ms_c1": 235.68542092107236,
+  "c2": {
+   "general": 0.011940802131823042,
+   "none_fit": 0.01715151423040928,
+   "relevant": 0.9709076836377677
+  },
+  "ms_c2": 310.1117911282927
+ },
+ {
+  "kind": "relevant",
+  "query": "What does John appreciate about the veteran's hospital visit?",
+  "skip": false,
+  "yesno": 0.9318931428356837,
+  "ms_yesno": 425.1918918453157,
+  "c1": {
+   "general": 0.0018608153832873132,
+   "none_fit": 0.000801258431750536,
+   "relevant": 0.9973379261849622
+  },
+  "ms_c1": 238.32272086292505,
+  "c2": {
+   "general": 0.005303245469323938,
+   "none_fit": 0.004054552326652996,
+   "relevant": 0.9906422022040231
+  },
+  "ms_c2": 528.2152248546481
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie go to the museum?",
+  "skip": false,
+  "yesno": 0.9209657526209863,
+  "ms_yesno": 586.0501590650529,
+  "c1": {
+   "general": 0.001963857996425987,
+   "none_fit": 0.0013732785998614402,
+   "relevant": 0.9966628634037126
+  },
+  "ms_c1": 240.0052568409592,
+  "c2": {
+   "general": 0.00454524493871038,
+   "none_fit": 0.004660056319033863,
+   "relevant": 0.9907946987422558
+  },
+  "ms_c2": 300.3953208681196
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of dance piece did Gina's team perform to win first place?",
+  "skip": false,
+  "yesno": 0.7929857430827301,
+  "ms_yesno": 411.0304450150579,
+  "c1": {
+   "general": 0.004012150138090429,
+   "none_fit": 0.0016359364602611432,
+   "relevant": 0.9943519134016484
+  },
+  "ms_c1": 240.59133208356798,
+  "c2": {
+   "general": 0.0034451692483255083,
+   "none_fit": 0.0038944107493633674,
+   "relevant": 0.9926604200023111
+  },
+  "ms_c2": 530.7166550774127
+ },
+ {
+  "kind": "relevant",
+  "query": "What type of individuals does the adoption agency Caroline is considering support?",
+  "skip": false,
+  "yesno": 0.8860011095465029,
+  "ms_yesno": 561.6752728819847,
+  "c1": {
+   "general": 0.0018365392170177192,
+   "none_fit": 0.0018673650476718475,
+   "relevant": 0.9962960957353104
+  },
+  "ms_c1": 242.63919284567237,
+  "c2": {
+   "general": 0.0074076981752663204,
+   "none_fit": 0.011866382260431074,
+   "relevant": 0.9807259195643026
+  },
+  "ms_c2": 324.2189968004823
+ },
+ {
+  "kind": "relevant",
+  "query": "Why did John feel inspired to join the military after the visit to the hospital?",
+  "skip": false,
+  "yesno": 0.9637393110743695,
+  "ms_yesno": 536.9517218787223,
+  "c1": {
+   "general": 0.0015207439760122608,
+   "none_fit": 0.0004627024161026938,
+   "relevant": 0.998016553607885
+  },
+  "ms_c1": 255.16529893502593,
+  "c2": {
+   "general": 0.0034233746951498265,
+   "none_fit": 0.0036868330407277203,
+   "relevant": 0.9928897922641224
+  },
+  "ms_c2": 330.29792993329465
+ },
+ {
+  "kind": "relevant",
+  "query": "What plans does Jon have after receiving advice at the networking event?",
+  "skip": false,
+  "yesno": 0.9549758608353894,
+  "ms_yesno": 407.2110219858587,
+  "c1": {
+   "general": 0.001888504011821289,
+   "none_fit": 0.001363441132255972,
+   "relevant": 0.9967480548559228
+  },
+  "ms_c1": 238.08547598309815,
+  "c2": {
+   "general": 0.0035514204554413335,
+   "none_fit": 0.0061958337220474995,
+   "relevant": 0.9902527458225112
+  },
+  "ms_c2": 352.3110889364034
+ },
+ {
+  "kind": "relevant",
+  "query": "Where is Gina's fashion internship?",
+  "skip": false,
+  "yesno": 0.9357395265419666,
+  "ms_yesno": 515.4992260504514,
+  "c1": {
+   "general": 0.005510471433882284,
+   "none_fit": 0.02593800666302319,
+   "relevant": 0.9685515219030946
+  },
+  "ms_c1": 238.02726715803146,
+  "c2": {
+   "general": 0.002584759093602249,
+   "none_fit": 0.002541365588418873,
+   "relevant": 0.9948738753179789
+  },
+  "ms_c2": 511.3330881576985
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie buy the figurines?",
+  "skip": false,
+  "yesno": 0.7191587086675277,
+  "ms_yesno": 561.0429421067238,
+  "c1": {
+   "general": 0.004381987147789767,
+   "none_fit": 0.006571705327017258,
+   "relevant": 0.9890463075251928
+  },
+  "ms_c1": 236.36372108012438,
+  "c2": {
+   "general": 0.005298569401459608,
+   "none_fit": 0.012388325911839663,
+   "relevant": 0.9823131046867006
+  },
+  "ms_c2": 317.2858450561762
+ },
+ {
+  "kind": "relevant",
+  "query": "How did Maria start volunteering at the homeless shelter?",
+  "skip": false,
+  "yesno": 0.9217269281324738,
+  "ms_yesno": 419.27443095482886,
+  "c1": {
+   "general": 0.0013335319939475998,
+   "none_fit": 0.0004953488765430729,
+   "relevant": 0.9981711191295093
+  },
+  "ms_c1": 231.09722300432622,
+  "c2": {
+   "general": 0.0024512442266151776,
+   "none_fit": 0.0020966073336696374,
+   "relevant": 0.9954521484397153
+  },
+  "ms_c2": 517.067554872483
+ },
+ {
+  "kind": "relevant",
+  "query": "Who performed at the concert at Melanie's daughter's birthday?",
+  "skip": false,
+  "yesno": 0.7356516392823156,
+  "ms_yesno": 573.1341689825058,
+  "c1": {
+   "general": 0.005800728311323385,
+   "none_fit": 0.008614192936916119,
+   "relevant": 0.9855850787517606
+  },
+  "ms_c1": 232.3710541240871,
+  "c2": {
+   "general": 0.011633981572042339,
+   "none_fit": 0.0315924348798962,
+   "relevant": 0.9567735835480615
+  },
+  "ms_c2": 514.331148006022
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie read the book \"nothing is impossible\"?",
+  "skip": false,
+  "yesno": 0.8388430392938194,
+  "ms_yesno": 587.642190977931,
+  "c1": {
+   "general": 0.009659452987727161,
+   "none_fit": 0.3867642847896188,
+   "relevant": 0.603576262222654
+  },
+  "ms_c1": 237.06829408183694,
+  "c2": {
+   "general": 0.02275283189137392,
+   "none_fit": 0.1489741309728682,
+   "relevant": 0.8282730371357578
+  },
+  "ms_c2": 506.88381982035935
+ },
+ {
+  "kind": "relevant",
+  "query": "What symbols are important to Caroline?",
+  "skip": false,
+  "yesno": 0.9106356150789506,
+  "ms_yesno": 556.8179390393198,
+  "c1": {
+   "general": 0.002320612380023302,
+   "none_fit": 0.00044338516278243214,
+   "relevant": 0.9972360024571942
+  },
+  "ms_c1": 235.58497987687588,
+  "c2": {
+   "general": 0.006319946237848715,
+   "none_fit": 0.004512637477138543,
+   "relevant": 0.9891674162850128
+  },
+  "ms_c2": 499.71489096060395
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline go biking with friends?",
+  "skip": false,
+  "yesno": 0.9354876584145816,
+  "ms_yesno": 580.9820739086717,
+  "c1": {
+   "general": 0.0035701762431817313,
+   "none_fit": 0.01528574372309554,
+   "relevant": 0.9811440800337228
+  },
+  "ms_c1": 237.071919022128,
+  "c2": {
+   "general": 0.006390265106638104,
+   "none_fit": 0.015382235278793576,
+   "relevant": 0.9782274996145683
+  },
+  "ms_c2": 322.94698478654027
+ },
+ {
+  "kind": "relevant",
+  "query": "What has Maria done to feel closer to her faith?",
+  "skip": false,
+  "yesno": 0.9726304192420657,
+  "ms_yesno": 417.30484389699996,
+  "c1": {
+   "general": 0.001268628979015682,
+   "none_fit": 0.00045575921612936264,
+   "relevant": 0.9982756118048549
+  },
+  "ms_c1": 253.34523804485798,
+  "c2": {
+   "general": 0.0016160652999516285,
+   "none_fit": 0.0012046160968160586,
+   "relevant": 0.9971793186032324
+  },
+  "ms_c2": 517.5176130142063
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Maria donate to a homeless shelter in December 2023?",
+  "skip": false,
+  "yesno": 0.6236195460511312,
+  "ms_yesno": 577.8740220703185,
+  "c1": {
+   "general": 0.0021388641299064765,
+   "none_fit": 0.6303071723653517,
+   "relevant": 0.3675539635047418
+  },
+  "ms_c1": 237.0690810494125,
+  "c2": {
+   "general": 0.007295960570699049,
+   "none_fit": 0.45241873730935994,
+   "relevant": 0.540285302119941
+  },
+  "ms_c2": 359.17877685278654
+ },
+ {
+  "kind": "relevant",
+  "query": "What LGBTQ+ events has Caroline participated in?",
+  "skip": false,
+  "yesno": 0.9485485955843036,
+  "ms_yesno": 524.2293130140752,
+  "c1": {
+   "general": 0.001291714867327064,
+   "none_fit": 0.00031481050427328253,
+   "relevant": 0.9983934746283997
+  },
+  "ms_c1": 244.36992011032999,
+  "c2": {
+   "general": 0.001319819411938363,
+   "none_fit": 0.00046267200516542475,
+   "relevant": 0.9982175085828962
+  },
+  "ms_c2": 549.7055861633271
+ },
+ {
+  "kind": "relevant",
+  "query": "How often does John get to see sunsets like the one he shared with Maria?",
+  "skip": false,
+  "yesno": 0.911386034369553,
+  "ms_yesno": 565.688505070284,
+  "c1": {
+   "general": 0.0025778385838417027,
+   "none_fit": 0.0027771193355788015,
+   "relevant": 0.9946450420805795
+  },
+  "ms_c1": 237.2672399505973,
+  "c2": {
+   "general": 0.009032318410407645,
+   "none_fit": 0.022425903771127638,
+   "relevant": 0.9685417778184648
+  },
+  "ms_c2": 347.8502540383488
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Gina say about the dancers in the photo?",
+  "skip": false,
+  "yesno": 0.888314883578847,
+  "ms_yesno": 515.0104379281402,
+  "c1": {
+   "general": 0.0070950305315304425,
+   "none_fit": 0.002872765406932812,
+   "relevant": 0.9900322040615368
+  },
+  "ms_c1": 240.6623000279069,
+  "c2": {
+   "general": 0.009400686887292162,
+   "none_fit": 0.026839184297916804,
+   "relevant": 0.963760128814791
+  },
+  "ms_c2": 358.4079840220511
+ },
+ {
+  "kind": "relevant",
+  "query": "What are Melanie's pets' names?",
+  "skip": false,
+  "yesno": 0.8444533516548692,
+  "ms_yesno": 539.9401518516243,
+  "c1": {
+   "general": 0.002143327858447551,
+   "none_fit": 0.0005693526678240076,
+   "relevant": 0.9972873194737284
+  },
+  "ms_c1": 244.08672004938126,
+  "c2": {
+   "general": 0.005074300737045474,
+   "none_fit": 0.0021681608577697855,
+   "relevant": 0.9927575384051848
+  },
+  "ms_c2": 513.508474919945
+ },
+ {
+  "kind": "relevant",
+  "query": "What do Melanie's family give her?",
+  "skip": false,
+  "yesno": 0.910069018962804,
+  "ms_yesno": 547.464377945289,
+  "c1": {
+   "general": 0.016922111184940483,
+   "none_fit": 0.04169539783226492,
+   "relevant": 0.9413824909827947
+  },
+  "ms_c1": 235.2495768573135,
+  "c2": {
+   "general": 0.020712279215613034,
+   "none_fit": 0.2134182905194581,
+   "relevant": 0.7658694302649289
+  },
+  "ms_c2": 341.02454991079867
+ },
+ {
+  "kind": "relevant",
+  "query": "What book did Caroline recommend to Melanie?",
+  "skip": false,
+  "yesno": 0.8850226812699157,
+  "ms_yesno": 405.2159320563078,
+  "c1": {
+   "general": 0.0029500605766018947,
+   "none_fit": 0.0010606563662395898,
+   "relevant": 0.9959892830571585
+  },
+  "ms_c1": 237.99778101965785,
+  "c2": {
+   "general": 0.0038071617589010872,
+   "none_fit": 0.00928990028130823,
+   "relevant": 0.9869029379597907
+  },
+  "ms_c2": 510.3677739389241
+ },
+ {
+  "kind": "relevant",
+  "query": "What did John recently get promoted to?",
+  "skip": false,
+  "yesno": 0.8013358973694028,
+  "ms_yesno": 552.1218390204012,
+  "c1": {
+   "general": 0.0036323652874558194,
+   "none_fit": 0.0021312558842832806,
+   "relevant": 0.994236378828261
+  },
+  "ms_c1": 234.26788509823382,
+  "c2": {
+   "general": 0.007507297698759458,
+   "none_fit": 0.00851926961019446,
+   "relevant": 0.9839734326910461
+  },
+  "ms_c2": 501.9288728944957
+ },
+ {
+  "kind": "relevant",
+  "query": "What do sunflowers represent according to Caroline?",
+  "skip": false,
+  "yesno": 0.8833311626509677,
+  "ms_yesno": 565.7494710758328,
+  "c1": {
+   "general": 0.003288538001083808,
+   "none_fit": 0.0005383689644250346,
+   "relevant": 0.9961730930344911
+  },
+  "ms_c1": 237.12094710208476,
+  "c2": {
+   "general": 0.025143781397443363,
+   "none_fit": 0.008489304187454971,
+   "relevant": 0.9663669144151017
+  },
+  "ms_c2": 505.98375289700925
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of professional experience did Gina get accepted for on May 23, 2023?",
+  "skip": false,
+  "yesno": 0.8691761207437184,
+  "ms_yesno": 559.5610740128905,
+  "c1": {
+   "general": 0.003941579410039652,
+   "none_fit": 0.0044827211716227874,
+   "relevant": 0.9915756994183377
+  },
+  "ms_c1": 232.22785303369164,
+  "c2": {
+   "general": 0.010988942270435976,
+   "none_fit": 0.0675490054144267,
+   "relevant": 0.9214620523151373
+  },
+  "ms_c2": 330.408746143803
+ },
+ {
+  "kind": "relevant",
+  "query": "When is Melanie's daughter's birthday?",
+  "skip": false,
+  "yesno": 0.92809146690705,
+  "ms_yesno": 391.0049821715802,
+  "c1": {
+   "general": 0.0031082606131887175,
+   "none_fit": 0.002886434244175621,
+   "relevant": 0.9940053051426356
+  },
+  "ms_c1": 246.83238891884685,
+  "c2": {
+   "general": 0.010153380249067832,
+   "none_fit": 0.015087218705519604,
+   "relevant": 0.9747594010454126
+  },
+  "ms_c2": 322.90771696716547
+ },
+ {
+  "kind": "relevant",
+  "query": "How is Maria's new puppy adjusting to its new home?",
+  "skip": false,
+  "yesno": 0.8924834837751541,
+  "ms_yesno": 533.2256609108299,
+  "c1": {
+   "general": 0.003311903268674871,
+   "none_fit": 0.004417637949058855,
+   "relevant": 0.9922704587822663
+  },
+  "ms_c1": 237.39256896078587,
+  "c2": {
+   "general": 0.0043560874118607415,
+   "none_fit": 0.008188820997515457,
+   "relevant": 0.9874550915906237
+  },
+  "ms_c2": 532.4481069110334
+ },
+ {
+  "kind": "relevant",
+  "query": "What is Melanie's reason for getting into running?",
+  "skip": false,
+  "yesno": 0.9521282170468731,
+  "ms_yesno": 563.794304151088,
+  "c1": {
+   "general": 0.003466663518444101,
+   "none_fit": 0.002118284310371669,
+   "relevant": 0.9944150521711842
+  },
+  "ms_c1": 254.93721407838166,
+  "c2": {
+   "general": 0.0072847651234177095,
+   "none_fit": 0.021310875293008708,
+   "relevant": 0.9714043595835735
+  },
+  "ms_c2": 328.74151784926653
+ },
+ {
+  "kind": "relevant",
+  "query": "What made Gina choose the furniture and decor for her store?",
+  "skip": false,
+  "yesno": 0.9522037035355158,
+  "ms_yesno": 521.7186319641769,
+  "c1": {
+   "general": 0.001075449206320821,
+   "none_fit": 0.0014873376479130921,
+   "relevant": 0.9974372131457662
+  },
+  "ms_c1": 237.25478211417794,
+  "c2": {
+   "general": 0.001763818926565735,
+   "none_fit": 0.00245245118965629,
+   "relevant": 0.995783729883778
+  },
+  "ms_c2": 528.536079917103
+ },
+ {
+  "kind": "relevant",
+  "query": "What happened to Melanie's son on their road trip?",
+  "skip": false,
+  "yesno": 0.9658224718302816,
+  "ms_yesno": 568.3642241638154,
+  "c1": {
+   "general": 0.002073778594597179,
+   "none_fit": 0.0026092153699039896,
+   "relevant": 0.9953170060354989
+  },
+  "ms_c1": 235.4454800952226,
+  "c2": {
+   "general": 0.0023486770227325606,
+   "none_fit": 0.002983200444714007,
+   "relevant": 0.9946681225325534
+  },
+  "ms_c2": 509.626128943637
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Gina develop a video presentation to teach how to style her fashion pieces? ",
+  "skip": false,
+  "yesno": 0.935375808667015,
+  "ms_yesno": 543.8585311640054,
+  "c1": {
+   "general": 0.0066271705029841265,
+   "none_fit": 0.0034296032138314845,
+   "relevant": 0.9899432262831844
+  },
+  "ms_c1": 237.83755116164684,
+  "c2": {
+   "general": 0.01190633088626428,
+   "none_fit": 0.01238476787414144,
+   "relevant": 0.9757089012395943
+  },
+  "ms_c2": 323.43424297869205
+ },
+ {
+  "kind": "relevant",
+  "query": "Would Caroline likely have Dr. Seuss books on her bookshelf?",
+  "skip": false,
+  "yesno": 0.6520030127997337,
+  "ms_yesno": 430.21836900152266,
+  "c1": {
+   "general": 0.016693228938233353,
+   "none_fit": 0.6026504198519876,
+   "relevant": 0.3806563512097789
+  },
+  "ms_c1": 253.3660689368844,
+  "c2": {
+   "general": 0.04710498551985999,
+   "none_fit": 0.6871139003418464,
+   "relevant": 0.2657811141382936
+  },
+  "ms_c2": 336.3888550084084
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of books does Caroline have in her library?",
+  "skip": false,
+  "yesno": 0.8817601580439836,
+  "ms_yesno": 535.6618210207671,
+  "c1": {
+   "general": 0.004360904747228757,
+   "none_fit": 0.013960964839281382,
+   "relevant": 0.98167813041349
+  },
+  "ms_c1": 231.5320570487529,
+  "c2": {
+   "general": 0.021331661643065918,
+   "none_fit": 0.11581794073765575,
+   "relevant": 0.8628503976192784
+  },
+  "ms_c2": 336.50797908194363
+ },
+ {
+  "kind": "relevant",
+  "query": "What fields would Caroline be likely to pursue in her educaton?",
+  "skip": false,
+  "yesno": 0.8385589592441537,
+  "ms_yesno": 534.3962961342186,
+  "c1": {
+   "general": 0.0018214037891351967,
+   "none_fit": 0.0023318525722422576,
+   "relevant": 0.9958467436386226
+  },
+  "ms_c1": 250.45243185013533,
+  "c2": {
+   "general": 0.008547776253425992,
+   "none_fit": 0.047665629695066665,
+   "relevant": 0.9437865940515073
+  },
+  "ms_c2": 517.8155051544309
+ },
+ {
+  "kind": "relevant",
+  "query": "Why did Jon shut down his bank account?",
+  "skip": false,
+  "yesno": 0.838946922026124,
+  "ms_yesno": 531.2011779751629,
+  "c1": {
+   "general": 0.00449126331282404,
+   "none_fit": 0.0026401566360704154,
+   "relevant": 0.9928685800511056
+  },
+  "ms_c1": 234.61657296866179,
+  "c2": {
+   "general": 0.007713531015231547,
+   "none_fit": 0.006808257207374501,
+   "relevant": 0.9854782117773939
+  },
+  "ms_c2": 493.3970761485398
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline go to the adoption meeting?",
+  "skip": false,
+  "yesno": 0.9413263497921491,
+  "ms_yesno": 574.9408919364214,
+  "c1": {
+   "general": 0.0031101402969535195,
+   "none_fit": 0.0026193004482919194,
+   "relevant": 0.9942705592547546
+  },
+  "ms_c1": 236.13262199796736,
+  "c2": {
+   "general": 0.004631318680888371,
+   "none_fit": 0.010286673534039706,
+   "relevant": 0.9850820077850719
+  },
+  "ms_c2": 467.35836612060666
+ },
+ {
+  "kind": "relevant",
+  "query": "What was Gina's favorite dancing memory?",
+  "skip": false,
+  "yesno": 0.92661587195878,
+  "ms_yesno": 547.9490591678768,
+  "c1": {
+   "general": 0.001687908225594223,
+   "none_fit": 0.0011800006860413932,
+   "relevant": 0.9971320910883643
+  },
+  "ms_c1": 241.3645889610052,
+  "c2": {
+   "general": 0.0027322609402373787,
+   "none_fit": 0.0024061612484708277,
+   "relevant": 0.9948615778112917
+  },
+  "ms_c2": 338.0559158977121
+ },
+ {
+  "kind": "relevant",
+  "query": "Who did John go to yoga with?",
+  "skip": false,
+  "yesno": 0.9468365337481004,
+  "ms_yesno": 534.3317140359432,
+  "c1": {
+   "general": 0.0021172132303754424,
+   "none_fit": 0.0007079747637783834,
+   "relevant": 0.9971748120058461
+  },
+  "ms_c1": 236.44900508224964,
+  "c2": {
+   "general": 0.002121605215406711,
+   "none_fit": 0.0012875572822812996,
+   "relevant": 0.996590837502312
+  },
+  "ms_c2": 299.2231850512326
+ },
+ {
+  "kind": "relevant",
+  "query": "What book did Melanie read from Caroline's suggestion?",
+  "skip": false,
+  "yesno": 0.89492155551921,
+  "ms_yesno": 422.1375018823892,
+  "c1": {
+   "general": 0.0024496078486828995,
+   "none_fit": 0.0021004543710849703,
+   "relevant": 0.9954499377802322
+  },
+  "ms_c1": 248.22323117405176,
+  "c2": {
+   "general": 0.0054168414011828364,
+   "none_fit": 0.01697814945720713,
+   "relevant": 0.97760500914161
+  },
+  "ms_c2": 331.31110412068665
+ },
+ {
+  "kind": "relevant",
+  "query": "How long ago was Caroline's 18th birthday?",
+  "skip": false,
+  "yesno": 0.847316230597855,
+  "ms_yesno": 520.6988288555294,
+  "c1": {
+   "general": 0.005074151668268684,
+   "none_fit": 0.009328379656620048,
+   "relevant": 0.9855974686751112
+  },
+  "ms_c1": 264.86335997469723,
+  "c2": {
+   "general": 0.030760468520036336,
+   "none_fit": 0.02028666454162234,
+   "relevant": 0.9489528669383414
+  },
+  "ms_c2": 513.0296691786498
+ },
+ {
+  "kind": "relevant",
+  "query": "What did John take away from visiting the veteran's hospital?",
+  "skip": false,
+  "yesno": 0.8271943730031563,
+  "ms_yesno": 589.0320080798119,
+  "c1": {
+   "general": 0.010829525475155677,
+   "none_fit": 0.2879235169417523,
+   "relevant": 0.7012469575830921
+  },
+  "ms_c1": 239.39414508640766,
+  "c2": {
+   "general": 0.023483440993489615,
+   "none_fit": 0.28240242765933626,
+   "relevant": 0.6941141313471741
+  },
+  "ms_c2": 355.80263705924153
+ },
+ {
+  "kind": "relevant",
+  "query": "What book is Jon currently reading?",
+  "skip": false,
+  "yesno": 0.7033748149082371,
+  "ms_yesno": 503.3301250077784,
+  "c1": {
+   "general": 0.004461012845662888,
+   "none_fit": 0.7529232449350262,
+   "relevant": 0.242615742219311
+  },
+  "ms_c1": 235.15618010424078,
+  "c2": {
+   "general": 0.018452979703064212,
+   "none_fit": 0.7630295299146466,
+   "relevant": 0.2185174903822893
+  },
+  "ms_c2": 312.22004699520767
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline encounter people on a hike and have a negative experience?",
+  "skip": false,
+  "yesno": 0.9563501255948939,
+  "ms_yesno": 442.5902150105685,
+  "c1": {
+   "general": 0.0035316212156642508,
+   "none_fit": 0.005071653506011645,
+   "relevant": 0.9913967252783242
+  },
+  "ms_c1": 236.55821499414742,
+  "c2": {
+   "general": 0.0034281779780157033,
+   "none_fit": 0.007491715787772782,
+   "relevant": 0.9890801062342114
+  },
+  "ms_c2": 495.39015092886984
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of activities did John and his mates from the online group do as part of their service efforts?",
+  "skip": false,
+  "yesno": 0.8036034250979713,
+  "ms_yesno": 585.8668820001185,
+  "c1": {
+   "general": 0.004737802558832365,
+   "none_fit": 0.014100048190369181,
+   "relevant": 0.9811621492507984
+  },
+  "ms_c1": 232.75772109627724,
+  "c2": {
+   "general": 0.0091271947482047,
+   "none_fit": 0.03243461417002379,
+   "relevant": 0.9584381910817715
+  },
+  "ms_c2": 360.79612490721047
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie paint a sunrise?",
+  "skip": false,
+  "yesno": 0.8614553649452296,
+  "ms_yesno": 516.8721079826355,
+  "c1": {
+   "general": 0.006040439622825512,
+   "none_fit": 0.02194841460581038,
+   "relevant": 0.9720111457713642
+  },
+  "ms_c1": 231.93679004907608,
+  "c2": {
+   "general": 0.010782318739374824,
+   "none_fit": 0.026231376825990558,
+   "relevant": 0.9629863044346347
+  },
+  "ms_c2": 324.61729808710515
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie go to the park?",
+  "skip": false,
+  "yesno": 0.9055106278949322,
+  "ms_yesno": 530.1801438909024,
+  "c1": {
+   "general": 0.0028057702014113598,
+   "none_fit": 0.0060311104614308685,
+   "relevant": 0.9911631193371577
+  },
+  "ms_c1": 237.23848396912217,
+  "c2": {
+   "general": 0.004954506605436653,
+   "none_fit": 0.005613590199951935,
+   "relevant": 0.9894319031946114
+  },
+  "ms_c2": 506.81648100726306
+ },
+ {
+  "kind": "relevant",
+  "query": "How many weeks passed between Maria adopting Coco and Shadow?",
+  "skip": false,
+  "yesno": 0.7319216888610086,
+  "ms_yesno": 573.1928709428757,
+  "c1": {
+   "general": 0.028652545711924254,
+   "none_fit": 0.1024046173826225,
+   "relevant": 0.8689428369054533
+  },
+  "ms_c1": 235.43281015008688,
+  "c2": {
+   "general": 0.036388288416491305,
+   "none_fit": 0.13186983447078895,
+   "relevant": 0.8317418771127196
+  },
+  "ms_c2": 499.9296630267054
+ },
+ {
+  "kind": "relevant",
+  "query": "Did Melanie make the black and white bowl in the photo?",
+  "skip": false,
+  "yesno": 0.9244274754712272,
+  "ms_yesno": 552.2063060197979,
+  "c1": {
+   "general": 0.0035924638444802368,
+   "none_fit": 0.0018963768550840944,
+   "relevant": 0.9945111593004358
+  },
+  "ms_c1": 249.2756019346416,
+  "c2": {
+   "general": 0.006383733930103264,
+   "none_fit": 0.0047990477067435386,
+   "relevant": 0.9888172183631532
+  },
+  "ms_c2": 507.05623207613826
+ },
+ {
+  "kind": "relevant",
+  "query": "What was Melanie's favorite book from her childhood?",
+  "skip": false,
+  "yesno": 0.8751142190131219,
+  "ms_yesno": 605.4203088860959,
+  "c1": {
+   "general": 0.0018545052307786995,
+   "none_fit": 0.0009387604941017898,
+   "relevant": 0.9972067342751195
+  },
+  "ms_c1": 238.35491994395852,
+  "c2": {
+   "general": 0.007570389711183291,
+   "none_fit": 0.006254192888178762,
+   "relevant": 0.9861754174006379
+  },
+  "ms_c2": 532.245656941086
+ },
+ {
+  "kind": "relevant",
+  "query": "Why did Gina decide to start her own clothing store?",
+  "skip": false,
+  "yesno": 0.914929469777311,
+  "ms_yesno": 564.7840828169137,
+  "c1": {
+   "general": 0.009169913045374989,
+   "none_fit": 0.0036428307276554356,
+   "relevant": 0.9871872562269695
+  },
+  "ms_c1": 243.02445887587965,
+  "c2": {
+   "general": 0.012621465878129592,
+   "none_fit": 0.011138631993905157,
+   "relevant": 0.9762399021279652
+  },
+  "ms_c2": 322.72056420333683
+ },
+ {
+  "kind": "relevant",
+  "query": "What is Caroline's identity?",
+  "skip": false,
+  "yesno": 0.8340811470185924,
+  "ms_yesno": 428.070108871907,
+  "c1": {
+   "general": 0.009704903907995737,
+   "none_fit": 0.007201711104945405,
+   "relevant": 0.9830933849870589
+  },
+  "ms_c1": 258.7981859687716,
+  "c2": {
+   "general": 0.04765822337214786,
+   "none_fit": 0.047592407585248395,
+   "relevant": 0.9047493690426038
+  },
+  "ms_c2": 307.43724200874567
+ },
+ {
+  "kind": "relevant",
+  "query": "Would Melanie be more interested in going to a national park or a theme park?",
+  "skip": false,
+  "yesno": 0.8344606461078558,
+  "ms_yesno": 415.50983395427465,
+  "c1": {
+   "general": 0.0038666779508901967,
+   "none_fit": 0.0031605831520421907,
+   "relevant": 0.9929727388970676
+  },
+  "ms_c1": 234.5484581310302,
+  "c2": {
+   "general": 0.01159044221529718,
+   "none_fit": 0.1416982375385393,
+   "relevant": 0.8467113202461636
+  },
+  "ms_c2": 502.3040750529617
+ },
+ {
+  "kind": "relevant",
+  "query": "How long has Melanie been practicing art?",
+  "skip": false,
+  "yesno": 0.7292329024091923,
+  "ms_yesno": 575.54721692577,
+  "c1": {
+   "general": 0.006269609809675479,
+   "none_fit": 0.04951088835861151,
+   "relevant": 0.944219501831713
+  },
+  "ms_c1": 237.85839998163283,
+  "c2": {
+   "general": 0.007845912585042943,
+   "none_fit": 0.00792816938802396,
+   "relevant": 0.984225918026933
+  },
+  "ms_c2": 525.2216961234808
+ },
+ {
+  "kind": "relevant",
+  "query": "When was John's old area hit with a flood?",
+  "skip": false,
+  "yesno": 0.940781888099674,
+  "ms_yesno": 583.4030320402235,
+  "c1": {
+   "general": 0.002100327402758255,
+   "none_fit": 0.0028478688148948533,
+   "relevant": 0.9950518037823469
+  },
+  "ms_c1": 235.17730692401528,
+  "c2": {
+   "general": 0.006793918897760073,
+   "none_fit": 0.006240371274243583,
+   "relevant": 0.9869657098279965
+  },
+  "ms_c2": 337.0661879889667
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline give a speech at a school?",
+  "skip": false,
+  "yesno": 0.6500937889492424,
+  "ms_yesno": 432.38664185628295,
+  "c1": {
+   "general": 0.006247824578427128,
+   "none_fit": 0.7468522040513863,
+   "relevant": 0.24689997137018657
+  },
+  "ms_c1": 251.40896090306342,
+  "c2": {
+   "general": 0.04317487223848763,
+   "none_fit": 0.6793852089388024,
+   "relevant": 0.27743991882271
+  },
+  "ms_c2": 351.56003711745143
+ },
+ {
+  "kind": "relevant",
+  "query": "What desserts has Maria made?",
+  "skip": false,
+  "yesno": 0.9444643812189147,
+  "ms_yesno": 527.0997569896281,
+  "c1": {
+   "general": 0.0014021787589189702,
+   "none_fit": 0.0009537602291635652,
+   "relevant": 0.9976440610119174
+  },
+  "ms_c1": 255.03955292515457,
+  "c2": {
+   "general": 0.007042572608266274,
+   "none_fit": 0.012041834631200121,
+   "relevant": 0.9809155927605336
+  },
+  "ms_c2": 515.95652801916
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of art does Caroline make?",
+  "skip": false,
+  "yesno": 0.8592356767792689,
+  "ms_yesno": 571.510166162625,
+  "c1": {
+   "general": 0.007831329628890082,
+   "none_fit": 0.004478963651428376,
+   "relevant": 0.9876897067196816
+  },
+  "ms_c1": 238.19095198996365,
+  "c2": {
+   "general": 0.05600271622790007,
+   "none_fit": 0.03489451178618841,
+   "relevant": 0.9091027719859115
+  },
+  "ms_c2": 508.88779992237687
+ },
+ {
+  "kind": "relevant",
+  "query": "What are Maria's dogs' names?",
+  "skip": false,
+  "yesno": 0.9412276661762903,
+  "ms_yesno": 544.1612959839404,
+  "c1": {
+   "general": 0.002134504804939589,
+   "none_fit": 0.0011043818646953652,
+   "relevant": 0.996761113330365
+  },
+  "ms_c1": 213.11378595419228,
+  "c2": {
+   "general": 0.004277229410588803,
+   "none_fit": 0.0032882890567015955,
+   "relevant": 0.9924344815327095
+  },
+  "ms_c2": 292.77861188165843
+ },
+ {
+  "kind": "relevant",
+  "query": "What areas of the U.S. has John been to or is planning to go to?",
+  "skip": false,
+  "yesno": 0.648428946174689,
+  "ms_yesno": 432.50362388789654,
+  "c1": {
+   "general": 0.006428945502586828,
+   "none_fit": 0.1742387538963165,
+   "relevant": 0.8193323006010966
+  },
+  "ms_c1": 234.22267101705074,
+  "c2": {
+   "general": 0.008616280221044883,
+   "none_fit": 0.1459643432649639,
+   "relevant": 0.8454193765139912
+  },
+  "ms_c2": 515.9936870913953
+ },
+ {
+  "kind": "relevant",
+  "query": "What area was hit by a flood?",
+  "skip": false,
+  "yesno": 0.944337392625981,
+  "ms_yesno": 573.5967988148332,
+  "c1": {
+   "general": 0.0017485255466807002,
+   "none_fit": 0.0027449362286638833,
+   "relevant": 0.9955065382246555
+  },
+  "ms_c1": 238.37089794687927,
+  "c2": {
+   "general": 0.012667851201186095,
+   "none_fit": 0.011597680017732972,
+   "relevant": 0.9757344687810809
+  },
+  "ms_c2": 521.04637096636
+ },
+ {
+  "kind": "relevant",
+  "query": "Why did John start blogging about politics and policies?",
+  "skip": false,
+  "yesno": 0.9179132023227856,
+  "ms_yesno": 577.0908780395985,
+  "c1": {
+   "general": 0.003221975971788938,
+   "none_fit": 0.000967080542808088,
+   "relevant": 0.9958109434854029
+  },
+  "ms_c1": 238.49460599012673,
+  "c2": {
+   "general": 0.0064636339856644,
+   "none_fit": 0.010679446415963188,
+   "relevant": 0.9828569195983723
+  },
+  "ms_c2": 350.47936090268195
+ },
+ {
+  "kind": "relevant",
+  "query": "How does John describe the support he received during his journey to becoming assistant manager?",
+  "skip": false,
+  "yesno": 0.9508488086790557,
+  "ms_yesno": 536.6844050586224,
+  "c1": {
+   "general": 0.0013766776459048344,
+   "none_fit": 0.000813031486422666,
+   "relevant": 0.9978102908676726
+  },
+  "ms_c1": 236.24873091466725,
+  "c2": {
+   "general": 0.0030201969932847892,
+   "none_fit": 0.006030896914742311,
+   "relevant": 0.990948906091973
+  },
+  "ms_c2": 348.0409539770335
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie go camping in July?",
+  "skip": false,
+  "yesno": 0.8783411404135624,
+  "ms_yesno": 544.8975788895041,
+  "c1": {
+   "general": 0.008445342557794529,
+   "none_fit": 0.05455628193706,
+   "relevant": 0.9369983755051454
+  },
+  "ms_c1": 251.3109769206494,
+  "c2": {
+   "general": 0.014175886031070768,
+   "none_fit": 0.031122106841328028,
+   "relevant": 0.9547020071276011
+  },
+  "ms_c2": 518.8293638639152
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Maria say it was like being at the waterfall in Oregon?",
+  "skip": false,
+  "yesno": 0.9783315171926509,
+  "ms_yesno": 573.3550188597292,
+  "c1": {
+   "general": 0.0010567699455885143,
+   "none_fit": 0.0007487977430140132,
+   "relevant": 0.9981944323113974
+  },
+  "ms_c1": 237.1612440329045,
+  "c2": {
+   "general": 0.005019567246176756,
+   "none_fit": 0.0028580216445417885,
+   "relevant": 0.9921224111092815
+  },
+  "ms_c2": 305.8681678958237
+ },
+ {
+  "kind": "relevant",
+  "query": "What was discussed in the LGBTQ+ counseling workshop?",
+  "skip": false,
+  "yesno": 0.9205119834249715,
+  "ms_yesno": 431.41747009940445,
+  "c1": {
+   "general": 0.0038693018028688893,
+   "none_fit": 0.0023667865978817225,
+   "relevant": 0.9937639115992495
+  },
+  "ms_c1": 238.52963303215802,
+  "c2": {
+   "general": 0.012075938283116186,
+   "none_fit": 0.011409850707614314,
+   "relevant": 0.9765142110092695
+  },
+  "ms_c2": 365.6081759836525
+ },
+ {
+  "kind": "relevant",
+  "query": "Who supports Caroline when she has a negative experience?",
+  "skip": false,
+  "yesno": 0.8510058195793246,
+  "ms_yesno": 536.834510974586,
+  "c1": {
+   "general": 0.005192063118863865,
+   "none_fit": 0.0034545193189508346,
+   "relevant": 0.9913534175621852
+  },
+  "ms_c1": 242.07451893016696,
+  "c2": {
+   "general": 0.007187583769658855,
+   "none_fit": 0.019001414701554385,
+   "relevant": 0.9738110015287869
+  },
+  "ms_c2": 533.5854650475085
+ },
+ {
+  "kind": "relevant",
+  "query": "What was the focus of John's recent research and writing on his blog?",
+  "skip": false,
+  "yesno": 0.9266839239957779,
+  "ms_yesno": 551.000660052523,
+  "c1": {
+   "general": 0.0027199181167971674,
+   "none_fit": 0.0018503389718277675,
+   "relevant": 0.995429742911375
+  },
+  "ms_c1": 237.62256396003067,
+  "c2": {
+   "general": 0.005605433077077244,
+   "none_fit": 0.008212779463447695,
+   "relevant": 0.986181787459475
+  },
+  "ms_c2": 346.8918181024492
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie's family go on a roadtrip?",
+  "skip": false,
+  "yesno": 0.9253773386975985,
+  "ms_yesno": 533.7723479606211,
+  "c1": {
+   "general": 0.0035139657574544208,
+   "none_fit": 0.0061961833144463544,
+   "relevant": 0.9902898509280992
+  },
+  "ms_c1": 236.47229885682464,
+  "c2": {
+   "general": 0.005762393177723569,
+   "none_fit": 0.009308608368049993,
+   "relevant": 0.9849289984542264
+  },
+  "ms_c2": 512.9981799982488
+ },
+ {
+  "kind": "relevant",
+  "query": "What is Caroline excited about in the adoption process?",
+  "skip": false,
+  "yesno": 0.8700177319652883,
+  "ms_yesno": 557.8361400403082,
+  "c1": {
+   "general": 0.0033554348575563996,
+   "none_fit": 0.0027729807022768335,
+   "relevant": 0.9938715844401668
+  },
+  "ms_c1": 235.76515819877386,
+  "c2": {
+   "general": 0.00384737869797251,
+   "none_fit": 0.014897660128903608,
+   "relevant": 0.9812549611731238
+  },
+  "ms_c2": 333.58383318409324
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline have a picnic?",
+  "skip": false,
+  "yesno": 0.9466440904375748,
+  "ms_yesno": 543.8250179868191,
+  "c1": {
+   "general": 0.0029143372047898027,
+   "none_fit": 0.002209857635210308,
+   "relevant": 0.99487580516
+  },
+  "ms_c1": 235.96911504864693,
+  "c2": {
+   "general": 0.00426833327499169,
+   "none_fit": 0.003190421652965958,
+   "relevant": 0.9925412450720423
+  },
+  "ms_c2": 355.98706314340234
+ },
+ {
+  "kind": "relevant",
+  "query": "Would Caroline pursue writing as a career option?",
+  "skip": false,
+  "yesno": 0.76014782523012,
+  "ms_yesno": 564.8813489824533,
+  "c1": {
+   "general": 0.0053203279532291784,
+   "none_fit": 0.07433669075992076,
+   "relevant": 0.9203429812868501
+  },
+  "ms_c1": 249.18895703740418,
+  "c2": {
+   "general": 0.006343927445538076,
+   "none_fit": 0.059222036168251696,
+   "relevant": 0.9344340363862103
+  },
+  "ms_c2": 297.04941902309656
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of painting did Caroline share with Melanie on October 13, 2023?",
+  "skip": false,
+  "yesno": 0.8020439489445229,
+  "ms_yesno": 413.8495749793947,
+  "c1": {
+   "general": 0.004714932831144069,
+   "none_fit": 0.0058556197754551145,
+   "relevant": 0.9894294473934008
+  },
+  "ms_c1": 236.9851761031896,
+  "c2": {
+   "general": 0.0047773193664401815,
+   "none_fit": 0.007050400690908576,
+   "relevant": 0.9881722799426512
+  },
+  "ms_c2": 501.24823790974915
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Maria start volunteering at the homeless shelter?",
+  "skip": false,
+  "yesno": 0.8469593261353148,
+  "ms_yesno": 574.1929379291832,
+  "c1": {
+   "general": 0.0014230774117459136,
+   "none_fit": 0.0007260581202506523,
+   "relevant": 0.9978508644680035
+  },
+  "ms_c1": 237.24666913039982,
+  "c2": {
+   "general": 0.004072253823249596,
+   "none_fit": 0.0031800660274582905,
+   "relevant": 0.992747680149292
+  },
+  "ms_c2": 531.4441728405654
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Melanie go on a hike after the roadtrip?",
+  "skip": false,
+  "yesno": 0.8829055084599993,
+  "ms_yesno": 568.2717368472368,
+  "c1": {
+   "general": 0.003082834219683543,
+   "none_fit": 0.0022508255677701487,
+   "relevant": 0.9946663402125462
+  },
+  "ms_c1": 237.1677381452173,
+  "c2": {
+   "general": 0.0032012440863339177,
+   "none_fit": 0.003290916154533401,
+   "relevant": 0.9935078397591327
+  },
+  "ms_c2": 504.3937030714005
+ },
+ {
+  "kind": "relevant",
+  "query": "What painting did Melanie show to Caroline on October 13, 2023?",
+  "skip": false,
+  "yesno": 0.8121065610260777,
+  "ms_yesno": 562.0874760206789,
+  "c1": {
+   "general": 0.006269619796789209,
+   "none_fit": 0.001961626911876301,
+   "relevant": 0.9917687532913345
+  },
+  "ms_c1": 237.91150492615998,
+  "c2": {
+   "general": 0.006765910752802578,
+   "none_fit": 0.0042380587806817435,
+   "relevant": 0.9889960304665157
+  },
+  "ms_c2": 299.8430849984288
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Maria adopt Shadow?",
+  "skip": false,
+  "yesno": 0.9123233283622321,
+  "ms_yesno": 415.33083701506257,
+  "c1": {
+   "general": 0.006346604031948509,
+   "none_fit": 0.01404389141001386,
+   "relevant": 0.9796095045580376
+  },
+  "ms_c1": 236.19537497870624,
+  "c2": {
+   "general": 0.00776648204788879,
+   "none_fit": 0.015708992084993403,
+   "relevant": 0.9765245258671178
+  },
+  "ms_c2": 329.93574207648635
+ },
+ {
+  "kind": "relevant",
+  "query": "When is Caroline going to the transgender conference?",
+  "skip": false,
+  "yesno": 0.784186715208461,
+  "ms_yesno": 554.78963884525,
+  "c1": {
+   "general": 0.006119694595975321,
+   "none_fit": 0.6020342584977448,
+   "relevant": 0.39184604690627983
+  },
+  "ms_c1": 240.62714911997318,
+  "c2": {
+   "general": 0.012181788693202744,
+   "none_fit": 0.5660033152130113,
+   "relevant": 0.421814896093786
+  },
+  "ms_c2": 540.9898110665381
+ },
+ {
+  "kind": "relevant",
+  "query": "What did John attend with his colleagues in March 2023?",
+  "skip": false,
+  "yesno": 0.5362090279585673,
+  "ms_yesno": 593.5270029585809,
+  "c1": {
+   "general": 0.0036125379087439003,
+   "none_fit": 0.7468637447309928,
+   "relevant": 0.24952371736026338
+  },
+  "ms_c1": 236.236966913566,
+  "c2": {
+   "general": 0.008692399701312971,
+   "none_fit": 0.3897953314559845,
+   "relevant": 0.6015122688427025
+  },
+  "ms_c2": 535.9315748792142
+ },
+ {
+  "kind": "relevant",
+  "query": "How is Gina's store doing?",
+  "skip": false,
+  "yesno": 0.9246328202858023,
+  "ms_yesno": 539.6050091367215,
+  "c1": {
+   "general": 0.005431135404339356,
+   "none_fit": 0.00796750018436443,
+   "relevant": 0.9866013644112962
+  },
+  "ms_c1": 243.148990906775,
+  "c2": {
+   "general": 0.0034462637947408454,
+   "none_fit": 0.004739220776743138,
+   "relevant": 0.9918145154285161
+  },
+  "ms_c2": 337.88887481205165
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Maria do to feel closer to a community and her faith?",
+  "skip": false,
+  "yesno": 0.8762915471771217,
+  "ms_yesno": 531.7037620116025,
+  "c1": {
+   "general": 0.0010685154688716927,
+   "none_fit": 0.00029124243039598067,
+   "relevant": 0.9986402421007323
+  },
+  "ms_c1": 237.94643417932093,
+  "c2": {
+   "general": 0.0014110730869044924,
+   "none_fit": 0.0011640604404889272,
+   "relevant": 0.9974248664726066
+  },
+  "ms_c2": 524.7086239978671
+ },
+ {
+  "kind": "relevant",
+  "query": "What did the charity race raise awareness for?",
+  "skip": false,
+  "yesno": 0.9317602397499805,
+  "ms_yesno": 611.147163901478,
+  "c1": {
+   "general": 0.005250928660186074,
+   "none_fit": 0.0036932779042002976,
+   "relevant": 0.9910557934356136
+  },
+  "ms_c1": 230.8414571452886,
+  "c2": {
+   "general": 0.022029152817757948,
+   "none_fit": 0.027303727304438644,
+   "relevant": 0.9506671198778034
+  },
+  "ms_c2": 347.1997359301895
+ },
+ {
+  "kind": "relevant",
+  "query": "What European countries has Maria been to?",
+  "skip": false,
+  "yesno": 0.39373326769720146,
+  "ms_yesno": 472.747408086434,
+  "c1": {
+   "general": 0.005203554040397165,
+   "none_fit": 0.9486662865608604,
+   "relevant": 0.046130159398742585
+  },
+  "ms_c1": 207.4889938812703,
+  "c2": {
+   "general": 0.09081690440829872,
+   "none_fit": 0.8419116011077163,
+   "relevant": 0.0672714944839849
+  },
+  "ms_c2": 285.69290903396904
+ },
+ {
+  "kind": "relevant",
+  "query": "How does John plan to honor the memories of his beloved pet?",
+  "skip": false,
+  "yesno": 0.8379683251404302,
+  "ms_yesno": 427.0397999789566,
+  "c1": {
+   "general": 0.004215195718783862,
+   "none_fit": 0.010524145032959462,
+   "relevant": 0.9852606592482567
+  },
+  "ms_c1": 236.97648709639907,
+  "c2": {
+   "general": 0.013542974101356152,
+   "none_fit": 0.05096838784521545,
+   "relevant": 0.9354886380534284
+  },
+  "ms_c2": 323.57885083183646
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Jon start learning marketing and analytics tools?",
+  "skip": false,
+  "yesno": 0.8790644557679658,
+  "ms_yesno": 394.7425330989063,
+  "c1": {
+   "general": 0.003550263086736184,
+   "none_fit": 0.0005342111861029459,
+   "relevant": 0.9959155257271608
+  },
+  "ms_c1": 245.77631009742618,
+  "c2": {
+   "general": 0.009065511787746188,
+   "none_fit": 0.003559780311638286,
+   "relevant": 0.9873747079006154
+  },
+  "ms_c2": 534.0925101190805
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Maria join a gym?",
+  "skip": false,
+  "yesno": 0.8446449195993241,
+  "ms_yesno": 556.3514139503241,
+  "c1": {
+   "general": 0.011618617306949772,
+   "none_fit": 0.010642033530176745,
+   "relevant": 0.9777393491628734
+  },
+  "ms_c1": 236.79053713567555,
+  "c2": {
+   "general": 0.009525365796359124,
+   "none_fit": 0.014455628752758347,
+   "relevant": 0.9760190054508826
+  },
+  "ms_c2": 514.1883259639144
+ },
+ {
+  "kind": "relevant",
+  "query": "What yoga activity has Maria been trying to improve her strength and endurance?",
+  "skip": false,
+  "yesno": 0.9450037411927642,
+  "ms_yesno": 561.5203338675201,
+  "c1": {
+   "general": 0.0011942256130234345,
+   "none_fit": 0.0005384162226516908,
+   "relevant": 0.9982673581643248
+  },
+  "ms_c1": 248.6233611125499,
+  "c2": {
+   "general": 0.0019736257968757344,
+   "none_fit": 0.0020262442190313017,
+   "relevant": 0.996000129984093
+  },
+  "ms_c2": 378.4544209484011
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Jon's dance studio offer?",
+  "skip": false,
+  "yesno": 0.862552131005261,
+  "ms_yesno": 505.2976899314672,
+  "c1": {
+   "general": 0.02254786519110874,
+   "none_fit": 0.20809353184720325,
+   "relevant": 0.7693586029616881
+  },
+  "ms_c1": 243.45661513507366,
+  "c2": {
+   "general": 0.09282451345423612,
+   "none_fit": 0.1249865370117411,
+   "relevant": 0.7821889495340228
+  },
+  "ms_c2": 531.9989011622965
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of activities did Maria do at the picnic with her church friends?",
+  "skip": false,
+  "yesno": 0.8317097751761473,
+  "ms_yesno": 605.6644220370799,
+  "c1": {
+   "general": 0.001095437425952123,
+   "none_fit": 0.0010203707665231432,
+   "relevant": 0.9978841918075249
+  },
+  "ms_c1": 236.6836580913514,
+  "c2": {
+   "general": 0.0013426418945660572,
+   "none_fit": 0.001829300328155066,
+   "relevant": 0.9968280577772789
+  },
+  "ms_c2": 342.70808612927794
+ },
+ {
+  "kind": "relevant",
+  "query": "When did John help renovate his hometown community center?",
+  "skip": false,
+  "yesno": 0.9312676603471013,
+  "ms_yesno": 523.1191131751984,
+  "c1": {
+   "general": 0.002092911842648438,
+   "none_fit": 0.0020564163789737596,
+   "relevant": 0.9958506717783778
+  },
+  "ms_c1": 235.90946709737182,
+  "c2": {
+   "general": 0.003737597910154126,
+   "none_fit": 0.0030860130830764774,
+   "relevant": 0.9931763890067693
+  },
+  "ms_c2": 333.28511100262403
+ },
+ {
+  "kind": "relevant",
+  "query": "Which activity has John done apart from yoga at the studio?",
+  "skip": false,
+  "yesno": 0.9420101585162993,
+  "ms_yesno": 424.63704687543213,
+  "c1": {
+   "general": 0.0007035258234310486,
+   "none_fit": 0.0006450979954330399,
+   "relevant": 0.9986513761811359
+  },
+  "ms_c1": 237.65076999552548,
+  "c2": {
+   "general": 0.002398089991625418,
+   "none_fit": 0.0028076208544533673,
+   "relevant": 0.9947942891539212
+  },
+  "ms_c2": 488.0563810002059
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Maria say she feels when doing upside-down yoga poses?",
+  "skip": false,
+  "yesno": 0.9532002253013797,
+  "ms_yesno": 594.1746809985489,
+  "c1": {
+   "general": 0.0013361316200883697,
+   "none_fit": 0.0005671139305192485,
+   "relevant": 0.9980967544493924
+  },
+  "ms_c1": 237.30132402852178,
+  "c2": {
+   "general": 0.006900070466261135,
+   "none_fit": 0.007406728348485582,
+   "relevant": 0.9856932011852533
+  },
+  "ms_c2": 532.0631999056786
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Gina say about creating an experience for her customers?",
+  "skip": false,
+  "yesno": 0.9482098170305382,
+  "ms_yesno": 552.1950840484351,
+  "c1": {
+   "general": 0.0019408292449432782,
+   "none_fit": 0.0008910168814367564,
+   "relevant": 0.99716815387362
+  },
+  "ms_c1": 233.23878413066268,
+  "c2": {
+   "general": 0.0038907512789592698,
+   "none_fit": 0.0022469857789616026,
+   "relevant": 0.9938622629420791
+  },
+  "ms_c2": 341.724299127236
+ },
+ {
+  "kind": "relevant",
+  "query": "What cause did the 5K charity run organized by John support?",
+  "skip": false,
+  "yesno": 0.9369273462324144,
+  "ms_yesno": 537.3750547878444,
+  "c1": {
+   "general": 0.0013677317503668724,
+   "none_fit": 0.0004377949898679343,
+   "relevant": 0.9981944732597652
+  },
+  "ms_c1": 237.60170303285122,
+  "c2": {
+   "general": 0.003533383153401123,
+   "none_fit": 0.0030072323774210496,
+   "relevant": 0.9934593844691778
+  },
+  "ms_c2": 524.006110848859
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline meet up with her friends, family, and mentors?",
+  "skip": false,
+  "yesno": 0.8340811428942554,
+  "ms_yesno": 576.7019221093506,
+  "c1": {
+   "general": 0.003959389196236483,
+   "none_fit": 0.011744704619881991,
+   "relevant": 0.9842959061838815
+  },
+  "ms_c1": 239.28617197088897,
+  "c2": {
+   "general": 0.009193644611445645,
+   "none_fit": 0.023620567702563953,
+   "relevant": 0.9671857876859904
+  },
+  "ms_c2": 352.3715690243989
+ },
+ {
+  "kind": "relevant",
+  "query": "What did John do the week before August 3, 2023 involving his kids?",
+  "skip": false,
+  "yesno": 0.692923312993994,
+  "ms_yesno": 545.7683010026813,
+  "c1": {
+   "general": 0.004027125010916279,
+   "none_fit": 0.5775706872018439,
+   "relevant": 0.41840218778723987
+  },
+  "ms_c1": 239.1047440469265,
+  "c2": {
+   "general": 0.01043350587503787,
+   "none_fit": 0.38560177756742275,
+   "relevant": 0.6039647165575395
+  },
+  "ms_c2": 497.0253398641944
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Jon go to a fair to get more exposure for his dance studio?",
+  "skip": false,
+  "yesno": 0.7970673307768372,
+  "ms_yesno": 549.1277759429067,
+  "c1": {
+   "general": 0.012409742469200393,
+   "none_fit": 0.05662006790390557,
+   "relevant": 0.930970189626894
+  },
+  "ms_c1": 237.89172410033643,
+  "c2": {
+   "general": 0.012210817250912664,
+   "none_fit": 0.013548158149515982,
+   "relevant": 0.9742410245995714
+  },
+  "ms_c2": 480.15029984526336
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline go to the LGBTQ support group?",
+  "skip": false,
+  "yesno": 0.9363644898205536,
+  "ms_yesno": 566.2674461491406,
+  "c1": {
+   "general": 0.0017771459789035036,
+   "none_fit": 0.0016618113297270747,
+   "relevant": 0.9965610426913694
+  },
+  "ms_c1": 237.0945371221751,
+  "c2": {
+   "general": 0.003076697978236151,
+   "none_fit": 0.004932834268759845,
+   "relevant": 0.991990467753004
+  },
+  "ms_c2": 340.44005908071995
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Jon take a trip to Rome for?",
+  "skip": false,
+  "yesno": 0.9402288445059492,
+  "ms_yesno": 507.63082783669233,
+  "c1": {
+   "general": 0.0016878225593235869,
+   "none_fit": 0.0004202172038824707,
+   "relevant": 0.9978919602367938
+  },
+  "ms_c1": 246.94197694770992,
+  "c2": {
+   "general": 0.0022780476774755505,
+   "none_fit": 0.0023331946997916762,
+   "relevant": 0.9953887576227327
+  },
+  "ms_c2": 500.41321595199406
+ },
+ {
+  "kind": "relevant",
+  "query": "What kind of food did Maria have on her dinner spread iwth her mother?",
+  "skip": false,
+  "yesno": 0.9025941825501296,
+  "ms_yesno": 599.2708031553775,
+  "c1": {
+   "general": 0.0027009232009967453,
+   "none_fit": 0.0008748433508196774,
+   "relevant": 0.9964242334481835
+  },
+  "ms_c1": 260.8732001390308,
+  "c2": {
+   "general": 0.008218639090092305,
+   "none_fit": 0.005362980810429102,
+   "relevant": 0.9864183800994786
+  },
+  "ms_c2": 505.6447999086231
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Mel and her kids make during the pottery workshop?",
+  "skip": false,
+  "yesno": 0.8999188676829745,
+  "ms_yesno": 560.7936528977007,
+  "c1": {
+   "general": 0.0021713598490136743,
+   "none_fit": 0.001213652864477527,
+   "relevant": 0.9966149872865088
+  },
+  "ms_c1": 249.8068290296942,
+  "c2": {
+   "general": 0.004159107727123223,
+   "none_fit": 0.0036812434771553377,
+   "relevant": 0.9921596487957215
+  },
+  "ms_c2": 512.2697369661182
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Caroline see at the council meeting for adoption?",
+  "skip": false,
+  "yesno": 0.9197588750928616,
+  "ms_yesno": 566.063952865079,
+  "c1": {
+   "general": 0.004592345690098706,
+   "none_fit": 0.003918664979301554,
+   "relevant": 0.9914889893305998
+  },
+  "ms_c1": 236.91109800711274,
+  "c2": {
+   "general": 0.005492905130282441,
+   "none_fit": 0.007225681078962603,
+   "relevant": 0.9872814137907551
+  },
+  "ms_c2": 508.85939481668174
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Gina say to Jon about the grand opening?",
+  "skip": false,
+  "yesno": 0.9549455856913496,
+  "ms_yesno": 566.2889941595495,
+  "c1": {
+   "general": 0.003005676302557647,
+   "none_fit": 0.0032326686592849927,
+   "relevant": 0.9937616550381573
+  },
+  "ms_c1": 259.59125510416925,
+  "c2": {
+   "general": 0.003041093931104022,
+   "none_fit": 0.008603220143216694,
+   "relevant": 0.9883556859256792
+  },
+  "ms_c2": 321.0650999099016
+ },
+ {
+  "kind": "relevant",
+  "query": "What is John's main focus in local politics?",
+  "skip": false,
+  "yesno": 0.8504732254765734,
+  "ms_yesno": 532.5111120473593,
+  "c1": {
+   "general": 0.001253113114364385,
+   "none_fit": 0.000973309953692787,
+   "relevant": 0.9977735769319427
+  },
+  "ms_c1": 236.5452889353037,
+  "c2": {
+   "general": 0.003870694627423552,
+   "none_fit": 0.004958022732126266,
+   "relevant": 0.9911712826404501
+  },
+  "ms_c2": 333.5713669657707
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Jon start expanding his studio's social media presence?",
+  "skip": false,
+  "yesno": 0.8116949713424195,
+  "ms_yesno": 510.58557094074786,
+  "c1": {
+   "general": 0.008833754776818739,
+   "none_fit": 0.0105094290295691,
+   "relevant": 0.9806568161936122
+  },
+  "ms_c1": 238.82231418974698,
+  "c2": {
+   "general": 0.01334785919442149,
+   "none_fit": 0.009898900998201945,
+   "relevant": 0.9767532398073766
+  },
+  "ms_c2": 517.8252030164003
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Caroline attend a pride parade in August?",
+  "skip": false,
+  "yesno": 0.7841534704395707,
+  "ms_yesno": 576.1785069480538,
+  "c1": {
+   "general": 0.0038133656874033447,
+   "none_fit": 0.005472551380777262,
+   "relevant": 0.9907140829318194
+  },
+  "ms_c1": 238.6355809867382,
+  "c2": {
+   "general": 0.006187297714005784,
+   "none_fit": 0.011006157521997885,
+   "relevant": 0.9828065447639964
+  },
+  "ms_c2": 309.0940839610994
+ },
+ {
+  "kind": "relevant",
+  "query": "What Jon thinks the ideal dance studio should look like?",
+  "skip": false,
+  "yesno": 0.8133056054525157,
+  "ms_yesno": 389.3214650452137,
+  "c1": {
+   "general": 0.005678643720088004,
+   "none_fit": 0.001049914657722315,
+   "relevant": 0.9932714416221897
+  },
+  "ms_c1": 237.11841506883502,
+  "c2": {
+   "general": 0.00596069512390995,
+   "none_fit": 0.0039266657112422285,
+   "relevant": 0.9901126391648478
+  },
+  "ms_c2": 521.2853869888932
+ },
+ {
+  "kind": "relevant",
+  "query": "How did Melanie feel about her family after the accident?",
+  "skip": false,
+  "yesno": 0.9667456866094145,
+  "ms_yesno": 553.2200101297349,
+  "c1": {
+   "general": 0.0010046802229187915,
+   "none_fit": 0.0003051899624302453,
+   "relevant": 0.9986901298146509
+  },
+  "ms_c1": 237.46234108693898,
+  "c2": {
+   "general": 0.001633693359819653,
+   "none_fit": 0.0009076084254442826,
+   "relevant": 0.997458698214736
+  },
+  "ms_c2": 315.87569788098335
+ },
+ {
+  "kind": "relevant",
+  "query": "What event did John participate in to show support for veterans' rights?",
+  "skip": false,
+  "yesno": 0.9726109124346162,
+  "ms_yesno": 430.8409101795405,
+  "c1": {
+   "general": 0.000592380521507627,
+   "none_fit": 0.0001942711397959407,
+   "relevant": 0.9992133483386963
+  },
+  "ms_c1": 252.18727299943566,
+  "c2": {
+   "general": 0.0015005988497492964,
+   "none_fit": 0.0017502262396471761,
+   "relevant": 0.9967491749106034
+  },
+  "ms_c2": 345.07549088448286
+ },
+ {
+  "kind": "relevant",
+  "query": "What event is Maria getting ready for at the shelter on May 25, 2023?",
+  "skip": false,
+  "yesno": 0.8636018196336911,
+  "ms_yesno": 431.61643017083406,
+  "c1": {
+   "general": 0.0019550149837651294,
+   "none_fit": 0.0011085186583258066,
+   "relevant": 0.9969364663579091
+  },
+  "ms_c1": 251.93798099644482,
+  "c2": {
+   "general": 0.0020459230998863378,
+   "none_fit": 0.0016742718007098853,
+   "relevant": 0.9962798050994037
+  },
+  "ms_c2": 319.04231291264296
+ },
+ {
+  "kind": "relevant",
+  "query": "What career path has Caroline decided to persue?",
+  "skip": false,
+  "yesno": 0.9092667080159318,
+  "ms_yesno": 409.42899510264397,
+  "c1": {
+   "general": 0.0014278616633526845,
+   "none_fit": 0.0005830632969745709,
+   "relevant": 0.9979890750396727
+  },
+  "ms_c1": 237.74627200327814,
+  "c2": {
+   "general": 0.003945715880294935,
+   "none_fit": 0.004058642297288954,
+   "relevant": 0.9919956418224161
+  },
+  "ms_c2": 501.34442397393286
+ },
+ {
+  "kind": "relevant",
+  "query": "What do the dancers in the photo represent?",
+  "skip": false,
+  "yesno": 0.8031707928734315,
+  "ms_yesno": 536.8249709717929,
+  "c1": {
+   "general": 0.013770130530884472,
+   "none_fit": 0.043816006598126525,
+   "relevant": 0.9424138628709889
+  },
+  "ms_c1": 235.36705411970615,
+  "c2": {
+   "general": 0.12166416330565097,
+   "none_fit": 0.10017786040913568,
+   "relevant": 0.7781579762852133
+  },
+  "ms_c2": 321.11629797145724
+ },
+ {
+  "kind": "relevant",
+  "query": "How does Jon use the clipboard with a notepad attached to it?",
+  "skip": false,
+  "yesno": 0.9207746572911837,
+  "ms_yesno": 509.56123997457325,
+  "c1": {
+   "general": 0.008237251184187288,
+   "none_fit": 0.0038267487048761453,
+   "relevant": 0.9879360001109365
+  },
+  "ms_c1": 249.11661981604993,
+  "c2": {
+   "general": 0.021942600837664375,
+   "none_fit": 0.070777374248299,
+   "relevant": 0.9072800249140367
+  },
+  "ms_c2": 510.1117780432105
+ },
+ {
+  "kind": "relevant",
+  "query": "What is the name of John's one-year-old child?",
+  "skip": false,
+  "yesno": 0.9670712070297232,
+  "ms_yesno": 545.8597138058394,
+  "c1": {
+   "general": 0.0018448390320686065,
+   "none_fit": 0.00077114523114694,
+   "relevant": 0.9973840157367845
+  },
+  "ms_c1": 234.78786507621408,
+  "c2": {
+   "general": 0.011984584110322872,
+   "none_fit": 0.011624684543116904,
+   "relevant": 0.9763907313465603
+  },
+  "ms_c2": 311.18205818347633
+ },
+ {
+  "kind": "relevant",
+  "query": "What happened to John's job in August 2023?",
+  "skip": false,
+  "yesno": 0.9010615846343836,
+  "ms_yesno": 508.36711400188506,
+  "c1": {
+   "general": 0.0016973811220314463,
+   "none_fit": 0.001689029566886885,
+   "relevant": 0.9966135893110817
+  },
+  "ms_c1": 259.8170139826834,
+  "c2": {
+   "general": 0.004385929527213641,
+   "none_fit": 0.003778600183034278,
+   "relevant": 0.991835470289752
+  },
+  "ms_c2": 315.67509402520955
+ },
+ {
+  "kind": "relevant",
+  "query": "What did Caroline make for a local church?",
+  "skip": false,
+  "yesno": 0.9657123647336018,
+  "ms_yesno": 558.5333339404315,
+  "c1": {
+   "general": 0.0018066266614898804,
+   "none_fit": 0.00021691958764730025,
+   "relevant": 0.9979764537508629
+  },
+  "ms_c1": 237.7080488950014,
+  "c2": {
+   "general": 0.003012263576701532,
+   "none_fit": 0.0010513205213254137,
+   "relevant": 0.995936415901973
+  },
+  "ms_c2": 341.48926893249154
+ },
+ {
+  "kind": "relevant",
+  "query": "How did Melanie's son handle the accident?",
+  "skip": false,
+  "yesno": 0.9511353121678479,
+  "ms_yesno": 529.0311418939382,
+  "c1": {
+   "general": 0.003000699673102547,
+   "none_fit": 0.002985115453766959,
+   "relevant": 0.9940141848731305
+  },
+  "ms_c1": 229.8873590771109,
+  "c2": {
+   "general": 0.005341085578239116,
+   "none_fit": 0.006724777528477194,
+   "relevant": 0.9879341368932837
+  },
+  "ms_c2": 330.42126800864935
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Jon and Gina decide to collaborate to create dance content?",
+  "skip": false,
+  "yesno": 0.9212118313298886,
+  "ms_yesno": 511.9545131456107,
+  "c1": {
+   "general": 0.003720780680315325,
+   "none_fit": 0.0029491735631191327,
+   "relevant": 0.9933300457565655
+  },
+  "ms_c1": 235.58080312795937,
+  "c2": {
+   "general": 0.008071538028138979,
+   "none_fit": 0.005213319896781629,
+   "relevant": 0.9867151420750793
+  },
+  "ms_c2": 337.5258219894022
+ },
+ {
+  "kind": "relevant",
+  "skip": true
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Melanie say running has been great for?",
+  "skip": false,
+  "yesno": 0.9093313612906374,
+  "ms_yesno": 534.8226139321923,
+  "c1": {
+   "general": 0.0025578078085375664,
+   "none_fit": 0.0008350841717779169,
+   "relevant": 0.9966071080196844
+  },
+  "ms_c1": 238.8272830285132,
+  "c2": {
+   "general": 0.0065011506974684136,
+   "none_fit": 0.00631760910293284,
+   "relevant": 0.9871812401995987
+  },
+  "ms_c2": 325.71296114474535
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Gina open her online clothing store?",
+  "skip": false,
+  "yesno": 0.9227939667753241,
+  "ms_yesno": 569.4687550421804,
+  "c1": {
+   "general": 0.0033147651519480873,
+   "none_fit": 0.0008029431643276278,
+   "relevant": 0.9958822916837242
+  },
+  "ms_c1": 236.83808813802898,
+  "c2": {
+   "general": 0.01350522676564292,
+   "none_fit": 0.002596705022230134,
+   "relevant": 0.983898068212127
+  },
+  "ms_c2": 306.5996700897813
+ },
+ {
+  "kind": "relevant",
+  "query": "Would Caroline be considered religious?",
+  "skip": false,
+  "yesno": 0.6766900140277022,
+  "ms_yesno": 429.32918504811823,
+  "c1": {
+   "general": 0.009052650838275363,
+   "none_fit": 0.814331274490287,
+   "relevant": 0.17661607467143764
+  },
+  "ms_c1": 235.49881810322404,
+  "c2": {
+   "general": 0.05821800572794547,
+   "none_fit": 0.7940680708188707,
+   "relevant": 0.14771392345318385
+  },
+  "ms_c2": 301.52534088119864
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Melanie do to destress?",
+  "skip": false,
+  "yesno": 0.9664794038471861,
+  "ms_yesno": 405.38362390361726,
+  "c1": {
+   "general": 0.0016509329404554049,
+   "none_fit": 0.00044175251391994556,
+   "relevant": 0.9979073145456246
+  },
+  "ms_c1": 235.6201889924705,
+  "c2": {
+   "general": 0.004318893345311141,
+   "none_fit": 0.007462582469727568,
+   "relevant": 0.9882185241849613
+  },
+  "ms_c2": 492.7062480710447
+ },
+ {
+  "kind": "relevant",
+  "query": "When did Maria's grandmother pass away?",
+  "skip": false,
+  "yesno": 0.8163329042402436,
+  "ms_yesno": 544.3449490703642,
+  "c1": {
+   "general": 0.004869269328235208,
+   "none_fit": 0.0029767119922765846,
+   "relevant": 0.9921540186794882
+  },
+  "ms_c1": 232.49770607799292,
+  "c2": {
+   "general": 0.010481714927610748,
+   "none_fit": 0.011719947174407407,
+   "relevant": 0.977798337897982
+  },
+  "ms_c2": 484.3099529389292
+ },
+ {
+  "kind": "relevant",
+  "query": "What activity did John's colleague, Rob, invite him to?",
+  "skip": false,
+  "yesno": 0.8800001511379442,
+  "ms_yesno": 576.3817061670125,
+  "c1": {
+   "general": 0.0018873797199882327,
+   "none_fit": 0.0011862825027057486,
+   "relevant": 0.9969263377773061
+  },
+  "ms_c1": 235.47057388350368,
+  "c2": {
+   "general": 0.0037645122546315296,
+   "none_fit": 0.004340444688391952,
+   "relevant": 0.9918950430569765
+  },
+  "ms_c2": 332.8402121551335
+ },
+ {
+  "kind": "relevant",
+  "query": "How long was Max a part of John's family?",
+  "skip": false,
+  "yesno": 0.8759255362316892,
+  "ms_yesno": 528.6978641524911,
+  "c1": {
+   "general": 0.0020166824175924065,
+   "none_fit": 0.0017267703869625224,
+   "relevant": 0.9962565471954452
+  },
+  "ms_c1": 237.42186999879777,
+  "c2": {
+   "general": 0.005647767178668207,
+   "none_fit": 0.006525374684371392,
+   "relevant": 0.9878268581369605
+  },
+  "ms_c2": 493.4345721267164
+ },
+ {
+  "kind": "relevant",
+  "query": "Which  classical musicians does Melanie enjoy listening to?",
+  "skip": false,
+  "yesno": 0.8914584961135059,
+  "ms_yesno": 545.0609070248902,
+  "c1": {
+   "general": 0.0018336989751269526,
+   "none_fit": 0.006279544846123942,
+   "relevant": 0.9918867561787492
+  },
+  "ms_c1": 236.18044494651258,
+  "c2": {
+   "general": 0.006033137304616272,
+   "none_fit": 0.032020142514993126,
+   "relevant": 0.9619467201803906
+  },
+  "ms_c2": 503.964114934206
+ },
+ {
+  "kind": "relevant",
+  "query": "Why does John say he feels stuck and questioning his decisions and goals?",
+  "skip": false,
+  "yesno": 0.9060917812517126,
+  "ms_yesno": 562.2558798640966,
+  "c1": {
+   "general": 0.0017725268848438511,
+   "none_fit": 0.0009331941480701177,
+   "relevant": 0.997294278967086
+  },
+  "ms_c1": 236.67303193360567,
+  "c2": {
+   "general": 0.0022845761501645344,
+   "none_fit": 0.0060302102351885226,
+   "relevant": 0.991685213614647
+  },
+  "ms_c2": 348.3497479464859
+ },
+ {
+  "kind": "relevant",
+  "query": "What does Jon tell Gina he won't do?",
+  "skip": false,
+  "yesno": 0.8047100370317583,
+  "ms_yesno": 488.4391291998327,
+  "c1": {
+   "general": 0.018729359239452972,
+   "none_fit": 0.6897556716216858,
+   "relevant": 0.2915149691388611
+  },
+  "ms_c1": 226.70102189294994,
+  "c2": {
+   "general": 0.027589147380837696,
+   "none_fit": 0.5128356406017791,
+   "relevant": 0.45957521201738327
+  },
+  "ms_c2": 463.10194698162377
+ },
+ {
+  "kind": "relevant",
+  "query": "What new activity did Maria start recently, as mentioned on 3 June, 2023?",
+  "skip": false,
+  "yesno": 0.6401074250237497,
+  "ms_yesno": 539.6899890620261,
+  "c1": {
+   "general": 0.0010575404163599208,
+   "none_fit": 0.8640335398993549,
+   "relevant": 0.13490891968428512
+  },
+  "ms_c1": 228.99104794487357,
+  "c2": {
+   "general": 0.026801858576090163,
+   "none_fit": 0.744159246726754,
+   "relevant": 0.22903889469715577
+  },
+  "ms_c2": 318.9512749668211
+ },
+ {
+  "kind": "relevant",
+  "skip": true
+ },
+ {
+  "kind": "relevant",
+  "query": "Why did Maria sit with the little girl at the shelter event in February 2023?",
+  "skip": false,
+  "yesno": 0.8043137792011575,
+  "ms_yesno": 542.6215860061347,
+  "c1": {
+   "general": 0.0024394724717703466,
+   "none_fit": 0.0008369803672369768,
+   "relevant": 0.9967235471609927
+  },
+  "ms_c1": 236.68006202206016,
+  "c2": {
+   "general": 0.0026195599223247856,
+   "none_fit": 0.0018580524316445437,
+   "relevant": 0.9955223876460306
+  },
+  "ms_c2": 512.1710589155555
+ },
+ {
+  "kind": "relevant",
+  "query": "Do Jon and Gina start businesses out of what they love?",
+  "skip": false,
+  "yesno": 0.9020857356632407,
+  "ms_yesno": 540.5579500366002,
+  "c1": {
+   "general": 0.003767707927764948,
+   "none_fit": 0.00171319478289064,
+   "relevant": 0.9945190972893445
+  },
+  "ms_c1": 236.93626699969172,
+  "c2": {
+   "general": 0.007420921275453801,
+   "none_fit": 0.006210200291467003,
+   "relevant": 0.9863688784330792
+  },
+  "ms_c2": 320.6675508990884
+ },
+ {
+  "kind": "relevant",
+  "query": "How did the flood impact the homes in John's old area?",
+  "skip": false,
+  "yesno": 0.9396698719811984,
+  "ms_yesno": 572.1668030600995,
+  "c1": {
+   "general": 0.002198653330717051,
+   "none_fit": 0.0020430349990059778,
+   "relevant": 0.995758311670277
+  },
+  "ms_c1": 242.37152189016342,
+  "c2": {
+   "general": 0.0019000343217597682,
+   "none_fit": 0.00690364511757302,
+   "relevant": 0.9911963205606673
+  },
+  "ms_c2": 527.1520998794585
+ },
+ {
+  "kind": "relevant",
+  "query": "What activities does John's family enjoy doing together?",
+  "skip": false,
+  "yesno": 0.9153031279175052,
+  "ms_yesno": 548.9554519299418,
+  "c1": {
+   "general": 0.004484475921092069,
+   "none_fit": 0.00235119354293829,
+   "relevant": 0.9931643305359696
+  },
+  "ms_c1": 235.43620691634715,
+  "c2": {
+   "general": 0.008963467885483176,
+   "none_fit": 0.016180764191607307,
+   "relevant": 0.9748557679229095
+  },
+  "ms_c2": 319.80108306743205
+ },
+ {
+  "kind": "relevant",
+  "query": "Where did Maria get the idea for the castle shadow box in her home?",
+  "skip": false,
+  "yesno": 0.9700311294851788,
+  "ms_yesno": 545.7739389967173,
+  "c1": {
+   "general": 0.0009749185331716571,
+   "none_fit": 0.0003282887204209739,
+   "relevant": 0.9986967927464073
+  },
+  "ms_c1": 237.54596314392984,
+  "c2": {
+   "general": 0.0011529342611508624,
+   "none_fit": 0.0007790927182632127,
+   "relevant": 0.9980679730205859
+  },
+  "ms_c2": 545.1174420304596
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's a good synonym for 'quick'?",
+  "skip": false,
+  "yesno": 0.8756009618320294,
+  "ms_yesno": 603.6870928946882,
+  "c1": {
+   "general": 0.1700413149199358,
+   "none_fit": 0.7722386275900109,
+   "relevant": 0.05772005749005324
+  },
+  "ms_c1": 240.10683503001928,
+  "c2": {
+   "general": 0.5794557174321575,
+   "none_fit": 0.3878458098889369,
+   "relevant": 0.03269847267890549
+  },
+  "ms_c2": 355.5544321425259
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write me a two-line poem about rain.",
+  "skip": false,
+  "yesno": 0.7255582157270367,
+  "ms_yesno": 444.8438009712845,
+  "c1": {
+   "general": 0.40051932285647607,
+   "none_fit": 0.3560933527282576,
+   "relevant": 0.24338732441526637
+  },
+  "ms_c1": 242.83756199292839,
+  "c2": {
+   "general": 0.6863661578708371,
+   "none_fit": 0.20351837524285774,
+   "relevant": 0.11011546688630519
+  },
+  "ms_c2": 545.9821859840304
+ },
+ {
+  "kind": "off-topic",
+  "query": "How many ounces are in a cup?",
+  "skip": false,
+  "yesno": 0.8430694216702017,
+  "ms_yesno": 669.8165740817785,
+  "c1": {
+   "general": 0.6101985043273396,
+   "none_fit": 0.2477374188634763,
+   "relevant": 0.14206407680918404
+  },
+  "ms_c1": 243.18352108821273,
+  "c2": {
+   "general": 0.8087312320659699,
+   "none_fit": 0.11591708507449693,
+   "relevant": 0.07535168285953328
+  },
+  "ms_c2": 430.5017681326717
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the capital of Australia?",
+  "skip": false,
+  "yesno": 0.1150066344397233,
+  "ms_yesno": 591.7505770921707,
+  "c1": {
+   "general": 0.3049714481305257,
+   "none_fit": 0.6829932278398586,
+   "relevant": 0.01203532402961573
+  },
+  "ms_c1": 238.58406394720078,
+  "c2": {
+   "general": 0.5863287022061686,
+   "none_fit": 0.4062305406654194,
+   "relevant": 0.007440757128412022
+  },
+  "ms_c2": 554.6803020406514
+ },
+ {
+  "kind": "off-topic",
+  "query": "Give me a quick tip for boiling eggs.",
+  "skip": false,
+  "yesno": 0.7071563044030973,
+  "ms_yesno": 615.9424381330609,
+  "c1": {
+   "general": 0.042636007904679155,
+   "none_fit": 0.8088179911112546,
+   "relevant": 0.14854600098406617
+  },
+  "ms_c1": 262.97855703160167,
+  "c2": {
+   "general": 0.4597707077821577,
+   "none_fit": 0.43943896094624424,
+   "relevant": 0.10079033127159809
+  },
+  "ms_c2": 544.555741827935
+ },
+ {
+  "kind": "off-topic",
+  "query": "What does 'ephemeral' mean?",
+  "skip": false,
+  "yesno": 0.9775586825915374,
+  "ms_yesno": 559.4186300877482,
+  "c1": {
+   "general": 0.2357400318678383,
+   "none_fit": 0.6702901448034291,
+   "relevant": 0.09396982332873255
+  },
+  "ms_c1": 236.4838318899274,
+  "c2": {
+   "general": 0.6174069386154827,
+   "none_fit": 0.33288231594891043,
+   "relevant": 0.04971074543560695
+  },
+  "ms_c2": 333.9352160692215
+ },
+ {
+  "kind": "off-topic",
+  "query": "Explain photosynthesis in one sentence.",
+  "skip": false,
+  "yesno": 0.6191506473458503,
+  "ms_yesno": 530.7715509552509,
+  "c1": {
+   "general": 0.9314551856421295,
+   "none_fit": 0.028523464574331896,
+   "relevant": 0.040021349783538517
+  },
+  "ms_c1": 246.63042393513024,
+  "c2": {
+   "general": 0.9260457486010634,
+   "none_fit": 0.05446902127022301,
+   "relevant": 0.01948523012871364
+  },
+  "ms_c2": 504.69063105992973
+ },
+ {
+  "kind": "off-topic",
+  "query": "Translate 'thank you very much' into Spanish.",
+  "skip": false,
+  "yesno": 0.6590486634637425,
+  "ms_yesno": 543.6320209410042,
+  "c1": {
+   "general": 0.907354985396984,
+   "none_fit": 0.009513180904473558,
+   "relevant": 0.0831318336985424
+  },
+  "ms_c1": 234.5063490793109,
+  "c2": {
+   "general": 0.959870358297445,
+   "none_fit": 0.003228713228035355,
+   "relevant": 0.03690092847451967
+  },
+  "ms_c2": 495.35174504853785
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is 17 times 23?",
+  "skip": false,
+  "yesno": 0.4634414039316041,
+  "ms_yesno": 551.5737389214337,
+  "c1": {
+   "general": 0.8040077626686176,
+   "none_fit": 0.18865229341720857,
+   "relevant": 0.007339943914173799
+  },
+  "ms_c1": 267.7022379357368,
+  "c2": {
+   "general": 0.9320758984338011,
+   "none_fit": 0.06442056794815224,
+   "relevant": 0.0035035336180467033
+  },
+  "ms_c2": 501.0932160075754
+ },
+ {
+  "kind": "off-topic",
+  "query": "Who wrote Pride and Prejudice?",
+  "skip": false,
+  "yesno": 0.32850251195418445,
+  "ms_yesno": 612.299885135144,
+  "c1": {
+   "general": 0.06249861008054867,
+   "none_fit": 0.9202268669089304,
+   "relevant": 0.017274523010520897
+  },
+  "ms_c1": 237.13204683735967,
+  "c2": {
+   "general": 0.5712402190731453,
+   "none_fit": 0.414999503945161,
+   "relevant": 0.013760276981693645
+  },
+  "ms_c2": 575.956195127219
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a haiku about autumn leaves.",
+  "skip": false,
+  "yesno": 0.8087263286478298,
+  "ms_yesno": 583.5366800893098,
+  "c1": {
+   "general": 0.6695790034589717,
+   "none_fit": 0.013352090738936718,
+   "relevant": 0.3170689058020917
+  },
+  "ms_c1": 238.33282198756933,
+  "c2": {
+   "general": 0.8011469529406077,
+   "none_fit": 0.00666613336484383,
+   "relevant": 0.1921869136945485
+  },
+  "ms_c2": 555.4243160877377
+ },
+ {
+  "kind": "off-topic",
+  "query": "How do I reverse a list in Python?",
+  "skip": false,
+  "yesno": 0.7180077552045447,
+  "ms_yesno": 600.913607981056,
+  "c1": {
+   "general": 0.8639103024562704,
+   "none_fit": 0.10889291213605236,
+   "relevant": 0.02719678540767726
+  },
+  "ms_c1": 252.41573411040008,
+  "c2": {
+   "general": 0.9265957833491296,
+   "none_fit": 0.056577585041095675,
+   "relevant": 0.016826631609774673
+  },
+  "ms_c2": 387.45832280255854
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the boiling point of water in Fahrenheit?",
+  "skip": false,
+  "yesno": 0.7581659497597749,
+  "ms_yesno": 580.6387059856206,
+  "c1": {
+   "general": 0.46731829289602533,
+   "none_fit": 0.5042825636404055,
+   "relevant": 0.028399143463569223
+  },
+  "ms_c1": 238.3860880509019,
+  "c2": {
+   "general": 0.7797442847928859,
+   "none_fit": 0.20887576284374837,
+   "relevant": 0.01137995236336562
+  },
+  "ms_c2": 542.4142880365252
+ },
+ {
+  "kind": "off-topic",
+  "query": "Give me three words that rhyme with 'light'.",
+  "skip": false,
+  "yesno": 0.67540007434718,
+  "ms_yesno": 606.4423071220517,
+  "c1": {
+   "general": 0.060479076040431214,
+   "none_fit": 0.4299520302174933,
+   "relevant": 0.5095688937420755
+  },
+  "ms_c1": 240.64680887386203,
+  "c2": {
+   "general": 0.4792640005620381,
+   "none_fit": 0.23474700061289838,
+   "relevant": 0.28598899882506346
+  },
+  "ms_c2": 570.9022970404476
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the difference between 'affect' and 'effect'?",
+  "skip": false,
+  "yesno": 0.8679644489247897,
+  "ms_yesno": 599.7066700365394,
+  "c1": {
+   "general": 0.27329931607884494,
+   "none_fit": 0.6566496377934338,
+   "relevant": 0.07005104612772127
+  },
+  "ms_c1": 242.39309295080602,
+  "c2": {
+   "general": 0.6325026482310139,
+   "none_fit": 0.3310780284600939,
+   "relevant": 0.036419323308892214
+  },
+  "ms_c2": 372.09350103512406
+ },
+ {
+  "kind": "off-topic",
+  "query": "Convert 5 kilometres to miles.",
+  "skip": false,
+  "yesno": 0.6673932681157009,
+  "ms_yesno": 541.4302269928157,
+  "c1": {
+   "general": 0.9745152043440088,
+   "none_fit": 0.012409736851896974,
+   "relevant": 0.013075058804094304
+  },
+  "ms_c1": 232.49641084112227,
+  "c2": {
+   "general": 0.9868928048343144,
+   "none_fit": 0.006222645095462481,
+   "relevant": 0.006884550070223183
+  },
+  "ms_c2": 334.2290020082146
+ },
+ {
+  "kind": "off-topic",
+  "query": "Tell me a short joke about penguins.",
+  "skip": false,
+  "yesno": 0.6205542366138833,
+  "ms_yesno": 516.6427348740399,
+  "c1": {
+   "general": 0.7110875374520914,
+   "none_fit": 0.27844570675808145,
+   "relevant": 0.010466755789827142
+  },
+  "ms_c1": 238.82834683172405,
+  "c2": {
+   "general": 0.8984804812543457,
+   "none_fit": 0.0975127529852068,
+   "relevant": 0.004006765760447646
+  },
+  "ms_c2": 561.4524690899998
+ },
+ {
+  "kind": "off-topic",
+  "query": "What year did the Berlin Wall fall?",
+  "skip": false,
+  "yesno": 0.416354867879048,
+  "ms_yesno": 563.786509912461,
+  "c1": {
+   "general": 0.07720918079724642,
+   "none_fit": 0.8920010039838684,
+   "relevant": 0.030789815218885228
+  },
+  "ms_c1": 231.41585988923907,
+  "c2": {
+   "general": 0.5407477848965632,
+   "none_fit": 0.4470745866241725,
+   "relevant": 0.01217762847926431
+  },
+  "ms_c2": 506.7896959371865
+ },
+ {
+  "kind": "off-topic",
+  "query": "Summarize the plot of Romeo and Juliet in two sentences.",
+  "skip": false,
+  "yesno": 0.6335112435658009,
+  "ms_yesno": 606.2601800076663,
+  "c1": {
+   "general": 0.01564466936974891,
+   "none_fit": 0.9781102423309659,
+   "relevant": 0.006245088299285179
+  },
+  "ms_c1": 237.73683793842793,
+  "c2": {
+   "general": 0.4948221702165285,
+   "none_fit": 0.49472845791964115,
+   "relevant": 0.010449371863830239
+  },
+  "ms_c2": 377.82729393802583
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the square root of 144?",
+  "skip": false,
+  "yesno": 0.460791666454411,
+  "ms_yesno": 586.6411319002509,
+  "c1": {
+   "general": 0.8580064609100723,
+   "none_fit": 0.12239558101657214,
+   "relevant": 0.01959795807335568
+  },
+  "ms_c1": 246.33812811225653,
+  "c2": {
+   "general": 0.9272884579153329,
+   "none_fit": 0.0627139562494445,
+   "relevant": 0.009997585835222634
+  },
+  "ms_c2": 372.90352396667004
+ },
+ {
+  "kind": "off-topic",
+  "query": "How many continents are there?",
+  "skip": false,
+  "yesno": 0.5057880676956141,
+  "ms_yesno": 610.0172388833016,
+  "c1": {
+   "general": 0.9570537799107794,
+   "none_fit": 0.010610393679256655,
+   "relevant": 0.032335826409963964
+  },
+  "ms_c1": 269.97467409819365,
+  "c2": {
+   "general": 0.9525896564529235,
+   "none_fit": 0.017136173506744706,
+   "relevant": 0.030274170040331956
+  },
+  "ms_c2": 612.0452440809458
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a regex that matches an email address.",
+  "skip": false,
+  "yesno": 0.22964316038097415,
+  "ms_yesno": 646.3274660054594,
+  "c1": {
+   "general": 0.9296359124975215,
+   "none_fit": 0.03121917022452983,
+   "relevant": 0.039144917277948714
+  },
+  "ms_c1": 243.3231130708009,
+  "c2": {
+   "general": 0.9495426060398711,
+   "none_fit": 0.03231380610281208,
+   "relevant": 0.018143587857316897
+  },
+  "ms_c2": 564.0934410039335
+ },
+ {
+  "kind": "off-topic",
+  "query": "What does HTTP stand for?",
+  "skip": false,
+  "yesno": 0.5382262514801996,
+  "ms_yesno": 583.8632639497519,
+  "c1": {
+   "general": 0.9295547585251898,
+   "none_fit": 0.020563033186866822,
+   "relevant": 0.04988220828794338
+  },
+  "ms_c1": 237.9793229047209,
+  "c2": {
+   "general": 0.9607369118924459,
+   "none_fit": 0.01154665546357392,
+   "relevant": 0.027716432643980184
+  },
+  "ms_c2": 335.1206600200385
+ },
+ {
+  "kind": "off-topic",
+  "query": "Name three primary colours.",
+  "skip": false,
+  "yesno": 0.6927723173299528,
+  "ms_yesno": 528.347454033792,
+  "c1": {
+   "general": 0.41488844667703034,
+   "none_fit": 0.4896148397325225,
+   "relevant": 0.09549671359044709
+  },
+  "ms_c1": 234.1967469546944,
+  "c2": {
+   "general": 0.7088691458027349,
+   "none_fit": 0.24188424307075942,
+   "relevant": 0.04924661112650573
+  },
+  "ms_c2": 320.0919311493635
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the plural of 'cactus'?",
+  "skip": false,
+  "yesno": 0.571219656321174,
+  "ms_yesno": 527.714871102944,
+  "c1": {
+   "general": 0.8876840541691258,
+   "none_fit": 0.10614984416474953,
+   "relevant": 0.006166101666124698
+  },
+  "ms_c1": 236.65400687605143,
+  "c2": {
+   "general": 0.9430952558283483,
+   "none_fit": 0.053385465424480895,
+   "relevant": 0.0035192787471708606
+  },
+  "ms_c2": 336.62792993709445
+ },
+ {
+  "kind": "off-topic",
+  "query": "Explain what a black hole is to a ten-year-old.",
+  "skip": false,
+  "yesno": 0.39965147364730297,
+  "ms_yesno": 415.05617601796985,
+  "c1": {
+   "general": 0.7113743329017067,
+   "none_fit": 0.2703891087040183,
+   "relevant": 0.01823655839427501
+  },
+  "ms_c1": 250.767552992329,
+  "c2": {
+   "general": 0.8548975783579278,
+   "none_fit": 0.1353924864682736,
+   "relevant": 0.009709935173798494
+  },
+  "ms_c2": 344.9020499829203
+ },
+ {
+  "kind": "off-topic",
+  "query": "How many days are in a leap year?",
+  "skip": false,
+  "yesno": 0.43847661553436135,
+  "ms_yesno": 533.3663260098547,
+  "c1": {
+   "general": 0.3813800266297015,
+   "none_fit": 0.5828098060047835,
+   "relevant": 0.035810167365515025
+  },
+  "ms_c1": 236.61800613626838,
+  "c2": {
+   "general": 0.6628131683704905,
+   "none_fit": 0.3253705715124164,
+   "relevant": 0.011816260117093011
+  },
+  "ms_c2": 507.91229121387005
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is the chemical symbol for gold?",
+  "skip": false,
+  "yesno": 0.38519668948127334,
+  "ms_yesno": 620.2729069627821,
+  "c1": {
+   "general": 0.8265541186124165,
+   "none_fit": 0.1690146183596469,
+   "relevant": 0.004431263027936512
+  },
+  "ms_c1": 260.4009029455483,
+  "c2": {
+   "general": 0.9118469758523093,
+   "none_fit": 0.08483042018966762,
+   "relevant": 0.0033226039580230137
+  },
+  "ms_c2": 382.1855019778013
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a limerick about a cat who loves boxes.",
+  "skip": false,
+  "yesno": 0.575858235576255,
+  "ms_yesno": 579.3636189773679,
+  "c1": {
+   "general": 0.9264200808520399,
+   "none_fit": 0.024801247099575565,
+   "relevant": 0.048778672048384514
+  },
+  "ms_c1": 240.76291103847325,
+  "c2": {
+   "general": 0.9695464506590046,
+   "none_fit": 0.006753845972534058,
+   "relevant": 0.02369970336846143
+  },
+  "ms_c2": 529.2672740761191
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the opposite of 'generous'?",
+  "skip": false,
+  "yesno": 0.8448727861295252,
+  "ms_yesno": 624.1829679347575,
+  "c1": {
+   "general": 0.635282295319346,
+   "none_fit": 0.34805155546171324,
+   "relevant": 0.016666149218940832
+  },
+  "ms_c1": 238.8338150922209,
+  "c2": {
+   "general": 0.6432964002602308,
+   "none_fit": 0.3337376434765086,
+   "relevant": 0.022965956263260548
+  },
+  "ms_c2": 543.9830480609089
+ },
+ {
+  "kind": "off-topic",
+  "query": "How do you say 'good morning' in Japanese?",
+  "skip": false,
+  "yesno": 0.33706798738498417,
+  "ms_yesno": 643.241791985929,
+  "c1": {
+   "general": 0.21704946587614468,
+   "none_fit": 0.7685685025434132,
+   "relevant": 0.01438203158044216
+  },
+  "ms_c1": 241.74646008759737,
+  "c2": {
+   "general": 0.5844190955333443,
+   "none_fit": 0.4053237350728378,
+   "relevant": 0.01025716939381788
+  },
+  "ms_c2": 557.8188840299845
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is the speed of light, roughly?",
+  "skip": false,
+  "yesno": 0.3930864614225598,
+  "ms_yesno": 659.4499140046537,
+  "c1": {
+   "general": 0.253516694886524,
+   "none_fit": 0.7114487057383367,
+   "relevant": 0.03503459937513917
+  },
+  "ms_c1": 253.67148593068123,
+  "c2": {
+   "general": 0.6225134263109127,
+   "none_fit": 0.3574611066321725,
+   "relevant": 0.020025467056914777
+  },
+  "ms_c2": 380.8775618672371
+ },
+ {
+  "kind": "off-topic",
+  "query": "Give me a one-line definition of machine learning.",
+  "skip": false,
+  "yesno": 0.9171998680906585,
+  "ms_yesno": 462.17339602299035,
+  "c1": {
+   "general": 0.840857828228743,
+   "none_fit": 0.02400867252213192,
+   "relevant": 0.13513349924912502
+  },
+  "ms_c1": 240.99194607697427,
+  "c2": {
+   "general": 0.9157611322158703,
+   "none_fit": 0.01303675681627673,
+   "relevant": 0.07120211096785294
+  },
+  "ms_c2": 356.9111099932343
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's 15% of 80?",
+  "skip": false,
+  "yesno": 0.4656380667794369,
+  "ms_yesno": 413.1488602142781,
+  "c1": {
+   "general": 0.931712468469239,
+   "none_fit": 0.06291521747632382,
+   "relevant": 0.005372314054437126
+  },
+  "ms_c1": 237.8489919938147,
+  "c2": {
+   "general": 0.9852395577517198,
+   "none_fit": 0.012157791359236657,
+   "relevant": 0.002602650889043569
+  },
+  "ms_c2": 503.2399860210717
+ },
+ {
+  "kind": "off-topic",
+  "query": "Who painted the Mona Lisa?",
+  "skip": false,
+  "yesno": 0.5183933190679144,
+  "ms_yesno": 546.0876661818475,
+  "c1": {
+   "general": 0.13015162279121412,
+   "none_fit": 0.8222572578649383,
+   "relevant": 0.047591119343847646
+  },
+  "ms_c1": 235.81751389428973,
+  "c2": {
+   "general": 0.5486109309112663,
+   "none_fit": 0.423151195585259,
+   "relevant": 0.028237873503474672
+  },
+  "ms_c2": 505.3666611202061
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a SQL query that counts rows in a table called orders.",
+  "skip": false,
+  "yesno": 0.5298150690120503,
+  "ms_yesno": 588.8686468824744,
+  "c1": {
+   "general": 0.22446367699665712,
+   "none_fit": 0.7489482537839796,
+   "relevant": 0.026588069219363283
+  },
+  "ms_c1": 236.85083398595452,
+  "c2": {
+   "general": 0.6289804906956649,
+   "none_fit": 0.3589826305398387,
+   "relevant": 0.012036878764496448
+  },
+  "ms_c2": 491.5103989187628
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is the largest planet in our solar system?",
+  "skip": false,
+  "yesno": 0.46366244409586926,
+  "ms_yesno": 567.4069249071181,
+  "c1": {
+   "general": 0.643567097093574,
+   "none_fit": 0.35093400085314225,
+   "relevant": 0.005498902053283793
+  },
+  "ms_c1": 237.94473917223513,
+  "c2": {
+   "general": 0.7126994131640396,
+   "none_fit": 0.28421213768638043,
+   "relevant": 0.003088449149579813
+  },
+  "ms_c2": 512.875669868663
+ },
+ {
+  "kind": "off-topic",
+  "query": "Explain the difference between weather and climate.",
+  "skip": false,
+  "yesno": 0.8213516221528012,
+  "ms_yesno": 606.0615591704845,
+  "c1": {
+   "general": 0.40469144263228113,
+   "none_fit": 0.4390546998875807,
+   "relevant": 0.15625385748013818
+  },
+  "ms_c1": 241.37396621517837,
+  "c2": {
+   "general": 0.8372024364819808,
+   "none_fit": 0.10230264974865125,
+   "relevant": 0.060494913769368004
+  },
+  "ms_c2": 541.7740428820252
+ },
+ {
+  "kind": "off-topic",
+  "query": "What does 'carpe diem' mean?",
+  "skip": false,
+  "yesno": 0.3437508083373944,
+  "ms_yesno": 631.9828659761697,
+  "c1": {
+   "general": 0.3930064389840106,
+   "none_fit": 0.5740195883386726,
+   "relevant": 0.0329739726773167
+  },
+  "ms_c1": 238.0710719153285,
+  "c2": {
+   "general": 0.6951745421999658,
+   "none_fit": 0.287214065550868,
+   "relevant": 0.01761139224916617
+  },
+  "ms_c2": 365.1629937812686
+ },
+ {
+  "kind": "off-topic",
+  "query": "How many sides does a hexagon have?",
+  "skip": false,
+  "yesno": 0.3388274813775591,
+  "ms_yesno": 426.72546789981425,
+  "c1": {
+   "general": 0.6062451179578031,
+   "none_fit": 0.31291458590600796,
+   "relevant": 0.08084029613618894
+  },
+  "ms_c1": 236.58504406921566,
+  "c2": {
+   "general": 0.8020416925898558,
+   "none_fit": 0.15662387127239308,
+   "relevant": 0.04133443613775107
+  },
+  "ms_c2": 326.0820801369846
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a two-sentence horror story.",
+  "skip": false,
+  "yesno": 0.8492456537347572,
+  "ms_yesno": 510.7892139349133,
+  "c1": {
+   "general": 0.03655863800195726,
+   "none_fit": 0.07730788620246878,
+   "relevant": 0.886133475795574
+  },
+  "ms_c1": 239.41349610686302,
+  "c2": {
+   "general": 0.2345219157843474,
+   "none_fit": 0.11218525118878347,
+   "relevant": 0.6532928330268691
+  },
+  "ms_c2": 392.4764930270612
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the freezing point of water in Celsius?",
+  "skip": false,
+  "yesno": 0.5826482974681103,
+  "ms_yesno": 465.3422220144421,
+  "c1": {
+   "general": 0.9489097653574915,
+   "none_fit": 0.04402623842732674,
+   "relevant": 0.007063996215181761
+  },
+  "ms_c1": 237.3498580418527,
+  "c2": {
+   "general": 0.970697189402457,
+   "none_fit": 0.023058938608710822,
+   "relevant": 0.0062438719888322294
+  },
+  "ms_c2": 363.68982191197574
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is a prime number?",
+  "skip": false,
+  "yesno": 0.610322812069265,
+  "ms_yesno": 548.3849330339581,
+  "c1": {
+   "general": 0.8544012656962375,
+   "none_fit": 0.12640480294067763,
+   "relevant": 0.019193931363084775
+  },
+  "ms_c1": 237.70842398516834,
+  "c2": {
+   "general": 0.9230985842972577,
+   "none_fit": 0.0662070387713483,
+   "relevant": 0.010694376931394073
+  },
+  "ms_c2": 355.8657499961555
+ },
+ {
+  "kind": "off-topic",
+  "query": "Suggest a title for a poem about the ocean.",
+  "skip": false,
+  "yesno": 0.8322033728315696,
+  "ms_yesno": 503.74971190467477,
+  "c1": {
+   "general": 0.40841391216148565,
+   "none_fit": 0.10321753641099285,
+   "relevant": 0.48836855142752145
+  },
+  "ms_c1": 236.65875592269003,
+  "c2": {
+   "general": 0.5420553427526752,
+   "none_fit": 0.0748705168458128,
+   "relevant": 0.383074140401512
+  },
+  "ms_c2": 296.63560492917895
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the past tense of 'swim'?",
+  "skip": false,
+  "yesno": 0.8381816070919466,
+  "ms_yesno": 423.3266809023917,
+  "c1": {
+   "general": 0.6506673502357198,
+   "none_fit": 0.2936974617504282,
+   "relevant": 0.05563518801385198
+  },
+  "ms_c1": 241.59226706251502,
+  "c2": {
+   "general": 0.8242743225814491,
+   "none_fit": 0.14705677548494203,
+   "relevant": 0.02866890193360889
+  },
+  "ms_c2": 333.80045485682786
+ },
+ {
+  "kind": "off-topic",
+  "query": "How long is a marathon?",
+  "skip": false,
+  "yesno": 0.5971725367757175,
+  "ms_yesno": 614.1045929398388,
+  "c1": {
+   "general": 0.3826854968930124,
+   "none_fit": 0.5391092968626497,
+   "relevant": 0.07820520624433784
+  },
+  "ms_c1": 245.97980501130223,
+  "c2": {
+   "general": 0.6884717715676267,
+   "none_fit": 0.2699228818696859,
+   "relevant": 0.04160534656268739
+  },
+  "ms_c2": 407.0165550801903
+ },
+ {
+  "kind": "off-topic",
+  "query": "What language is spoken in Brazil?",
+  "skip": false,
+  "yesno": 0.674175789235161,
+  "ms_yesno": 576.0830040089786,
+  "c1": {
+   "general": 0.57783443684413,
+   "none_fit": 0.3873563181347495,
+   "relevant": 0.03480924502112045
+  },
+  "ms_c1": 236.14225210621953,
+  "c2": {
+   "general": 0.7865497944203317,
+   "none_fit": 0.1851303513783531,
+   "relevant": 0.02831985420131525
+  },
+  "ms_c2": 560.2152540814131
+ },
+ {
+  "kind": "off-topic",
+  "query": "Explain recursion in one sentence.",
+  "skip": false,
+  "yesno": 0.5760632015201228,
+  "ms_yesno": 591.3526071235538,
+  "c1": {
+   "general": 0.34099359758094405,
+   "none_fit": 0.6060322055778138,
+   "relevant": 0.052974196841242195
+  },
+  "ms_c1": 237.5373721588403,
+  "c2": {
+   "general": 0.5980571698166572,
+   "none_fit": 0.37741991581768264,
+   "relevant": 0.024522914365660113
+  },
+  "ms_c2": 525.106691988185
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is the tallest mountain on Earth?",
+  "skip": false,
+  "yesno": 0.3692786508558815,
+  "ms_yesno": 615.210103802383,
+  "c1": {
+   "general": 0.29539901713890854,
+   "none_fit": 0.6885836207669521,
+   "relevant": 0.016017362094139367
+  },
+  "ms_c1": 238.7677209917456,
+  "c2": {
+   "general": 0.6452601662678135,
+   "none_fit": 0.34525507303611674,
+   "relevant": 0.0094847606960697
+  },
+  "ms_c2": 357.4907348956913
+ },
+ {
+  "kind": "off-topic",
+  "query": "Give me an anagram of 'listen'.",
+  "skip": false,
+  "yesno": 0.5984936942926541,
+  "ms_yesno": 468.92518387176096,
+  "c1": {
+   "general": 0.14298746669801327,
+   "none_fit": 0.6729139969250725,
+   "relevant": 0.1840985363769142
+  },
+  "ms_c1": 233.25844202190638,
+  "c2": {
+   "general": 0.5605963862513915,
+   "none_fit": 0.3448879734110879,
+   "relevant": 0.09451564033752059
+  },
+  "ms_c2": 399.6777560096234
+ },
+ {
+  "kind": "off-topic",
+  "query": "What does DNA stand for?",
+  "skip": false,
+  "yesno": 0.30373341599989057,
+  "ms_yesno": 533.6590649094433,
+  "c1": {
+   "general": 0.30175275413904434,
+   "none_fit": 0.6578653592544044,
+   "relevant": 0.040381886606551315
+  },
+  "ms_c1": 228.92285091802478,
+  "c2": {
+   "general": 0.6518949363572308,
+   "none_fit": 0.3260989248298274,
+   "relevant": 0.022006138812941726
+  },
+  "ms_c2": 325.2000578213483
+ },
+ {
+  "kind": "off-topic",
+  "query": "How many minutes are in three hours?",
+  "skip": false,
+  "yesno": 0.49339712800084373,
+  "ms_yesno": 538.1742648314685,
+  "c1": {
+   "general": 0.9504516272573841,
+   "none_fit": 0.038434528007719466,
+   "relevant": 0.011113844734896492
+  },
+  "ms_c1": 243.70203097350895,
+  "c2": {
+   "general": 0.9780227753508138,
+   "none_fit": 0.015789246346346205,
+   "relevant": 0.00618797830283992
+  },
+  "ms_c2": 531.3540319912136
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's the difference between a virus and a bacterium?",
+  "skip": false,
+  "yesno": 0.40285682850154036,
+  "ms_yesno": 543.1482158601284,
+  "c1": {
+   "general": 0.6829803955498134,
+   "none_fit": 0.3075076984360478,
+   "relevant": 0.00951190601413887
+  },
+  "ms_c1": 239.81532105244696,
+  "c2": {
+   "general": 0.8496174599533646,
+   "none_fit": 0.14655254406164112,
+   "relevant": 0.003829995984994314
+  },
+  "ms_c2": 504.6639700885862
+ },
+ {
+  "kind": "off-topic",
+  "query": "Write a tongue twister about sheep.",
+  "skip": false,
+  "yesno": 0.6996040801441015,
+  "ms_yesno": 583.1644949503243,
+  "c1": {
+   "general": 0.936214341029495,
+   "none_fit": 0.027699935364251617,
+   "relevant": 0.03608572360625337
+  },
+  "ms_c1": 236.44864605739713,
+  "c2": {
+   "general": 0.9609423377592784,
+   "none_fit": 0.01064963077229295,
+   "relevant": 0.02840803146842869
+  },
+  "ms_c2": 518.9924892038107
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is the main ingredient in guacamole?",
+  "skip": false,
+  "yesno": 0.4075954129046045,
+  "ms_yesno": 614.9986900854856,
+  "c1": {
+   "general": 0.030842192346808028,
+   "none_fit": 0.9247718119012327,
+   "relevant": 0.04438599575195935
+  },
+  "ms_c1": 241.1657611373812,
+  "c2": {
+   "general": 0.47834384169529703,
+   "none_fit": 0.4844523803703442,
+   "relevant": 0.03720377793435882
+  },
+  "ms_c2": 553.3788171596825
+ },
+ {
+  "kind": "off-topic",
+  "query": "How do I center text in CSS?",
+  "skip": false,
+  "yesno": 0.9337294513600405,
+  "ms_yesno": 625.7364249322563,
+  "c1": {
+   "general": 0.49419706505492067,
+   "none_fit": 0.06726404360175306,
+   "relevant": 0.4385388913433263
+  },
+  "ms_c1": 242.67398193478584,
+  "c2": {
+   "general": 0.7940518213978959,
+   "none_fit": 0.10010154448609274,
+   "relevant": 0.10584663411601142
+  },
+  "ms_c2": 575.2047670539469
+ },
+ {
+  "kind": "off-topic",
+  "query": "Who discovered penicillin?",
+  "skip": false,
+  "yesno": 0.14017295714936737,
+  "ms_yesno": 627.4457809049636,
+  "c1": {
+   "general": 0.06616188540256629,
+   "none_fit": 0.8896676816125425,
+   "relevant": 0.04417043298489117
+  },
+  "ms_c1": 240.56539498269558,
+  "c2": {
+   "general": 0.5188402916145225,
+   "none_fit": 0.4512037721022678,
+   "relevant": 0.029955936283209632
+  },
+  "ms_c2": 591.8153400998563
+ },
+ {
+  "kind": "off-topic",
+  "query": "What's a synonym for 'happy'?",
+  "skip": false,
+  "yesno": 0.7036405557664006,
+  "ms_yesno": 595.3643459361047,
+  "c1": {
+   "general": 0.20097385694179995,
+   "none_fit": 0.7189892162857591,
+   "relevant": 0.080036926772441
+  },
+  "ms_c1": 237.7154240384698,
+  "c2": {
+   "general": 0.5755168525983846,
+   "none_fit": 0.3816399810341336,
+   "relevant": 0.04284316636748184
+  },
+  "ms_c2": 541.1965928506106
+ },
+ {
+  "kind": "off-topic",
+  "query": "What is 2 to the power of 10?",
+  "skip": false,
+  "yesno": 0.4997186810075063,
+  "ms_yesno": 610.8350940048695,
+  "c1": {
+   "general": 0.7258583008082463,
+   "none_fit": 0.2376485563083383,
+   "relevant": 0.03649314288341541
+  },
+  "ms_c1": 241.61699507385492,
+  "c2": {
+   "general": 0.8630047076988998,
+   "none_fit": 0.11816278274649122,
+   "relevant": 0.018832509554608964
+  },
+  "ms_c2": 392.74506480433047
+ },
+ {
+  "kind": "off-topic",
+  "query": "Explain what inflation means in economics.",
+  "skip": false,
+  "yesno": 0.28267552913505,
+  "ms_yesno": 526.0272149462253,
+  "c1": {
+   "general": 0.8439796010255434,
+   "none_fit": 0.13837105802664387,
+   "relevant": 0.01764934094781269
+  },
+  "ms_c1": 237.91337898001075,
+  "c2": {
+   "general": 0.9246228554374318,
+   "none_fit": 0.06696398951305704,
+   "relevant": 0.008413155049511081
+  },
+  "ms_c2": 529.5260329730809
+ }
+]

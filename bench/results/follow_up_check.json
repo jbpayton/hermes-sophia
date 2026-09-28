@@ -1,0 +1,382 @@
+[
+ {
+  "kind": "general",
+  "previous": "Write a haiku about autumn leaves.",
+  "query": "Now make it rhyme.",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.89",
+   "referential": true,
+   "uncertain": false,
+   "ms": 537
+  },
+  "choice": {
+   "injected": false,
+   "gate": "choice:g0.96,n0.02,m0.02",
+   "referential": true,
+   "uncertain": false,
+   "ms": 563
+  }
+ },
+ {
+  "kind": "general",
+  "previous": "Convert 5 kilometres to miles.",
+  "query": "And 10?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "referential": true,
+   "uncertain": false,
+   "ms": 498
+  },
+  "choice": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "referential": true,
+   "uncertain": false,
+   "ms": 546
+  }
+ },
+ {
+  "kind": "general",
+  "previous": "Translate 'thank you very much' into Spanish.",
+  "query": "What about in French?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.69",
+   "referential": true,
+   "uncertain": false,
+   "ms": 427
+  },
+  "choice": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "referential": true,
+   "uncertain": false,
+   "ms": 490
+  }
+ },
+ {
+  "kind": "general",
+  "previous": "How do I reverse a list in Python?",
+  "query": "And in JavaScript?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.76",
+   "referential": true,
+   "uncertain": false,
+   "ms": 522
+  },
+  "choice": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "referential": true,
+   "uncertain": false,
+   "ms": 549
+  }
+ },
+ {
+  "kind": "general",
+  "previous": "Tell me a short joke about penguins.",
+  "query": "Another one about them?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.79",
+   "referential": true,
+   "uncertain": false,
+   "ms": 491
+  },
+  "choice": {
+   "injected": false,
+   "gate": "choice:g0.97,n0.03,m0.00",
+   "referential": true,
+   "uncertain": false,
+   "ms": 547
+  }
+ },
+ {
+  "kind": "general",
+  "previous": "Explain photosynthesis in one sentence.",
+  "query": "Can you make it simpler for a child?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.91",
+   "referential": true,
+   "uncertain": false,
+   "ms": 516
+  },
+  "choice": {
+   "injected": false,
+   "gate": "choice:g0.97,n0.02,m0.02",
+   "referential": true,
+   "uncertain": false,
+   "ms": 573
+  }
+ },
+ {
+  "kind": "general",
+  "previous": "What's the boiling point of water in Fahrenheit?",
+  "query": "And in Kelvin?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.83",
+   "referential": true,
+   "uncertain": false,
+   "ms": 510
+  },
+  "choice": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "referential": true,
+   "uncertain": false,
+   "ms": 555
+  }
+ },
+ {
+  "kind": "general",
+  "previous": "Write a limerick about a cat who loves boxes.",
+  "query": "Make it about a dog instead.",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.74",
+   "referential": true,
+   "uncertain": false,
+   "ms": 534
+  },
+  "choice": {
+   "injected": true,
+   "gate": "choice:g0.35,n0.02,m0.63",
+   "referential": true,
+   "uncertain": false,
+   "ms": 853
+  }
+ },
+ {
+  "kind": "general",
+  "previous": "Draft a polite email declining a meeting invitation.",
+  "query": "Make it shorter.",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "referential": true,
+   "uncertain": false,
+   "ms": 526
+  },
+  "choice": {
+   "injected": false,
+   "gate": "choice:g0.99,n0.00,m0.00",
+   "referential": true,
+   "uncertain": false,
+   "ms": 573
+  }
+ },
+ {
+  "kind": "general",
+  "previous": "What is the difference between TCP and UDP?",
+  "query": "Which of them is faster?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.87",
+   "referential": true,
+   "uncertain": false,
+   "ms": 524
+  },
+  "choice": {
+   "injected": false,
+   "gate": "choice:g1.00,n0.00,m0.00",
+   "referential": true,
+   "uncertain": false,
+   "ms": 589
+  }
+ },
+ {
+  "kind": "about them",
+  "previous": "When did Melanie sign up for a pottery class?",
+  "query": "And what did she make there?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.94",
+   "referential": true,
+   "uncertain": false,
+   "ms": 498
+  },
+  "choice": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.01,m0.99",
+   "referential": true,
+   "uncertain": false,
+   "ms": 557
+  }
+ },
+ {
+  "kind": "about them",
+  "previous": "What did Caroline research?",
+  "query": "When did she apply to them?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.70",
+   "referential": true,
+   "uncertain": false,
+   "ms": 490
+  },
+  "choice": {
+   "injected": true,
+   "gate": "choice:g0.15,n0.22,m0.63",
+   "referential": true,
+   "uncertain": false,
+   "ms": 831
+  }
+ },
+ {
+  "kind": "about them",
+  "previous": "Where has Melanie camped?",
+  "query": "And when did she go in July?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.88",
+   "referential": true,
+   "uncertain": false,
+   "ms": 540
+  },
+  "choice": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.01,m0.99",
+   "referential": true,
+   "uncertain": false,
+   "ms": 573
+  }
+ },
+ {
+  "kind": "about them",
+  "previous": "What is Caroline's relationship status?",
+  "query": "What about Melanie?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "referential": true,
+   "uncertain": false,
+   "ms": 418
+  },
+  "choice": {
+   "injected": true,
+   "gate": "choice:g0.37,n0.20,m0.43",
+   "referential": true,
+   "uncertain": false,
+   "ms": 776
+  }
+ },
+ {
+  "kind": "about them",
+  "previous": "What are Melanie's pets' names?",
+  "query": "Which of them is the oldest?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.81",
+   "referential": true,
+   "uncertain": false,
+   "ms": 508
+  },
+  "choice": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.01,m0.97",
+   "referential": true,
+   "uncertain": false,
+   "ms": 529
+  }
+ },
+ {
+  "kind": "about them",
+  "previous": "When did Caroline go to the LGBTQ support group?",
+  "query": "And the conference?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.99",
+   "referential": true,
+   "uncertain": false,
+   "ms": 518
+  },
+  "choice": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.01,m0.98",
+   "referential": true,
+   "uncertain": false,
+   "ms": 577
+  }
+ },
+ {
+  "kind": "about them",
+  "previous": "What kind of art does Caroline make?",
+  "query": "Has Melanie painted the same thing?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.73",
+   "referential": true,
+   "uncertain": false,
+   "ms": 524
+  },
+  "choice": {
+   "injected": true,
+   "gate": "choice:g0.41,n0.38,m0.21",
+   "referential": true,
+   "uncertain": true,
+   "ms": 842
+  }
+ },
+ {
+  "kind": "about them",
+  "previous": "What books has Melanie read?",
+  "query": "When did she read that one about the spider?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.83",
+   "referential": true,
+   "uncertain": false,
+   "ms": 567
+  },
+  "choice": {
+   "injected": true,
+   "gate": "choice:g0.00,n0.01,m0.99",
+   "referential": true,
+   "uncertain": false,
+   "ms": 618
+  }
+ },
+ {
+  "kind": "about them",
+  "previous": "Who supports Caroline when she has a negative experience?",
+  "query": "And what happened on that hike?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.98",
+   "referential": true,
+   "uncertain": false,
+   "ms": 521
+  },
+  "choice": {
+   "injected": true,
+   "gate": "choice:g0.02,n0.01,m0.96",
+   "referential": true,
+   "uncertain": false,
+   "ms": 598
+  }
+ },
+ {
+  "kind": "about them",
+  "previous": "When is Melanie planning on going camping?",
+  "query": "What do her kids like about it?",
+  "decider": {
+   "injected": true,
+   "gate": "decider:0.92",
+   "referential": true,
+   "uncertain": false,
+   "ms": 526
+  },
+  "choice": {
+   "injected": true,
+   "gate": "choice:g0.01,n0.04,m0.95",
+   "referential": true,
+   "uncertain": false,
+   "ms": 553
+  }
+ }
+]

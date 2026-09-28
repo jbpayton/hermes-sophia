@@ -348,3 +348,111 @@ def test_similarity_gate_needs_no_model_call(engine, fake):
     assert "Willow Street" in out and fake.calls["readout"] == before
     engine.cfg["gate_floor"] = 0.999                           # nothing is that close: nothing injected
     assert engine.prefetch("What's a good synonym for quick?", "s9") == ""
+
+
+def _choice_readout(pick_key: str):
+    """A fake decider that picks the three-way gate option named pick_key, in any option order."""
+    import re as _re
+
+    def readout(prompt):
+        opts = dict(_re.findall(r"^([A-Z])\) (.*)$", prompt, _re.M))
+        pick = next((l for l, d in opts.items() if d.startswith(pick_key + ":")), next(iter(opts)))
+        return [(pick, -0.05)] + [(l, -4.0) for l in opts if l != pick]
+    return readout
+
+
+def test_choice_gate_general_request_gets_no_memory(engine, fake):
+    engine.cfg["gate"] = "choice"
+    engine.capture.remember("Joey likes quick stretches after his morning run.", speaker="Joey")
+    fake.readout = _choice_readout("general")
+    text, info = engine.recall.prefetch("What's a good synonym for quick?", "s1")
+    assert text == "" and info["gate"].startswith("choice:")
+
+
+def test_choice_gate_marks_possible_matches(engine, fake):
+    engine.cfg["gate"] = "choice"
+    engine.capture.remember("Joey does cardio on the elliptical three times a week.", speaker="Joey")
+    fake.readout = _choice_readout("none_fit")                 # about Joey, but nothing here answers it
+    text, info = engine.recall.prefetch("Which gym do I use for my cardio?", "s2")
+    assert info["uncertain"] and "possible matches only" in text and "elliptical" in text
+    fake.readout = _choice_readout("m1")
+    text, info = engine.recall.prefetch("How often do I do cardio?", "s2")
+    assert not info["uncertain"] and "possible matches" not in text.lower() and "elliptical" in text
+
+
+def test_follow_ups_search_with_the_previous_message(engine, fake, monkeypatch):
+    engine.cfg.update(gate="decider")
+    fake.says(True)
+    engine.capture_turn("s3", "Which of my two laptops has the bigger battery, the ThinkPad or the MacBook?", "The MacBook.")
+    seen = []
+    orig = engine.recall.candidates
+    monkeypatch.setattr(engine.recall, "candidates", lambda q, *a, **k: (seen.append(q), orig(q, *a, **k))[1])
+    _, info = engine.recall.prefetch("And the other one?", "s3")
+    assert info["referential"] and "ThinkPad" in seen[-1] and seen[-1].endswith("And the other one?")
+
+
+def test_choice_gate_sees_what_a_follow_up_follows(engine, fake):
+    """The gate judges a follow-up together with the previous message, so it can tell what "it" is."""
+    engine.cfg.update(gate="choice")
+    engine.capture.remember("Joey writes haiku about his garden most mornings.", speaker="Joey")
+    engine.capture_turn("s4", "Write a haiku about autumn leaves.", "Crimson leaves drift down...")
+    prompts = []
+    general = _choice_readout("general")
+    fake.readout = lambda p: (prompts.append(p), general(p))[1]
+    text, info = engine.recall.prefetch("Now make it about the second line?", "s4")
+    assert info["referential"] and '"previous message": "Write a haiku about autumn leaves."' in prompts[-1] and text == ""
+
+
+def test_choice_gate_rereads_only_when_unsure(engine, fake):
+    """gate_recheck: a confident first reading is final; an unsure one gets the reverse option order too."""
+    import re as _re
+    engine.cfg.update(gate="choice", gate_recheck=0.05)
+    engine.capture.remember("Joey does cardio on the elliptical three times a week.", speaker="Joey")
+    fake.readout = _choice_readout("m1")
+    before = fake.calls["readout"]
+    _, info = engine.recall.prefetch("How often do I do cardio?", "s3")
+    assert fake.calls["readout"] - before == 1 and info["passed"]
+
+    def reading(general_lp):                                    # "general" against memory 1, in either order
+        def readout(prompt):
+            opts = dict(_re.findall(r"^([A-Z])\) (.*)$", prompt, _re.M))
+            return [(l, general_lp if d.startswith("general") else -1.4 if d.startswith("m1:") else -5.0)
+                    for l, d in opts.items()]
+        return readout
+    for general_lp, reads in ((-0.3, 2),                       # about 0.7, near the 0.8 cutoff: read again
+                              (-1.4, 1)):                      # about 0.45: the average can't reach 0.8, so no
+        fake.readout = reading(general_lp)
+        before = fake.calls["readout"]
+        engine.recall.prefetch("How often do I do cardio?", "s3")
+        assert fake.calls["readout"] - before == reads
+
+
+def test_choice_gate_splits_vouched_lines_from_possible_matches(engine, fake):
+    """Lines the gate vouched for go under Relevant, the rest under Possible matches; a doubtful line doesn't
+    cast doubt on a confident one."""
+    engine.cfg.update(gate="choice", gate_split=True, split_min=0.1, inject_order="rank")
+    engine.capture.remember("Joey's cardio routine is the elliptical, three times a week.", speaker="Joey")
+    engine.capture.remember("Joey's cardio playlist is mostly old funk records.", speaker="Joey")
+    items, _ = engine.recall.candidates("What machine do I use for cardio?", 10, session_id="s5")
+    first = next(i for i, it in enumerate(items[:10]) if "elliptical" in it["text"])
+    fake.readout = _choice_readout(f"m{first + 1}")
+    text, info = engine.recall.prefetch("What machine do I use for cardio?", "s5")
+    rel, maybe = text.split("Possible matches")
+    assert "Relevant:" in rel and "elliptical" in rel and "funk" in maybe and info["split"][0] == 1
+    engine.cfg["gate_split"] = False                              # one list, no sections
+    text, _ = engine.recall.prefetch("What machine do I use for cardio?", "s5")
+    assert "Possible matches" not in text and "Relevant:" not in text and "funk" in text
+
+
+def test_choice_gate_without_the_decider_still_injects_a_strong_match(engine, fake):
+    engine.cfg.update(gate="choice", skip_gate=0.1)
+    engine.capture.remember("Dr. Alvarez moved her clinic to 240 Willow Street in Mountain View.", speaker="Joey")
+
+    def down(prompt):
+        raise RuntimeError("decider unreachable")
+    fake.readout = down
+    text, info = engine.recall.prefetch("Where did Dr. Alvarez move her clinic?", "s9")
+    assert info["gate"] == "degraded" and "Willow Street" in text
+    engine.cfg["skip_gate"] = 0.999                            # nothing that strong: nothing injected
+    text, _ = engine.recall.prefetch("Where did Dr. Alvarez move her clinic?", "s9")
+    assert text == ""

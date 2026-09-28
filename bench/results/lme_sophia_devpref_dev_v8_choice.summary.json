@@ -1,0 +1,44 @@
+{
+  "setup": {
+    "benchmark": "LongMemEval (longmemeval_s_cleaned.json)",
+    "sample": "devpref",
+    "mode": "sophia",
+    "recall": "passive",
+    "reader": "qwen35-9b",
+    "judge": "qwen35-9b",
+    "judge_prompts": "official evaluate_qa.py (9e0b455)",
+    "embed": "nomic-embed",
+    "decider": "qwen35-9b",
+    "night_model": null,
+    "sophia_config": {
+      "inject_chars": 9000,
+      "inject_top": 50,
+      "recall_k": 50,
+      "inject_relative_floor": 0.25,
+      "graph_hops": 1,
+      "graph_adjacent": 1,
+      "fts_weight": 0.05,
+      "facts_as": "keys",
+      "skip_gate": 0.82,
+      "gate_threshold": 0.5
+    }
+  },
+  "summary": {
+    "n": 26,
+    "accuracy": 0.4615,
+    "by": {
+      "single-session-preference": {
+        "n": 26,
+        "acc": 0.4615
+      }
+    },
+    "mean_seconds_per_question": 9.13,
+    "gate_passed_rate": 0.9615,
+    "task_averaged": 0.4615,
+    "abstention": {
+      "n": 0,
+      "acc": null
+    }
+  },
+  "written": "2026-09-28T00:07:11"
+}

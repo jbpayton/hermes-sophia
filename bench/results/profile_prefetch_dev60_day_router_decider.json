@@ -1,0 +1,482 @@
+[
+ {
+  "id": "6b168ec8",
+  "windows": 2002,
+  "candidates_ms": 107.35731502063572,
+  "prefetch_ms": 521.0951820481569,
+  "gate": "decider:0.99",
+  "chars": 5435
+ },
+ {
+  "id": "dccbc061",
+  "windows": 1976,
+  "candidates_ms": 53.40070300735533,
+  "prefetch_ms": 503.78248398192227,
+  "gate": "decider:0.71",
+  "chars": 7166
+ },
+ {
+  "id": "86b68151",
+  "windows": 2086,
+  "candidates_ms": 68.58380092307925,
+  "prefetch_ms": 507.7504359651357,
+  "gate": "decider:0.97",
+  "chars": 5837
+ },
+ {
+  "id": "d52b4f67",
+  "windows": 2078,
+  "candidates_ms": 78.97182507440448,
+  "prefetch_ms": 503.82516300305724,
+  "gate": "decider:0.85",
+  "chars": 7558
+ },
+ {
+  "id": "c14c00dd",
+  "windows": 2029,
+  "candidates_ms": 49.126716097816825,
+  "prefetch_ms": 497.90161894634366,
+  "gate": "decider:0.95",
+  "chars": 4119
+ },
+ {
+  "id": "6f9b354f",
+  "windows": 1992,
+  "candidates_ms": 59.49326208792627,
+  "prefetch_ms": 25.040300795808434,
+  "gate": "skip:0.83",
+  "chars": 5600
+ },
+ {
+  "id": "faba32e5",
+  "windows": 1969,
+  "candidates_ms": 48.87373582459986,
+  "prefetch_ms": 23.637659149244428,
+  "gate": "skip:0.83",
+  "chars": 1931
+ },
+ {
+  "id": "76d63226",
+  "windows": 2064,
+  "candidates_ms": 54.248739033937454,
+  "prefetch_ms": 479.45756395347416,
+  "gate": "decider:0.71",
+  "chars": 2959
+ },
+ {
+  "id": "c4f10528",
+  "windows": 2009,
+  "candidates_ms": 56.16711615584791,
+  "prefetch_ms": 480.86743988096714,
+  "gate": "decider:0.98",
+  "chars": 4494
+ },
+ {
+  "id": "3e321797",
+  "windows": 1995,
+  "candidates_ms": 56.366937002167106,
+  "prefetch_ms": 46.55755311250687,
+  "gate": "skip:0.84",
+  "chars": 7927
+ },
+ {
+  "id": "352ab8bd",
+  "windows": 2071,
+  "candidates_ms": 52.432214142754674,
+  "prefetch_ms": 24.35862203128636,
+  "gate": "skip:0.89",
+  "chars": 2678
+ },
+ {
+  "id": "8b9d4367",
+  "windows": 1977,
+  "candidates_ms": 47.53188998438418,
+  "prefetch_ms": 495.45474094338715,
+  "gate": "decider:0.88",
+  "chars": 4423
+ },
+ {
+  "id": "89527b6b",
+  "windows": 2030,
+  "candidates_ms": 53.042524959892035,
+  "prefetch_ms": 41.56651091761887,
+  "gate": "skip:0.82",
+  "chars": 4111
+ },
+ {
+  "id": "e3fc4d6e",
+  "windows": 2064,
+  "candidates_ms": 58.2197499461472,
+  "prefetch_ms": 515.4913768637925,
+  "gate": "decider:0.96",
+  "chars": 5155
+ },
+ {
+  "id": "cc539528",
+  "windows": 2048,
+  "candidates_ms": 51.44213978201151,
+  "prefetch_ms": 42.08426713012159,
+  "gate": "skip:0.87",
+  "chars": 8719
+ },
+ {
+  "id": "fca70973",
+  "windows": 1865,
+  "candidates_ms": 45.102756936103106,
+  "prefetch_ms": 492.9793381597847,
+  "gate": "decider:0.90",
+  "chars": 8743
+ },
+ {
+  "id": "0edc2aef",
+  "windows": 2013,
+  "candidates_ms": 46.90330219455063,
+  "prefetch_ms": 473.7368538044393,
+  "gate": "decider:0.63",
+  "chars": 7495
+ },
+ {
+  "id": "09d032c9",
+  "windows": 2007,
+  "candidates_ms": 57.66477785073221,
+  "prefetch_ms": 498.62127494998276,
+  "gate": "decider:0.62",
+  "chars": 8918
+ },
+ {
+  "id": "6b7dfb22",
+  "windows": 2117,
+  "candidates_ms": 58.040434028953314,
+  "prefetch_ms": 528.8959289900959,
+  "gate": "decider:0.87",
+  "chars": 9085
+ },
+ {
+  "id": "67e0d0f2",
+  "windows": 2044,
+  "candidates_ms": 55.58463302440941,
+  "prefetch_ms": 528.6090848967433,
+  "gate": "decider:0.93",
+  "chars": 8817
+ },
+ {
+  "id": "2e6d26dc",
+  "windows": 1992,
+  "candidates_ms": 53.378362907096744,
+  "prefetch_ms": 519.8883679695427,
+  "gate": "decider:0.86",
+  "chars": 8874
+ },
+ {
+  "id": "2311e44b",
+  "windows": 2046,
+  "candidates_ms": 55.90153904631734,
+  "prefetch_ms": 538.113169837743,
+  "gate": "decider:0.91",
+  "chars": 4437
+ },
+ {
+  "id": "a9f6b44c",
+  "windows": 1986,
+  "candidates_ms": 72.13874091394246,
+  "prefetch_ms": 560.3974210098386,
+  "gate": "decider:0.72",
+  "chars": 8642
+ },
+ {
+  "id": "gpt4_2f91af09",
+  "windows": 1942,
+  "candidates_ms": 65.58886589482427,
+  "prefetch_ms": 535.1641708984971,
+  "gate": "decider:0.71",
+  "chars": 5928
+ },
+ {
+  "id": "gpt4_d12ceb0e",
+  "windows": 1972,
+  "candidates_ms": 51.75075610168278,
+  "prefetch_ms": 532.6270689256489,
+  "gate": "decider:0.94",
+  "chars": 7729
+ },
+ {
+  "id": "e3038f8c",
+  "windows": 1981,
+  "candidates_ms": 55.19707081839442,
+  "prefetch_ms": 515.5050731264055,
+  "gate": "decider:0.87",
+  "chars": 6269
+ },
+ {
+  "id": "d23cf73b",
+  "windows": 1985,
+  "candidates_ms": 54.591835010796785,
+  "prefetch_ms": 504.9628531560302,
+  "gate": "decider:0.85",
+  "chars": 5975
+ },
+ {
+  "id": "0a995998",
+  "windows": 2014,
+  "candidates_ms": 64.70348383300006,
+  "prefetch_ms": 512.6750841736794,
+  "gate": "decider:0.87",
+  "chars": 5131
+ },
+ {
+  "id": "bf659f65",
+  "windows": 1905,
+  "candidates_ms": 50.527898129075766,
+  "prefetch_ms": 517.5475508440286,
+  "gate": "decider:0.81",
+  "chars": 7634
+ },
+ {
+  "id": "85fa3a3f",
+  "windows": 1952,
+  "candidates_ms": 55.62318116426468,
+  "prefetch_ms": 536.0068788286299,
+  "gate": "decider:0.92",
+  "chars": 1993
+ },
+ {
+  "id": "91b15a6e",
+  "windows": 1963,
+  "candidates_ms": 55.915619945153594,
+  "prefetch_ms": 533.2916090264916,
+  "gate": "decider:0.94",
+  "chars": 3924
+ },
+ {
+  "id": "d6062bb9",
+  "windows": 2049,
+  "candidates_ms": 51.41538195312023,
+  "prefetch_ms": 525.5304710008204,
+  "gate": "decider:0.61",
+  "chars": 6758
+ },
+ {
+  "id": "eeda8a6d_abs",
+  "windows": 1952,
+  "candidates_ms": 51.858810940757394,
+  "prefetch_ms": 500.6724230479449,
+  "gate": "decider:0.37",
+  "chars": 0
+ },
+ {
+  "id": "c2ac3c61",
+  "windows": 2032,
+  "candidates_ms": 56.64748698472977,
+  "prefetch_ms": 525.686196051538,
+  "gate": "decider:0.93",
+  "chars": 8741
+ },
+ {
+  "id": "37f165cf",
+  "windows": 2058,
+  "candidates_ms": 53.52472304366529,
+  "prefetch_ms": 528.1246490776539,
+  "gate": "decider:0.56",
+  "chars": 4816
+ },
+ {
+  "id": "gpt4_7a0daae1",
+  "windows": 2009,
+  "candidates_ms": 40.690836030989885,
+  "prefetch_ms": 501.1868590954691,
+  "gate": "decider:0.93",
+  "chars": 5646
+ },
+ {
+  "id": "0bc8ad92",
+  "windows": 1873,
+  "candidates_ms": 49.10023510456085,
+  "prefetch_ms": 530.3676698822528,
+  "gate": "decider:0.86",
+  "chars": 8487
+ },
+ {
+  "id": "gpt4_d6585ce8",
+  "windows": 2016,
+  "candidates_ms": 55.09200785309076,
+  "prefetch_ms": 526.9767369609326,
+  "gate": "decider:0.69",
+  "chars": 7360
+ },
+ {
+  "id": "gpt4_59149c78",
+  "windows": 2012,
+  "candidates_ms": 48.79397782497108,
+  "prefetch_ms": 502.37977411597967,
+  "gate": "decider:0.83",
+  "chars": 8975
+ },
+ {
+  "id": "4dfccbf7",
+  "windows": 2031,
+  "candidates_ms": 51.90010508522391,
+  "prefetch_ms": 552.7479348238558,
+  "gate": "decider:0.92",
+  "chars": 6515
+ },
+ {
+  "id": "370a8ff4",
+  "windows": 1882,
+  "candidates_ms": 49.93875604122877,
+  "prefetch_ms": 524.8395439703017,
+  "gate": "decider:0.97",
+  "chars": 6189
+ },
+ {
+  "id": "2c63a862",
+  "windows": 2078,
+  "candidates_ms": 58.128113159909844,
+  "prefetch_ms": 522.2187938634306,
+  "gate": "decider:0.87",
+  "chars": 6992
+ },
+ {
+  "id": "a3838d2b",
+  "windows": 1916,
+  "candidates_ms": 39.09956710413098,
+  "prefetch_ms": 25.25092288851738,
+  "gate": "skip:0.82",
+  "chars": 4942
+ },
+ {
+  "id": "gpt4_f420262d",
+  "windows": 1998,
+  "candidates_ms": 43.10700693167746,
+  "prefetch_ms": 548.6605151090771,
+  "gate": "decider:0.82",
+  "chars": 8840
+ },
+ {
+  "id": "c8090214",
+  "windows": 1903,
+  "candidates_ms": 53.67788998410106,
+  "prefetch_ms": 525.2258291002363,
+  "gate": "decider:0.90",
+  "chars": 8702
+ },
+ {
+  "id": "gpt4_74aed68e",
+  "windows": 2035,
+  "candidates_ms": 56.048970902338624,
+  "prefetch_ms": 546.6183291282505,
+  "gate": "decider:0.93",
+  "chars": 8102
+ },
+ {
+  "id": "0db4c65d",
+  "windows": 1975,
+  "candidates_ms": 54.784480948001146,
+  "prefetch_ms": 501.5569089446217,
+  "gate": "decider:0.72",
+  "chars": 1935
+ },
+ {
+  "id": "gpt4_b0863698",
+  "windows": 2019,
+  "candidates_ms": 53.063550032675266,
+  "prefetch_ms": 500.27992902323604,
+  "gate": "decider:0.86",
+  "chars": 9051
+ },
+ {
+  "id": "gpt4_4929293a",
+  "windows": 1962,
+  "candidates_ms": 49.147743033245206,
+  "prefetch_ms": 517.51231495291,
+  "gate": "decider:0.81",
+  "chars": 3679
+ },
+ {
+  "id": "gpt4_18c2b244",
+  "windows": 2025,
+  "candidates_ms": 61.04101403616369,
+  "prefetch_ms": 549.846620997414,
+  "gate": "decider:0.93",
+  "chars": 3967
+ },
+ {
+  "id": "gpt4_45189cb4",
+  "windows": 1962,
+  "candidates_ms": 63.43086203560233,
+  "prefetch_ms": 535.5356179643422,
+  "gate": "decider:0.81",
+  "chars": 6169
+ },
+ {
+  "id": "5831f84d",
+  "windows": 1886,
+  "candidates_ms": 55.292287142947316,
+  "prefetch_ms": 497.95523495413363,
+  "gate": "decider:0.92",
+  "chars": 8880
+ },
+ {
+  "id": "f685340e",
+  "windows": 1907,
+  "candidates_ms": 57.33572784811258,
+  "prefetch_ms": 33.02187705412507,
+  "gate": "skip:0.83",
+  "chars": 6755
+ },
+ {
+  "id": "6071bd76",
+  "windows": 1954,
+  "candidates_ms": 48.32017491571605,
+  "prefetch_ms": 532.0723929908127,
+  "gate": "decider:0.56",
+  "chars": 4461
+ },
+ {
+  "id": "7401057b",
+  "windows": 2019,
+  "candidates_ms": 51.85403907671571,
+  "prefetch_ms": 21.82113006711006,
+  "gate": "skip:0.89",
+  "chars": 1999
+ },
+ {
+  "id": "e66b632c",
+  "windows": 2052,
+  "candidates_ms": 47.25626693107188,
+  "prefetch_ms": 516.9353329110891,
+  "gate": "decider:0.94",
+  "chars": 6795
+ },
+ {
+  "id": "01493427",
+  "windows": 1945,
+  "candidates_ms": 56.44228192977607,
+  "prefetch_ms": 31.98592597618699,
+  "gate": "skip:0.85",
+  "chars": 3367
+ },
+ {
+  "id": "89941a93",
+  "windows": 2048,
+  "candidates_ms": 78.68718891404569,
+  "prefetch_ms": 522.207188885659,
+  "gate": "decider:0.99",
+  "chars": 5826
+ },
+ {
+  "id": "07741c45",
+  "windows": 2011,
+  "candidates_ms": 50.548693863675,
+  "prefetch_ms": 485.8261700719595,
+  "gate": "decider:0.93",
+  "chars": 3639
+ },
+ {
+  "id": "f685340e_abs",
+  "windows": 1996,
+  "candidates_ms": 54.31419098749757,
+  "prefetch_ms": 497.43085191585124,
+  "gate": "decider:0.94",
+  "chars": 6902
+ }
+]

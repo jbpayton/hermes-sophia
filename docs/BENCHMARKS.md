@@ -9,7 +9,7 @@ Sophia on LongMemEval and LoCoMo, measured on one machine (2× RTX 3090, LM Stud
   - **LoCoMo:** tuned on conversations 26, 30 and 41; reported on the other seven.
   - **LongMemEval:** tuned on 60 questions drawn with a different seed and the same per-type quotas, disjoint from the test sample; reported on Gemmery's fixed 60 questions (`bench/lme_gemmery60.json`) and on all 500.
 - **Fixed harness.** The reader prompt, the judge prompts (verbatim from the official code) and the answer extraction were not changed during tuning.
-- **One thing deliberately not tuned:** the relevance check that decides whether to inject anything. Every benchmark question is about memory, so tuning that check on benchmarks would teach it to always inject, which is the wrong behaviour in real chat.
+- **The relevance check is tuned on both sides.** Every benchmark question is about memory, so tuning the check that decides whether to inject on benchmarks alone would teach it to always inject. Its development data therefore also has hand-written requests that need nothing about the user, generic-sounding personal requests, and follow-ups. It is reported on request sets written before the setting was chosen and not looked at while choosing ([the choice gate](#the-choice-gate-one-readout-that-gates-and-splits-the-lines)).
 
 ## Passive and active recall
 
@@ -180,10 +180,66 @@ The gate should let memory through when it bears on the message, and keep it out
 - **Similarity alone can't do it.** In large memories a floor of 0.60 keeps about 99% of relevant messages and turns away 20–33% of off-topic ones. In small memories, off-topic questions score as high as relevant ones: on Almanac's development lives, relevant questions went as low as 0.55 and off-topic ones were 0.59–0.66. On the Almanac test lives, 0.60 blocked 4 relevant questions ("Which city do I live in now?" went unanswered) and let 12 of 16 off-topic ones through.
 
 **Settings:**
-- **`gate: decider`** (the default, one order): about 0.65 s per message on LM Studio; it filters well in small memories and hardly at all in large ones.
-- **`gate: similarity`** with `gate_floor: 0.50`: under 0.1 s; it lets memory through on nearly every message. On held-out data it scored the same as the default, apart from the Almanac misses above at 0.60.
+- **`gate: choice`** (the default since v8): one readout with an option per memory. See the next section.
+- **`gate: decider`** (the default before v8, one order): it filters well in small memories and hardly at all in large ones.
+- **`gate: similarity`** with `gate_floor: 0.50`: under 0.1 s; it lets memory through on nearly every message. On held-out data it scored the same as the yes/no gate, apart from the Almanac misses above at 0.60.
 
 **Also tested and rejected:** the gate through the chat endpoint (top letter only), which was 0.2 s faster but turned away 17% of relevant messages.
+
+### The choice gate: one readout that gates and splits the lines
+
+The yes/no gate asks whether at least one memory is relevant. That is a low bar, and in a large memory it is nearly always met. Worse, once it is met every injected line reads as equally trustworthy. Sophia, the agent persona the maintainer runs on Hermes, reviewed this from the reader's side. One real match mixed in with nine lines that only look related is how a reader ends up asserting a near-miss as fact. The design below was worked out with her.
+
+**One question, with one option per memory.** The decider sees the message, the previous user message when this one is a short follow-up, and the top 10 memories, numbered. It picks one answer:
+- "nothing": a good reply would be the same for any user;
+- "none fits": it is about the user or earlier conversations, but none of these memories bears on it;
+- "memory [i] bears on it most directly", one option per memory.
+
+From that single readout:
+- **Gate:** memory is injected unless "nothing" reaches 0.8 (`gate_general`). A very strong match (cosine ≥ 0.82) is always injected, and so is one found while the decider is unreachable.
+- **Whole-block label:** when "none fits" outweighs all the memories together, the block is headed *possible matches only: less certain; rely on one only if it clearly answers the message*.
+- **Second reading:** if the first reading is unsure (0.05–0.95) and a second reading could still change the decision, the options are read again in reverse order and the two readings are averaged.
+- **Split, off by default** (`gate_split`): lines holding at least 2% of the memories' probability (`split_min`) are listed under **Relevant**, and the rest under **Possible matches**. On held-out LoCoMo it cost answers, so it is opt-in. See below.
+
+**How it was chosen** (development data only; `bench/gate_choice.py`, `bench/gate_wording_choice.py`, `bench/split_study.py`, `bench/combo_study.py`):
+- **Two stages.** First tried as two stages: a message-only check (`bench/message_check.py`), then the relevance gate. It doubled passive time from 440 ms to 991 ms median (`results/stage1_check.json`, from a script removed along with the feature), so the stages were folded into one three-way question.
+- **Wording.** The first wording listed kinds of general request ("a definition, fact, calculation…"). On a fresh held-out set it let 13 of 40 general requests through, against 7 of 60 on the tuning set: it had learned the list. That held-out set became development data, and a principle ("the same for any user") replaced the list. A new held-out set was written before the principle was tried.
+- **Split readout.** A separate "which memory" readout after the gate added about 280 ms. The decider's recurrent layers keep llama.cpp from reusing a cached prompt that diverges partway through, so every call pays in full. Folding the split into the gate question costs one call. Its gate needed the higher cutoff (0.8) to keep every relevant question. Of the LongMemEval answer lines in the top 10, it kept 94 of 113 under Relevant; only 2 of 81 questions had all their evidence demoted. Precision was 0.42, a lower bound, since answer turns are labelled sparsely.
+
+**Held out** (`bench/gate_check.py` and `bench/follow_up_check.py`; relevant questions from the large development memories, about 2,000 windows):
+
+| Messages that got memory | Yes/no gate | Choice gate |
+|---|---|---|
+| Relevant questions (LongMemEval, LoCoMo) | 234 / 236 | 235 / 236 |
+| General requests, held out | 26 / 40 | **6 / 40** |
+| Personal requests, held out ("what should I cook tonight?") | 23 / 25 | 24 / 25 |
+| Follow-ups to a general request ("and in Kelvin?") | 10 / 10 | **1 / 10** |
+| Follow-ups about people in memory ("when did she apply to them?") | 10 / 10 | 10 / 10 |
+
+- **Whole block marked possible:** 4 of 236 relevant questions.
+- **Writing tasks:** writing about people in memory ("a short bio for Jon's dance studio website") opened the gate 9 times out of 10 on development memories. The miss was "a short birthday message for Melanie".
+- **With the split on:** a median of 2 lines per relevant question were listed as Relevant, 577 of the 9,430 injected.
+
+**Answers** (paired, same code and serving, 9B reader and judge; passive; `bench/run_final_v8.sh`, `bench/run_heldout_v8.sh`, `bench/run_choice_dev.sh`, `bench/run_label_dev.sh`). The default is the second column:
+
+| | Yes/no gate | Choice gate | With the split, "verify before relying" label | With the split, "rely on one only if it clearly answers" label |
+|---|---|---|---|---|
+| LongMemEval development 60 | 0.800 | 0.750 | 0.767 | 0.850 |
+| LongMemEval preference questions (development) | 0.385 | 0.308 | 0.462 | 0.500 |
+| LoCoMo development | 0.784 | 0.805 | 0.784 | 0.779 |
+| Almanac development lives | 0.960 | 0.920 | 0.973 | 0.947 |
+| **LongMemEval, held-out 60** | 0.817 | **0.817** (no answer changed) | 0.783 | |
+| **LoCoMo, held-out** | 0.798 | **0.797** (won 16, lost 17) | 0.772 (won 52, lost 82) | |
+| **Almanac test lives, 199 scored** | 0.930 | **0.940** (won 3, lost 1) | 0.940 | |
+| Almanac quiet questions with memory injected (held out) | 7 / 16 | **0 / 16** | 0 / 16 | |
+
+- **The held-out rows are the comparison to read.** With the split off, the injected text is the same as the yes/no gate's whenever both open. Across the 1,960 questions above, the choice gate closed only 2 that the yes/no gate opened, and neither answer changed. The held-out answers are unchanged: LongMemEval identical, LoCoMo −1 of 1,155, Almanac +2 of 199. What changed is what reaches the reader when nothing is needed: 0 of 16 Almanac quiet questions with memory, against 7.
+- **Development rows are noisier than they look.** The yes/no and "verify" columns ran before a one-character fix to the injected header (a stray parenthesis), and the other two after it. That fix alone, with the text otherwise identical, moved 7 of the 60 LongMemEval development answers: that is the run-to-run noise of these small sets. Every held-out arm ran after the fix.
+- **Why the split is off.** On held-out LoCoMo the split lost 82 questions and won 52, nearly all of them simple lookups. The answer line was injected, the readout filed it under Possible matches, and the reader, told to verify it, answered "It was not mentioned": "How long have Mel and her husband been married?" went from "5 years" to "It wasn't mentioned". The same pattern was in the development data, hidden by gains elsewhere. A reader can't verify a line; it can only judge whether the line answers the question. The softer label asks for that, and recovered LongMemEval on development data but not LoCoMo or Almanac.
+- **The cutoff doesn't fix it either.** The readout names the one memory that bears on the message most directly. A counting question needs several, and its second and third lines can fall under 2%. At 0.5%, all the evidence stayed under Relevant for 28 of 33 multi-line development questions, against 20 at 2%. But superseded lines then read as sure as the current one: "which city do I live in now?" failed on two Almanac lives. On development data it was a wash (LongMemEval +3 of 86, Almanac −2 of 75). Held out: LongMemEval 0.800, Almanac 0.915.
+- **What the split is for.** Questions where a near-miss is dangerous: an absence question with a same-topic memory nearby, a topic match that doesn't answer, a stale value. The current benchmarks have few of those, so the split stays opt-in until a benchmark does.
+
+**Time** (`bench/profile_prefetch.py`, LongMemEval development memories, llama-server): the whole passive path takes 607 ms median and 632 ms p90, against 514 ms and 538 ms with the yes/no gate. The prompt is longer, and strong matches now get a readout too.
 
 ### Serving the decider faster
 
@@ -231,6 +287,7 @@ Each change was found stage by stage on the development data (`bench/stages.py`,
 | Two option orders | Read one after the other: two round trips per decision | Read in parallel; on LM Studio this helps short prompts most, since it runs long prompts for one model largely one at a time |
 | Order of the injected evidence | Ranked best first, the reader had to put events in order and tell separate occasions apart itself | Still chosen best first, then listed by date under a heading per day (`inject_order: time`). Development: LongMemEval 0.717 → 0.783, LoCoMo 0.730 → 0.790. Held-out: LoCoMo up in all three settings, LongMemEval-500 flat (see above) |
 | "Can you suggest…" | Present-tense "you suggest" matched the pattern for asking about the agent's own words, which switched off the assistant penalty on exactly the requests that need it | Only past forms ("you suggested", "did you recommend") count |
+| Relevance gate | In a large memory the yes/no gate let memory into 26 of 40 held-out general requests and into every follow-up. Once it opened, every injected line read as equally sure | One readout with an option per memory (`gate: choice`) that closes the gate on general requests and marks blocks where nothing fits; short follow-ups are judged with the previous message. Splitting lines into Relevant and Possible matches is opt-in. See [the choice gate](#the-choice-gate-one-readout-that-gates-and-splits-the-lines) |
 | Advice requests | Asked for suggestions, the top slots went to the assistant's earlier generic advice rather than what the user had said about themselves | Advice requests rank the agent's lines a further 0.06 lower and keep the user's own past questions (which describe them) at full rank (`advice_penalty`, `advice_keeps_questions`). On the 26 preference questions outside the held-out set: evidence injected 0.69 → 0.89, answers 0.42 → 0.50 |
 
 **Tried and rejected** on development data:

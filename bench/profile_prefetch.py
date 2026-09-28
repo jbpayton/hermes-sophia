@@ -1,6 +1,6 @@
 """Where passive recall's time goes: candidates (embed + search + graph) vs the gate vs formatting.
 
-  python bench/profile_prefetch.py --sample dev60 [--db-suffix day] [--set key=value]
+  python bench/profile_prefetch.py --sample dev60 [--db-suffix day] [--set key=value] [--tag name]
 """
 from __future__ import annotations
 
@@ -48,13 +48,14 @@ def main():
     for key in ("candidates_ms", "prefetch_ms"):
         xs = [r[key] for r in rows]
         print(f"{key:14} median {statistics.median(xs):6.0f}  p90 {q(xs, .9):6.0f}  max {max(xs):6.0f}")
-    gated = [r["prefetch_ms"] - r["candidates_ms"] for r in rows if r["gate"].startswith("decider")]
+    gated = [r["prefetch_ms"] - r["candidates_ms"] for r in rows if r["gate"].startswith(("decider", "choice"))]
     skipped = [r for r in rows if r["gate"].startswith("skip")]
     print(f"gate asked the decider on {len(gated)}/{len(rows)}; skipped (strong match) on {len(skipped)}; "
           f"median gate+format time when asked {statistics.median(gated) if gated else 0:.0f} ms")
     print(f"windows per memory: median {statistics.median(r['windows'] for r in rows):.0f}; injected chars median "
           f"{statistics.median(r['chars'] for r in rows):.0f}")
-    (RESULTS / f"profile_prefetch_{args.sample}_{args.db_suffix}.json").write_text(json.dumps(rows, indent=1))
+    tag = f"_{args.tag}" if args.tag else ""
+    (RESULTS / f"profile_prefetch_{args.sample}_{args.db_suffix}{tag}.json").write_text(json.dumps(rows, indent=1))
 
 
 if __name__ == "__main__":

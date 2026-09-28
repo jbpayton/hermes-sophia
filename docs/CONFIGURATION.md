@@ -103,17 +103,25 @@ hermes sophia sleep --model M [--url U --api openai]
 | `recall_k` | 50 | Number of candidates fetched |
 | `gate_top` | 10 | Number of candidates the gate looks at |
 | `inject_top` | 50 | How deep in the ranking injection may draw from. It is still bounded by `inject_relative_floor` and `inject_chars` |
-| `skip_gate` | 0.82 | At or above this top-1 cosine, inject without asking the decider (measured; see `research/embed_thresholds.py`) |
-| `gate_threshold` | 0.5 | Decider probability needed to inject |
-| `gate_permutations` | 1 | Option orders averaged per gate decision. With 2, both orders are averaged, cancelling position bias at twice the cost |
+| `skip_gate` | 0.82 | At or above this top-1 cosine, always inject. `gate: decider` then skips the decider; `gate: choice` still asks it, for the split (measured; see `research/embed_thresholds.py`) |
+| `gate` | choice | How Sophia decides what to inject. `choice`: one decider readout with an option per memory. It closes the gate on messages that need nothing about you, and heads the block "possible matches only" when none of the memories fits. `decider`: the older yes/no question, which in a large memory lets nearly everything through. `similarity`: no model call, just the best match's cosine. [Measured](BENCHMARKS.md#the-choice-gate-one-readout-that-gates-and-splits-the-lines) |
+| `gate_general` | 0.8 | `gate: choice`: inject unless "nothing needed" gets at least this probability |
+| `gate_recheck` | 0.05 | `gate: choice`: when "nothing needed" is between this and 1 minus this, and a second reading could still change the decision, read the options again in reverse order and average the two readings. 0 turns it off |
+| `gate_split` | off | `gate: choice`: list the lines the gate vouched for under Relevant and the rest under "Possible matches (less certain; rely on one only if it clearly answers the message)". Off by default: on held-out LoCoMo the reader dropped answers the split had misfiled ([measured](BENCHMARKS.md#the-choice-gate-one-readout-that-gates-and-splits-the-lines)) |
+| `split_min` | 0.02 | `gate_split`: the share of the memories' probability a line needs to be listed as Relevant. Lower lists more lines as Relevant, which helps counting questions that need every piece, and hurts questions whose older, superseded lines then look as sure as the current one ([measured](BENCHMARKS.md#the-choice-gate-one-readout-that-gates-and-splits-the-lines)) |
+| `gate_threshold` | 0.5 | `gate: decider`: probability needed to inject |
+| `gate_floor` | 0.50 | `gate: similarity`: the best match's cosine needed to inject |
+| `gate_permutations` | 1 | Option orders averaged per gate decision. With 2, both orders are always averaged, cancelling position bias at twice the cost |
 | `junk_floor` | 0.5 | Candidates below this cosine are never shown to the gate |
 | `inject_chars` | 9000 | Size cap for the injected block: about 2,300 tokens at most, and typically 1,900 when memory is relevant. The check injects nothing on unrelated turns. If your model's context is small, lower this and `inject_top` |
 | `inject_relative_floor` | 0.25 | Only inject items within this score of the top item |
+| `inject_order` | time | `time`: still chosen best first, then listed by date under a heading per day. `rank`: best first |
 | `recency_bonus`, `fts_bonus`, `type_bonus` | 0.01, 0.03, 0.02 | Ranking nudges. `fts_bonus` applies only when `fts_weight` is 0 |
 | `fts_weight` | 0.05 | Graded keyword weight: a keyword match adds this × its bm25 score relative to the best match |
 | `time_scope`, `time_scope_bonus` | boost, 0.05 | A date range in the question ("last week", "in March") ranks memories inside it higher. `filter` hides everything outside it instead, which misses facts told later about an earlier month |
 | `facts_as` | keys | Extracted facts are extra search keys for the verbatim message they came from. The message ranks and is injected, labelled with its facts. `items` lets facts compete as their own entries, which pushed evidence down in testing |
 | `assistant_penalty`, `max_assistant_items` | 0.06, 2 | Keep the agent's own restatements from crowding out your words |
+| `advice_penalty`, `advice_keeps_questions` | 0.06, on | When you ask for suggestions or advice, the agent's earlier lines rank a further 0.06 lower, and your own earlier questions (which say a lot about you) are not ranked down |
 | `question_penalty` | 0.04 | Ranking penalty for a bare earlier question in `sophia_recall`. Passive injection leaves bare questions out entirely |
 
 ## Awake: graph expansion

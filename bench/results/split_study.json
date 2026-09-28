@@ -1,0 +1,5592 @@
+[
+ {
+  "id": "6b168ec8",
+  "type": "single-session-user",
+  "gate": {
+   "general": 0.0011633813022017521,
+   "none_fit": 0.0004341653301841767,
+   "relevant": 0.9984024533676141
+  },
+  "list_raw": "1, 2, 5, 7, 8, 9, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.995511212266254,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0024450902887930477,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00036269964820380163,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0002969136262635317,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00011539494150912111,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 7.026041788893283e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 2.7793953471050743e-05,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 9.359524718405292e-14,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 3.5220195133123796e-05,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003309282889394055,
+    "listed": true
+   }
+  ],
+  "none": 0.0008044863734503028,
+  "ms_pick": 275.3760418854654,
+  "ms_list": 666.8735190760344
+ },
+ {
+  "id": "dccbc061",
+  "type": "single-session-user",
+  "gate": {
+   "general": 0.003535741575382341,
+   "none_fit": 0.005872081261318741,
+   "relevant": 0.990592177163299
+  },
+  "list_raw": "1",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9857391693806302,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0014487843553994575,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0007779153368253554,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0009481500276462212,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0006166718072770639,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0016767578317212583,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.000569478152107642,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00014533600061272936,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.362887532962814e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0006409254141647252,
+    "listed": false
+   }
+  ],
+  "none": 0.007436811693521739,
+  "ms_pick": 274.58199905231595,
+  "ms_list": 286.49822412990034
+ },
+ {
+  "id": "86b68151",
+  "type": "single-session-user",
+  "gate": {
+   "general": 0.00043751140858723167,
+   "none_fit": 0.00034266075484046607,
+   "relevant": 0.9992198278365724
+  },
+  "list_raw": "1, 4",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9990247107938919,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00023861813513499958,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00019754387362652705,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0002914896539181216,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 4.853284584184296e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 5.940558742876816e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.359378803143965e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 1.702000199017051e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.359378803143965e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 3.641659640971571e-05,
+    "listed": false
+   }
+  ],
+  "none": 8.626251157075072e-05,
+  "ms_pick": 277.1057200152427,
+  "ms_list": 318.08599713258445
+ },
+ {
+  "id": "d52b4f67",
+  "type": "single-session-user",
+  "gate": {
+   "general": 0.006432564481922831,
+   "none_fit": 0.10769357449251783,
+   "relevant": 0.8858738610255594
+  },
+  "list_raw": "1",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9832173350186565,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0013909827779392577,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0016600543790426857,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004109332380900131,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00032244722722019726,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00034053577113360596,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.362565775635463e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00019707664671878987,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0005785663807445823,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.003274083998823544,
+    "listed": false
+   }
+  ],
+  "none": 0.004909585418727185,
+  "ms_pick": 692.0870190951973,
+  "ms_list": 501.6150460578501
+ },
+ {
+  "id": "c14c00dd",
+  "type": "single-session-user",
+  "gate": {
+   "general": 0.000998044016068762,
+   "none_fit": 0.002658781869597017,
+   "relevant": 0.9963431741143343
+  },
+  "list_raw": "2",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.40142886046050275,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.5936774729921979,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0013451763376009834,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0009701590391361991,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0006087670103743408,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0005471522447699268,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00016563325434958815,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.807757028530887e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.361592501193586e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00015891029135904657,
+    "listed": false
+   }
+  ],
+  "none": 0.0009997907993303772,
+  "ms_pick": 273.3074438292533,
+  "ms_list": 284.58560397848487
+ },
+ {
+  "id": "6f9b354f",
+  "type": "single-session-user",
+  "gate": {
+   "general": 0.0006702233921082459,
+   "none_fit": 0.00038986557329141877,
+   "relevant": 0.9989399110346003
+  },
+  "list_raw": "1, 3",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.9955419769862569,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0005040978243072324,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.003029147911027252,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00012171492736749407,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 5.418143442848074e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 6.203697018081988e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.359892992975204e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.359892992975204e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 2.2497654980977595e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0001167513122428278,
+    "listed": false
+   }
+  ],
+  "none": 0.0005475949790206987,
+  "ms_pick": 280.3913599345833,
+  "ms_list": 316.4432051125914
+ },
+ {
+  "id": "faba32e5",
+  "type": "single-session-user",
+  "gate": {
+   "general": 0.0007585230413519558,
+   "none_fit": 0.0002632841459101443,
+   "relevant": 0.9989781928127379
+  },
+  "list_raw": "1, 2",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9998362936768492,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 6.646348014747208e-05,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 2.0052717129074142e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 1.999115680923432e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 7.751956291848188e-06,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 1.3528460744732731e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.35851921907679e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.35851921907679e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.35851921907679e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.138175345512739e-06,
+    "listed": false
+   }
+  ],
+  "none": 2.6780376402073865e-05,
+  "ms_pick": 279.2959420476109,
+  "ms_list": 343.79338286817074
+ },
+ {
+  "id": "76d63226",
+  "type": "single-session-user",
+  "gate": {
+   "general": 0.002646958470310036,
+   "none_fit": 0.005616408612675917,
+   "relevant": 0.9917366329170141
+  },
+  "list_raw": "1, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9828366745682349,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0014003800578974756,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0010582424528397623,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0008071255885259755,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0010001386072903064,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0020536430170855174,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0002640689493839233,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00014583188985009166,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00011639212781043286,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0036900097172852956,
+    "listed": true
+   }
+  ],
+  "none": 0.00662749302379627,
+  "ms_pick": 273.7174609210342,
+  "ms_list": 363.55807702057064
+ },
+ {
+  "id": "c4f10528",
+  "type": "single-session-assistant",
+  "gate": {
+   "general": 0.00049738761096013,
+   "none_fit": 0.0008850186626265082,
+   "relevant": 0.9986175937264135
+  },
+  "list_raw": "3, 4, 5",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.0018839187844893685,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0008545706410327245,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004179098497409268,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.9826949348419157,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.005428607719091489,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.002267802490642526,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003074280966590424,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0008502913257776791,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00021222139315653767,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0009216209198103216,
+    "listed": false
+   }
+  ],
+  "none": 0.0003995052900153754,
+  "ms_pick": 276.3871739152819,
+  "ms_list": 347.7431680075824
+ },
+ {
+  "id": "3e321797",
+  "type": "single-session-assistant",
+  "gate": {
+   "general": 0.00047060281487699583,
+   "none_fit": 0.0003689663460421115,
+   "relevant": 0.9991604308390809
+  },
+  "list_raw": "1, 3",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9928492116746275,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.0020508598033066776,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.000735823283814647,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0007286155015075313,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.00010602162164712484,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.0005665335816302853,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.0015063050260713663,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 6.802157666672546e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.359268518073596e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00011963471629543226,
+    "listed": false
+   }
+  ],
+  "none": 0.0012689732143390724,
+  "ms_pick": 277.317336993292,
+  "ms_list": 349.04879215173423
+ },
+ {
+  "id": "352ab8bd",
+  "type": "single-session-assistant",
+  "gate": {
+   "general": 0.0009590206708194837,
+   "none_fit": 0.0004398056785811912,
+   "relevant": 0.9986011736505994
+  },
+  "list_raw": "2, 10",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.0018136211468308058,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.9941498970238829,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0013906550107176375,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0008055036036242108,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.456940067247931e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00042758600568806074,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00010541008199364401,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.0003465141553000897,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 6.764844637501692e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00079859512482158,
+    "listed": true
+   }
+  ],
+  "none": 9.361689785244767e-14,
+  "ms_pick": 281.47287806496024,
+  "ms_list": 355.20020802505314
+ },
+ {
+  "id": "8b9d4367",
+  "type": "single-session-assistant",
+  "gate": {
+   "general": 0.0006828246762411533,
+   "none_fit": 0.00030084038768348837,
+   "relevant": 0.9990163349360754
+  },
+  "list_raw": "1, 9",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9994193527840111,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0001547133550215429,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00010532237609715902,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 4.468169749655515e-05,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 2.2811255816490182e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 2.0157681258524884e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.35945068459826e-14,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 9.35945068459826e-14,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 1.2355326692531494e-05,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 4.2150389293865124e-05,
+    "listed": false
+   }
+  ],
+  "none": 0.0001784551341251283,
+  "ms_pick": 284.40706292167306,
+  "ms_list": 316.7614808771759
+ },
+ {
+  "id": "89527b6b",
+  "type": "single-session-assistant",
+  "gate": {
+   "general": 0.0005617625390931483,
+   "none_fit": 0.00011046511197818145,
+   "relevant": 0.9993277723489286
+  },
+  "list_raw": "1, 2",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9979364264674306,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.0006800122997725289,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003378125364917817,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.00011808753219690533,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 4.692308329001479e-05,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.00010797451239433481,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 2.9113984571751548e-05,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 9.359516373023436e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 4.161966584996735e-05,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.00012323317320412326,
+    "listed": false
+   }
+  ],
+  "none": 0.0005787967447043428,
+  "ms_pick": 281.10521589405835,
+  "ms_list": 343.8176759518683
+ },
+ {
+  "id": "e3fc4d6e",
+  "type": "single-session-assistant",
+  "gate": {
+   "general": 0.00048140154423951436,
+   "none_fit": 5.6057067590674305e-05,
+   "relevant": 0.9994625413881698
+  },
+  "list_raw": "1, 3",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.997925534802875,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003914155078406112,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.0009010763729420888,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00017958433650736794,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 4.400320086148105e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 4.7847908528546684e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 1.9262204552383854e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.358996568968011e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 1.99718814892532e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00019394747649724905,
+    "listed": false
+   }
+  ],
+  "none": 0.0002773563078122773,
+  "ms_pick": 280.94296297058463,
+  "ms_list": 579.0965901687741
+ },
+ {
+  "id": "cc539528",
+  "type": "single-session-assistant",
+  "gate": {
+   "general": 0.0020940523796443705,
+   "none_fit": 0.0017612512547552557,
+   "relevant": 0.9961446963656004
+  },
+  "list_raw": "1, 3, 5, 6",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9998272200625259,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 5.6478534211481566e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 4.419323802962183e-05,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 1.8239241100354534e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.430736221738748e-06,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 1.021044710135349e-05,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 9.358324932431157e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.358324932431157e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 1.137238517398942e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 4.459576138115328e-06,
+    "listed": false
+   }
+  ],
+  "none": 1.8395779310252153e-05,
+  "ms_pick": 1041.100685019046,
+  "ms_list": 583.5695429705083
+ },
+ {
+  "id": "fca70973",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.010927571904642192,
+   "none_fit": 0.006322523957821746,
+   "relevant": 0.9827499041375359
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9807698300579322,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00167669474706038,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002527813079260743,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.001354853719106911,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0008619303341943869,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0036262330316612808,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0011175737033184917,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003803898102296765,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0002847108491025698,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.001352406131484165,
+    "listed": false
+   }
+  ],
+  "none": 0.006047564536649305,
+  "ms_pick": 278.3769150264561,
+  "ms_list": 284.4534700270742
+ },
+ {
+  "id": "0edc2aef",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.04462678560701969,
+   "none_fit": 0.1874290691641291,
+   "relevant": 0.7679441452288512
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.6907569583136349,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.03947977540017222,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.010339460211291533,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002739731245261601,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002733264343121797,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0042925222344568775,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0027852334466232586,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.0012488044934648942,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.382028573247656e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.014432723443573945,
+    "listed": false
+   }
+  ],
+  "none": 0.23119152686830513,
+  "ms_pick": 276.76079305820167,
+  "ms_list": 280.973857967183
+ },
+ {
+  "id": "09d032c9",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.058659278668540996,
+   "none_fit": 0.6410460410037072,
+   "relevant": 0.3002946803277518
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.053753352332560865,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00575103816955277,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.030310893498168425,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.005671509534879655,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0439811259963915,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.006410074265904166,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.001848564233771276,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.009317659405865125,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0023408055906871173,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.033547261256165764,
+    "listed": false
+   }
+  ],
+  "none": 0.8070677157160533,
+  "ms_pick": 272.90036785416305,
+  "ms_list": 278.0964660923928
+ },
+ {
+  "id": "6b7dfb22",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.009556387644563685,
+   "none_fit": 0.018266754597628464,
+   "relevant": 0.9721768577578078
+  },
+  "list_raw": "1, 2, 3, 4, 5, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.711626889757521,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.027867056568789215,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.1146188902635687,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.03511382390873608,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.015708097325985704,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.01244002427835763,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.003964348239988102,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0022733400885101523,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002483363278555022,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.04593913787086579,
+    "listed": true
+   }
+  ],
+  "none": 0.027965028419122673,
+  "ms_pick": 273.32062809728086,
+  "ms_list": 603.5986649803817
+ },
+ {
+  "id": "67e0d0f2",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.0029076725286189685,
+   "none_fit": 0.0018946731874715768,
+   "relevant": 0.9951976542839095
+  },
+  "list_raw": "1, 4",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9989823821830601,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00018083738908329194,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0001583788283291786,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0001825249749037298,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 7.583454447629419e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 5.072326560998383e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.359657507887234e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.359657507887234e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.359657507887234e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 7.423752999015895e-05,
+    "listed": false
+   }
+  ],
+  "none": 0.00029508128426657175,
+  "ms_pick": 284.51129607856274,
+  "ms_list": 318.1455940939486
+ },
+ {
+  "id": "2e6d26dc",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.024516496573607553,
+   "none_fit": 0.040978387697024034,
+   "relevant": 0.9345051157293685
+  },
+  "list_raw": "1, 2, 3, 5, 6, 8",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.539632667681638,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.10496172932664452,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.2998705548028675,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.0068590073857829024,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.003251443201201681,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0025063557223002275,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.004493179104381735,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.010247608525083027,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00026470750450848163,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.006979656590669489,
+    "listed": false
+   }
+  ],
+  "none": 0.020933090154922413,
+  "ms_pick": 282.36071299761534,
+  "ms_list": 462.2925869189203
+ },
+ {
+  "id": "2311e44b",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.00359494775375615,
+   "none_fit": 0.0009440399598169701,
+   "relevant": 0.9954610122864269
+  },
+  "list_raw": "4, 5, 7",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.007332946272617931,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0013938643371596085,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004227300912998844,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.9782282835888245,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0007439971372396852,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0041268953479284285,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0012955744004190914,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0012278540947191921,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00036747974127939744,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.000866274338288776,
+    "listed": false
+   }
+  ],
+  "none": 0.00018952982852446677,
+  "ms_pick": 273.44803093001246,
+  "ms_list": 404.11126683466136
+ },
+ {
+  "id": "a9f6b44c",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.002361050005454883,
+   "none_fit": 0.10125828057849275,
+   "relevant": 0.8963806694160523
+  },
+  "list_raw": "2, 4",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.04448553883388967,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.34554977538404713,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.055006748838670926,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.4435508499661679,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.021748610000845506,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.02010205654127382,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.009031269551038733,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00801028581866408,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.000810111496852549,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.010661269473674314,
+    "listed": false
+   }
+  ],
+  "none": 0.04104348409487543,
+  "ms_pick": 277.19846088439226,
+  "ms_list": 320.2692149206996
+ },
+ {
+  "id": "gpt4_2f91af09",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.001267550462050702,
+   "none_fit": 0.001640397880186324,
+   "relevant": 0.9970920516577629
+  },
+  "list_raw": "1, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.8323913870513343,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0027774581223853462,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.012958014330148575,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0030441347051641354,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0012577790671528075,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0007911377690005113,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003220755647381937,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003285266130593875,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0002011213673936089,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.13982691030573507,
+    "listed": true
+   }
+  ],
+  "none": 0.006101455103888043,
+  "ms_pick": 278.56674301438034,
+  "ms_list": 326.07775810174644
+ },
+ {
+  "id": "gpt4_d12ceb0e",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.0030311320196185856,
+   "none_fit": 0.005008905071196211,
+   "relevant": 0.9919599629091852
+  },
+  "list_raw": "5, 7",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.6334898968551516,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.008862942325778287,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0111062989645391,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.012494223333758011,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.28088756614045746,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.005743602841570585,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.008916318470987462,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0011616185828191088,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0006162188903866179,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.006769231769298357,
+    "listed": false
+   }
+  ],
+  "none": 0.02995208182525354,
+  "ms_pick": 278.6651470232755,
+  "ms_list": 651.4104090165347
+ },
+ {
+  "id": "e3038f8c",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.0013021754313291996,
+   "none_fit": 0.0014525680709102132,
+   "relevant": 0.9972452564977606
+  },
+  "list_raw": "8, 9",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9905897181687157,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0016988979376307961,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0012489360257579949,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0013246054497188491,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003869709678989202,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00040799785095646816,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.001473679202578592,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.0006538866152388126,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 8.715266473269617e-05,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0005860426386105299,
+    "listed": false
+   }
+  ],
+  "none": 0.0015421124781607354,
+  "ms_pick": 868.6434170231223,
+  "ms_list": 343.4377850499004
+ },
+ {
+  "id": "d23cf73b",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.0032667045302903755,
+   "none_fit": 0.003742374609428514,
+   "relevant": 0.9929909208602812
+  },
+  "list_raw": "1, 2, 3, 5, 6, 9",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.7530821422528868,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.07781959903267216,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.029459513470471353,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.007504043178767875,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.01292247006506716,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.027470810722278714,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.010021161582631612,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.003151121922009952,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.0010742583850788764,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.011455030174056581,
+    "listed": false
+   }
+  ],
+  "none": 0.0660398492140789,
+  "ms_pick": 281.45260480232537,
+  "ms_list": 443.77352809533477
+ },
+ {
+  "id": "0a995998",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.011532187567332161,
+   "none_fit": 0.0031910624343693228,
+   "relevant": 0.9852767499982986
+  },
+  "list_raw": "5, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.361498168411837,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0034949860911166804,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004571329012005217,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.005076665984806438,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.5856178278169947,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.003505908956989201,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0012872327845578511,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0015638626014136305,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0005171644912456148,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.02825300571451948,
+    "listed": true
+   }
+  ],
+  "none": 0.004613848134514178,
+  "ms_pick": 274.0538769867271,
+  "ms_list": 362.7449159976095
+ },
+ {
+  "id": "bf659f65",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.008999639457540523,
+   "none_fit": 0.04007806714208946,
+   "relevant": 0.9509222934003699
+  },
+  "list_raw": "2, 6",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.04369157916542888,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.13339756763080696,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.01099160094610345,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.017132760313245718,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.003298319991535596,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.6613720467371749,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.010716745980771466,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0051573619202806885,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0014722413563928848,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.029298079842712897,
+    "listed": false
+   }
+  ],
+  "none": 0.08347169611554664,
+  "ms_pick": 273.38543999940157,
+  "ms_list": 315.244487952441
+ },
+ {
+  "id": "85fa3a3f",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.0015811368030323322,
+   "none_fit": 0.00040757408176371614,
+   "relevant": 0.998011289115204
+  },
+  "list_raw": "1, 2, 3, 4, 6, 8",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.3133053213549404,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.4261053903674875,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.04607251793288771,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.04892276356690776,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.009854881856857104,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.012437770763660176,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.09664829114662693,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.027459100272014748,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.002708643043008708,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.009739214468525742,
+    "listed": false
+   }
+  ],
+  "none": 0.006746105227083166,
+  "ms_pick": 275.70641809143126,
+  "ms_list": 442.8849599789828
+ },
+ {
+  "id": "91b15a6e",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.0008781925150294463,
+   "none_fit": 0.0004324765266233756,
+   "relevant": 0.9986893309583471
+  },
+  "list_raw": "1, 2, 5, 6",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.7174817548796152,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.19079776140067858,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.020534086503063695,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.008765430087279268,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.006092214974177922,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.008731689916994278,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0030633405401787567,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0012663375623612454,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0023515103748777567,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.02537416138339156,
+    "listed": false
+   }
+  ],
+  "none": 0.01554171237738184,
+  "ms_pick": 279.33303895406425,
+  "ms_list": 453.1233760062605
+ },
+ {
+  "id": "d6062bb9",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.018704580945835637,
+   "none_fit": 0.2747517385490766,
+   "relevant": 0.7065436805050879
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.05995134368291726,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.9085348524626982,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00499201006744149,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.005272754231791723,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00438909533861836,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0020311535361068867,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.000507564217012449,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.0007265129298299394,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.36640055528154e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002914814309452501,
+    "listed": false
+   }
+  ],
+  "none": 0.0106798992240376,
+  "ms_pick": 273.6397269181907,
+  "ms_list": 277.0925459917635
+ },
+ {
+  "id": "eeda8a6d_abs",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.0034906028263186764,
+   "none_fit": 0.014885761992889577,
+   "relevant": 0.9816236351807919
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.6044422647064388,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0046964108584179095,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.013733323160521504,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.03954903752073768,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0016712511819523205,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.006202550462650763,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0023233803298602167,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002852132490263654,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.411392626154989e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.02278964256276789,
+    "listed": false
+   }
+  ],
+  "none": 0.30174000672629514,
+  "ms_pick": 275.85318381898105,
+  "ms_list": 280.8439719956368
+ },
+ {
+  "id": "c2ac3c61",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.0005406486049930624,
+   "none_fit": 0.0019334099772782781,
+   "relevant": 0.9975259414177287
+  },
+  "list_raw": "1, 2, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.8951218686638398,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.08826399250639376,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.005994378608720343,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0016202419970268497,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0006444385702359757,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0008164915958689046,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0006572843645889192,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0004027351303886962,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0001437166336563364,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0036002905295111146,
+    "listed": true
+   }
+  ],
+  "none": 0.002734561399769314,
+  "ms_pick": 278.98655203171074,
+  "ms_list": 428.7277809344232
+ },
+ {
+  "id": "37f165cf",
+  "type": "multi-session",
+  "gate": {
+   "general": 0.002470002063360943,
+   "none_fit": 0.13544344200852781,
+   "relevant": 0.8620865559281111
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.3647039680350658,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0029589904471382087,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.018226030979409905,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.007433993536154651,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0005516622268732611,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0007354601914462411,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00014729368115415408,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0002987119412752908,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.37539731107003e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.006271609908119741,
+    "listed": false
+   }
+  ],
+  "none": 0.598672279053269,
+  "ms_pick": 272.72881218232214,
+  "ms_list": 278.39073399081826
+ },
+ {
+  "id": "gpt4_7a0daae1",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.0013683631298215756,
+   "none_fit": 0.0026487355563490646,
+   "relevant": 0.9959829013138295
+  },
+  "list_raw": "1, 2",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.3546238520102589,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.6409111655052668,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.002129838854108148,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0010170912309048466,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00016156706776886205,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003363190720378751,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.361216763117657e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.34457099828057e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00019578517273380536,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0002130300927891908,
+    "listed": false
+   }
+  ],
+  "none": 0.00031790528405516486,
+  "ms_pick": 278.3895630855113,
+  "ms_list": 319.2857059184462
+ },
+ {
+  "id": "0bc8ad92",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.0009477079434775564,
+   "none_fit": 0.011370158591695111,
+   "relevant": 0.9876821334648274
+  },
+  "list_raw": "2, 8",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.002054907727549326,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.9035096835363692,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.019897802464553097,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0030497154701710403,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0007333262684307954,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.005842520856690335,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.003298761642285077,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.05762408728394912,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0004319842844979911,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0021926844630537085,
+    "listed": false
+   }
+  ],
+  "none": 0.0013645260024503798,
+  "ms_pick": 272.03951589763165,
+  "ms_list": 342.7678409498185
+ },
+ {
+  "id": "gpt4_d6585ce8",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.002166521818570465,
+   "none_fit": 0.003952815227860925,
+   "relevant": 0.9938806629535685
+  },
+  "list_raw": "4, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.13534483884611914,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.7889871843095061,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.011461699899440049,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.027155896197250912,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.001866145507648176,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0037749916255760477,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.006084778720101183,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0018168799167552173,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0015269635099605134,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.016306960769670344,
+    "listed": true
+   }
+  ],
+  "none": 0.005673660697972243,
+  "ms_pick": 278.65132689476013,
+  "ms_list": 326.9436291884631
+ },
+ {
+  "id": "gpt4_59149c78",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.0010438286564542097,
+   "none_fit": 0.001287482092396721,
+   "relevant": 0.9976686892511492
+  },
+  "list_raw": "1, 2",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.9920426909838626,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0023852408015751342,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0019076521887872102,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0007790750482588681,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003653123145908893,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003977206288526025,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0001558254070872831,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00010477368463585956,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.360941597986695e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00037569917688143014,
+    "listed": false
+   }
+  ],
+  "none": 0.001486009765374531,
+  "ms_pick": 295.08226620964706,
+  "ms_list": 322.5141561124474
+ },
+ {
+  "id": "4dfccbf7",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.0016423831496481655,
+   "none_fit": 0.0011340297757217337,
+   "relevant": 0.9972235870746301
+  },
+  "list_raw": "1, 2, 3, 6, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9450248725074296,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.01607383380611836,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.021092497770708856,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0011483282882502508,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0009382738489454403,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00494981215099545,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0008963460224559611,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003267975953510841,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.362204259603654e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004442944800734764,
+    "listed": true
+   }
+  ],
+  "none": 0.005106293208916536,
+  "ms_pick": 278.2240388914943,
+  "ms_list": 544.9806198012084
+ },
+ {
+  "id": "370a8ff4",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.002622336263969441,
+   "none_fit": 0.0024350772510344666,
+   "relevant": 0.9949425864849961
+  },
+  "list_raw": "2, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.004320140084132655,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.9649833412081199,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.002834876531247436,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0024423065586105007,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0006024080715410304,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0012593324244165537,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00022069114293120967,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0004047822250392345,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00016378865781064628,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.022438951549665343,
+    "listed": true
+   }
+  ],
+  "none": 0.00032938154648558737,
+  "ms_pick": 272.37696503289044,
+  "ms_list": 323.9966300316155
+ },
+ {
+  "id": "2c63a862",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.0022977188123510144,
+   "none_fit": 0.0033456872222835388,
+   "relevant": 0.9943565939653655
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.18444185941685748,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.008935793254950513,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.10019403051887281,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.545889894245967,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.01255861009004761,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.01204315347105747,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.06861854614132563,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.008460594025835776,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0012055304859958174,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.021132482442050078,
+    "listed": false
+   }
+  ],
+  "none": 0.03651950590703985,
+  "ms_pick": 289.2265850678086,
+  "ms_list": 282.35876793041825
+ },
+ {
+  "id": "a3838d2b",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.0013941926466361878,
+   "none_fit": 0.0033689129564877054,
+   "relevant": 0.995236894396876
+  },
+  "list_raw": "8",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.03760033891231204,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.006049277084020322,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.016947667202223658,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.010520436941868393,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0013547489261695204,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0010140854382805653,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.001189844915722563,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.9226678401228489,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003663860200192274,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0011100245520389675,
+    "listed": false
+   }
+  ],
+  "none": 0.0011793498844959887,
+  "ms_pick": 277.18668105080724,
+  "ms_list": 293.7620209995657
+ },
+ {
+  "id": "gpt4_f420262d",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.0014154067599722357,
+   "none_fit": 0.0030582030055740814,
+   "relevant": 0.9955263902344536
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.708050587878266,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.2010237745106012,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.018304463186309395,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.027514283465690313,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.003441734774098364,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0045042030790633895,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00245496774900073,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0011297951733692591,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003267312991312182,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00428830276627306,
+    "listed": false
+   }
+  ],
+  "none": 0.028961156118197145,
+  "ms_pick": 281.0350439976901,
+  "ms_list": 276.96503908373415
+ },
+ {
+  "id": "c8090214",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.0011326020560324698,
+   "none_fit": 0.0006837212968102615,
+   "relevant": 0.9981836766471571
+  },
+  "list_raw": "1, 2",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.20540005680811982,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.7839412774268228,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.004719114878149191,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0030183387080167383,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.000932563788499563,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0005258960345123704,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00015928007474441924,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00012267757170026627,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.362272797746522e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003896746671198001,
+    "listed": false
+   }
+  ],
+  "none": 0.0007911200422214394,
+  "ms_pick": 281.580634880811,
+  "ms_list": 317.1935009304434
+ },
+ {
+  "id": "gpt4_74aed68e",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.001552644571069536,
+   "none_fit": 0.0007158772898879965,
+   "relevant": 0.9977314781390425
+  },
+  "list_raw": "1, 2, 3",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.28938508777524774,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.6657479498289036,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.020216124201689754,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.004619824438212675,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0019992368499568533,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004008188283028853,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0008422702077417473,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.000745457509900373,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0002595869642682773,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004666709444794704,
+    "listed": false
+   }
+  ],
+  "none": 0.007509564496255431,
+  "ms_pick": 277.3010730743408,
+  "ms_list": 410.2455258835107
+ },
+ {
+  "id": "0db4c65d",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.006061399595451019,
+   "none_fit": 0.012216160975526228,
+   "relevant": 0.9817224394290227
+  },
+  "list_raw": "8, 7",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.3135728950858216,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.01310126101335051,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.01656682187921264,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.018151834722905227,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0069000090668419525,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.01891669299178834,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.14165846277172411,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.4292201913183112,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.002545906424196436,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.01191737217748564,
+    "listed": false
+   }
+  ],
+  "none": 0.027448552548362308,
+  "ms_pick": 282.30043197982013,
+  "ms_list": 316.8614038731903
+ },
+ {
+  "id": "gpt4_b0863698",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.0018985927879616607,
+   "none_fit": 0.0026880267407910488,
+   "relevant": 0.9954133804712473
+  },
+  "list_raw": "1, 5",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9974263532475252,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0006133107208122594,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003716924599888868,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00019049400569352853,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0002374401710303598,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 7.45095780332213e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 4.384007642797282e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.359644550913631e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.359644550913631e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00014744289058424192,
+    "listed": false
+   }
+  ],
+  "none": 0.0008949168497172001,
+  "ms_pick": 277.9583560768515,
+  "ms_list": 320.3265790361911
+ },
+ {
+  "id": "gpt4_4929293a",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.002717413151415874,
+   "none_fit": 0.0036190509713848484,
+   "relevant": 0.9936635358771992
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.39808925263739603,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00737059700712491,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.09404762143055942,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.005491055124543378,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0027260315679439573,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.012914180396959088,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.008959051321757424,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0014820568782577452,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.386338417410264e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.015978335194548575,
+    "listed": false
+   }
+  ],
+  "none": 0.4529418184408156,
+  "ms_pick": 279.36358377337456,
+  "ms_list": 287.10810909979045
+ },
+ {
+  "id": "gpt4_18c2b244",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.004563766737692252,
+   "none_fit": 0.0009263034062576208,
+   "relevant": 0.9945099298560501
+  },
+  "list_raw": "4, 2, 1",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.240521287696021,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.049644882598148914,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.01653350121365706,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.6480464118405881,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0036542332430625594,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004516192269037607,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00630689865382806,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0036021937196951907,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0007188252444876835,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.009005360023408411,
+    "listed": false
+   }
+  ],
+  "none": 0.017450213498065435,
+  "ms_pick": 274.457179941237,
+  "ms_list": 347.9897379875183
+ },
+ {
+  "id": "gpt4_45189cb4",
+  "type": "temporal-reasoning",
+  "gate": {
+   "general": 0.003981360355846874,
+   "none_fit": 0.11028172940067746,
+   "relevant": 0.8857369102434756
+  },
+  "list_raw": "2, 4, 6",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.008685207863783571,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.4261351133479832,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.007678569864517326,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.04131044409341812,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00247349531684734,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.5028104075627879,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0034877949769818624,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0016673165024954713,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00021454989837050195,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002557533415262165,
+    "listed": false
+   }
+  ],
+  "none": 0.0029795671575524787,
+  "ms_pick": 282.75405312888324,
+  "ms_list": 351.60760185681283
+ },
+ {
+  "id": "5831f84d",
+  "type": "knowledge-update",
+  "gate": {
+   "general": 0.010807265377425532,
+   "none_fit": 0.007696222660581406,
+   "relevant": 0.981496511961993
+  },
+  "list_raw": "4, 5",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.0098987306007635,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0027080624905862277,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0070397380134943855,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.9717898084039892,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.002456279367923743,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0006866671884559347,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00027853843329466815,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.000497471531395312,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00033702397219120025,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0019413098927415463,
+    "listed": false
+   }
+  ],
+  "none": 0.0023663701051643287,
+  "ms_pick": 638.0468120332807,
+  "ms_list": 1026.4384730253369
+ },
+ {
+  "id": "f685340e",
+  "type": "knowledge-update",
+  "gate": {
+   "general": 0.0059470086319736055,
+   "none_fit": 0.07165354630289007,
+   "relevant": 0.9223994450651364
+  },
+  "list_raw": "3, 5",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.016417241507182278,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.021003854864073603,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.8915035571195482,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00944359196206688,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.00826055714833014,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.007115736666695506,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.008062509335192543,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.010169208980872332,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.000625762450072306,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.007651695427640093,
+    "listed": false
+   }
+  ],
+  "none": 0.019746284538326258,
+  "ms_pick": 274.2704330012202,
+  "ms_list": 352.7740950230509
+ },
+ {
+  "id": "6071bd76",
+  "type": "knowledge-update",
+  "gate": {
+   "general": 0.010173927147643341,
+   "none_fit": 0.050801679510400155,
+   "relevant": 0.9390243933419564
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9873448849214486,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0011165872934628055,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0012294109320244177,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.001574640471508483,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0005840606517078049,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0004115207701705365,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00044859020996069175,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00030279175724364426,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0008964077037866435,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.001165900418006256,
+    "listed": false
+   }
+  ],
+  "none": 0.004925204870680234,
+  "ms_pick": 274.342596065253,
+  "ms_list": 279.0615251287818
+ },
+ {
+  "id": "7401057b",
+  "type": "knowledge-update",
+  "gate": {
+   "general": 0.011785037821641278,
+   "none_fit": 0.004584782941152173,
+   "relevant": 0.9836301792372064
+  },
+  "list_raw": "2, 7, 9",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.5883685866640954,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.1559405192298866,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.04265128537467856,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.01754369743890161,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.005755657448927184,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.012064082351209067,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.010039260595486934,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.011003029467052183,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.06375249033836579,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.04279192835497308,
+    "listed": false
+   }
+  ],
+  "none": 0.05008946273642357,
+  "ms_pick": 272.2917888313532,
+  "ms_list": 345.4214110970497
+ },
+ {
+  "id": "e66b632c",
+  "type": "knowledge-update",
+  "gate": {
+   "general": 0.0010533611494932663,
+   "none_fit": 0.0008300776935682622,
+   "relevant": 0.9981165611569385
+  },
+  "list_raw": "2, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.16390087106302262,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.6743746916035998,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0075431568176647324,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.005239172745584126,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0014219392580326544,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.006648957807297415,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004510139238599702,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0020054164065121246,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0017467781494795187,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.12863918591847553,
+    "listed": true
+   }
+  ],
+  "none": 0.003969690991731772,
+  "ms_pick": 273.69653689675033,
+  "ms_list": 363.13618812710047
+ },
+ {
+  "id": "01493427",
+  "type": "knowledge-update",
+  "gate": {
+   "general": 0.0016255560114341065,
+   "none_fit": 0.0009497060345268091,
+   "relevant": 0.997424737954039
+  },
+  "list_raw": "1, 2, 9",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9921950998774726,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.002433540431639618,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.000800122892354215,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.0005720786804067717,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00026990682660358423,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0006670043998350455,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00031134895881137494,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0002467072831048368,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0014194959316684087,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0005449582793079389,
+    "listed": false
+   }
+  ],
+  "none": 0.0005397364387956838,
+  "ms_pick": 275.5978691857308,
+  "ms_list": 348.39119599200785
+ },
+ {
+  "id": "89941a93",
+  "type": "knowledge-update",
+  "gate": {
+   "general": 0.0005798326333235572,
+   "none_fit": 0.0003016146623001305,
+   "relevant": 0.9991185527043762
+  },
+  "list_raw": "1, 2, 4, 8",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9957997520174559,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0018553533343668343,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003530079326812363,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.000580882702774366,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0001947034952259082,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00022571186136972985,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 7.461829540615342e-05,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.00032212316737836703,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 9.360500316608211e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0002483398892825724,
+    "listed": false
+   }
+  ],
+  "none": 0.0003455073039653115,
+  "ms_pick": 293.30850299447775,
+  "ms_list": 380.50699909217656
+ },
+ {
+  "id": "07741c45",
+  "type": "knowledge-update",
+  "gate": {
+   "general": 0.002724804335304483,
+   "none_fit": 0.0026519446416248035,
+   "relevant": 0.9946232510230706
+  },
+  "list_raw": "4, 10",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.050262859325253616,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004278578056189142,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.08053765638502118,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.8484050858678367,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.002361990069743268,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002315395116792832,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0011441679605565893,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0026717368646226106,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00026455366751648154,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0024168134532892536,
+    "listed": true
+   }
+  ],
+  "none": 0.005341163233178248,
+  "ms_pick": 272.6617520675063,
+  "ms_list": 361.7124678567052
+ },
+ {
+  "id": "f685340e_abs",
+  "type": "knowledge-update",
+  "gate": {
+   "general": 0.00355357509102626,
+   "none_fit": 0.005779066909490055,
+   "relevant": 0.9906673579994838
+  },
+  "list_raw": "2, 3, 5, 10",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.03429836532658808,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.9282934156613456,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.018831953421054187,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.006543996096275259,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0015875885578947228,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0022883785809864276,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0006405671429099451,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0018269129168172226,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00022332662318992974,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004417127962929298,
+    "listed": true
+   }
+  ],
+  "none": 0.0010483677100092707,
+  "ms_pick": 277.5971519295126,
+  "ms_list": 390.6791571062058
+ },
+ {
+  "id": "06878be2",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.008549310551227781,
+   "none_fit": 0.004968265175554723,
+   "relevant": 0.9864824242732174
+  },
+  "list_raw": "3, 5, 6, 10",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.15703673430600726,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.005497708999988405,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.40502138549643263,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.006258052549606512,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.11299632587100748,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.034914868642738336,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.253151544462083,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.003859359057764863,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00036482728220369484,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.008807595013653495,
+    "listed": true
+   }
+  ],
+  "none": 0.012091598318514247,
+  "ms_pick": 312.43703700602055,
+  "ms_list": 386.50115113705397
+ },
+ {
+  "id": "06f04340",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.007383567114465015,
+   "none_fit": 0.013624954125198449,
+   "relevant": 0.9789914787603365
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.4743194701506785,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.01102782684173496,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.03974137232558492,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.010265232533010886,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.006543049614716608,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.017302281238146235,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.022316623099631058,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0035342240924434065,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.413370322714118e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.04042375166065914,
+    "listed": false
+   }
+  ],
+  "none": 0.37452616844330017,
+  "ms_pick": 272.7372250519693,
+  "ms_list": 283.5613079369068
+ },
+ {
+  "id": "07b6f563",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.03079060134345586,
+   "none_fit": 0.03302202802790069,
+   "relevant": 0.9361873706286435
+  },
+  "list_raw": "1, 2, 4, 5, 6, 7",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.29604299325007477,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.11555857873256449,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.019237257257408463,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.03670614415684422,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.02830895804764279,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.26069305095233136,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.16749655101380959,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.006608594585741534,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0009197951335271338,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.014795979802782645,
+    "listed": false
+   }
+  ],
+  "none": 0.05363209706727301,
+  "ms_pick": 274.62573791854084,
+  "ms_list": 443.98184097371995
+ },
+ {
+  "id": "09d032c9",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.058659278668540996,
+   "none_fit": 0.6410460410037072,
+   "relevant": 0.3002946803277518
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.053753352332560865,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00575103816955277,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.030310893498168425,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.005671509534879655,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0439811259963915,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.006410074265904166,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.001848564233771276,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.009317659405865125,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0023408055906871173,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.033547261256165764,
+    "listed": false
+   }
+  ],
+  "none": 0.8070677157160533,
+  "ms_pick": 272.84827595576644,
+  "ms_list": 278.21797877550125
+ },
+ {
+  "id": "0a34ad58",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.01028299240569261,
+   "none_fit": 0.012372655875506141,
+   "relevant": 0.9773443517188013
+  },
+  "list_raw": "4, 10",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.11743078573185882,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.005658920798437272,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.010895441766890914,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.36077999503256597,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.10864716051765429,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.017098225791373087,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.1663129815436931,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.022191794707388215,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.005341565314641084,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.15029769108932817,
+    "listed": true
+   }
+  ],
+  "none": 0.03534543770616909,
+  "ms_pick": 278.6972289904952,
+  "ms_list": 364.626799011603
+ },
+ {
+  "id": "0edc2aef",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.046178706916650825,
+   "none_fit": 0.3874047069636975,
+   "relevant": 0.5664165861196517
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.7707117954935276,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.036415339952189624,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.009388173803877171,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0029896548914005432,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002387501027456263,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0033471244667601595,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002635212857486898,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.0010382028413801385,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.378130319895822e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.009333236808270029,
+    "listed": false
+   }
+  ],
+  "none": 0.16175375785755766,
+  "ms_pick": 275.9486751165241,
+  "ms_list": 280.98357701674104
+ },
+ {
+  "id": "195a1a1b",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.003253680381411995,
+   "none_fit": 0.0035346940489289127,
+   "relevant": 0.9932116255696591
+  },
+  "list_raw": "2, 5, 8",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.01739047506013613,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.9623875918826484,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.009412321232150548,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0021222718232224895,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0016187111923532654,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0026687475808132607,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0005223148628667622,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0009054481784774676,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00014524348275929755,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0011269559344237914,
+    "listed": false
+   }
+  ],
+  "none": 0.0016999187701485679,
+  "ms_pick": 315.5163750052452,
+  "ms_list": 342.0548301655799
+ },
+ {
+  "id": "1a1907b4",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.009841919020840261,
+   "none_fit": 0.1577391668068726,
+   "relevant": 0.8324189141722872
+  },
+  "list_raw": "3, 8",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.0057430107027542955,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0016102547543175607,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.7943757727951765,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.05776641673487025,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002260947803275212,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.003010561867240318,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004998806464946822,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.11661527493822675,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0015503755568703579,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00592194650045407,
+    "listed": false
+   }
+  ],
+  "none": 0.006146631881867875,
+  "ms_pick": 271.6179189737886,
+  "ms_list": 343.4011160861701
+ },
+ {
+  "id": "1d4e3b97",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.0019156087286920913,
+   "none_fit": 0.0021033319050712965,
+   "relevant": 0.9959810593662366
+  },
+  "list_raw": "1, 2",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9872957865684636,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00835660756296576,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0008154009017767607,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0006104045673587014,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00012002190705316894,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00021286923432351377,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 6.607878429375605e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00010430996075400739,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.360064500632327e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00042309300334795655,
+    "listed": false
+   }
+  ],
+  "none": 0.0019954275095690407,
+  "ms_pick": 275.0037359073758,
+  "ms_list": 315.505838021636
+ },
+ {
+  "id": "32260d93",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.06840574566419343,
+   "none_fit": 0.33988398158756844,
+   "relevant": 0.5917102727482381
+  },
+  "list_raw": "4, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.13811410610906674,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0016428329659161603,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004609920072281472,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.8226687538540062,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.001428315440516457,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0011177513502056886,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0016625921288704118,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0023606007970466214,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003417961375944435,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.008355973388256065,
+    "listed": true
+   }
+  ],
+  "none": 0.017697357756239825,
+  "ms_pick": 274.12374899722636,
+  "ms_list": 327.6984060648829
+ },
+ {
+  "id": "35a27287",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.009116938564824345,
+   "none_fit": 0.08607282951266738,
+   "relevant": 0.9048102319225083
+  },
+  "list_raw": "1, 3, 5, 6, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.4351614119952473,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.012285598607777832,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.19805346466714374,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.024505310371834906,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.12935238627054038,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.08687273851248967,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.012936909850053087,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002793201454337155,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0015474264053152572,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.05753503259746548,
+    "listed": true
+   }
+  ],
+  "none": 0.0389565192677952,
+  "ms_pick": 274.6668760664761,
+  "ms_list": 542.1516979113221
+ },
+ {
+  "id": "38146c39",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.05082685186630016,
+   "none_fit": 0.6735291458345642,
+   "relevant": 0.2756440022991356
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.05010835059001718,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004748343241334352,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.006934145809815776,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004612762668620106,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0032688928334035773,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0021401725007908104,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.0009854444697079646,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0006127207531173432,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0007269178338334353,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.020573802207851065,
+    "listed": false
+   }
+  ],
+  "none": 0.9052884470915085,
+  "ms_pick": 277.7876469772309,
+  "ms_list": 280.77325713820755
+ },
+ {
+  "id": "505af2f5",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.004426022064066385,
+   "none_fit": 0.0013710705999052304,
+   "relevant": 0.9942029073360285
+  },
+  "list_raw": "1, 5, 7, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9828842720988596,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.001926770618301337,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002187372817342723,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0016737646791481358,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0036565983007380127,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00037050308252034456,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0004594042685249032,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00019313615277195392,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00019781111152100496,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002105803859864945,
+    "listed": true
+   }
+  ],
+  "none": 0.004344563010406972,
+  "ms_pick": 650.2171559259295,
+  "ms_list": 1398.2318749185652
+ },
+ {
+  "id": "57f827a0",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.018703436333717967,
+   "none_fit": 0.2814990955737356,
+   "relevant": 0.6997974680925464
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.02723644332215267,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.005142703818272477,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004679967210156708,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.9440486827482585,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.006979464501419117,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002093210414625214,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.001157114432895676,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0013134627137032118,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0006490464683273058,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0037085335613372384,
+    "listed": false
+   }
+  ],
+  "none": 0.0029913708088517964,
+  "ms_pick": 273.1541390530765,
+  "ms_list": 284.7266469616443
+ },
+ {
+  "id": "6b7dfb22",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.009556387644563685,
+   "none_fit": 0.018266754597628464,
+   "relevant": 0.9721768577578078
+  },
+  "list_raw": "1, 2, 3, 4, 5, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.711626889757521,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.027867056568789215,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.1146188902635687,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.03511382390873608,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.015708097325985704,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.01244002427835763,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.003964348239988102,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0022733400885101523,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002483363278555022,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.04593913787086579,
+    "listed": true
+   }
+  ],
+  "none": 0.027965028419122673,
+  "ms_pick": 280.0685069523752,
+  "ms_list": 452.39789690822363
+ },
+ {
+  "id": "75832dbd",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.0035223269657701215,
+   "none_fit": 0.002668236059276326,
+   "relevant": 0.9938094369749535
+  },
+  "list_raw": "1, 2, 10",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.962977113135469,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.015577339716796071,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0013908567255496902,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0011733474152367807,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.000759443552957385,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0005972446493899949,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0011631842475646006,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0020475391482642795,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.000321717709887978,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.011080002666462347,
+    "listed": true
+   }
+  ],
+  "none": 0.0029122110324219306,
+  "ms_pick": 275.03441204316914,
+  "ms_list": 423.8604079000652
+ },
+ {
+  "id": "75f70248",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.0030385914574687454,
+   "none_fit": 0.004703059000732013,
+   "relevant": 0.9922583495417991
+  },
+  "list_raw": "4, 5, 6, 7, 8, 9, 10",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.5505375454090952,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.010464868430842834,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.06578444274042922,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.24907233601266898,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.06355139340490262,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.018846803492866483,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.004919757430921486,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.002587254250142653,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.001692438089508966,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00863740809999968,
+    "listed": true
+   }
+  ],
+  "none": 0.023905752638621994,
+  "ms_pick": 273.38225580751896,
+  "ms_list": 659.9594568833709
+ },
+ {
+  "id": "8a2466db",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.0040452163903468,
+   "none_fit": 0.005306812043191587,
+   "relevant": 0.9906479715664617
+  },
+  "list_raw": "1, 6, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9697793828602813,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0008174329139181704,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0007454105788191549,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0005518414300492296,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00031638900920527774,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002583806899822288,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00038147952253596686,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0002135135076529698,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0004531201129055975,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.020271797949482476,
+    "listed": true
+   }
+  ],
+  "none": 0.0038858252153275478,
+  "ms_pick": 274.4855540804565,
+  "ms_list": 355.86851998232305
+ },
+ {
+  "id": "95228167",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.03022704264245784,
+   "none_fit": 0.3427814345101147,
+   "relevant": 0.6269915228474274
+  },
+  "list_raw": "4, 6, 8",
+  "items": [
+   {
+    "evidence": false,
+    "pick": 0.11462755685509105,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0031799298746828996,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004190236282290091,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.8171311509183293,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0020356868821602083,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.012787185554727026,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.007954716510704143,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.019138145813101942,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0007666949605710087,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00516705172446979,
+    "listed": false
+   }
+  ],
+  "none": 0.013021644623872407,
+  "ms_pick": 279.1753609199077,
+  "ms_list": 403.0941450037062
+ },
+ {
+  "id": "a89d7624",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.004907287219697572,
+   "none_fit": 0.0022463984321138193,
+   "relevant": 0.9928463143481886
+  },
+  "list_raw": "1, 2, 3, 5, 6, 9, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.833424062779617,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.058618094766728135,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.05015267767157988,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00947159345473206,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.003965835228668062,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.005782099679341205,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0036668397094318226,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.001152019109932498,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002808542516807092,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.006628426047358632,
+    "listed": true
+   }
+  ],
+  "none": 0.02432980903580359,
+  "ms_pick": 273.57948990538716,
+  "ms_list": 659.1405819635838
+ },
+ {
+  "id": "afdc33df",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.011434452140529537,
+   "none_fit": 0.10393157370669268,
+   "relevant": 0.8846339741527778
+  },
+  "list_raw": "4",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.6336508769469419,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.004395123305291931,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.005248317870461105,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.2609028414122466,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0021657531024739285,
+    "listed": false
+   },
+   {
+    "evidence": true,
+    "pick": 0.004611033660447798,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0025791117312678777,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0019218898562852593,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0012730882925889111,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.010903772077345844,
+    "listed": false
+   }
+  ],
+  "none": 0.07234819174464888,
+  "ms_pick": 272.6956168189645,
+  "ms_list": 278.13462098129094
+ },
+ {
+  "id": "b0479f84",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.00654161991816584,
+   "none_fit": 0.0016046806144174904,
+   "relevant": 0.9918536994674166
+  },
+  "list_raw": "1, 7, 9",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9972254666967737,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0004180001796436044,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0002511095578059543,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003172088905352262,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.7533353411907e-05,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00010234692935090682,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 4.5977344963299696e-05,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 9.360123221498462e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 4.4696500907223144e-05,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0005718312805958442,
+    "listed": false
+   }
+  ],
+  "none": 0.0009258292659187722,
+  "ms_pick": 303.09685599058867,
+  "ms_list": 409.40414485521615
+ },
+ {
+  "id": "b6025781",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.008027562254187383,
+   "none_fit": 0.008231939625614082,
+   "relevant": 0.9837404981201986
+  },
+  "list_raw": "1, 2, 3, 4, 5, 6, 8",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.6391085735694307,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.011594931540253501,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.23408706345825642,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.008123319105995518,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0426061974323422,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.02649559148302814,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.005242888655713731,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.01356733315171515,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0011042683068181447,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0052242219343193895,
+    "listed": false
+   }
+  ],
+  "none": 0.012845611362127104,
+  "ms_pick": 287.94140997342765,
+  "ms_list": 620.047640055418
+ },
+ {
+  "id": "caf03d32",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.0031302033457892733,
+   "none_fit": 0.001845656197953059,
+   "relevant": 0.9950241404562575
+  },
+  "list_raw": "1, 2, 3, 4, 5, 6, 7, 8, 10",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.902725759210433,
+    "listed": true
+   },
+   {
+    "evidence": true,
+    "pick": 0.008854840882908796,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.012043995423094658,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.004875058120353142,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.019048891646467305,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.014720516411075246,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.00826869861528255,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0020983846913227096,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0015622092739482004,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00853793080731694,
+    "listed": true
+   }
+  ],
+  "none": 0.01726371491779744,
+  "ms_pick": 677.6946568861604,
+  "ms_list": 1352.336959913373
+ },
+ {
+  "id": "d24813b1",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.021169061090287693,
+   "none_fit": 0.03889934131408375,
+   "relevant": 0.9399315975956286
+  },
+  "list_raw": "1, 2, 7",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.38482959321865384,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.06625947881230755,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.019868011896565445,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004804969521847273,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0024885668283003543,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004689438867479697,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.5033341276795072,
+    "listed": true
+   },
+   {
+    "evidence": false,
+    "pick": 0.0025609401156645576,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 9.372253470081758e-14,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.004346827338912009,
+    "listed": false
+   }
+  ],
+  "none": 0.0068180457206683046,
+  "ms_pick": 276.8556100782007,
+  "ms_list": 349.87259609624743
+ },
+ {
+  "id": "fca70973",
+  "type": "single-session-preference",
+  "gate": {
+   "general": 0.010927571904642192,
+   "none_fit": 0.006322523957821746,
+   "relevant": 0.9827499041375359
+  },
+  "list_raw": "0",
+  "items": [
+   {
+    "evidence": true,
+    "pick": 0.9807698300579322,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.00167669474706038,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.002527813079260743,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.001354853719106911,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0008619303341943869,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0036262330316612808,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0011175737033184917,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0003803898102296765,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.0002847108491025698,
+    "listed": false
+   },
+   {
+    "evidence": false,
+    "pick": 0.001352406131484165,
+    "listed": false
+   }
+  ],
+  "none": 0.006047564536649305,
+  "ms_pick": 277.7390400879085,
+  "ms_list": 276.48360608145595
+ }
+]
