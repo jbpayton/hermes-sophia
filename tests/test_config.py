@@ -103,9 +103,9 @@ def test_server_busy_from_llama_server_slots(monkeypatch):
 
 def test_night_waits_for_a_busy_openai_server(engine, fake):
     fake.api, fake.base_url = "openai", "http://gpu1:8081"
-    fake.server_busy = lambda: True
+    fake.server_busy = lambda model=None: True
     assert SleepRunner(engine, model="m").busy() == ["http://gpu1:8081"]
-    fake.server_busy = lambda: None                                      # unknown counts as idle
+    fake.server_busy = lambda model=None: None                           # unknown counts as idle
     assert SleepRunner(engine, model="m").busy() == []
 
 
@@ -130,3 +130,14 @@ def test_transient_server_errors_are_retried(monkeypatch):
     monkeypatch.setattr(urllib.request, "urlopen", urlopen)
     monkeypatch.setattr("hermes_sophia.lms.time.sleep", lambda s: None)
     assert ModelServer(api="openai").chat("m", "hi", timeout=5) == "ok" and calls["n"] == 2
+
+
+def test_night_asks_a_router_about_each_guarded_model(engine, fake):
+    """llama-server's router mode answers /slots per model: the guard asks about the models it protects."""
+    fake.api, fake.base_url = "openai", "http://127.0.0.1:8080"
+    fake.server_busy = lambda model=None: None if model is None else model == "qwen/qwen3.8-27b"
+    r = SleepRunner(engine, model="m")
+    r.guard = ["qwen/qwen3.8-27b"]
+    assert r.busy() == ["qwen/qwen3.8-27b"]
+    r.guard = ["other-model"]
+    assert r.busy() == []

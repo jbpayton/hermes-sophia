@@ -13,6 +13,7 @@ import re
 import subprocess
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
@@ -141,12 +142,13 @@ class ModelServer:
         return first.get("token", ""), [(t.get("token", ""), float(t["logprob"])) for t in first.get("top_logprobs", [])]
 
     # ---------------------------------------------------------------- status
-    def server_busy(self, timeout: float = 5.0) -> Optional[bool]:
-        """For openai-type servers: True while llama-server's /slots shows a slot processing; None if unknown."""
+    def server_busy(self, timeout: float = 5.0, model: Optional[str] = None) -> Optional[bool]:
+        """For openai-type servers: True while llama-server's /slots shows a slot processing; None if unknown.
+        ``model``: in llama-server's router mode, /slots is per model (``?model=``)."""
         if self.api == "lmstudio":
             return None
         try:
-            slots = self._get("/slots", timeout)
+            slots = self._get("/slots" + (f"?model={urllib.parse.quote(model, safe='')}" if model else ""), timeout)
         except LMStudioError:
             return None
         if not isinstance(slots, list):

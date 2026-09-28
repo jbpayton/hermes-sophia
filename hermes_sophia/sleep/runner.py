@@ -97,8 +97,11 @@ class SleepRunner:
         st = self.client.model_status()
         if st:
             out += [m for m in self.guard if st.get(m) not in (None, "", "idle", "loaded")]
-        if getattr(self.client, "api", "lmstudio") != "lmstudio" and self.client.server_busy():
-            out.append(self.client.base_url)
+        if getattr(self.client, "api", "lmstudio") != "lmstudio":
+            if self.client.server_busy():                  # a single-model server
+                out.append(self.client.base_url)
+            else:                                          # a router: ask about each guarded model
+                out += [m for m in self.guard if self.client.server_busy(model=m)]
         return out
 
     def wait_idle(self) -> None:

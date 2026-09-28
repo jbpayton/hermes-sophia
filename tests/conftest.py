@@ -55,7 +55,7 @@ class FakeLMS:
     def model_status(self):
         return self.status
 
-    def server_busy(self):
+    def server_busy(self, model=None):
         return None
 
 

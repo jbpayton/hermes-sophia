@@ -176,3 +176,60 @@ decider_api: openai
   - **vLLM** (`logprob_token_ids`, `/generative_scoring`) and **SGLang** (`/v1/score`, which scores candidate tokens in one pass) have the neatest APIs for this. But Qwen3.5-9B's 4-bit checkpoints for them take 8–9 GB. Prefix caching for its hybrid recurrent layers is still unreliable in both, and SGLang's kernels for them need newer GPUs than a 3090.
   - **TabbyAPI + ExLlamaV3** returns logprobs and has a 4-bit build that fits in 6–8 GB. Untested here.
   - **Ollama** returns logprobs natively since v0.12.11, but reportedly not through its OpenAI-compatible endpoint. Untested here.
+
+### One endpoint for everything: llama-server's router mode
+
+llama-server can serve several models on one port, routing by the request's `model` name, with per-model flags in an INI file. The chat model, the decider and the embedding model all move off LM Studio this way. Measured on 2× RTX 3090 with the same GGUF files (`bench/serving_bench.py`):
+
+| | LM Studio | llama-server router |
+|---|---|---|
+| Qwen3.8-27B, fresh 6,100-token prompt: first token | 6.5 s | 6.0 s |
+| Qwen3.8-27B, cached prompt: first token | 0.45 s | 0.50 s |
+| Qwen3.8-27B generation | 43.6 tok/s | **75.5 tok/s** (tensor split + built-in MTP, one slot) |
+| Decider gate call | 594 ms | **403 ms** |
+| Embeddings, 64 texts | 571 ms | **89 ms** |
+
+The same 27B with 4 slots and no MTP instead generates 50 tok/s, and 42 tok/s each for two requests at once, against LM Studio's 29.4. Choose that when requests often overlap.
+
+```ini
+version = 1
+[*]
+jinja = true
+flash-attn = on
+n-gpu-layers = 999
+
+[qwen/qwen3.8-27b]
+model = /models/Qwen3.8-27B-Q6_K.gguf
+mmproj = /models/mmproj-Qwen3.8-27B-BF16.gguf
+split-mode = tensor
+ctx-size = 65536
+parallel = 1
+batch-size = 4096
+ubatch-size = 1024
+spec-type = draft-mtp
+spec-draft-n-max = 2
+load-on-startup = true
+
+[qwen35-9b]
+model = /models/Qwen3.5-9B-Q4_K_M.gguf
+device = CUDA1
+ctx-size = 16384
+parallel = 4
+load-on-startup = true
+
+[nomic-embed]
+model = /models/nomic-embed-text-v1.5.Q4_K_M.gguf
+device = CUDA1
+embedding = true
+pooling = mean
+ctx-size = 8192
+batch-size = 8192
+ubatch-size = 8192
+load-on-startup = true
+```
+
+Start it with `llama-server --host 127.0.0.1 --port 8090 --models-preset models.ini --models-max 3`, for example from a systemd user service. Then:
+
+- **Hermes:** `model.provider: local` and `model.base_url: http://127.0.0.1:8090/v1`. The model names stay the same.
+- **Sophia:** `lmstudio_url: http://127.0.0.1:8090`, with `embed_api`, `decider_api` and `sleep_api` set to `openai`, and `lms_cli: ''`. The night guard then asks the router whether the chat model is busy (`/slots?model=…`), so nights still yield to a live conversation.
+- **Only one 27B fits in memory.** Don't load models in LM Studio while the router holds the GPUs.
