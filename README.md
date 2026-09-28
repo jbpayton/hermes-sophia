@@ -58,13 +58,15 @@ What the agent is told about each item:
 | The quoted words | Always the original text. Extracted facts (`subject \| relation \| object`) help find it and label it; they never replace it |
 | `planned`, `habitual`, `negated`, … | How the fact was said |
 | `happens` | When it takes place, as distinct from when it was said |
+| `"next weekend" = 2024-06-29/2024-07-01` | A relative time word resolved to the date it meant when it was said. If it pointed ahead and that date is over, it adds `now past; this line doesn't say if it happened`, so an old plan isn't read as still coming up, or as done |
 | `evidence later changed` | These words include something that was later superseded, so the agent doesn't repeat a stale plan |
 | `assistant said` | The agent's own earlier words: weaker evidence, and capped at two per injection |
 | `linked via Lily` | Reached through the graph rather than by similarity |
 | `untrusted source text` | Text from a web page, which the agent must treat as data, not instructions |
 | `used +0.25` | Credit earned when this item actually helped a past answer. It affects ordering only, never whether an item may be shown |
+| `possible matches only` (block heading) | The check found nothing that fits the message, so everything below is at best a lead |
 
-For an off-topic message ("What's the capital of Australia?") the check said no (0.45), so nothing was injected.
+For an off-topic message ("What's the capital of Australia?") the check answered "nothing is needed" with probability 1.00 (`choice:g1.00,n0.00,m0.00`), so nothing was injected.
 
 **What is never injected:**
 - the agent repeating memory back (echoes);

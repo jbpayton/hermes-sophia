@@ -265,6 +265,21 @@ def test_relative_dates_are_resolved_in_the_injection(engine):
     assert '"last Saturday" = 2023-05-20' in text and '"last year" = 2022' in text
 
 
+def test_a_plan_whose_date_is_over_says_so(engine):
+    """ "next weekend" said months ago is labelled as past, without claiming it happened, so an old plan isn't read
+    as still ahead; the day after it was said, it is still ahead; words that pointed back ("last Saturday") need no
+    label."""
+    said = time.mktime((2024, 6, 20, 12, 0, 0, 0, 0, -1))                # a Thursday
+    engine.capture.remember("I'm going to repaint the kitchen next weekend. I ran a race last Saturday.",
+                            speaker="Joey", now=said)
+    engine.cfg["skip_gate"] = 0.0
+    later, _ = engine.recall.prefetch("Is the kitchen repaint still happening?", "q", now=said + 86400 * 120)
+    soon, _ = engine.recall.prefetch("Is the kitchen repaint still happening?", "q", now=said + 86400)
+    assert '"next weekend" = 2024-06-29/2024-07-01, now past; this line doesn\'t say if it happened' in later
+    assert '"next weekend" = 2024-06-29/2024-07-01' in soon and "now past" not in soon
+    assert '"last Saturday" = 2024-06-15' in later and '2024-06-15, now past' not in later
+
+
 def test_agent_lines_are_evidence_when_asked_about(engine):
     for i, film in enumerate(["Alien", "Arrival", "Heat", "Ronin"]):
         engine.capture.process_messages(f"m{i}", [{"role": "user", "content": "Any film ideas for Friday?"},

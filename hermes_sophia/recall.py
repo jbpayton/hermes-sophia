@@ -196,7 +196,7 @@ class Recall:
                     if note not in it.setdefault("changed", []):
                         it["changed"].append(note)
         ranked = sorted(items.values(), key=lambda it: it["score"], reverse=True)[:k]
-        self._attach_times(ranked)
+        self._attach_times(ranked, now)
         credit = store.credit([it["id"] for it in ranked])
         for it in ranked:
             c = credit.get(it["id"], {})
@@ -205,9 +205,12 @@ class Recall:
                     reverse=True)
         return ranked, info
 
-    def _attach_times(self, items: List[Dict[str, Any]]) -> None:
+    def _attach_times(self, items: List[Dict[str, Any]], now: Optional[float] = None) -> None:
         """Relative time words resolved against when they were said ("last Saturday" -> 2023-05-20), so the
-        reader doesn't have to do the date arithmetic. Phrases that already name a year are left alone."""
+        reader doesn't have to do the date arithmetic. Phrases that already name a year are left alone.
+        mark_passed_dates: a phrase that pointed ahead when it was said ("next weekend") and whose date is now over
+        says so, so an old plan isn't read as still coming up."""
+        today = dt.datetime.fromtimestamp(now or time.time()).strftime("%Y-%m-%d")
         wins = {it["id"]: it for it in items if it["kind"] == "window"}
         if not wins or not self.e.cfg["show_resolved_dates"]:
             return
@@ -218,9 +221,15 @@ class Recall:
             phrase = (it["text"] or "")[r["start"]:r["end"]].strip()
             if not phrase or re.search(r"\b(1[89]|20)\d\d\b", phrase) or not r["value"]:
                 continue
+            value = r["value"]
+            if self.e.cfg["mark_passed_dates"] and it.get("said"):
+                said = dt.datetime.fromtimestamp(it["said"]).strftime("%Y-%m-%d")
+                start, end = value.split("/")[0], value.split("/")[-1]
+                if start > said[:len(start)] and end < today[:len(end)]:
+                    value += ", now past; this line doesn't say if it happened"
             times = it.setdefault("times", [])
-            if len(times) < 3 and (phrase, r["value"]) not in times:
-                times.append((phrase, r["value"]))
+            if len(times) < 3 and (phrase, value) not in times:
+                times.append((phrase, value))
 
     # ------------------------------------------------------------------ graph
     @staticmethod

@@ -1,0 +1,62 @@
+{
+  "n": 319,
+  "accuracy": 0.922,
+  "areas": {
+    "absence": 0.95,
+    "change": 0.725,
+    "clocks": 1.0,
+    "hygiene": 1.0,
+    "nearmiss": 0.85,
+    "noanswer": 0.95,
+    "plans": 0.7,
+    "provenance": 1.0,
+    "stale": 1.0,
+    "tasks": 1.0
+  },
+  "categories": {
+    "change.count": "1/10",
+    "change.current": "10/10",
+    "change.previous": "18/20",
+    "clocks.believed": "20/20",
+    "clocks.happens": "20/20",
+    "clocks.said": "20/20",
+    "hygiene.injection": "10/10",
+    "hygiene.invented": "10/10",
+    "hygiene.secret": "10/10",
+    "nearmiss.domain": "7/10",
+    "nearmiss.person": "10/10",
+    "noanswer.topic": "19/20",
+    "plans.cancelled": "10/10",
+    "plans.happened": "10/10",
+    "plans.unknown": "1/10",
+    "provenance.user": "10/10",
+    "provenance.web": "10/10",
+    "stale.followup": "10/10",
+    "stale.true": "20/20",
+    "tasks.failed": "20/20",
+    "tasks.how": "20/20",
+    "tasks.source": "9/9"
+  },
+  "quiet": {
+    "n": 20,
+    "memory_injected_on": 1,
+    "mean_injected_chars": 239.5
+  },
+  "secrets": {
+    "n": 10,
+    "kept": 0,
+    "unknown": 0,
+    "repeated": 0
+  },
+  "mean_context_chars": 4199,
+  "mean_seconds": 2.68,
+  "adapter": "sophia",
+  "options": {
+    "night": "end",
+    "memories": "/home/seraphius/sophia-hermes-research/hermes-sophia/bench/work/almanac02_dev10/memories",
+    "embed": "nomic-embed",
+    "api": "openai"
+  },
+  "reader": "qwen35-9b",
+  "judge": "qwen35-9b"
+}

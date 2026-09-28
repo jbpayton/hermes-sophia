@@ -62,6 +62,7 @@ DEFAULTS: Dict[str, Any] = {
     "fts_bonus": 0.03,
     "fts_weight": 0.05,                # > 0: keyword matches add weight × (bm25 / best bm25) instead of the flat bonus
     "type_bonus": 0.02,
+    "mark_passed_dates": True,        # ... and when a phrase that pointed ahead ("next weekend") is over, say "now past"
     "show_resolved_dates": True,      # label relative time words with the date they mean ("last Saturday" = 2023-05-20)
     "time_scope": "boost",            # filter: a date range in the question hides everything outside it; boost: ranks it up
     "time_scope_bonus": 0.05,
@@ -173,6 +174,8 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
     ("fts_weight", "Graded keyword weight: a match adds this × its bm25 relative to the best (0 = flat fts_bonus)",
      {"when": _ADVANCED}),
     ("type_bonus", "Ranking bonus when a typed span matches the question", {"when": _ADVANCED}),
+    ("mark_passed_dates", "Mark a resolved date that pointed ahead when it was said, and is now over, as past",
+     {"when": _ADVANCED}),
     ("show_resolved_dates", "Label relative time words in injected memories with the date they mean",
      {"when": _ADVANCED, "choices": ["on", "off"], "default": "on"}),
     ("time_scope", "A date range in the question (\"last week\", \"in March\"): hide everything outside it, or rank "

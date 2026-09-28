@@ -241,6 +241,50 @@ From that single readout:
 
 **Time** (`bench/profile_prefetch.py`, LongMemEval development memories, llama-server): the whole passive path takes 607 ms median and 632 ms p90, against 514 ms and 538 ms with the yes/no gate. The prompt is longer, and strong matches now get a readout too.
 
+### Almanac v0.2: near-misses and stale plans
+
+[Almanac v0.2](https://github.com/jbpayton/almanac) adds the question types Sophia flagged as the ones where a near-miss is dangerous:
+- **Near-miss:** "What's my brother's name?" when only a brother-in-law was mentioned; "Which dermatologist do I see?" when only the family doctor and the dentist were.
+- **No answer:** "What's my cat's name?" when the cat came up twice and its name never did.
+- **Stale:** a fact said once, five months earlier and still true. Also a follow-up in the same conversation, "Is it still happening next weekend, like I told you?", about a plan from months ago.
+
+**Development** (`bench/run_almanac_v02_paired.sh`; 10 development lives, 319 scored questions). Each life's memory is built once, with a night, and every arm reuses it, so the arms differ only in recall. 9B reader and judge:
+
+| | Yes/no gate | Choice gate | With the split |
+|---|---|---|---|
+| Overall | 0.934 | 0.931 | 0.931 |
+| Near-miss (person / provider) | 10/10 · 7/10 | 10/10 · 7/10 | 10/10 · **10/10** |
+| No answer | 19/20 | 19/20 | 20/20 |
+| Stale: still true · follow-up | 20/20 · 6/10 | 20/20 · 7/10 | 20/20 · 7/10 |
+| Change: current · previous · count | 10/10 · 19/20 · 3/10 | 10/10 · 17/20 · 3/10 | 9/10 · 15/20 · 4/10 |
+| Plans: cancelled · outcome never told | 10/10 · 6/10 | 10/10 · 5/10 | **7/10** · 7/10 |
+| Quiet questions with memory injected | 12/20 | **1/20** | 1/20 |
+
+- **The split does what it was meant to, and costs as much.**
+  - "Which dermatologist do I see?": without the split the reader named the family doctor 3 times in 10, because the gate judged that line relevant and nothing was labelled. With the split, it said it didn't know every time.
+  - "Did I go to The Lumineers concert?" needs two lines, the tickets and the cancellation. In the 3 lives where the cancellation landed under Possible matches, the reader answered "yes".
+  - The net is zero, so the split stays opt-in.
+- **"Now Y (was X)" instead of "X → Y"** for superseded facts, as Sophia suggested so a small reader can't read the arrow backwards: 5 questions won and 5 lost on identical memories. On 20 LongMemEval development questions with night memories, the answers were identical. Not adopted.
+- **Stale plans.** Without help, the reader confirmed a months-old "next weekend" as still ahead in 4 of 10 follow-ups ("Yes, the kitchen repaint is still planned for next weekend (October 26–28)"). The phrase's resolved date was on the line, but nothing said it was over.
+  - Marking it "now past" fixed those. It also made the reader assume past appointments had happened: "Did I go to my dentist appointment?", whose right answer is "you never told me", fell from 4 to 1 of 10.
+  - Saying what the line does and doesn't know fixed both: "now past; this line doesn't say if it happened". Follow-ups went 6 → 9 of 10, appointments 4 → 8 of 10, overall 0.922 → 0.947 (`mark_passed_dates`).
+  - Two runs of the same setting on the same memories differ by about three questions: the 0.931 and 0.922 above are both without the mark.
+
+**Held out** (`bench/run_almanac_v02_heldout.sh`; the 8 v0.2 test lives, 255 scored questions, same method; nothing was tuned afterwards). The passed-dates mark is on in every arm except the second:
+
+| | Choice gate (default) | Without the passed-dates mark | Yes/no gate | Choice gate with the split |
+|---|---|---|---|---|
+| Overall | **0.957** | 0.933 (8 lost, 2 won) | 0.953 | 0.914 (14 lost, 3 won) |
+| Stale follow-up | 8/8 | 5/8 | 8/8 | 7/8 |
+| Plan whose outcome was never told | 7/8 | 4/8 | 7/8 | 7/8 |
+| Near-miss (person / provider) | 8/8 · 6/8 | 8/8 · 6/8 | 8/8 · 6/8 | 8/8 · 6/8 |
+| Plan cancelled | 8/8 | 8/8 | 8/8 | **3/8** |
+| Quiet questions with memory injected | **1/16** | 1/16 | 9/16 | 1/16 |
+
+- **The passed-dates mark holds up:** stale follow-ups 5 → 8 of 8, and plans whose outcome was never told 4 → 7 of 8.
+- **The split's near-miss gain from development did not repeat**, and its two-line cost did: a cancelled concert was answered "yes" in 5 of 8 lives. It stays opt-in.
+- **Near-miss providers are still the weak spot:** 2 of 8 "which dermatologist do I see?" were answered with another doctor's name, under every setting.
+
 ### Serving the decider faster
 
 Most of the gate's time on LM Studio is the server, not the model: `/v1/responses`, the only LM Studio endpoint that returns logprobs, costs about 0.24 s even for a tiny cached prompt. The same 9B file served by llama.cpp's `llama-server`, on one GPU (`bench/decider_servers.py`, 20 real gate prompts, none cached):
@@ -282,6 +326,7 @@ Each change was found stage by stage on the development data (`bench/stages.py`,
 | Injection depth | Only 10 items could be injected, and counting questions need every piece | 50 items within 9,000 characters (about 1,900 tokens when memory is relevant). All evidence injected: 0.81 → 0.88 (LongMemEval development), 0.74 → 0.80 (LoCoMo development) |
 | Context headers | They carry most of the night's gain for LoCoMo (evidence in the top 10: 0.78 → 0.87) | Batches now run in parallel (`night_parallel`) |
 | Relative dates | The reader had to work out which date "last Saturday" meant from the line's date, and often got it wrong | Injected lines label relative time words with the date they mean (`show_resolved_dates`). LoCoMo development conversation: 0.645 → 0.684, temporal 0.51 → 0.70 |
+| Plans whose date is over | A months-old "next weekend" plan, asked about as a follow-up, was confirmed as still ahead in 4 of 10 Almanac v0.2 development lives | A resolved date that pointed ahead and is now over adds "now past; this line doesn't say if it happened" (`mark_passed_dates`). Development: 0.922 → 0.947. See [Almanac v0.2](#almanac-v02-near-misses-and-stale-plans) |
 | The agent's own words | "What did you recommend?" needs the agent's lines, which recall normally ranks down so the agent doesn't quote itself as fact | When the user asks about the agent's words, agent lines are evidence: no penalty, no cap |
 | Who judges at night | Every night threshold was measured on the 9B's one-token readouts | The night model writes; its yes/no judgments go to the decider (`night_judge: decider`) |
 | Two option orders | Read one after the other: two round trips per decision | Read in parallel; on LM Studio this helps short prompts most, since it runs long prompts for one model largely one at a time |

@@ -1,0 +1,62 @@
+{
+  "n": 96,
+  "accuracy": 0.875,
+  "areas": {
+    "absence": 1.0,
+    "change": 0.417,
+    "clocks": 1.0,
+    "hygiene": 0.889,
+    "nearmiss": 1.0,
+    "noanswer": 1.0,
+    "plans": 0.778,
+    "provenance": 1.0,
+    "stale": 0.778,
+    "tasks": 1.0
+  },
+  "categories": {
+    "change.count": "0/3",
+    "change.current": "2/3",
+    "change.previous": "3/6",
+    "clocks.believed": "6/6",
+    "clocks.happens": "6/6",
+    "clocks.said": "6/6",
+    "hygiene.injection": "3/3",
+    "hygiene.invented": "2/3",
+    "hygiene.secret": "3/3",
+    "nearmiss.domain": "3/3",
+    "nearmiss.person": "3/3",
+    "noanswer.topic": "6/6",
+    "plans.cancelled": "1/3",
+    "plans.happened": "3/3",
+    "plans.unknown": "3/3",
+    "provenance.user": "3/3",
+    "provenance.web": "3/3",
+    "stale.followup": "1/3",
+    "stale.true": "6/6",
+    "tasks.failed": "6/6",
+    "tasks.how": "6/6",
+    "tasks.source": "3/3"
+  },
+  "quiet": {
+    "n": 6,
+    "memory_injected_on": 0,
+    "mean_injected_chars": 0.0
+  },
+  "secrets": {
+    "n": 3,
+    "kept": 0,
+    "unknown": 0,
+    "repeated": 0
+  },
+  "mean_context_chars": 4452,
+  "mean_seconds": 5.69,
+  "adapter": "sophia",
+  "options": {
+    "night": "end",
+    "gate_split": "true",
+    "embed": "nomic-embed",
+    "api": "openai"
+  },
+  "reader": "qwen35-9b",
+  "judge": "qwen35-9b"
+}

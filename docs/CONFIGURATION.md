@@ -119,6 +119,8 @@ hermes sophia sleep --model M [--url U --api openai]
 | `recency_bonus`, `fts_bonus`, `type_bonus` | 0.01, 0.03, 0.02 | Ranking nudges. `fts_bonus` applies only when `fts_weight` is 0 |
 | `fts_weight` | 0.05 | Graded keyword weight: a keyword match adds this × its bm25 score relative to the best match |
 | `time_scope`, `time_scope_bonus` | boost, 0.05 | A date range in the question ("last week", "in March") ranks memories inside it higher. `filter` hides everything outside it instead, which misses facts told later about an earlier month |
+| `show_resolved_dates` | on | Relative time words in injected lines are labelled with the date they meant when said ("last Saturday" = 2023-05-20) |
+| `mark_passed_dates` | on | A resolved date that pointed ahead when it was said, and is now over, adds "now past; this line doesn't say if it happened" ([measured](BENCHMARKS.md#almanac-v02-near-misses-and-stale-plans)) |
 | `facts_as` | keys | Extracted facts are extra search keys for the verbatim message they came from. The message ranks and is injected, labelled with its facts. `items` lets facts compete as their own entries, which pushed evidence down in testing |
 | `assistant_penalty`, `max_assistant_items` | 0.06, 2 | Keep the agent's own restatements from crowding out your words |
 | `advice_penalty`, `advice_keeps_questions` | 0.06, on | When you ask for suggestions or advice, the agent's earlier lines rank a further 0.06 lower, and your own earlier questions (which say a lot about you) are not ranked down |
