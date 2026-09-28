@@ -70,6 +70,21 @@ def _excerpt(a, n: int = 220) -> str:
     return re.sub(r"\s+", " ", body)[:n]
 
 
+def fit_actions(lines: List[str], budget: int) -> List[str]:
+    """The action lines within about ``budget`` characters: the first two, then as many of the last as fit. How a task
+    turned out shows at its end; its start says what it was."""
+    if sum(len(l) + 1 for l in lines) <= budget or len(lines) <= 3:
+        return lines
+    head, tail, used = lines[:2], [], sum(len(l) + 1 for l in lines[:2])
+    for line in reversed(lines[2:]):
+        if used + len(line) + 1 > budget and tail:
+            break
+        tail.insert(0, line)
+        used += len(line) + 1
+    skipped = len(lines) - len(head) - len(tail)
+    return head + ([f"... ({skipped} actions in between left out)"] if skipped else []) + tail
+
+
 class TaskPass:
     def __init__(self, runner):
         self.r, self.s, self.e, self.cfg = runner, runner.s, runner.e, runner.cfg
@@ -201,7 +216,9 @@ class TaskPass:
                 break
             ev = self.evidence(task)
             self.r._guard()
-            ans = self.r.teacher.choice(ev, "How did the task turn out?", OUTCOMES, permutations=2)
+            # the judge reads a one-token answer on a small context: a long log keeps its start and its end
+            judged = {**ev, "actions": fit_actions(ev["actions"], self.cfg["task_judge_chars"])}
+            ans = self.r.teacher.choice(judged, "How did the task turn out?", OUTCOMES, permutations=2)
             outcome = ans.choice
             parsed = self.parse_card(self.r.llm(CARD_PROMPT.format(
                 request=ev["request"], outcome=outcome, actions="\n".join(ev["actions"]), reply=ev["reply"],

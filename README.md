@@ -353,7 +353,7 @@ Nothing is scheduled for you. When you're ready, add a nightly run:
 
 ```bash
 pip install -e ".[test]"
-pytest -q        # 47 tests against a fake model server; no GPU needed
+pytest -q        # 72 tests against a fake model server; no GPU needed
 ```
 
 | Path | What |

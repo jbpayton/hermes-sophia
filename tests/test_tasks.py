@@ -147,3 +147,12 @@ def test_actions_are_searchable_the_same_day(engine):
     engine.cfg.update(skip_gate=0.0, junk_floor=0.0, inject_relative_floor=1.0)    # plumbing, not ranking
     text, _ = engine.recall.prefetch("What didn't work when we rotated the nginx logs?", "later")
     assert "rm /var/log/nginx/*.log" in text
+
+
+def test_a_long_action_log_is_cut_to_its_start_and_end_for_the_judge():
+    from hermes_sophia.sleep.tasks import fit_actions
+    lines = [f"a{i} terminal: step {i} -> ok: " + "x" * 90 for i in range(1, 41)]
+    cut = fit_actions(lines, 1500)
+    assert cut[:2] == lines[:2] and cut[-1] == lines[-1] and "left out" in cut[2]
+    assert sum(len(l) for l in cut) <= 1700 and len(cut) < len(lines)
+    assert fit_actions(lines[:5], 1500) == lines[:5]              # a short log is untouched

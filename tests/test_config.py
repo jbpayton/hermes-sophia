@@ -141,3 +141,11 @@ def test_night_asks_a_router_about_each_guarded_model(engine, fake):
     assert r.busy() == ["qwen/qwen3.8-27b"]
     r.guard = ["other-model"]
     assert r.busy() == []
+
+
+def test_long_texts_are_embedded_from_their_start(engine, fake):
+    seen = []
+    orig = fake.embed
+    fake.embed = lambda texts, *a, **k: (seen.extend(texts), orig(texts, *a, **k))[1]
+    engine.embed(["x" * 20000, "short"])
+    assert len(seen[0]) == engine.cfg["embed_max_chars"] and seen[1] == "short"

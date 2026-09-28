@@ -151,12 +151,13 @@ Conversation links are followed too: a matched message brings what corrects it, 
 | `promote_min_instances` / `promote_min_sessions` | 5 / 2 | Evidence needed before an emergent relation is promoted to canonical |
 | `page_min_facts` | 3 | Minimum facts about an entity before it gets a wiki page |
 | `calibration_min_labels` | 50 | Gold labels needed before decider temperatures are fitted |
-| `supersede_threshold` | 0.85 | Decider probability needed before a newer fact retires an older one. It's high on purpose: a wrong retirement hides a true memory, while a missed one leaves both visible with their dates. Only facts about an ongoing state (asked once per relation) can be retired |
+| `supersede_threshold` | 0.85 | Decider probability needed before a newer fact retires an older one. It's high on purpose: a wrong retirement hides a true memory, while a missed one leaves both visible with their dates. Only facts about an ongoing state (asked once per relation) can be retired. On one real memory the 9B retired set-valued states at 0.86–0.90 ("has reservations for" four places, each "replacing" the last); measured real changes score at least 0.92, so 0.92 is the safer setting until relations are also asked whether they hold several values at once |
+| `task_judge_chars` | 6000 | How much of a long task's action log the night's judge reads when deciding how it turned out: its first two actions and as many of its last as fit. A small decider context otherwise rejects long tasks |
 | `night_parallel` | 2 | Night model calls in flight at once. Match the model's parallel slots in LM Studio |
 
 ## Timeouts (seconds)
 
-`embed_timeout` 5, `decider_timeout` 8, `sleep_call_timeout` 300.
+`embed_timeout` 5, `decider_timeout` 8, `sleep_call_timeout` 300. `embed_max_chars` (3000): longer texts, such as task cards, are embedded from their start, so they fit the embedding server's context; the text itself is kept whole.
 
 Hermes gives an external provider's prefetch 8 s in total, so keep `embed_timeout + decider_timeout` comfortably under that on slow hardware. When a model call fails or times out, Sophia records a degraded mode, which `sophia status` shows, and carries on without that model:
 

@@ -65,7 +65,9 @@ class Engine:
 
     # ---------------------------------------------------------------- models
     def embed(self, texts: Sequence[str], kind: str = "document"):
-        return self.clients["embed"].embed(list(texts), self.cfg["embed_model"], kind, self.cfg["embed_timeout"])
+        cap = self.cfg["embed_max_chars"]             # the vector only; the stored text is never cut
+        return self.clients["embed"].embed([(t or "")[:cap] for t in texts], self.cfg["embed_model"], kind,
+                                           self.cfg["embed_timeout"])
 
     def _log_decision(self, rec: Dict[str, Any]) -> None:
         self.store.x("""INSERT OR IGNORE INTO decisions(id,ts,model,type,state_sha,instructions,options,probabilities,raw,flip)

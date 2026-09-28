@@ -90,12 +90,15 @@ DEFAULTS: Dict[str, Any] = {
     "ground_check": True,             # flag agent replies that assert facts about the user out of nowhere
     # timeouts (seconds)
     "embed_timeout": 5.0,
+    "embed_max_chars": 3000,          # longer inputs are embedded from their start (embedding servers cap context;
+                                      # dense text like task cards runs ~2.4 characters per token)
     "decider_timeout": 8.0,
     "sleep_call_timeout": 300.0,
     # sleep
     "sleep_max_wait_s": 900,
     "sleep_poll_s": 10,
     "sleep_session_windows": 40,
+    "task_judge_chars": 6000,         # a task's action log as the night's judge reads it (start and end kept)
     "night_judge": "decider",         # one-token night judgments on the decider (fast; thresholds measured there) or "night"
     "header_roles": "all",            # "user": model headers only for the user's lines (cheaper on chat-heavy memories)
     "night_parallel": 2,              # night model calls in flight at once (LM Studio's parallel slots)
@@ -209,6 +212,8 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
     ("ground_check", "Check each live agent reply; one that asserts facts about you that nothing in the turn "
                      "supports is kept out of recall", {"when": _ADVANCED, "choices": ["on", "off"], "default": "on"}),
     ("embed_timeout", "Embedding call timeout (seconds)", {"when": _ADVANCED}),
+    ("embed_max_chars", "Longer texts are embedded from their first this-many characters (the text itself is kept "
+                        "whole); keeps inputs inside the embedding server's context", {"when": _ADVANCED}),
     ("decider_timeout", "Decider call timeout (seconds); keep embed + decider well under Hermes's 8 s",
      {"when": _ADVANCED}),
     ("sleep_call_timeout", "Night model call timeout (seconds)", {"when": _ADVANCED}),
@@ -218,6 +223,8 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
     ("sleep_session_windows", "Windows per contextualize call", {"when": _ADVANCED}),
     ("supersede_prescreen", "One reading below this settles 'no change' before the careful two-order reading",
      {"when": _ADVANCED}),
+    ("task_judge_chars", "How much of a long task's action log the night's judge reads when deciding how it turned "
+                         "out (its first actions and as many of its last as fit)", {"when": _ADVANCED}),
     ("night_judge", "Which model makes the night's one-token judgments (supersession, task outcomes, replay): the "
                     "fast decider, or the night model", {"when": _ADVANCED, "choices": ["decider", "night"]}),
     ("header_roles", "Whose lines get model-written context headers at night: everyone's, or only the user's "
