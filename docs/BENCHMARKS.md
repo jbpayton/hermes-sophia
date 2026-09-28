@@ -283,7 +283,8 @@ From that single readout:
 
 - **The passed-dates mark holds up:** stale follow-ups 5 → 8 of 8, and plans whose outcome was never told 4 → 7 of 8.
 - **The split's near-miss gain from development did not repeat**, and its two-line cost did: a cancelled concert was answered "yes" in 5 of 8 lives. It stays opt-in.
-- **Near-miss providers are still the weak spot:** 2 of 8 "which dermatologist do I see?" were answered with another doctor's name, under every setting.
+- **Near-miss providers are still the weak spot for the 9B:** 2 of 8 "which dermatologist do I see?" were answered with another doctor's name, under every setting.
+- **With the 27B as reader** (`bench/run_almanac_v02_r27.sh`, same memories, 9B judge): 0.996. The near-miss provider was right 8 of 8, the cancelled plan 8 of 8, and the move count 8 of 8. The one miss was a stale follow-up where the reader didn't guess what "it" meant and said so. The split scored the same (0.996; 1 won, 1 lost), so it stays opt-in.
 
 ### Serving the decider faster
 
