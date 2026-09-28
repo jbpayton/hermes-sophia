@@ -149,3 +149,12 @@ def test_long_texts_are_embedded_from_their_start(engine, fake):
     fake.embed = lambda texts, *a, **k: (seen.extend(texts), orig(texts, *a, **k))[1]
     engine.embed(["x" * 20000, "short"])
     assert len(seen[0]) == engine.cfg["embed_max_chars"] and seen[1] == "short"
+
+
+def test_wal_only_where_sqlite_is_free_of_the_wal_reset_bug(tmp_path):
+    from hermes_sophia.store import Store, wal_safe
+    assert not wal_safe((3, 45, 3)) and not wal_safe((3, 51, 2)) and not wal_safe((3, 50, 4))
+    assert wal_safe((3, 51, 3)) and wal_safe((3, 50, 7)) and wal_safe((3, 44, 6)) and wal_safe((3, 53, 0))
+    st = Store(tmp_path / "s.db")
+    mode = st.conn.execute("PRAGMA journal_mode").fetchone()[0]
+    assert mode == ("wal" if wal_safe() else "delete")

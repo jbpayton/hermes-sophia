@@ -151,6 +151,14 @@ class VectorIndex:
         return {i: float(self.mat[self.pos[i]] @ q) for i in ids if i in self.pos}
 
 
+def wal_safe(version: Tuple[int, ...] = sqlite3.sqlite_version_info) -> bool:
+    """SQLite's WAL-reset bug corrupts a WAL database written by several connections at once: versions 3.7.0 to
+    3.51.2, fixed in 3.51.3 and backported to 3.50.7 and 3.44.6 (https://sqlite.org/wal.html#walresetbug). The same
+    rule Hermes uses for its own databases."""
+    v = tuple(version[:3])
+    return v < (3, 7, 0) or v >= (3, 51, 3) or (3, 50, 7) <= v < (3, 51, 0) or (3, 44, 6) <= v < (3, 45, 0)
+
+
 class Store:
     def __init__(self, path: str | Path):
         self.path = Path(path)
@@ -159,9 +167,13 @@ class Store:
         self.conn.row_factory = sqlite3.Row
         self.lock = threading.RLock()
         with self.lock:
-            self.conn.execute("PRAGMA journal_mode=WAL")
             self.conn.execute("PRAGMA busy_timeout=30000")
-            self.conn.execute("PRAGMA synchronous=NORMAL")
+            # WAL only where SQLite is free of the WAL-reset bug; a store already in WAL stays WAL, because switching
+            # it while another process (the gateway, a night) holds it would lose that process's commits
+            mode = self.conn.execute("PRAGMA journal_mode").fetchone()[0]
+            if mode != "wal" and wal_safe():
+                mode = self.conn.execute("PRAGMA journal_mode=WAL").fetchone()[0]
+            self.conn.execute("PRAGMA synchronous=NORMAL" if mode == "wal" else "PRAGMA synchronous=FULL")
             self.conn.executescript(SCHEMA)
             self.conn.commit()
         self._indexes: Dict[Tuple[str, str], VectorIndex] = {}

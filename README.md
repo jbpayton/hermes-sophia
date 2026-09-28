@@ -329,7 +329,7 @@ memory:
     sleep_model: qwen/qwen3.8-27b           # sleep_url / embed_url default to lmstudio_url
 ```
 
-`hermes sophia status` shows where each job actually runs. Every setting is described in [docs/CONFIGURATION.md](docs/CONFIGURATION.md). The data lives in `$HERMES_HOME/plugin-data/sophia/sophia.db` (SQLite, WAL).
+`hermes sophia status` shows where each job actually runs. Every setting is described in [docs/CONFIGURATION.md](docs/CONFIGURATION.md). The data lives in `$HERMES_HOME/plugin-data/sophia/sophia.db` (SQLite). It uses WAL only where the linked SQLite is free of the [WAL-reset bug](https://sqlite.org/wal.html#walresetbug) (3.51.3 and later, or the 3.50.7 and 3.44.6 backports), the same rule Hermes applies to its own databases; otherwise it uses a rollback journal. An existing WAL store is left in WAL, because switching it while the gateway or a night holds it would lose their commits. To switch one, stop the gateway first.
 
 ## CLI
 
