@@ -54,6 +54,24 @@
   function trunc(s, n) { s = s || ""; return s.length > n ? s.slice(0, n - 1) + "…" : s; }
   function sentence(f) { return (f || []).filter(Boolean).join(" "); }
   function capital(s) { s = s || ""; return s.charAt(0).toUpperCase() + s.slice(1); }
+  var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  function when(h) {       // "2026-09-06/2026-09-08" -> "Sep 6 – 8"; "2026-08-17T09:30" -> "Aug 17, 09:30"; "2026-09" -> "Sep 2026"
+    if (!h) return "";
+    var thisYear = new Date().getFullYear();
+    function one(x) {
+      var m = /^(\d{4})-(\d\d)(?:-(\d\d))?(?:T(\d\d:\d\d))?$/.exec(x);
+      if (!m) return null;
+      var mon = MONTHS[+m[2] - 1];
+      if (!m[3]) return { text: mon + " " + m[1], y: m[1], mon: mon };
+      return { text: mon + " " + (+m[3]) + (+m[1] !== thisYear ? ", " + m[1] : "") + (m[4] ? ", " + m[4] : ""), y: m[1], mon: mon, d: +m[3] };
+    }
+    var parts = String(h).split("/");
+    var a = one(parts[0]), b = parts[1] ? one(parts[1]) : null;
+    if (!a) return h;
+    if (!parts[1]) return a.text;
+    if (!b) return a.text + " – " + parts[1];
+    return a.mon === b.mon && a.y === b.y && b.d ? a.text + " – " + b.d : a.text + " – " + b.text;
+  }
   function nightDate(id) {
     var m = /^(\d{4})(\d\d)(\d\d)-(\d\d)(\d\d)/.exec(id || "");
     if (!m) return id === "manual" ? "by hand" : (id || "");
@@ -323,7 +341,10 @@
   var SPEAKER_COLORS = ["var(--sm-violet)", "var(--sm-cyan)", "var(--sm-orchid)", "var(--sm-green)", "var(--sm-amber)", "var(--sm-grey)", "var(--sm-quiet)"];
   function InMemory(p) {
     var z = p.sizes;
-    var parts = z.speakers.map(function (s, i) { return { label: s[0], v: s[1], color: SPEAKER_COLORS[i % SPEAKER_COLORS.length] }; });
+    var fixed = { "Memory notes": "var(--sm-green)", "Web": "var(--sm-amber)", "Tool steps": "var(--sm-grey)", "Others": "var(--sm-orchid)" };
+    fixed[p.user] = "var(--sm-violet)";
+    fixed[p.agent] = "var(--sm-cyan)";
+    var parts = z.speakers.map(function (s, i) { return { label: s[0], v: s[1], color: fixed[s[0]] || SPEAKER_COLORS[i % SPEAKER_COLORS.length] }; });
     return h(Card, { title: "What's in memory" },
       h("div", { className: "sm-stats" },
         [[z.lines, "lines kept verbatim"], [z.facts, "facts"], [z.entities, "people, places, things"], [z.tasks, "task cards"]].map(function (x) {
@@ -372,11 +393,17 @@
       kind = ["A plan with no outcome", "var(--sm-amber)"];
       title = sentence(it.fact);
       var src = (it.sources || [])[0];
-      detail = (it.happens ? "Planned for " + it.happens + ". " : "") + "The date passed and nobody said whether it happened.";
+      detail = (it.happens ? "Planned for " + when(it.happens) + ". " : "") + "The date passed and nobody said whether it happened.";
       extra = src ? h("div", { className: "sm-q-src" }, h(Quote, null, trunc(src.text, 220)), h("div", { className: "sm-src" }, speakerLabel(src) + " · " + stamp(src.said))) : null;
       actions = [["It happened", true, function () { act(post("/plan", { fact_id: it.id, outcome: "happened" }), "Marked as happened"); }],
                  ["It didn’t", false, function () { act(post("/plan", { fact_id: it.id, outcome: "didnt" }), "Marked as didn’t happen"); }],
                  ["Leave", false, function () { review("Left unconfirmed"); }]];
+    } else if (it.type === "prompt_injection") {
+      kind = ["Kept out of memory", "var(--sm-cyan)"];
+      title = "A web page tried to give the assistant instructions";
+      detail = (it.url || "A page") + " was recognised" + (it.p != null ? " (" + it.p.toFixed(2) + ")" : "") +
+        " and is kept out of recall from now on. Recalls from before the night may have used it; the Recall view shows where.";
+      actions = [["Seen", false, function () { review("Noted"); }]];
     } else if (it.type === "recall_miss") {
       kind = ["Recall couldn't find it again", "var(--sm-cyan)"];
       title = it.question || sentence(it.fact);
@@ -453,12 +480,17 @@
       case "plan_resolved": return ["“" + sentence(d.fact) + "” " + (d.outcome === "happened" ? "happened" : "didn’t happen"), d.reason];
       case "reviewed": return ["Looked at and left as it is", d.item];
       case "undone": return ["Undid change #" + d.journal_id, ""];
-      case "canonical_relation": return ["“" + (d.relation || "(empty)") + "” became a known relation", d.instances + " uses"];
-      case "task_succeeded": return ["Task card: " + d.goal, d.steps + " steps"];
+      case "canonical_relation": return ["“" + (d.relation || "is") + "” became a known relation", d.instances + " uses"];
+      case "task_succeeded": return ["Task card: " + d.goal, d.steps + (d.steps === 1 ? " step" : " steps")];
       case "recall_miss": return ["Recall missed: " + d.question, ""];
+      case "prompt_injection": return ["A web page tried to instruct the assistant: " + d.url, "kept out of recall · " + d.p];
+      case "dropped": return ["Web page kept out of recall: " + d.url, d.p >= 0.6 ? "mostly boilerplate" : ""];
+      case "dropped_error_payload": return ["Web page was an error page: " + d.url, "kept out of recall"];
       case "failed": return ["Step " + e.step + " failed", trunc((d && d.error) || "", 120)];
       case "yielded": return ["The night yielded", String(e.detail)];
-      default: return [e.kind.replace(/_/g, " "), typeof d === "string" ? d : ""];
+      default:
+        if (/^task_/.test(e.kind)) return ["Task card (" + e.kind.slice(5).replace(/_/g, " ") + "): " + (d.goal || ""), d.steps ? d.steps + (d.steps === 1 ? " step" : " steps") : ""];
+        return [e.kind.replace(/_/g, " "), typeof d === "string" ? d : ""];
     }
   }
 
@@ -501,7 +533,7 @@
     return h("div", { className: "sm-overview" },
       h(NowStrip, { now: p.now, go: p.go }),
       ov.error && !d ? h(Failed, { error: ov.error, retry: ov.reload }) : !d ? h(Loading) :
-      h("div", { className: "sm-grid3" }, h(LastNight, { night: d.night }), h(InMemory, { sizes: d.sizes }), h(RecallWeek, { recall: d.recall })),
+      h("div", { className: "sm-grid3" }, h(LastNight, { night: d.night }), h(InMemory, { sizes: d.sizes, user: d.user, agent: d.agent }), h(RecallWeek, { recall: d.recall })),
       h("div", { className: "sm-grid3" }, h(Queue, { go: p.go }), h(Changes, null)));
   }
 
@@ -615,13 +647,20 @@
       edges.forEach(function (e) { ids[e.s] = true; ids[e.o] = true; });
       var nodes = data.nodes.filter(function (n) { return ids[n.id]; });
       var ties = together ? data.together.filter(function (t) { return ids[t.a] && ids[t.b]; }) : [];
-      var seen = {}, links = [];
+      // a hub's facts sit farther out the more it has, alternating over three rings so their labels don't collide
+      var seen = {}, links = [], degree = {}, nth = {};
+      edges.forEach(function (e) { degree[e.s] = (degree[e.s] || 0) + 1; degree[e.o] = (degree[e.o] || 0) + 1; });
       edges.forEach(function (e) {
         var key = e.s < e.o ? e.s + "|" + e.o : e.o + "|" + e.s;
         if (seen[key]) return;
         seen[key] = true;
         var hub = byId[e.s].subject && byId[e.o].subject;
-        links.push({ a: e.s, b: e.o, len: hub ? 110 : 30 + radius(byId[e.s]) + radius(byId[e.o]), k: hub ? 0.02 : 0.08 });
+        var owner = (degree[e.s] || 0) >= (degree[e.o] || 0) ? e.s : e.o, deg = degree[owner] || 0;
+        var spread = Math.min(200, 2.2 * deg);
+        nth[owner] = (nth[owner] || 0) + 1;
+        var ring = deg > 20 ? (nth[owner] % 3) * 46 : 0;
+        links.push({ a: e.s, b: e.o, len: hub ? 110 + spread * 1.4 : 30 + radius(byId[e.s]) + radius(byId[e.o]) + spread + ring,
+                     k: hub ? 0.02 : 0.08 });
       });
       ties.forEach(function (t) { links.push({ a: t.a, b: t.b, len: 220, k: 0.004 * Math.min(t.n, 5) }); });
       return { nodes: nodes, edges: edges, links: links, ties: ties };
@@ -652,6 +691,11 @@
       var id = focus.current;
       if (!id || !laid) return;
       focus.current = null;
+      if (!wide) {                 // phones: centre it at a readable size above the panel; pan or pinch for the rest
+        var q = pos.current[id];
+        if (q && size.w) setView({ k: 0.9, x: size.w / 2 - 0.9 * q.x, y: Math.max(180, size.h - 170) / 2 - 0.9 * q.y });
+        return;
+      }
       var ids = [id];
       shown.edges.forEach(function (e) { if (e.s === id) ids.push(e.o); else if (e.o === id) ids.push(e.s); });
       fitTo(ids, 1.6);
@@ -731,9 +775,11 @@
       }
       if (!Object.keys(ptrs.current).length) gesture.current = null;
     }
+    var picked = useRef(0);
     function pick(id) {
       var n = byId[id];
       if (!n) return;
+      picked.current = Date.now();
       if (sel === id && n.subject) {
         setExpanded(function (e) { return e.indexOf(id) >= 0 ? e.filter(function (x) { return x !== id; }) : e.concat([id]); });
         return;
@@ -853,7 +899,9 @@
       h("div", { className: "sm-chips-row" }, filterEls),
       h("div", { className: "sm-graph-canvas", ref: boxRef }, svg, toolbar),
       extras,
-      detail && h("section", { className: cx("sm-sheet", !sheetOpen && "sm-sheet-folded"), "aria-label": "Selected" },
+      detail && h("section", { className: cx("sm-sheet", !sheetOpen && "sm-sheet-folded"), "aria-label": "Selected",
+        // the click a phone sends after a tap lands on whatever just appeared under the finger: ignore it
+        onClickCapture: function (e) { if (Date.now() - picked.current < 450) { e.stopPropagation(); e.preventDefault(); } } },
         h("button", { type: "button", className: "sm-sheet-handle", "aria-label": sheetOpen ? "Fold the panel" : "Open the panel",
           onClick: function () { sheetS[1](!sheetOpen); } }, h("span", null)),
         detail));
@@ -880,7 +928,7 @@
               e.s === n.id ? null : " ",
               h("span", { className: "sm-rel" }, e.relation), " ",
               e.s === n.id ? h("button", { type: "button", className: "sm-link", onClick: function () { p.pick(other); } }, o ? o.label : other) : h("span", { className: "sm-muted" }, "(this)"),
-              e.happens ? h("span", { className: "sm-muted" }, " · " + e.happens) : null));
+              e.happens ? h("span", { className: "sm-muted" }, " · " + when(e.happens)) : null));
         }));
       }, [])));
   }
@@ -925,7 +973,7 @@
     return h("div", { className: "sm-fact" },
       h("div", { className: "sm-fact-head" },
         h(Badge, { group: group }),
-        h("div", { className: "sm-fact-text" }, sentence(f.fact), f.happens ? h("span", { className: "sm-muted" }, " · " + f.happens) : null),
+        h("div", { className: "sm-fact-text" }, sentence(f.fact), f.happens ? h("span", { className: "sm-muted" }, " · " + when(f.happens)) : null),
         h(IconBtn, { icon: "more", label: "Correct this fact", onClick: function () { ctx.correct({ fact: f, window: src }); } })),
       src && h(Quote, null, trunc(src.text, 520)),
       src && h("div", { className: "sm-src" }, speakerLabel(src) + " · " + stamp(src.said) + (f.sources.length > 1 ? " · and " + (f.sources.length - 1) + " more" : "")),
@@ -972,7 +1020,7 @@
       h("header", { className: "sm-page-head" },
         h("div", null,
           h("h2", { className: "sm-page-title" }, d.name),
-          h("div", { className: "sm-page-meta" }, [roleLabel(d.role, true), d.fact_count + " facts", d.mentions.length + (d.mentions.length >= 60 ? "+" : "") + " mentions",
+          h("div", { className: "sm-page-meta" }, [d.role !== "thing" ? roleLabel(d.role, true) : null, d.fact_count + " fact" + (d.fact_count === 1 ? "" : "s"), d.mentions.length + (d.mentions.length >= 60 ? "+" : "") + " mentions",
             d.page_built ? "page built " + nightDate(d.page_built) : null].filter(Boolean).join(" · "))),
         h(Btn, { onClick: function () { p.go("graph", d.id); } }, "Show in graph")),
       h("div", { className: "sm-page-body" },
@@ -998,7 +1046,7 @@
           d.linked.length ? h("section", { className: "sm-page-sec" },
             h("h3", { className: "sm-h3" }, "Linked"),
             h("ul", { className: "sm-linked" }, d.linked.map(function (l, i) {
-              var inner = [h("span", { key: "n", className: "sm-linked-name" }, l.name), h("span", { key: "r", className: "sm-muted" }, trunc(l.relation, 40))];
+              var inner = [h("span", { key: "n", className: "sm-linked-name" }, l.name), h("span", { key: "r", className: "sm-muted" }, trunc((l.relations || [l.relation]).join(" · "), 80))];
               return h("li", { key: l.id + i }, l.entity ? h("button", { type: "button", className: "sm-linked-item", onClick: function () { p.go("pages", l.id); } }, inner)
                 : h("div", { className: "sm-linked-item sm-linked-plain" }, inner));
             }))) : null,
@@ -1117,7 +1165,7 @@
   function CorrectSheet(p) {
     var t = p.target, ctx = useContext(Ctx);
     var opts = [];
-    if (t.window && (!t.only || t.only === "relabel")) opts.push(["relabel", "Someone else said this", "Relabel who said the whole message; facts drawn from it are re-derived tonight."]);
+    if (t.window && (!t.only || t.only === "relabel")) opts.push(["relabel", "Someone else said this", "Relabel who said the whole message. Facts already drawn from it don't change: retract any that are wrong."]);
     if (t.fact && !t.only) opts.push(["retract", "This fact is wrong: retract it", "It stops being recalled. The words it came from stay on record."]);
     if (t.window && (!t.only || t.only === "drop")) opts.push(["drop", "Keep this line out of recall", "For lines that are true but shouldn't come up."]);
     var optS = useState(opts.length === 1 ? opts[0][0] : null), opt = optS[0];

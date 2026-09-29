@@ -321,6 +321,11 @@ def queue(path: str | Path, cfg: Dict[str, Any], plans: int = 12) -> Dict[str, A
                 if b:
                     out.append({"key": f"f:{f['id']}", "type": "plan", **b})
         if last.get("night_id"):
+            for r in c.execute("SELECT id, detail FROM journal WHERE night_id=? AND kind='prompt_injection'", (last["night_id"],)):
+                if f"j:{r['id']}" not in reviewed:
+                    d = _j(r["detail"], {}) or {}
+                    out.append({"key": f"j:{r['id']}", "type": "prompt_injection", "journal_id": r["id"],
+                                "url": d.get("url"), "p": d.get("p")})
             for r in c.execute("SELECT id, detail FROM journal WHERE night_id=? AND kind='recall_miss'", (last["night_id"],)):
                 if f"j:{r['id']}" not in reviewed:
                     d = _j(r["detail"], {}) or {}
@@ -429,12 +434,14 @@ def entity(path: str | Path, cfg: Dict[str, Any], key: str) -> Optional[Dict[str
         mentions = [_window_brief(w, 600) for w in sorted(rows.values(), key=lambda w: -(w["said"] or 0))[:60]]
         view = c.execute("SELECT body, built_night FROM views WHERE key=?", (f"entity:{key}",)).fetchone()
         known = {norm_entity(r["name"]) for r in c.execute("SELECT name FROM entities")}
-    linked = Counter()
+    linked: Dict[str, Dict[str, Any]] = {}
     for f in facts:
         s, o = norm_entity(f["fact"][0]), norm_entity(f["fact"][2])
         other = o if s == key else s
         if other != key:
-            linked[(other, f["fact"][2] if s == key else f["fact"][0], f["fact"][1])] += 1
+            ln = linked.setdefault(other, {"name": f["fact"][2] if s == key else f["fact"][0], "relations": []})
+            if f["fact"][1] not in ln["relations"]:
+                ln["relations"].append(f["fact"][1])
     groups = {"now": [], "planned": [], "before": [], "check": []}
     for f in facts:
         if f["status"] == "unconfirmed":
@@ -447,8 +454,8 @@ def entity(path: str | Path, cfg: Dict[str, Any], key: str) -> Optional[Dict[str
             groups["now"].append(f)
     return {"id": key, "name": name, "role": roles.get(key, "thing"), "aliases": _j(e["aliases"], []) if (e["aliases"] or "").startswith("[") else [],
             "fact_count": len(facts), "groups": groups, "mentions": mentions,
-            "linked": [{"id": k, "name": n, "relation": rel, "n": cnt, "entity": k in known}
-                       for (k, n, rel), cnt in linked.most_common(24)],
+            "linked": [{"id": k, "name": v["name"], "relation": v["relations"][0], "relations": v["relations"], "entity": k in known}
+                       for k, v in sorted(linked.items(), key=lambda kv: -len(kv[1]["relations"]))[:24]],
             "page_built": view["built_night"] if view else None}
 
 
