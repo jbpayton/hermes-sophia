@@ -1,5 +1,7 @@
 # Sophia
 
+<p align="center"><img src="docs/img/hero.webp" width="100%" alt="hermes-sophia — memory for Hermes Agent: Sophia and the Hermes Agent mascot at a desk, working over a glowing graph of memories"></p>
+
 **Memory for [Hermes Agent](https://github.com/NousResearch/hermes-agent) that injects what's relevant before every reply, answers when the agent asks, and organizes itself while you sleep.**
 
 Sophia is a Hermes memory provider. Memory reaches the agent in three ways:
