@@ -352,6 +352,36 @@ class Store:
                (night_id, step, kind, json.dumps(detail, default=str),
                 json.dumps(undo, default=str) if undo is not None else None, time.time()))
 
+    # --------------------------------------------------------- corrections
+    # Only what was derived can be corrected: who a line is attributed to, and extracted facts. The verbatim text is
+    # the record and is never changed. Every correction is journaled with its reason and can be undone.
+    def relabel_speaker(self, window_ids: Sequence[str], speaker: str, reason: str, by: str = "manual") -> int:
+        rows = self.q(f"SELECT id, speaker FROM windows WHERE id IN ({','.join('?' * len(window_ids))})",
+                      list(window_ids)) if window_ids else []
+        rows = [r for r in rows if r["speaker"] != speaker]
+        if not rows:
+            return 0
+        olds = {}
+        for r in rows:
+            olds.setdefault(r["speaker"], []).append(r["id"])
+        for old, ids in olds.items():
+            self.x(f"UPDATE windows SET speaker=? WHERE id IN ({','.join('?' * len(ids))})", [speaker, *ids])
+            self.journal("manual", "correct", "speaker_corrected",
+                         {"windows": len(ids), "from": old, "to": speaker, "reason": reason, "by": by,
+                          "first": ids[0]},
+                         undo={"windows": ids, "speaker": old})
+        return len(rows)
+
+    def retract_fact(self, fact_id: str, reason: str, by: str = "manual") -> bool:
+        f = self.one("SELECT id, subject, relation, object, status FROM facts WHERE id=?", (fact_id,))
+        if not f or f["status"] == "retracted":
+            return False
+        self.x("UPDATE facts SET status='retracted' WHERE id=?", (fact_id,))
+        self.journal("manual", "correct", "fact_retracted",
+                     {"fact": [f["subject"], f["relation"], f["object"]], "reason": reason, "by": by},
+                     undo={"fact": fact_id, "status": f["status"]})
+        return True
+
     def job_done(self, night_id: str, step: str, item: str) -> bool:
         r = self.one("SELECT status FROM jobs WHERE night_id=? AND step=? AND item=?", (night_id, step, item))
         return bool(r and r["status"] == "done")

@@ -193,7 +193,8 @@ class Capture:
                 if is_new:
                     if full:
                         ws = self._windows_for(session_id, role, content, _said(m, now), h, prev, recent_names, injected,
-                                               speaker=(m.get("name") or None) if role == "user" else None)
+                                               speaker=(m.get("name") or self.prefixed_speaker(content))
+                                               if role == "user" else None)
                         if role == "assistant" and ground and ws and not self._grounded(session_id, turn_user,
                                                                                        turn_tools, content):
                             for w in ws:
@@ -304,6 +305,19 @@ class Capture:
         except Exception as ex:                            # can't tell: keep it (it is still labelled assistant)
             self.e.set_degraded("decider", str(ex))
             return True
+
+    def prefixed_speaker(self, content: str) -> Optional[str]:
+        """A user-role message that opens with "**Name:**" or "Name:" for one of other_speakers was written by them
+        (relayed through the user's channel), not by the user."""
+        names = self.e.cfg.get("other_speakers") or []
+        if isinstance(names, str):
+            names = [n.strip() for n in names.split(",") if n.strip()]
+        m = re.match(r"\s*\**\s*([^*:\n]{1,40}?)\s*\**\s*:", content or "")
+        if m:
+            for n in names:
+                if m.group(1).strip().lower() == n.lower():
+                    return n
+        return None
 
     def _windows_for(self, session_id, role, content, said, h, prev, recent_names, injected,
                      speaker: Optional[str] = None) -> List[Dict[str, Any]]:

@@ -4,6 +4,7 @@ from __future__ import annotations
 import logging
 import queue
 import threading
+import time
 from typing import Any, Dict, List, Optional
 
 from agent.memory_provider import MemoryProvider, RecallStatus, spawn_context_thread
@@ -82,7 +83,10 @@ class SophiaProvider(MemoryProvider):
 
     # ---------------------------------------------------------------- prompt
     def system_prompt_block(self) -> str:
-        return SYSTEM_NOTE if self.engine else ""
+        if not self.engine:
+            return ""
+        note = self.engine.morning_note()
+        return SYSTEM_NOTE + ("\n" + note if note else "")
 
     def prefetch(self, query: str, *, session_id: str = "") -> str:
         if not self.engine or not query:

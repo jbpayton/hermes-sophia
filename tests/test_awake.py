@@ -471,3 +471,58 @@ def test_choice_gate_without_the_decider_still_injects_a_strong_match(engine, fa
     engine.cfg["skip_gate"] = 0.999                            # nothing that strong: nothing injected
     text, _ = engine.recall.prefetch("Where did Dr. Alvarez move her clinic?", "s9")
     assert text == ""
+
+
+def test_a_relayed_message_is_attributed_to_whoever_wrote_it(engine):
+    """Another agent relaying through the user's channel ("**Claude:** ...") is labelled as itself, not the user."""
+    engine.cfg["other_speakers"] = ["Claude"]
+    engine.capture.process_messages("relay", [
+        {"role": "user", "content": "**Claude:** Welcome to the new memory. I'll tell Joey."},
+        {"role": "assistant", "content": "Thank you!"},
+        {"role": "user", "content": "Claude: one more check from me."},
+        {"role": "assistant", "content": "Sure."},
+        {"role": "user", "content": "Rachel: this name isn't configured, so it stays the user's line."},
+        {"role": "assistant", "content": "Okay."}])
+    rows = {r["text"][:12]: r["speaker"] for r in engine.store.q(
+        "SELECT text, speaker FROM windows WHERE session_id='relay' AND flags NOT LIKE '%assistant%'")}
+    assert rows["**Claude:** "] == "Claude" and rows["Claude: one "] == "Claude"
+    assert rows["Rachel: this"] == engine.cfg["user_name"]
+
+
+def test_a_mislabelled_line_can_be_corrected_and_undone(engine):
+    """sophia_correct relabels a whole message, journaled with its reason and an undo; the text never changes."""
+    engine.capture.process_messages("s", [{"role": "user", "content": "Welcome to the new memory. I'll tell Joey."},
+                                          {"role": "assistant", "content": "Thanks."}])
+    w = engine.store.one("SELECT id, text, speaker FROM windows WHERE session_id='s' AND flags NOT LIKE '%assistant%'")
+    out = json.loads(engine.tools.dispatch("sophia_correct", {"item_id": w["id"], "speaker": "Claude",
+                                                              "reason": "it says 'I'll tell Joey', so Joey didn't write it"}))
+    assert out["ok"] and out["windows_relabelled"] >= 1
+    after = engine.store.one("SELECT text, speaker FROM windows WHERE id=?", (w["id"],))
+    assert after["speaker"] == "Claude" and after["text"] == w["text"]
+    j = engine.store.one("SELECT detail, undo FROM journal WHERE kind='speaker_corrected'")
+    assert "tell Joey" in j["detail"] and json.loads(j["undo"])["speaker"] == w["speaker"]
+    assert "error" in json.loads(engine.tools.dispatch("sophia_correct", {"item_id": w["id"], "speaker": "X",
+                                                                           "reason": ""}))
+
+
+def test_a_retracted_fact_leaves_recall(engine):
+    import time as _t
+    engine.store.x("""INSERT INTO facts(id,subject,relation,object,subject_norm,relation_norm,modality,status,valid_from,
+                      created_at) VALUES('f1','Joey','has reservations for','Shibuya Sky','joey','has reservations for',
+                      'asserted','active',?,?)""", (_t.time(), _t.time()))
+    out = json.loads(engine.tools.dispatch("sophia_correct", {"item_id": "f1", "retract": True,
+                                                              "reason": "a false supersession left it wrong"}))
+    assert out["ok"] and engine.store.one("SELECT status FROM facts WHERE id='f1'")["status"] == "retracted"
+    assert json.loads(engine.store.one("SELECT undo FROM journal WHERE kind='fact_retracted'")["undo"])["status"] == "active"
+
+
+def test_the_morning_after_a_night_says_what_it_did(engine):
+    import time as _t
+    engine.store.set_meta("last_sleep", {"status": "complete", "finished": _t.time() - 3600,
+                                         "stats": {"relate": {"new_facts": 261}, "tasks": {"tasks": 5},
+                                                   "integrate": {"superseded": 1}}})
+    note = engine.morning_note()
+    assert "261 new facts" in note and "5 task cards" in note and "1 facts marked as changed" in note
+    engine.store.set_meta("last_sleep", {"status": "yielded: the night model stayed busy", "finished": _t.time()})
+    assert "deferred" in engine.morning_note() and "stayed busy" in engine.morning_note()
+    assert engine.morning_note(now=_t.time() + 3 * 86400) == ""        # an old night isn't news

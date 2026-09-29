@@ -19,7 +19,7 @@ def _print(obj):
 def cmd(args):
     sub = getattr(args, "sophia_cmd", None)
     if sub is None:
-        print("usage: hermes sophia <status|sleep|journal|recall|undo|reconsolidate|ingest-history>")
+        print("usage: hermes sophia <status|sleep|journal|recall|undo|relabel|reconsolidate|ingest-history>")
         return
     e = _engine()
     try:
@@ -63,6 +63,10 @@ def cmd(args):
                 print(f"journal entry {args.journal_id} has nothing to undo")
             else:
                 u = json.loads(row["undo"])
+                if "windows" in u:                      # a speaker correction: put the old label back
+                    ids = u["windows"]
+                    e.store.x(f"UPDATE windows SET speaker=? WHERE id IN ({','.join('?' * len(ids))})",
+                              [u["speaker"], *ids])
                 if "fact" in u:
                     e.store.x("UPDATE facts SET status=?, valid_to=NULL, superseded_by=NULL WHERE id=?",
                               (u.get("status", "active"), u["fact"]))
@@ -70,6 +74,12 @@ def cmd(args):
                               (u["fact"], row["night_id"]))
                 e.store.journal("manual", "undo", "undone", {"journal_id": args.journal_id, "detail": row["detail"]})
                 print(f"undone: {row['kind']} {row['detail'][:160]}")
+        elif sub == "relabel":
+            rows = e.store.q("SELECT id FROM windows WHERE session_id=? AND speaker=? AND flags NOT LIKE '%assistant%'",
+                             (args.session, args.from_speaker))
+            n = e.store.relabel_speaker([r["id"] for r in rows], args.to_speaker, args.reason)
+            print(f"relabelled {n} windows in {args.session}: {args.from_speaker} -> {args.to_speaker} "
+                  f"(journaled; `sophia journal --night manual` shows it, `sophia undo <id>` reverts)")
         elif sub == "reconsolidate":
             n = e.store.one("SELECT COUNT(*) AS n FROM facts")["n"]
             for sql in ("DELETE FROM facts", "DELETE FROM fact_sources", "DELETE FROM entities", "DELETE FROM relations",
@@ -117,6 +127,12 @@ def register_cli(subparser) -> None:
     p.add_argument("-k", type=int, default=10)
     p = subs.add_parser("undo", help="Revert a supersession, merge or plan change recorded in the journal")
     p.add_argument("journal_id", type=int)
+    p = subs.add_parser("relabel", help="Correct who a session's lines are attributed to (journaled, undoable; the "
+                                        "text itself is never changed)")
+    p.add_argument("--session", required=True)
+    p.add_argument("--from", dest="from_speaker", required=True)
+    p.add_argument("--to", dest="to_speaker", required=True)
+    p.add_argument("--reason", required=True)
     p = subs.add_parser("reconsolidate", help="Drop derived facts; the next sleep rebuilds them from the raw record")
     p.add_argument("--headers", action="store_true", help="Also redo model context headers")
     p = subs.add_parser("ingest-history", help="Capture past Hermes sessions from the session store")

@@ -63,6 +63,25 @@ class Engine:
     def now(self) -> float:
         return self.now_override or time.time()
 
+    def morning_note(self, now: Optional[float] = None, within_h: float = 36) -> str:
+        """What the last night did, in a line, for the first sessions after it: so a quiet morning or 200 new facts
+        aren't a surprise. Empty when no night has run lately."""
+        last = self.store.get_meta("last_sleep") or {}
+        fin = last.get("finished")
+        if not fin or (now or time.time()) - fin > within_h * 3600:
+            return ""
+        when = time.strftime("%Y-%m-%d %H:%M", time.localtime(fin))
+        st, status = last.get("stats") or {}, str(last.get("status") or "")
+        if status.startswith("yielded"):
+            return (f"Last memory night ({when}) was deferred: {status.split(':', 1)[-1].strip()}. It picks up where it "
+                    "left off at the next run.")
+        got = [f"{st.get('relate', {}).get('new_facts', 0)} new facts",
+               f"{st.get('tasks', {}).get('tasks', 0)} task cards",
+               f"{st.get('integrate', {}).get('superseded', 0)} facts marked as changed"]
+        head = "complete" if status == "complete" else status
+        return (f"Last memory night ({when}): {head} — {', '.join(got)}. `hermes sophia journal` lists what it changed; "
+                "anything marked undoable can be reverted.")
+
     # ---------------------------------------------------------------- models
     def embed(self, texts: Sequence[str], kind: str = "document"):
         cap = self.cfg["embed_max_chars"]             # the vector only; the stored text is never cut

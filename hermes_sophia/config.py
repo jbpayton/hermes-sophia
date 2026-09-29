@@ -33,6 +33,8 @@ DEFAULTS: Dict[str, Any] = {
     # identity
     "user_name": "user",
     "agent_name": "assistant",
+    "other_speakers": [],             # others who write in your conversations, as "**Name:** ..." or "Name: ..." at
+                                      # the start of a message (another agent relaying through the CLI, say)
     # windowing
     "window_sentences": 3,
     "window_chars": 480,
@@ -119,6 +121,9 @@ _ADVANCED = {"show_advanced": "yes"}
 # (key, description, extra schema attributes). Order is the order setup asks in.
 FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
     ("user_name", "Your name — the speaker label for your lines and the subject of your facts", {}),
+    ("other_speakers", "Others who write in your conversations, recognised by a 'Name:' prefix at the start of their "
+                       "message (comma-separated); their lines are labelled with their name instead of yours",
+     {"when": _ADVANCED}),
     ("agent_name", "The agent's name — the speaker label for its lines", {}),
     ("lmstudio_url", "Default model server URL (LM Studio); every job uses it unless given its own", {}),
     ("embed_model", "Embedding model — every embedding, day and night (nomic-embed-text-v1.5 recommended)", {}),
