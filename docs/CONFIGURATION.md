@@ -4,7 +4,7 @@ Sophia reads the `memory.sophia` section of the active profile's `config.yaml`, 
 
 There are three ways to set a value:
 
-- **`hermes -p <profile> memory setup`**, then pick sophia. It always asks for the basics: names, the default server, and a model for each job. Then it asks two gate questions, whose answers are saved and only affect what setup shows:
+- **`hermes -p <profile> memory setup`**, then pick sophia. It always asks for the basics: names, the model server's URL and type, and a model for each job. Then it asks two gate questions, whose answers are saved and only affect what setup shows:
   - `server_layout: shared | per-job` reveals the per-job server settings;
   - `show_advanced: no | yes` reveals every tuning setting below.
 - **The Hermes dashboard**, which shows the same fields.
@@ -24,7 +24,9 @@ memory:
   memory_enabled: false          # optional: make Sophia the only memory
   user_profile_enabled: false
   sophia:
-    embed_model: nomic-embed     # the identifiers your server shows (`lms ps`)
+    server_url: http://127.0.0.1:8080   # llama-server's default port; LM Studio uses 1234
+    server_type: openai                 # or lmstudio, for LM Studio's own API
+    embed_model: nomic-embed            # the model names your server serves
     decider_model: qwen35-9b
     sleep_model: qwen/qwen3.8-27b
     user_name: Joey
@@ -38,20 +40,24 @@ Sophia has three jobs. Each one has a model and, optionally, its own server:
 | Job | Model key | Server keys | What it does |
 |---|---|---|---|
 | Embeddings | `embed_model` (default `text-embedding-nomic-embed-text-v1.5`) | `embed_url`, `embed_api` | Every embedding, day and night. Sophia adds the nomic `search_query:` / `search_document:` prefixes |
-| Decider | `decider_model` (default `qwen/qwen3.5-9b`) | `decider_url`, `decider_api` | The per-turn check whether to inject. One prefill; only the first token's probabilities are read |
-| Night | `sleep_model` (default `qwen/qwen3.8-27b`) | `sleep_url`, `sleep_api` | Context headers, fact extraction, and the night's judgments (sorting, supersession, replay, rehearsal) |
+| Decider | `decider_model` (default `qwen/qwen3.5-9b`) | `decider_url`, `decider_api` | The per-turn check whether to inject, and the check of each live reply (`ground_check`). By default also the night's one-token judgments (`night_judge`). One prefill; only the first token's probabilities are read |
+| Night | `sleep_model` (default `qwen/qwen3.8-27b`) | `sleep_url`, `sleep_api` | Context headers, fact extraction, task cards and rehearsal questions. With `night_judge: night`, also the night's one-token judgments (sorting, supersession, task outcomes, replay) |
 
-- **`lmstudio_url`** (default `http://127.0.0.1:1234`) is the default server. A job whose `*_url` is `default` or blank uses it.
-- **`*_api`** is the server type:
+Any local server that speaks the OpenAI API works. LM Studio isn't required.
+
+- **`server_url`** is the server every job uses. A job whose `*_url` is `default` or blank uses it.
+- **`server_type`** is how Sophia talks to it. A job whose `*_api` is `default` or blank uses it:
 
   | Type | For | How Sophia talks to it |
   |---|---|---|
-  | `lmstudio` (default) | LM Studio | Logprobs come from `/v1/responses`, because LM Studio's chat endpoint returns none. Reasoning is switched off with `reasoning_effort: none`. Busy status comes from `lms ps` |
   | `openai` | llama-server, vLLM, or any OpenAI-compatible server whose chat endpoint returns `logprobs` | Chat completions with `logprobs` / `top_logprobs`. Reasoning is switched off with `chat_template_kwargs: {enable_thinking: false}`. Busy status comes from llama-server's `/slots` |
+  | `lmstudio` | LM Studio's own API | Logprobs come from `/v1/responses`, because LM Studio's chat endpoint returns none. Reasoning is switched off with `reasoning_effort: none`. Busy status comes from `lms ps` |
+
+- **Older configs.** Earlier versions called the URL `lmstudio_url`, and it is still read when `server_url` is unset. A config that sets neither `server_type` nor `*_api` keeps the old default, `lmstudio`; setup suggests `openai`.
 
 - Jobs that share a server share one client. `hermes sophia status` shows where each job runs.
 
-Example: the decider pinned to its own GPU under llama-server, which was about 1.35× faster in the speed tests, while everything else stays on LM Studio:
+Example: the decider pinned to its own GPU under its own llama-server, while everything else stays on the shared server. In the speed tests this was about 1.35× faster than the decider on LM Studio:
 
 ```yaml
     decider_url: http://127.0.0.1:8081
@@ -65,8 +71,8 @@ Example: the decider pinned to its own GPU under llama-server, which was about 1
 
 | Key | Default | |
 |---|---|---|
-| `sleep_guard_models` | `[sleep_model]` | Before each call, the night waits until these LM Studio models are idle |
-| `lms_cli` | `~/.cache/lm-studio/bin/lms` | Used to read LM Studio's model status |
+| `sleep_guard_models` | `[sleep_model]` | Before each call, the night waits until these models are idle |
+| `lms_cli` | `~/.cache/lm-studio/bin/lms` | LM Studio only: used to read its model status. Set it to `''` on other servers |
 
 When the night server is of type `openai`, the night also waits while that server reports a busy slot. A status that can't be read counts as idle.
 
@@ -82,6 +88,9 @@ hermes sophia sleep --model M [--url U --api openai]
 |---|---|---|
 | `user_name` | `user` | Speaker label for your lines; also the subject of extracted facts |
 | `agent_name` | `assistant` | Speaker label for the agent's lines. These rank below yours and are never mined for facts |
+| `other_speakers` | none | Others who write in your conversations, such as another agent relaying through your channel (comma-separated in setup). A user-role message that opens with `Name:` or `**Name:**` for one of these names is stored as theirs, not yours |
+
+Lines from other speakers are written to the agent, so at night a fact drawn from one must be grounded in the line. If the fact's subject or object is you, the agent or one of the other speakers, that person must be named in the line, or be the speaker writing in the first person ("I", "my"), or be the agent addressed as "you"/"your". Facts that fail are dropped, and the extraction prompt gets a one-line note about these lines whenever a batch contains any. On every line, a fact that only says one of these people *is* the assistant, the user or an agent is dropped as a role, not a fact. `hermes sophia audit-facts` lists stored facts that fail these checks, and `--apply` retracts them (journaled, undoable).
 
 ## Awake: capture
 
@@ -92,7 +101,7 @@ hermes sophia sleep --model M [--url U --api openai]
 | `capture_tools` | `web_extract`, `browser_snapshot`, `browser_navigate` | Tool results that are captured as external sources |
 | `never_capture_substrings` | `vault`, `credential`, `secret`, `password` | A tool whose name contains any of these is never captured |
 | `test_tools` | `terminal`, `shell`, `bash`, `run_command`, `execute_code` | Their output is scanned for pytest outcomes |
-| `full_capture_contexts` | `primary` | Agent contexts captured in full. Other contexts (subagents, cron) record only a short event per task prompt: no conversation windows, no web reads |
+| `full_capture_contexts` | `primary` | Agent contexts captured in full. Other contexts (subagents, cron) record a short event per task prompt and their tool calls (the action log, so they still get task cards), but no conversation windows and no web reads |
 | `echo_threshold` | 0.5 | Shingle containment above which a reply that just repeats injected memory is fenced off as an echo |
 | `ground_check` | on | Each live agent reply that names people, places or numbers is checked by the decider (both option orders). The question is whether every claim it makes about you is in your message, the memory it was given, or the turn's tool results. If not, the reply is kept out of recall. Imported history is not checked, because what was injected then is unknown |
 
@@ -103,8 +112,8 @@ hermes sophia sleep --model M [--url U --api openai]
 | `recall_k` | 50 | Number of candidates fetched |
 | `gate_top` | 10 | Number of candidates the gate looks at |
 | `inject_top` | 50 | How deep in the ranking injection may draw from. It is still bounded by `inject_relative_floor` and `inject_chars` |
-| `skip_gate` | 0.82 | At or above this top-1 cosine, always inject. `gate: decider` then skips the decider; `gate: choice` still asks it, for the split (measured; see `research/embed_thresholds.py`) |
-| `gate` | choice | How Sophia decides what to inject. `choice`: one decider readout with an option per memory. It closes the gate on messages that need nothing about you, and heads the block "possible matches only" when none of the memories fits. `decider`: the older yes/no question, which in a large memory lets nearly everything through. `similarity`: no model call, just the best match's cosine. [Measured](BENCHMARKS.md#the-choice-gate-one-readout-that-gates-and-splits-the-lines) |
+| `skip_gate` | 0.82 | At or above this top-1 cosine, always inject. `gate: decider` then skips the decider; `gate: choice` still asks it, for the whole-block label and, when on, the split (measured; see `research/embed_thresholds.py`) |
+| `gate` | choice | How Sophia decides what to inject. `choice`: one decider readout with an option per memory, plus "nothing needed" and "about you, but none of these fits". It closes the gate on messages that need nothing about you, and heads the block "possible matches only" when "none fits" is at least as likely as all the memories together. `decider`: the older yes/no question, which in a large memory lets nearly everything through. `similarity`: no model call, just the best match's cosine. [Measured](BENCHMARKS.md#the-choice-gate-one-readout-that-gates-and-splits-the-lines) |
 | `gate_general` | 0.8 | `gate: choice`: inject unless "nothing needed" gets at least this probability |
 | `gate_recheck` | 0.05 | `gate: choice`: when "nothing needed" is between this and 1 minus this, and a second reading could still change the decision, read the options again in reverse order and average the two readings. 0 turns it off |
 | `gate_split` | off | `gate: choice`: list the lines the gate vouched for under Relevant and the rest under "Possible matches (less certain; rely on one only if it clearly answers the message)". Off by default: on held-out LoCoMo the reader dropped answers the split had misfiled ([measured](BENCHMARKS.md#the-choice-gate-one-readout-that-gates-and-splits-the-lines)) |
@@ -112,7 +121,7 @@ hermes sophia sleep --model M [--url U --api openai]
 | `gate_threshold` | 0.5 | `gate: decider`: probability needed to inject |
 | `gate_floor` | 0.50 | `gate: similarity`: the best match's cosine needed to inject |
 | `gate_permutations` | 1 | Option orders averaged per gate decision. With 2, both orders are always averaged, cancelling position bias at twice the cost |
-| `junk_floor` | 0.5 | Candidates below this cosine are never shown to the gate |
+| `junk_floor` | 0.5 | Candidates below this cosine are dropped before ranking, unless they matched by keyword |
 | `inject_chars` | 9000 | Size cap for the injected block: about 2,300 tokens at most, and typically 1,900 when memory is relevant. The check injects nothing on unrelated turns. If your model's context is small, lower this and `inject_top` |
 | `inject_relative_floor` | 0.25 | Only inject items within this score of the top item |
 | `inject_order` | time | `time`: still chosen best first, then listed by date under a heading per day. `rank`: best first |
@@ -120,7 +129,7 @@ hermes sophia sleep --model M [--url U --api openai]
 | `fts_weight` | 0.05 | Graded keyword weight: a keyword match adds this × its bm25 score relative to the best match |
 | `time_scope`, `time_scope_bonus` | boost, 0.05 | A date range in the question ("last week", "in March") ranks memories inside it higher. `filter` hides everything outside it instead, which misses facts told later about an earlier month |
 | `show_resolved_dates` | on | Relative time words in injected lines are labelled with the date they meant when said ("last Saturday" = 2023-05-20) |
-| `mark_passed_dates` | on | A resolved date that pointed ahead when it was said, and is now over, adds "now past; this line doesn't say if it happened" ([measured](BENCHMARKS.md#almanac-v02-near-misses-and-stale-plans)) |
+| `mark_passed_dates` | on | A resolved date that pointed ahead when it was said, and is now over, adds "now past; this line doesn't say if it happened" ([measured](BENCHMARKS.md#almanac-v02-near-misses-and-stale-plans)). Separately, and regardless of this setting, each night marks `planned` facts whose date is over as `unconfirmed`, and injected lines show that status |
 | `facts_as` | keys | Extracted facts are extra search keys for the verbatim message they came from. The message ranks and is injected, labelled with its facts. `items` lets facts compete as their own entries, which pushed evidence down in testing |
 | `assistant_penalty`, `max_assistant_items` | 0.06, 2 | Keep the agent's own restatements from crowding out your words |
 | `advice_penalty`, `advice_keeps_questions` | 0.06, on | When you ask for suggestions or advice, the agent's earlier lines rank a further 0.06 lower, and your own earlier questions (which say a lot about you) are not ranked down |
@@ -151,9 +160,12 @@ Conversation links are followed too: a matched message brings what corrects it, 
 | `promote_min_instances` / `promote_min_sessions` | 5 / 2 | Evidence needed before an emergent relation is promoted to canonical |
 | `page_min_facts` | 3 | Minimum facts about an entity before it gets a wiki page |
 | `calibration_min_labels` | 50 | Gold labels needed before decider temperatures are fitted |
-| `supersede_threshold` | 0.85 | Decider probability needed before a newer fact retires an older one. It's high on purpose: a wrong retirement hides a true memory, while a missed one leaves both visible with their dates. Only facts about an ongoing state (asked once per relation) can be retired. On one real memory the 9B retired set-valued states at 0.86–0.90 ("has reservations for" four places, each "replacing" the last); measured real changes score at least 0.92, so 0.92 is the safer setting until relations are also asked whether they hold several values at once |
+| `supersede_threshold` | 0.85 | Decider probability needed before a newer fact retires an older one. It's high on purpose: a wrong retirement hides a true memory, while a missed one leaves both visible with their dates. Apart from negations ("not bringing the Fujifilm") and relations learned to hold one value at a time, only facts about an ongoing state (asked once per relation) can be retired. On one real memory the 9B retired set-valued states at 0.86–0.90 ("has reservations for" four places, each "replacing" the last); measured real changes score at least 0.92, so 0.92 is the safer setting until relations are also asked whether they hold several values at once |
+| `supersede_prescreen` | 0.8 | Each possible change is read once first, in one option order; below this it is settled as no change. At or above it, it gets the careful reading in both orders, which `supersede_threshold` applies to |
+| `night_judge` | decider | Which model makes the night's one-token judgments (sorting, headroom, supersession, whether a relation is a state, task outcomes, replay): `decider`, which is fast and on which every night threshold was measured, or `night`, the night model |
+| `header_roles` | all | Whose lines get model-written context headers at night: `all`, or `user` for every line except the agent's (cheaper when the agent's replies are long; its lines still appear in the prompt as context) |
 | `task_judge_chars` | 6000 | How much of a long task's action log the night's judge reads when deciding how it turned out: its first two actions and as many of its last as fit. A small decider context otherwise rejects long tasks |
-| `night_parallel` | 2 | Night model calls in flight at once. Match the model's parallel slots in LM Studio |
+| `night_parallel` | 2 | Night model calls in flight at once. Match the night model's parallel slots on its server |
 
 ## Timeouts (seconds)
 
@@ -162,7 +174,7 @@ Conversation links are followed too: a matched message brings what corrects it, 
 Hermes gives an external provider's prefetch 8 s in total, so keep `embed_timeout + decider_timeout` comfortably under that on slow hardware. When a model call fails or times out, Sophia records a degraded mode, which `sophia status` shows, and carries on without that model:
 
 - with no embeddings, recall falls back to keyword search;
-- with no decider, nothing is injected;
+- with no decider, only a very strong match (top-1 cosine at or above `skip_gate`) is injected; `gate: similarity` doesn't use the decider at all;
 - capture stores windows without vectors, and the next night fills them in.
 
 ## Serving the decider
@@ -242,5 +254,5 @@ load-on-startup = true
 Start it with `llama-server --host 127.0.0.1 --port 8090 --models-preset models.ini --models-max 3`, for example from a systemd user service. Then:
 
 - **Hermes:** `model.provider: local` and `model.base_url: http://127.0.0.1:8090/v1`. The model names stay the same.
-- **Sophia:** `lmstudio_url: http://127.0.0.1:8090`, with `embed_api`, `decider_api` and `sleep_api` set to `openai`, and `lms_cli: ''`. The night guard then asks the router whether the chat model is busy (`/slots?model=…`), so nights still yield to a live conversation.
+- **Sophia:** `server_url: http://127.0.0.1:8090`, `server_type: openai`, and `lms_cli: ''`. The night guard then asks the router whether the chat model is busy (`/slots?model=…`), so nights still yield to a live conversation.
 - **Only one 27B fits in memory.** Don't load models in LM Studio while the router holds the GPUs.

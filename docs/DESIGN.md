@@ -8,6 +8,8 @@ Status: draft v0.5, 2026-09-23. Targets Hermes Agent v0.21.4 (`~/.hermes/hermes-
 **measured** = from runs on the development box, 2× RTX 3090 (scripts and results in [`research/`](../research/)). **verify** = assumption to
 check in M1. **estimate** = not yet measured. Earlier versions are in [`archive/`](archive/). How the design got here: [STORY.md](STORY.md).
 Implementation: this repository (prototype of M1–M3; §15 lists what is built, simplified, or missing).
+Sections 0–14 are the design as drafted. Where the code has since moved on, §15 says so, and
+[CONFIGURATION.md](CONFIGURATION.md) lists every setting and default as built.
 
 Changes from v0.4: the blind-spot fixes; a representation built for the gaps extraction used to
 paper over — contextual index text, typed spans, a three-clock time model, threads; the
@@ -23,8 +25,9 @@ the agent asking: every turn is captured, associated memory is injected before e
 the store reorganizes itself during sleep. Everything deliberate — deep recall, structured
 queries, browsing the wiki, storing a note — is the agent's choice, through tools.
 
-Two edges, both kept passive by default: sleep's *anticipate* step only warms caches, it never
-surfaces anything unasked; the morning dream-journal line is off unless you turn it on.
+Two edges, both kept passive: sleep's *anticipate* step only warms caches, it never
+surfaces anything unasked; the morning note (one line in the system prompt, for 36 hours after a
+night, saying what it did) reports on the night and surfaces no memory.
 
 ---
 
@@ -106,8 +109,10 @@ Every fact also carries a **modality** (prescribed, because each changes behavio
 - Relative times are pinned to absolute dates at the night typing pass — "next Tuesday" said on
   2026-09-21 becomes 2026-09-29 forever.
 - **Plan lifecycle:** each night, `planned` facts whose *happens* time has passed become
-  `unconfirmed` unless later evidence shows they happened ("we got back from Yosemite") or were
-  cancelled. Recall shows unconfirmed plans as such.
+  `unconfirmed`; the night doesn't yet look for later evidence that they happened ("we got back from
+  Yosemite"). Recall shows unconfirmed plans as such. In the Mindscape tab a person can resolve one
+  as happened (it becomes an asserted fact) or not (`cancelled`: kept, but not recalled as current),
+  journaled and undoable.
 - `hypothetical` and `negated` never become current state; `reported` keeps who said it.
 
 ---
@@ -155,12 +160,16 @@ not by default.
 
 ## 5. Awake
 
-Rule: no generated text on the awake path. Model calls: embeddings (**measured** ~18 ms) and at
-most one decider call per turn (**measured** ~0.3 s).
+Rule: no generated text on the awake path. Model calls: embeddings (**measured** ~18 ms), one
+decider readout before each reply (**measured** ~0.3 s; a second when the choice gate rechecks), and
+in the background one check of each live reply that names people, places or numbers (`ground_check`).
 
 ### 5.1 Capture — every turn, background (`sync_turn`)
 
-1. **Window** user and assistant messages; add the heuristic context header (§2.1).
+1. **Window** user and assistant messages; add the heuristic context header (§2.1). A user-role
+   message that opens with `Name:` or `**Name:**` for one of `other_speakers` is stored as theirs.
+   Hermes's context-compaction summaries are skipped: they restate turns already kept, in the
+   model's words.
 2. **Redact** secrets (Gemmery's patterns) before storage.
 3. **Deterministic spans** (§2.2 awake column), with relative times resolved by a small
    rule-based resolver against the message time.
@@ -184,16 +193,23 @@ writes. `on_pre_compress`: the span is already indexed; the committed write is t
 
 1. Hermes skips trivial prompts. Embed the query.
 2. **Time scope:** the rule-based resolver reads time expressions in the query ("last Tuesday",
-   "in March"); if present, candidates are filtered by the *said* or *happens* clock, and
+   "in March"); if present, candidates inside the range by the *said* or *happens* clock rank
+   higher (`time_scope: boost`; `filter` hides the rest instead), and
    day-level questions ("what did we talk about Tuesday?") add that day's session titles from
    Hermes's session store.
 3. **Type hint:** "when / how much / where / who" boosts windows with spans of the matching type.
-4. **Candidates by rank:** raw windows (all time) top 20, active facts top 20, FTS over both.
+4. **Candidates by rank:** raw windows (all time) and active facts by similarity, keyword (FTS)
+   matches over windows, and task cards; the best `recall_k` (50) are kept.
    Junk floor 0.5 (to re-measure on windows, §11).
 5. **Merge:** a fact and its source window collapse into one item. Order by rank, then credit.
-6. **Gate:** skip at top-1 ≥ 0.82, otherwise one decider Noul over the top 10.
+6. **Gate:** one decider Choice over the top 10 (`gate: choice`): nothing about the user is needed,
+   it is about the user but none of these fits, or which memory bears on it most directly. Memory
+   is injected unless "nothing needed" reaches 0.8; top-1 ≥ 0.82 always injects. The first design's
+   yes/no Noul is still available as `gate: decider`.
 7. **Inject evidence or nothing:** verbatim windows, dates and numbers first, modality marked
-   (`planned`, `unconfirmed`, `reported by Sam`), assistant-authored windows marked. ≤ 3,000 chars.
+   (`planned`, `unconfirmed`, `reported by Sam`), assistant-authored windows marked. ≤ 9,000 chars
+   (`inject_chars`). When "none fits" outweighs the memories, the block is headed "possible
+   matches only".
 8. Log the injection.
 
 **Degraded modes:** decider unavailable → inject only above the skip threshold; embeddings
@@ -208,11 +224,12 @@ Dossiers ranked by credit, rendered into the system prompt via `system_prompt_bl
 
 | Tool | Purpose |
 |---|---|
-| `sophia_recall(query, history=false)` | deeper associative recall; past states with dates on request |
-| `sophia_query(entity?, relation?, type?, from?, to?, aggregate?)` | structured questions over canonical relations and typed spans: counts, lists, sums, date ranges |
-| `sophia_browse(view, key)` | the wiki: `entity`, `timeline`, `people`, `places`, `topics`, `sources`, `trust`, `changes` |
-| `sophia_remember(fact)` / feedback | explicit memory; `helpful` / `wrong` on recalled items is real credit |
-| `sophia_ingest(text, source_url)` | explicit learning from a document (reads are also captured automatically) |
+| `sophia_recall(query, history=false, limit=10)` | deeper associative recall; past states with dates on request |
+| `sophia_query(subject?, relation?, object?, from?, to?, aggregate?, include_past?, spans_type?, text?)` | structured questions over facts and typed spans: counts, lists, sums, date ranges |
+| `sophia_browse(view, key)` | the wiki: `entity`, `timeline`, `recent`, `sources`, `changes`, `topics`, `tasks` (people, places and trust views are not built) |
+| `sophia_remember(content)` / feedback | explicit memory; `helpful` / `wrong` on recalled items (`item_id`, `verdict`) is real credit |
+| `sophia_correct(item_id, reason, speaker?, retract?)` | correct what was derived, never the words: who a line is attributed to, or retract an extracted fact; journaled and undoable |
+| `sophia_ingest(text, source_url?, title?)` | explicit learning from a document (reads are also captured automatically) |
 
 ---
 
@@ -220,8 +237,9 @@ Dossiers ranked by credit, rendered into the system prompt via `system_prompt_bl
 
 **Trigger:** Hermes cron at a set hour (default 03:00) running `hermes sophia sleep`, or idleness.
 **Yields** to chat and resumes later. Every item is keyed by (night, step, item); reruns are safe;
-a missed night is absorbed by the next. **Models:** the 27B through aux task `sophia_sleep`;
-the 9B to replay gate decisions. **estimate:** 60–90 minutes for a busy day.
+a missed night is absorbed by the next. **Models:** the 27B (`sleep_model`) writes, called directly
+since providers get no aux-task LLM (§15); the 9B decider makes the night's one-token judgments
+(`night_judge: decider`). **estimate:** 60–90 minutes for a busy day.
 
 | Phase | # | Step | Does |
 |---|---|---|---|
@@ -272,7 +290,12 @@ watermark moves last so an interrupted night simply reruns.
 
 ---
 
-## 8. Data model (SQLite, `$HERMES_HOME/plugin-data/sophia/sophia.db`, WAL)
+## 8. Data model (SQLite, `$HERMES_HOME/plugin-data/sophia/sophia.db`)
+
+Journal mode: WAL only where the linked SQLite is free of the WAL-reset bug (3.51.3 and later, or
+the 3.50.7 and 3.44.6 backports), otherwise a rollback journal with `synchronous=FULL`. A store
+already in WAL stays in WAL. The schema below is the draft; the one as built is `SCHEMA` in
+[`hermes_sophia/store.py`](../hermes_sophia/store.py).
 
 ```sql
 windows(id TEXT PRIMARY KEY, ref TEXT, session_id TEXT, speaker TEXT, said REAL,
@@ -335,8 +358,8 @@ knowledge-update, and count categories.
 | Awake | Qwen3.8-27B (LM Studio) | Hermes chat |
 | Awake | Qwen3.5-9B (LM Studio), reasoning off | the gate; a smaller decider may suffice (test a 4B in M2) |
 | Awake | nomic-embed-text-v1.5 (LM Studio) | all embeddings |
-| Asleep | Qwen3.8-27B (vision-capable) | caption, thread, contextualize, type, headroom, relate, integrate, replay, rehearse, librarian |
-| Asleep | Qwen3.5-9B | replaying gate decisions |
+| Asleep | Qwen3.8-27B (vision-capable) | caption, thread, contextualize, type, relate, task cards, rehearsal questions, librarian |
+| Asleep | Qwen3.5-9B | the night's one-token judgments: sort, headroom, supersession, task outcomes, replay (`night_judge: decider`) |
 | Candidate | NuExtract3 (on disk) | night typing pass, if it beats the 27B on typed spans |
 
 The 27B at 16–32k context instead of 64k frees several GB per card.
@@ -356,16 +379,22 @@ model headers must be re-measured (M1), and at scale (§9).
 
 ## 12. CLI
 
+As built (`hermes_sophia/cli.py`):
+
 ```
-hermes sophia status                  sizes, last sleep, watermark, degraded modes, calibration
-hermes sophia sleep [--dry-run] [--phase NAME] [--night ID]
-hermes sophia journal [--night ID]    learned, superseded, merged, promoted, missed; with undo ids
-hermes sophia undo <journal-id>       revert a merge, supersession, or promotion
-hermes sophia eval [--set lme|hand|standing|scale]
-hermes sophia pin <relation|page|importance> …
-hermes sophia reembed --model M
-hermes sophia reconsolidate --since D
+hermes sophia status                  sizes, last sleep, degraded modes, calibration, where each model runs
+hermes sophia sleep [--model M] [--url U --api lmstudio|openai] [--steps a,b] [--max-wait S] [--limit N]
+hermes sophia journal [--night ID]    what a night learned, superseded, promoted, missed; with undo ids
+hermes sophia recall QUERY [--gate] [-k N]   debug recall; --gate runs the whole passive path
+hermes sophia undo <journal-id>       revert a supersession, plan change, correction or review
+hermes sophia audit-facts [--apply]   facts whose people aren't grounded in their lines; --apply retracts them
+hermes sophia drop-compaction         keep compaction summaries stored by older versions out of recall
+hermes sophia relabel --session S --from A --to B --reason R   correct who a session's lines belong to
+hermes sophia reconsolidate [--headers]   drop derived facts; the next night rebuilds them
+hermes sophia ingest-history [--days 7] [--max-sessions 200]   capture past Hermes sessions
 ```
+
+Planned and not built: `eval`, `pin`, `reembed`, and `sleep --dry-run`.
 
 ---
 
@@ -413,10 +442,10 @@ them (**verify** kanban can hold a goal that never completes).
 
 ## 15. Implementation status (prototype, 2026-09-23)
 
-The code is this repository. It is tested on the `sophiadev` profile (a clone of the default profile) through the real Hermes loader and `hermes -p sophiadev chat`.
+The code is this repository. It is tested on the `sophiadev` profile (a clone of the default profile) through the real Hermes loader and `hermes -p sophiadev chat`. First written on 2026-09-23; the lists below were brought up to date with the code on 2026-09-29.
 
 **Built and exercised in Hermes**
-- The provider is discovered and loaded from `plugins/sophia`. It exposes 5 tools, a system block, and a recall status line.
+- The provider is discovered and loaded from `plugins/sophia`. It exposes 6 tools, a system block, and a recall status line.
 - Awake path:
   - capture on a worker thread, 0.11 s per turn;
   - prefetch 260–460 ms including the gate;
@@ -429,10 +458,10 @@ The code is this repository. It is tested on the `sophiadev` profile (a clone of
   - injected source text carries an "(untrusted source text)" label.
 - Night on the 9B (about 44 s for 14 windows): headers, links, facts, supersession (Fujifilm → Sony A7 IV, with the journal entry, `undo`, and restore round-tripped), the plan lifecycle, the importance exemption, replay labels, and entity views.
   - Fresh sessions afterward answer "Sony A7 IV"; one noted the original plan.
-- When the prompt told the agent to use `sophia_browse` (view=entity for Dr. Patel), it called the tool correctly and cited where the fact came from. Unprompted tool use hasn't been tested yet.
+- When the prompt told the agent to use `sophia_browse` (view=entity for Dr. Patel), it called the tool correctly and cited where the fact came from. Unprompted tool use was measured later, in the benchmarks' active-recall runs, where the model gets the same tools, system note and skill and decides for itself when to call them.
 - `ingest-history` reads the session store read-only and is idempotent: live and stored message shapes hash to the same identity.
 - Per-job model servers. Embeddings, decider and night each have a model and an optional server, of type `lmstudio` or `openai` (llama-server, vLLM). Verified against LM Studio and a CPU llama-server: chat, logprob readout, routed recall, and the night's busy check.
-- Hermes setup (`hermes memory setup`) and the dashboard expose all 48 settings. The basics are always shown; servers and tuning sit behind two gate questions.
+- Hermes setup (`hermes memory setup`) and the dashboard expose all 80 settings. The basics are always shown; servers and tuning sit behind two gate questions.
 - Graph expansion at recall: one hop from bridge entities, with hub damping, plus conversation links. Live, "Where does Sam's sister live?" reached `Lily | moved to | Denver` (similarity 0.57, below the cutoff) through Lily.
 - Grounding check at capture. Live agent replies whose claims about the user are unsupported are kept out of recall. Found live: an invented answer was recalled as memory in the next session. The positive wording, read in both option orders, separated six hand-labelled cases (bad ≥ 0.59, good ≤ 0.34); the negative wording did not.
 - Bare earlier questions are never injected passively.
@@ -441,33 +470,43 @@ The code is this repository. It is tested on the `sophiadev` profile (a clone of
   - **Night task pass:** segmentation, with a decider check for whether a follow-up continues the task; an outcome choice read in both orders; and cards assembled from logged actions, which the night model only points at by number.
   - **Recall and credit:** cards stand in for their matched request, failed attempts carry a warning, a card gains or loses credit when it is reused, and `sophia_browse view=tasks` lists them.
   - **Evaluation:** scripted evaluation 5/5 outcomes, 5/5 segmentation, 5/5 card details and 4/4 recall. In a live Hermes run, the card from a real task was injected (0.88) when asked to do it again.
-- Benchmarks (docs/BENCHMARKS.md): tuned on development splits and reported on held-out data with a 9B reader and judge. LongMemEval-S (60 questions): 0.633 → 0.750. LoCoMo (7 conversations): J 0.671 by day, 0.730 after one night, against 0.768 with the whole conversation in context.
-- Unit tests: 47, all passing, run against a fake model server.
+- Benchmarks (docs/BENCHMARKS.md): tuned on development splits and reported on held-out data with a 9B reader and judge. LongMemEval-S (60 questions): 0.633 → 0.750. LoCoMo (7 conversations): J 0.671 by day, 0.730 after one night, against 0.768 with the whole conversation in context. Later results, including nights on the 27B, are in BENCHMARKS.md.
+- The choice gate (the default since v8): one decider readout over the top 10 with an option per memory, plus "nothing needed" and "none fits". A second reading in reverse option order when the first is unsure and could still change the decision; a whole block headed "possible matches only" when "none fits" outweighs the memories; the Relevant / Possible matches split is opt-in (`gate_split`).
+- Other speakers (`other_speakers`): a user-role message that opens with `Name:` or `**Name:**` is stored under that name. At night, facts from their lines must be grounded in the line (a participant named, "I"/"my" for the speaker, "you"/"your" for the agent), and a fact that only gives a participant a role ("X is the assistant") is dropped on every line. `hermes sophia audit-facts [--apply]` checks the facts already stored.
+- Corrections of what was derived, never of the words: `sophia_correct` (relabel a line's speaker, retract a fact; a reason is required), `hermes sophia relabel`, and the Mindscape tab. Every correction is journaled with its reason and can be undone (`hermes sophia undo`).
+- Hermes's context-compaction summaries are skipped at capture; `hermes sophia drop-compaction` keeps those stored by older versions out of recall.
+- A morning note: for 36 hours after a night, the system block carries one line on what it did.
+- The Mindscape tab in the Hermes dashboard (`hermes_sophia/dashboard/`, `hermes_sophia/observe.py`): the night's progress as it runs (it writes `sleep_progress` to the store), the journal, the graph and entity pages, each recall with its gate reading and timing, and curation: undo, plan outcomes, reviews and corrections.
+- SQLite journal mode: WAL only where SQLite is free of the WAL-reset bug, otherwise a rollback journal with `synchronous=FULL` (§8).
+- The night's steps as built: settle, sort, contextualize, headroom, relate, integrate, tasks, index, outcomes, replay, rehearse, calibrate, promote, views, anticipate, tidy.
+- Unit tests: 87, run against a fake model server (the dashboard API test is skipped where fastapi isn't installed).
 
 **Answers to §14 verify items**
-- `ctx.llm` is not forwarded to memory providers (`_ProviderCollector`), so Sophia talks to LM Studio directly. `reasoning_effort: "none"` works on `/v1/chat/completions`, and `/v1/responses` returns first-token logprobs.
+- `ctx.llm` is not forwarded to memory providers (`_ProviderCollector`), so Sophia talks to its model servers directly. `reasoning_effort: "none"` works on `/v1/chat/completions`, and `/v1/responses` returns first-token logprobs.
 - `SessionDB(read_only=True)` works for history import. Stored rows carry `tool_name` and `tool_call_id: None`, while live messages carry `name`.
-- The system block is short (under 700 characters). General plugins' `register_system_prompt_section` caps at 4,000.
+- The system block is short: about 700 characters, plus the one-line morning note after a night. General plugins' `register_system_prompt_section` caps at 4,000.
 
 **Simplified**
 - Typing is deterministic only; there is no night typing pass.
 - Threads are `links` rows with no segmentation table.
 - Headroom is a Noul judgment, not the cold-answer test.
 - Anticipate only builds an upcoming-7-days view; it warms no caches.
-- The decider is uncalibrated: 3 labels so far, and `calibrate` needs 50.
+- The decider is uncalibrated: `calibrate` needs 50 labels and fits only yes/no readouts, so the default choice gate isn't calibrated.
 
 **Not built yet**
 - Image captions.
 - The Gemmery layer, milestone M4. The outcomes step is a placeholder.
-- The LongMemEval harness and the hand set (§9).
-- The Mindscape UI.
-- A scheduled nightly run. The README has a cron line; nothing is installed.
-- The night has not been run on the 27B. It only ran on the 9B, so that the 27B instance in use elsewhere was never disturbed.
+- The hand set and the scale test (§9). The LongMemEval and LoCoMo harnesses are in `bench/`; Almanac runs from its own repository.
+- Entity merges (entities are keyed by their normalized name), demotion (§4), and the people, places and trust views.
+- Session titles for day-level questions (§5.2).
+- A scheduled nightly run. The README has a cron line; Sophia installs none. The Mindscape tab reads the next run from the crontab.
 
 **Lessons that changed the code**
 - Extraction must never read the model's context header as a source. The header once absorbed an assistant hallucination and extraction attributed it to the user. `relate` now sends verbatim `TEXT` with `CONTEXT` labelled, and never extracts from assistant lines.
 - Supersession must be strictly older, negation-aware, and never within the same message.
 - Injections need an assistant penalty and cap, exclusion of the live session unless compacted, and a floor relative to the top score. Without them, the agent's own restatements crowd out the user's words.
+- Lines relayed from another speaker are written to the agent. Stored as the user's, "your real store" became the user's store, and a speaker's label became a fact's subject. Those lines now carry their speaker, and their facts must be grounded in the line.
+- Hermes hands a compacted conversation back as a user message. Stored as-is, its summary read as the user's own words; it is now skipped.
 
 ---
 

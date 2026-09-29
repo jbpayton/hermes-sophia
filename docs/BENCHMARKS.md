@@ -166,7 +166,7 @@ Passive recall runs on every message, before the agent reads it, so it has to be
 | Search: embed the message, vectors, text search, graph | 0.07 s | 0.08 s |
 | The whole passive path, including the relevance gate | 0.65 s | 0.95 s |
 
-- **The gate is the cost:** one decision call, asked on 50 of 60 messages; a very strong match (cosine ≥ 0.82) skips it.
+- **The gate is the cost:** one decision call, asked on 50 of 60 messages; a very strong match (cosine ≥ 0.82) skips it. This was the yes/no gate, the default then. The choice gate, the default since v8, reads strong matches too; its time is [below](#the-choice-gate-one-readout-that-gates-and-splits-the-lines).
 - **Most of that is LM Studio's fixed cost per uncached request.** The same call with no memories in it takes 0.38 s, with 3 memories 0.43 s, and with the usual 10 memories 0.57 s. Trimming what the gate sees would save little.
 - **Every accuracy change in v6 is ranking or formatting.** No model calls were added, and passive time didn't change.
 
@@ -175,7 +175,7 @@ Passive recall runs on every message, before the agent reads it, so it has to be
 The gate should let memory through when it bears on the message, and keep it out of small talk and general questions. Tested on development data (`bench/gate_variants.py`, `bench/gate_wording.py`; 60 plainly impersonal requests in `bench/gate_offtopic.json`):
 
 - **In large memories (about 2,000 windows), the one-order gate filters almost nothing.** It passed 453 of 455 relevant questions and 29 of 30 off-topic ones: there is always something vaguely similar, and a single reading leans towards "yes".
-- **In small memories it does filter.** On Almanac, the default gate kept memory out of 11 of 16 off-topic questions and passed every relevant one.
+- **In small memories it does filter.** On Almanac, the yes/no gate kept memory out of 11 of 16 off-topic questions and passed every relevant one.
 - **A sharper wording read in both orders** separates better in large memories: 98.9% of relevant passed, 50 of 120 off-topic. But LM Studio runs the two long prompts one after the other, so passive time doubled (0.65 → 1.21 s), and it turned away 2% of real questions (LoCoMo development 0.790 → 0.771). Not adopted.
 - **Similarity alone can't do it.** In large memories a floor of 0.60 keeps about 99% of relevant messages and turns away 20–33% of off-topic ones. In small memories, off-topic questions score as high as relevant ones: on Almanac's development lives, relevant questions went as low as 0.55 and off-topic ones were 0.59–0.66. On the Almanac test lives, 0.60 blocked 4 relevant questions ("Which city do I live in now?" went unanswered) and let 12 of 16 off-topic ones through.
 

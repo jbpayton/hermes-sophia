@@ -303,19 +303,19 @@ Which brings us here.
 - **An early check concluded Hermes's venv lacked numpy.** It had read the wrong interpreter; numpy was there all along.
 - **The decider plan changed three times.** It went from a 4B sidecar, to the 27B readout, to the 9B readout that was already loaded.
 - **The sibling-plugin plan was reversed** into one provider.
-- **A progress report overstated a result.** It said the agent used `sophia_browse` "without being prompted"; the test prompt had told it to. Unprompted tool use is still untested.
+- **A progress report overstated a result.** It said the agent used `sophia_browse` "without being prompted"; the test prompt had told it to. Unprompted tool use was measured later, in the benchmarks' active-recall runs, where the model decides for itself when to call a tool ([Benchmarks](BENCHMARKS.md)).
 
 ## What's next
 
-- **Run a night on the 27B,** at an hour the author picks.
-- **Collect decider labels.** It has 3 of the 50 it needs to fit a calibrated temperature.
-- **Build an evaluation:** a LongMemEval harness, a hand-written question set, and a scale test. Several thresholds were tuned on 76 facts and must be re-measured on real windows at scale.
+Some of the list written on 23 September is done: nights have run on the 27B, LongMemEval and LoCoMo harnesses are in `bench/` with results in [BENCHMARKS.md](BENCHMARKS.md), and the Mindscape tab in the Hermes dashboard shows what the night builds. Still open:
+
+- **Calibrate the decider.** The night fits a temperature once it has 50 labels, and only for yes/no readouts; the default choice gate isn't calibrated yet.
+- **Finish the evaluation:** a hand-written question set and a scale test. Some thresholds (the 0.82 skip and the 0.5 junk floor) still come from the 76-fact test and should be re-measured on real windows at scale.
 - **Finish the parts that are simplified or missing:**
   - Gemmery's judgment layer, which is milestone M4;
   - image captions;
   - a night pass that types values the fixed rules miss;
-  - the full cold-answer headroom test;
-  - Mindscape as views over what the night builds.
+  - the full cold-answer headroom test.
 
 [docs/DESIGN.md §15](DESIGN.md#15-implementation-status-prototype-2026-09-23) keeps the exact list.
 
