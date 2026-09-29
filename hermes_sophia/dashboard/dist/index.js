@@ -677,6 +677,8 @@
     var focusS = useState(null), focusCl = focusS[0], setFocus = focusS[1];
     var qS = useState(""), query = qS[0];
     var sheetS = useState(false), sheetOpen = sheetS[0];
+    var keyS = useState(function () { try { return localStorage.getItem("sophia.graph.key") !== "hidden"; } catch (e) { return true; } });
+    var showKey = keyS[0];
     var posN = useRef({}), posE = useRef({});
     var viewS = useState({ k: 1, x: 0, y: 0 }), view = viewS[0], setView = viewS[1];
     var boxRef = useRef(null), svgRef = useRef(null);
@@ -693,7 +695,16 @@
     useEffect(function () {
       var el = boxRef.current;
       if (!el) return undefined;
-      var ro = new ResizeObserver(function () { sizeS[1]({ w: el.clientWidth, h: el.clientHeight }); });
+      var last = { w: 0, h: 0 };
+      var ro = new ResizeObserver(function () {
+        var w = el.clientWidth, hh = el.clientHeight;
+        if (last.w && (w !== last.w || hh !== last.h)) {
+          var dw = (w - last.w) / 2, dh = (hh - last.h) / 2;
+          setView(function (v) { return { k: v.k, x: v.x + dw, y: v.y + dh }; });
+        }
+        last = { w: w, h: hh };
+        sizeS[1]({ w: w, h: hh });
+      });
       ro.observe(el);
       return function () { ro.disconnect(); };
     }, [!!data]);
@@ -795,6 +806,15 @@
         fitTo(shown.nodes.filter(function (n) { return n.cluster === focusCl; }).map(function (n) { return n.id; }), 1.8);
       } else fit();
     }, [laid, size, focusCl]);   // eslint-disable-line
+
+    useEffect(function () {                                   // the panel opening mustn't hide what was just picked
+      var q = sel && pos.current[sel];
+      if (!q || !size.w) return;
+      var sx = view.x + q.x * view.k, sy = view.y + q.y * view.k;
+      if (sx < 40 || sx > size.w - 40 || sy < 40 || sy > size.h - 40) {
+        setView(function (v) { return { k: v.k, x: size.w / 2 - v.k * q.x, y: size.h / 2 - v.k * q.y }; });
+      }
+    }, [size.w, sel]);   // eslint-disable-line
 
     function change(next) { refit.current = true; setVs(function (v) { return Object.assign({}, v, next); }); }
     function explore(id) { setSel(id); setFocus(null); change({ center: id, view: "neighborhood" }); }
@@ -1002,15 +1022,28 @@
       h("label", { className: "sm-check" }, h("input", { type: "checkbox", checked: together, onChange: function (e) { togS[1](e.target.checked); refit.current = true; } }), "Mentioned together (faint lines)"),
       everything && h("label", { className: "sm-check" }, h("input", { type: "checkbox", checked: hulls, onChange: function (e) { hullS[1](e.target.checked); } }), "Outline clusters"));
 
+    var hideKey = function () { keyS[1](false); try { localStorage.setItem("sophia.graph.key", "hidden"); } catch (e) { /* private window */ } };
+    var key = showKey ? h("section", { className: "sm-graph-key", "aria-label": "What this is" },
+      h("div", { className: "sm-graph-key-head" },
+        h("strong", null, everything ? "Everything memory knows about" : "Who and what memory knows about"),
+        h(IconBtn, { icon: "close", label: "Hide this explanation", onClick: hideKey, size: 16 })),
+      h("ul", null,
+        h("li", null, h("span", { className: "sm-key-dot" }), h("span", null, "A circle is a person, place or thing; bigger means more facts.")),
+        h("li", null, h("span", { className: "sm-line sm-line-now" }), h("span", null, "A line is a fact: solid is current, ",
+          h("span", { className: "sm-key-word sm-amber" }, "dotted"), " is planned or past its date, ",
+          h("span", { className: "sm-key-word" }, "dashed"), " has changed.")),
+        everything ? h("li", null, h("span", { className: "sm-key-hull" }), h("span", null, "An outline is a cluster: what gets talked about together."))
+          : h("li", null, h("span", { className: "sm-key-ring" }), h("span", null, "The dashed ring is the centre; everything shown is within " + hops + (hops === 1 ? " hop" : " hops") + " of it.")),
+        h("li", { className: "sm-muted" }, h("span", null, "Click a circle to see its facts. Double-click it to explore from there.")))) : null;
     if (wide) {
-      return h("div", { className: "sm-graph sm-graph-wide" },
+      return h("div", { className: cx("sm-graph sm-graph-wide", selNode && "sm-graph-has-detail") },
         h("aside", { className: "sm-graph-side", "aria-label": "Graph controls" },
           search, viewControls, stat,
           h("div", { className: "sm-sub-head" }, "Show"), h("div", { className: "sm-toggles" }, filterEls),
           extras, legend,
-          h("p", { className: "sm-hint" }, "Click a circle to see its facts; double-click it to explore from there. Drag to move, scroll to zoom.")),
-        h("div", { className: "sm-graph-canvas", ref: boxRef }, svg, toolbar),
-        h("aside", { className: "sm-graph-detail", "aria-label": "Selected" }, detail || h(Empty, null, "Select a circle to see what memory holds about it.")));
+          !showKey && h("button", { type: "button", className: "sm-link sm-key-again", onClick: function () { keyS[1](true); try { localStorage.removeItem("sophia.graph.key"); } catch (e) { /* ignore */ } } }, "What am I looking at?")),
+        h("div", { className: "sm-graph-canvas", ref: boxRef }, svg, key, toolbar),
+        selNode && h("aside", { className: "sm-graph-detail", "aria-label": "Selected" }, detail));
     }
     return h("div", { className: "sm-graph sm-graph-narrow" },
       search, viewControls, stat,
