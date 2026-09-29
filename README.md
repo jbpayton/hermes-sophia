@@ -30,6 +30,12 @@ Sophia takes a different path:
 
 <sub>Screenshots use the synthetic "Silas" life from the <a href="https://github.com/jbpayton/almanac">Almanac</a> benchmark.</sub>
 
+### See it in a minute
+
+<a href="docs/video/sophia-explainer.mp4"><img src="docs/video/sophia-explainer-preview.webp" width="100%" alt="An animated tour: a conversation saved word for word; a check before each reply that adds nothing to a general question and the dated original lines to a personal one; a night that builds a graph, marks what changed and which plans passed, and quizzes itself; the Sophia tab; and where it's headed"></a>
+
+<sub>A silent one-minute tour, with the same synthetic data. [Full-quality MP4](docs/video/sophia-explainer.mp4).</sub>
+
 ### How it compares
 
 A memory provider puts text into the agent's prompt before each reply, and saves each conversation as it goes. The table compares how each option does that, as Hermes runs it. Sources and details are in [the full comparison](docs/COMPARISON.md#hermess-memory-side-by-side).
@@ -173,7 +179,7 @@ pip install -e ".[test]"
 pytest -q        # 91 tests against a fake model server; no GPU needed
 ```
 
-The code is in `hermes_sophia/`, including the dashboard tab in `hermes_sophia/dashboard/` (plain JS, no build step). The benchmark harness is in `bench/`, and the experiments behind the design are in `research/`.
+The code is in `hermes_sophia/`, including the dashboard tab in `hermes_sophia/dashboard/` (plain JS, no build step). The benchmark harness is in `bench/`, and the experiments behind the design are in `research/`. The animated tour is one HTML page, rendered to video by `scripts/explainer/build.py --video`.
 
 ## Lineage
 

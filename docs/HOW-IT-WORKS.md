@@ -10,7 +10,7 @@ The [README](../README.md) is the short version. This page shows what Sophia doe
 - [The machinery](#the-machinery): capture by day, the nightly run;
 - [How it compares](#how-it-compares), [principles](#principles), [models and servers](#models-and-servers), [commands](#commands).
 
-For the dashboard tab where you watch, correct and configure memory, see [DASHBOARD.md](DASHBOARD.md). For every setting, see [CONFIGURATION.md](CONFIGURATION.md).
+For the dashboard tab where you watch, correct and configure memory, see [DASHBOARD.md](DASHBOARD.md). For every setting, see [CONFIGURATION.md](CONFIGURATION.md). For the whole idea in one minute, watch [the animated tour](video/sophia-explainer.mp4).
 
 ## Memory injected before every reply
 

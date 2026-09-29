@@ -1,0 +1,434 @@
+<title>How Sophia Remembers</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  color-scheme: dark;
+  --ground: #0a0d18; --night: #05070f; --surface: #10152a; --raise: #151b35; --line: #242c4a; --faint: #1a2140;
+  --text: #e7eaf3; --muted: #9aa3bf; --quiet: #5c6485;
+  --cyan: #7fdbff; --violet: #b39dff; --amber: #f2be72; --rose: #f08fa4; --green: #8fe3b0;
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+html, body { background: var(--ground); color: var(--text); }
+body { margin: 0; }
+body { font-family: var(--sans); padding-inline: 16px; padding-block: 28px 40px; }
+.page { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+.head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.head h1 { margin: 0; font-family: var(--serif); font-weight: 600; font-size: clamp(26px, 3.2vw, 36px); letter-spacing: -0.01em; text-wrap: balance; }
+.head p { margin: 0; color: var(--muted); font-size: 15px; max-width: 60ch; }
+.frame { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--ground); }
+#shot1 { transform-origin: 62% 55%; }
+#stage { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; overflow: hidden; background: var(--ground); }
+.transport { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.transport button { font: inherit; font-size: 14px; color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; min-height: 40px; padding: 0 14px; cursor: pointer; }
+.transport button:hover { background: var(--raise); }
+.transport button:focus-visible, #scrub:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.transport button.on { border-color: var(--cyan); color: var(--cyan); }
+#play { min-width: 92px; font-weight: 600; }
+.chapters { display: flex; flex-wrap: wrap; gap: 6px; }
+.scrubrow { display: flex; align-items: center; gap: 12px; width: 100%; }
+#scrub { flex-grow: 1; accent-color: var(--cyan); height: 28px; }
+#clock { font-family: var(--mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 92px; text-align: right; }
+.note { color: var(--muted); font-size: 13px; }
+body.render { padding: 0; }
+body.render .page { max-width: none; gap: 0; }
+body.render .head, body.render .transport, body.render .scrubrow, body.render .note { display: none; }
+body.render .frame { border: 0; border-radius: 0; width: 1280px; height: 720px; }
+
+/* ---------- inside the stage (1280 × 720) ---------- */
+.a { position: absolute; will-change: opacity, transform; }
+#sky { left: 0; top: 0; width: 1280px; height: 720px; background: radial-gradient(900px 520px at 78% 12%, #1b2350 0%, rgba(10,13,24,0) 70%), var(--night); }
+#moon { left: 1128px; top: 46px; width: 64px; height: 64px; border-radius: 50%; background: radial-gradient(circle at 36% 36%, #fff6de 0%, #f2d9a2 55%, #caa76a 100%); box-shadow: 0 0 60px 10px rgba(242,217,162,0.25); }
+#moontime { left: 1040px; top: 124px; width: 152px; text-align: right; font-family: var(--mono); font-size: 15px; color: var(--amber); }
+.star { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #dfe6ff; }
+#chapter { left: 56px; top: 36px; display: flex; flex-direction: column; gap: 4px; }
+#chapter .n { font-family: var(--mono); font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); }
+#chapter .t { font-family: var(--serif); font-weight: 600; font-size: 38px; line-height: 1.1; }
+#caption { left: 56px; top: 624px; width: 1168px; font-size: 21px; line-height: 1.45; color: var(--text); text-wrap: balance; }
+#caption .k { color: var(--muted); }
+#title { left: 0; top: 0; width: 1280px; height: 720px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; }
+#title .big { font-family: var(--serif); font-weight: 600; font-size: 118px; line-height: 1; letter-spacing: -0.02em; }
+#title .sub { font-size: 24px; color: var(--muted); }
+#title .line { width: 280px; height: 1px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); }
+#title .tag { font-family: var(--serif); font-style: italic; font-size: 27px; color: var(--text); max-width: 30ch; line-height: 1.35; }
+
+.colhead { font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.bubble { width: 440px; padding: 12px 16px; border-radius: 16px 16px 16px 4px; background: var(--raise); border: 1px solid var(--line); font-size: 17px; line-height: 1.4; }
+.bubble .who { display: block; font-size: 12.5px; color: var(--violet); margin-bottom: 3px; font-weight: 500; }
+.bubble.agent { border-radius: 16px 16px 4px 16px; background: #0f2233; border-color: #1e4a63; }
+.bubble.agent .who { color: var(--cyan); }
+.chip { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 8px; font-family: var(--mono); font-size: 13px; background: var(--faint); border: 1px solid var(--line); color: var(--text); white-space: nowrap; }
+.rec { width: 470px; display: flex; gap: 12px; padding: 10px 12px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); }
+.rec .d { flex-shrink: 0; width: 62px; font-family: var(--mono); font-size: 13px; color: var(--amber); padding-top: 2px; }
+.rec .x { font-size: 15px; line-height: 1.4; color: var(--text); }
+.rec .x .w { color: var(--violet); font-size: 12.5px; display: block; }
+.rec .v { position: absolute; right: 10px; bottom: 7px; display: flex; gap: 2px; }
+.rec .v i { display: block; width: 3px; border-radius: 1px; background: var(--cyan); opacity: 0.8; }
+.rec.hot { border-color: var(--cyan); box-shadow: 0 0 0 1px var(--cyan), 0 0 26px rgba(127,219,255,0.25); }
+.channel { width: 170px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 17px; font-size: 15px; border: 1px solid var(--line); color: var(--muted); background: var(--surface); }
+.channel.on { color: var(--ground); background: var(--cyan); border-color: var(--cyan); font-weight: 600; }
+.meter { width: 440px; display: flex; flex-direction: column; gap: 9px; padding: 14px 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+.meter .row { display: grid; grid-template-columns: 170px 1fr 44px; align-items: center; gap: 10px; font-size: 14.5px; color: var(--muted); }
+.meter .bar { height: 10px; border-radius: 5px; background: var(--faint); overflow: hidden; }
+.meter .bar i { display: block; height: 100%; width: 0; border-radius: 5px; }
+.meter .val { font-family: var(--mono); font-size: 13px; text-align: right; color: var(--text); }
+.verdict { width: 440px; font-size: 18px; font-weight: 600; padding: 10px 14px; border-radius: 12px; }
+.verdict.no { color: var(--muted); background: var(--surface); border: 1px dashed var(--quiet); }
+.verdict.yes { color: var(--ground); background: var(--cyan); }
+.prompt { width: 470px; display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 14px; background: #0c1a26; border: 1px solid #1e4a63; }
+.prompt .l { font-family: var(--mono); font-size: 13px; line-height: 1.5; color: #cfe9f5; }
+.prompt .l b { color: var(--amber); font-weight: 500; }
+.prompt .l em { color: var(--rose); font-style: normal; }
+.step { display: flex; align-items: center; gap: 12px; font-size: 17px; color: var(--quiet); }
+.step .dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--quiet); flex-shrink: 0; }
+.step.done { color: var(--text); }
+.step.done .dot { background: var(--violet); border-color: var(--violet); }
+.step.now { color: var(--violet); }
+.step.now .dot { border-color: var(--violet); box-shadow: 0 0 12px var(--violet); }
+.card { width: 290px; display: flex; flex-direction: column; gap: 5px; padding: 12px 14px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.card .k { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+.card .h { font-size: 16px; line-height: 1.35; }
+.card .m { font-family: var(--mono); font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+.shot { border-radius: 12px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 30px 80px rgba(0,0,0,0.55); background: var(--surface); }
+.shot img { display: block; width: 100%; height: auto; }
+.callout { font-family: var(--serif); font-style: italic; font-size: 26px; color: var(--text); }
+.pot { display: flex; align-items: baseline; gap: 24px; width: 1040px; }
+.pot b { font-family: var(--serif); font-weight: 600; font-size: 34px; width: 300px; flex-shrink: 0; }
+.pot span { font-size: 21px; color: #c3c9dc; line-height: 1.4; }
+#end { left: 0; top: 0; width: 1280px; height: 720px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; }
+#end .big { font-family: var(--serif); font-weight: 600; font-size: 96px; line-height: 1; }
+#end .sub { font-size: 22px; color: var(--muted); }
+#end .url { margin-top: 10px; font-family: var(--mono); font-size: 19px; color: var(--cyan); }
+svg text { font-family: var(--sans); }
+@media (prefers-reduced-motion: reduce) { .step.now .dot { box-shadow: none; } }
+</style>
+
+<div class="page">
+  <div class="head">
+    <h1>How Sophia remembers</h1>
+    <p>A one-minute tour of a memory for Hermes Agent: what it keeps, how it decides what the agent sees, what it does overnight, and where it goes.</p>
+  </div>
+  <div class="frame" id="frame">
+    <div id="stage" role="img" aria-label="Animated explainer of how Sophia saves conversations, decides what memory an agent needs, organizes memory overnight into a graph, and shows it in the Sophia tab.">
+      <div class="a" id="sky"></div>
+      <div class="a" id="stars"></div>
+      <div class="a" id="moon"></div>
+      <div class="a" id="moontime">03:30 · asleep</div>
+
+      <!-- title -->
+      <div class="a" id="title">
+        <div class="big">Sophia</div>
+        <div class="sub">memory for Hermes Agent</div>
+        <div class="line"></div>
+        <div class="tag">Keep the words. Decide what matters. Sleep on it.</div>
+      </div>
+
+      <!-- scene 1: saved as said -->
+      <div class="a colhead" id="s1chat" style="left:56px; top:150px">The conversation</div>
+      <div class="a colhead" id="s1rec" style="left:754px; top:150px">The record: word for word, dated, one embedding each</div>
+      <div class="a bubble" id="b1" style="left:56px; top:182px"><span class="who">Silas · Jul 7</span>We finally finished moving into our place in Denver this week. Boxes everywhere.</div>
+      <div class="a bubble" id="b2" style="left:56px; top:284px"><span class="who">Silas · Jul 16</span>Can you free up some disk space on build-1?</div>
+      <div class="a chip" id="t1" style="left:66px; top:358px"><span style="color:var(--rose)">✗</span> sudo apt-get autoremove</div>
+      <div class="a chip" id="t2" style="left:300px; top:358px"><span style="color:var(--green)">✓</span> docker system prune -a -f</div>
+      <div class="a bubble" id="b3" style="left:56px; top:400px"><span class="who">Silas · Aug 10</span>Reminder to self: dentist appointment with Dr. Moreau on August 17 at 9:30.</div>
+      <div class="a bubble" id="b4" style="left:56px; top:502px"><span class="who">Silas · Sep 1</span>Plot twist: I'm relocating to Spokane for work. The movers come this Friday.</div>
+      <div class="a rec" id="r1" style="left:754px; top:182px"><div class="d">Jul 7</div><div class="x"><span class="w">Silas</span>We finally finished moving into our place in Denver this week. Boxes everywhere.</div><div class="v"></div></div>
+      <div class="a rec" id="r2" style="left:754px; top:284px"><div class="d">Jul 16</div><div class="x"><span class="w">Silas, then the agent's tool calls</span>Can you free up some disk space on build-1? → 1 failed, 1 worked</div><div class="v"></div></div>
+      <div class="a rec" id="r3" style="left:754px; top:400px"><div class="d">Aug 10</div><div class="x"><span class="w">Silas</span>Reminder to self: dentist appointment with Dr. Moreau on August 17 at 9:30.</div><div class="v"></div></div>
+      <div class="a rec" id="r4" style="left:754px; top:502px"><div class="d">Sep 1</div><div class="x"><span class="w">Silas</span>Plot twist: I'm relocating to Spokane for work. The movers come this Friday.</div><div class="v"></div></div>
+
+      <!-- scene 2: before each reply -->
+      <div class="a bubble" id="q1" style="left:56px; top:182px"><span class="who">Silas · today</span>What's a good substitute for buttermilk?</div>
+      <div class="a bubble" id="q2" style="left:56px; top:182px"><span class="who">Silas · today</span>Which city do I live in now?</div>
+      <div class="a colhead" id="chanhead" style="left:540px; top:150px">Search</div>
+      <div class="a channel" id="c1" style="left:540px; top:182px">by meaning</div>
+      <div class="a channel" id="c2" style="left:540px; top:226px">keywords</div>
+      <div class="a channel" id="c3" style="left:540px; top:270px">dates</div>
+      <div class="a channel" id="c4" style="left:540px; top:314px">the graph</div>
+      <div class="a meter" id="meter" style="left:56px; top:290px">
+        <div class="colhead">A small model reads the message</div>
+        <div class="row"><span>A general question</span><span class="bar"><i id="m1" style="background:var(--quiet)"></i></span><span class="val" id="v1">0.00</span></div>
+        <div class="row"><span>About you, nothing fits</span><span class="bar"><i id="m2" style="background:var(--muted)"></i></span><span class="val" id="v2">0.00</span></div>
+        <div class="row"><span>A memory bears on it</span><span class="bar"><i id="m3" style="background:var(--cyan)"></i></span><span class="val" id="v3">0.00</span></div>
+      </div>
+      <div class="a verdict no" id="vno" style="left:56px; top:470px">Nothing needed. The prompt stays clean.</div>
+      <div class="a verdict yes" id="vyes" style="left:56px; top:470px">Memory helps: add the lines that answer it.</div>
+      <div class="a prompt" id="prompt" style="left:754px; top:150px">
+        <div class="colhead" style="color:#8fc9e3">What the agent sees before it answers</div>
+        <div class="l">Sophia memory: verbatim evidence from earlier conversations (dates are when it was said)</div>
+        <div class="l"><b>[2026-09-13 · Silas · fact: Silas moved to Spokane]</b> Settled into Spokane at last. The new apartment has a balcony.</div>
+        <div class="l"><b>[2026-09-01 · Silas]</b> Plot twist: I'm relocating to Spokane for work. The movers come this Friday.</div>
+        <div class="l"><b>[2026-07-07 · Silas]</b> We finally finished moving into our place in Denver this week. Boxes everywhere.</div>
+      </div>
+      <div class="a bubble agent" id="reply" style="left:754px; top:448px; width:470px"><span class="who">Agent</span>Spokane. You moved there for work in early September; before that, Denver.</div>
+
+      <!-- scene 3: asleep -->
+      <div class="a" id="steps" style="left:56px; top:156px; display:flex; flex-direction:column; gap:13px">
+        <div class="colhead" style="margin-bottom:4px">The night · 16 steps</div>
+        <div class="step" id="st0"><span class="dot"></span>Contextualize: what each line refers to</div>
+        <div class="step" id="st1"><span class="dot"></span>Relate: facts from what was said</div>
+        <div class="step" id="st2"><span class="dot"></span>Integrate: what changed, what passed</div>
+        <div class="step" id="st3"><span class="dot"></span>Tasks: how the work went</div>
+        <div class="step" id="st4"><span class="dot"></span>Rehearse: quiz itself, repair misses</div>
+        <div class="step" id="st5"><span class="dot"></span>Promote: recurring relations become structure</div>
+      </div>
+      <svg class="a" id="graph" width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true"></svg>
+      <div class="a card" id="task" style="left:934px; top:452px">
+        <span class="k" style="color:var(--green)">Task card · succeeded</span>
+        <span class="h">Free up disk space on build-1</span>
+        <span class="m">worked: docker system prune -a -f<br>dead end: apt-get autoremove<br>(nothing to remove)</span>
+      </div>
+      <div class="a card" id="quiz" style="left:934px; top:452px">
+        <span class="k" style="color:var(--violet)">Night quiz</span>
+        <span class="h">"Where did Silas move to?"</span>
+        <span class="m">recall found it: Spokane ✓<br>misses get repaired before morning</span>
+      </div>
+
+      <!-- scene 4: you can see it -->
+      <div class="a shot" id="shot1" style="left:236px; top:128px; width:700px"><img id="img1" alt=""></div>
+      <div class="a shot" id="shot2" style="left:360px; top:128px; width:660px"><img id="img2" alt=""></div>
+      <div class="a callout" id="call1" style="left:966px; top:200px; width:270px">The graph, grouped by what gets talked about together</div>
+      <div class="a callout" id="call2" style="left:56px; top:200px; width:280px">Why a reply got the memory it got</div>
+
+      <!-- scene 5: where it goes -->
+      <div class="a pot" id="p1" style="left:120px; top:176px"><b>Yours</b><span>One SQLite file on your machine, read by models you run.</span></div>
+      <div class="a pot" id="p2" style="left:120px; top:250px"><b>Grows with you</b><span>No schema to design: structure emerges from what you talk about.</span></div>
+      <div class="a pot" id="p3" style="left:120px; top:324px"><b>Knows time</b><span>What changed, what's planned, and what quietly passed.</span></div>
+      <div class="a pot" id="p4" style="left:120px; top:398px"><b>Learns from doing</b><span>Every task becomes a card the agent can reuse.</span></div>
+      <div class="a pot" id="p5" style="left:120px; top:472px"><b>Rises with models</b><span>A stronger model reads the same memory better. Swap it; the memory stays.</span></div>
+      <div class="a" id="end">
+        <div class="big">Sophia</div>
+        <div class="sub">memory for Hermes Agent · local · open source</div>
+        <div class="url">github.com/jbpayton/hermes-sophia</div>
+      </div>
+
+      <div class="a" id="chapter"><span class="n" id="chn"></span><span class="t" id="cht"></span></div>
+      <div class="a" id="caption"></div>
+    </div>
+  </div>
+  <div class="transport" aria-label="Playback">
+    <button id="play" type="button">Pause</button>
+    <div class="chapters" id="chapters"></div>
+  </div>
+  <div class="scrubrow">
+    <input id="scrub" type="range" min="0" max="66" step="0.05" value="0" aria-label="Position in the tour">
+    <span id="clock">0:00 / 1:06</span>
+  </div>
+  <p class="note">The examples are from Almanac's synthetic "Silas" life, not a real person. Scores are illustrative of real gate readings.</p>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var DUR = 66;
+  var CH = [
+    { t: 0, n: "", title: "", cap: "" },
+    { t: 5, n: "01", title: "Saved as said", cap: "Every line is kept word for word, with its date. Nothing is summarized or rewritten when it's saved: just one embedding, so it can be found by meaning later." },
+    { t: 15, n: "02", title: "Before each reply", cap: "Before the agent answers, Sophia searches by meaning, keywords, dates and the graph. Then a small model decides whether any of it helps." },
+    { t: 31, n: "03", title: "Asleep", cap: "At night a graph assembles itself: who and what you talk about, what changed, which plans passed, and how the work went. Then it quizzes itself." },
+    { t: 49, n: "04", title: "You can see it", cap: "The Sophia tab shows the graph, the Mindscape pages, and why each reply got what it got. Every correction can be undone." },
+    { t: 57, n: "05", title: "Where it goes", cap: "Memory that stays yours, organizes itself, and gets better as models do." }
+  ];
+  var CAP2B = "When memory helps, the agent sees the original lines with their dates, so it can tell what is current. When it doesn't, nothing is added.";
+  var $ = function (id) { return document.getElementById(id); };
+  var clamp = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
+  var ease = function (x) { x = clamp(x); return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; };
+  var rise = function (t, a, d) { return ease((t - a) / (d || 0.6)); };
+  // visible between a and b, fading in over fi and out over fo
+  var win = function (t, a, b, fi, fo) { fi = fi || 0.6; fo = fo || 0.6; return Math.min(rise(t, a, fi), 1 - rise(t, b - fo, fo)); };
+  function show(el, o, dx, dy, s) {
+    if (typeof el === "string") el = $(el);
+    el.style.opacity = o.toFixed(3);
+    el.style.visibility = o < 0.002 ? "hidden" : "visible";
+    el.style.transform = "translate(" + (dx || 0).toFixed(1) + "px," + (dy || 0).toFixed(1) + "px)" + (s && s !== 1 ? " scale(" + s.toFixed(4) + ")" : "");
+  }
+  function inAt(el, t, a, end, dy) { var o = win(t, a, end, 0.7, 0.6); show(el, o, 0, (1 - rise(t, a, 0.7)) * (dy == null ? 14 : dy)); return o; }
+
+  // stars and embedding bars (fixed, seeded)
+  var seed = 7; var rnd = function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+  var stars = $("stars");
+  for (var i = 0; i < 70; i++) { var s = document.createElement("i"); s.className = "star"; s.style.left = (rnd() * 1280) + "px"; s.style.top = (rnd() * 420) + "px"; s.style.opacity = (0.3 + rnd() * 0.7).toFixed(2); stars.appendChild(s); }
+  document.querySelectorAll(".rec .v").forEach(function (v) { for (var k = 0; k < 14; k++) { var b = document.createElement("i"); b.style.height = (3 + rnd() * 11).toFixed(1) + "px"; v.appendChild(b); } });
+
+  // the night's graph
+  var NS = "http://www.w3.org/2000/svg";
+  var svg = $("graph");
+  function el(name, attrs, parent) { var e = document.createElementNS(NS, name); for (var k in attrs) e.setAttribute(k, attrs[k]); (parent || svg).appendChild(e); return e; }
+  var C = { x: 600, y: 380 };
+  var nodes = [
+    { id: "portland", label: "Portland", x: 452, y: 212, c: "moving", r: 9 }, { id: "denver", label: "Denver", x: 568, y: 186, c: "moving", r: 12 },
+    { id: "spokane", label: "Spokane", x: 704, y: 196, c: "moving", r: 12 }, { id: "partner", label: "a partner", x: 428, y: 300, c: "moving", r: 8 },
+    { id: "moreau", label: "Dr. Moreau", x: 424, y: 484, c: "health", r: 11 }, { id: "blood", label: "the blood bank", x: 532, y: 560, c: "health", r: 8 },
+    { id: "oneg", label: "O negative", x: 392, y: 568, c: "health", r: 8 },
+    { id: "library", label: "the county library", x: 780, y: 290, c: "work", r: 9 }, { id: "maple", label: "Maple Street School", x: 818, y: 392, c: "work", r: 11 },
+    { id: "build", label: "build-1", x: 752, y: 548, c: "tasks", r: 9 }
+  ];
+  var colors = { moving: "#b39dff", health: "#f08fa4", work: "#8fe3b0", tasks: "#7fdbff" };
+  var root = el("g", { transform: "translate(120,20) scale(0.9)" });
+  var hullsG = el("g", {}, root), edgesG = el("g", {}, root), nodesG = el("g", {}, root), labelsG = el("g", {}, root);
+  var hulls = [
+    { c: "moving", d: "M392,300 C380,190 520,150 620,160 C720,168 760,190 740,240 C700,280 520,300 470,330 C430,350 400,340 392,300 Z", label: "moving", lx: 462, ly: 152 },
+    { c: "health", d: "M360,500 C360,440 460,440 500,470 C560,510 600,560 560,590 C510,620 380,610 360,570 Z", label: "health", lx: 276, ly: 536 },
+    { c: "work", d: "M740,250 C790,230 870,260 876,330 C882,400 870,440 820,440 C770,440 740,380 740,320 Z", label: "work", lx: 820, ly: 238 }
+  ];
+  hulls.forEach(function (h) {
+    h.p = el("path", { d: h.d, fill: colors[h.c], "fill-opacity": 0.08, stroke: colors[h.c], "stroke-opacity": 0.35, "stroke-width": 1.5 }, hullsG);
+    h.t = el("text", { x: h.lx, y: h.ly, fill: colors[h.c], "font-size": 17, "font-weight": 600, "letter-spacing": "0.08em" }, hullsG); h.t.textContent = h.label.toUpperCase();
+  });
+  nodes.forEach(function (n) {
+    n.e = el("line", { x1: C.x, y1: C.y, x2: n.x, y2: n.y, stroke: "#5fa8c8", "stroke-width": 1.8 }, edgesG);
+    n.g = el("circle", { cx: n.x, cy: n.y, r: n.r, fill: colors[n.c], "fill-opacity": 0.22, stroke: colors[n.c], "stroke-width": 2 }, nodesG);
+    n.t = el("text", { x: n.x, y: n.y + n.r + 17, fill: "#dde2ef", "font-size": 15.5, "text-anchor": "middle" }, labelsG); n.t.textContent = n.label;
+  });
+  var silas = el("circle", { cx: C.x, cy: C.y, r: 26, fill: "#b39dff", "fill-opacity": 0.25, stroke: "#b39dff", "stroke-width": 2.5 }, nodesG);
+  var silasT = el("text", { x: C.x, y: C.y + 46, fill: "#f2f4fa", "font-size": 19, "font-weight": 600, "text-anchor": "middle" }, labelsG); silasT.textContent = "Silas";
+  var repl = el("g", {}, labelsG);
+  el("rect", { x: 425, y: 92, width: 340, height: 32, rx: 8, fill: "#10152a", stroke: "#f08fa4" }, repl);
+  var replT = el("text", { x: 595, y: 113, fill: "#f08fa4", "font-size": 15.5, "text-anchor": "middle" }, repl); replT.textContent = "lived in: Portland → Denver · undoable";
+  var repl2 = el("g", {}, labelsG);
+  el("rect", { x: 880, y: 316, width: 326, height: 32, rx: 8, fill: "#10152a", stroke: "#f08fa4" }, repl2);
+  var repl2T = el("text", { x: 1043, y: 337, fill: "#f08fa4", "font-size": 15.5, "text-anchor": "middle" }, repl2); repl2T.textContent = "works at: library → Maple Street School";
+  var plan = el("g", {}, labelsG);
+  var planRing = el("circle", { cx: 424, cy: 484, r: 19, fill: "none", stroke: "#f2be72", "stroke-width": 2, "stroke-dasharray": "3 4" }, plan);
+  var planBox = el("rect", { x: 128, y: 468, width: 270, height: 32, rx: 8, fill: "#10152a", stroke: "#f2be72" }, plan);
+  var planT = el("text", { x: 263, y: 489, fill: "#f2be72", "font-size": 15.5, "text-anchor": "middle" }, plan); planT.textContent = "Aug 17 passed: unconfirmed";
+  var byId = {}; nodes.forEach(function (n) { byId[n.id] = n; });
+
+  function setCaption(text) { var c = $("caption"); if (c.dataset.text !== text) { c.dataset.text = text; c.textContent = text; } }
+
+  function render(t) {
+    // background: night falls in scene 3
+    var night = win(t, 31, 49, 1.4, 1.2);
+    show("sky", night); show("stars", night); show("moon", night, 0, (1 - rise(t, 31.4, 1.6)) * 30); show("moontime", win(t, 32, 48.6, 0.8, 0.6));
+
+    // title
+    var ti = 1 - rise(t, 4.2, 0.8);
+    show("title", ti, 0, 0, 1 + 0.02 * (1 - ti));
+
+    // chapter label and caption
+    var ch = 0; for (var i = 0; i < CH.length; i++) if (t >= CH[i].t) ch = i;
+    var chO = ch === 0 ? 0 : Math.min(rise(t, CH[ch].t + 0.1, 0.6), ch === 5 ? 1 - rise(t, 63, 0.6) : 1);
+    if (ch !== 0) { $("chn").textContent = CH[ch].n; $("cht").textContent = CH[ch].title; }
+    show("chapter", chO, 0, (1 - rise(t, CH[ch].t + 0.1, 0.6)) * -8);
+    var cap = ch === 0 ? "" : CH[ch].cap;
+    if (ch === 2 && t >= 26.6) cap = CAP2B;
+    setCaption(cap);
+    var capStart = ch === 2 && t >= 26.6 ? 26.6 : CH[ch].t + 0.3;
+    show("caption", ch === 0 ? 0 : Math.min(rise(t, capStart, 0.7), ch === 5 ? 1 - rise(t, 63, 0.6) : 1));
+
+    // ---------- scene 1: saved as said (5 to 15) ----------
+    var s1end = 15;
+    show("s1chat", win(t, 5.3, s1end)); show("s1rec", win(t, 5.3, s1end));
+    [["b1", 6], ["b2", 8], ["b3", 10.8], ["b4", 12.4]].forEach(function (b) { inAt(b[0], t, b[1], s1end); });
+    [["r1", 6.7], ["r2", 10], ["r3", 11.5], ["r4", 13.1]].forEach(function (r) {
+      var o = win(t, r[1], s1end, 0.8, 0.6); show(r[0], o, (1 - rise(t, r[1], 0.8)) * -120, 0);
+    });
+    [["t1", 8.7], ["t2", 9.3]].forEach(function (c) { inAt(c[0], t, c[1], s1end, 8); });
+
+    // ---------- scene 2: before each reply (15 to 31) ----------
+    var q1 = win(t, 15.5, 21.6, 0.6, 0.5), q2 = win(t, 21.8, 31, 0.6, 0.6);
+    show("q1", q1, 0, (1 - rise(t, 15.5, 0.6)) * 12); show("q2", q2, 0, (1 - rise(t, 21.8, 0.6)) * 12);
+    show("chanhead", win(t, 16, 31));
+    ["c1", "c2", "c3", "c4"].forEach(function (id, k) {
+      var o = win(t, 16 + k * 0.15, 31, 0.5, 0.6); show(id, o, (1 - rise(t, 16 + k * 0.15, 0.5)) * -10, 0);
+      var on = (t >= 16.6 + k * 0.35 && t < 18.2) || (t >= 22.6 + k * 0.3 && t < 24.6);
+      $(id).classList.toggle("on", on);
+    });
+    // the record stays visible as the thing being searched, until the prompt replaces it
+    var recO = Math.min(win(t, 15.2, 27.4, 0.6, 0.6), 1);
+    ["r1", "r2", "r3", "r4"].forEach(function (id) { if (t >= 15) show(id, recO); });
+    $("r1").classList.toggle("hot", t >= 23.4 && t < 27); $("r4").classList.toggle("hot", t >= 23.2 && t < 27);
+    var meterO = win(t, 18.2, 31, 0.6, 0.6); show("meter", meterO, 0, (1 - rise(t, 18.2, 0.6)) * 10);
+    var r1 = [0.92, 0.03, 0.05], r2 = [0.03, 0.03, 0.94], vals;
+    if (t < 21.6) { var k1 = rise(t, 18.6, 1.4); vals = r1.map(function (v) { return v * k1; }); }
+    else { var k0 = 1 - rise(t, 21.6, 0.5), k2 = rise(t, 24.8, 1.4); vals = r1.map(function (v, i) { return v * k0 + r2[i] * k2; }); }
+    [["m1", "v1"], ["m2", "v2"], ["m3", "v3"]].forEach(function (m, i) { $(m[0]).style.width = (vals[i] * 100).toFixed(1) + "%"; $(m[1]).textContent = vals[i].toFixed(2); });
+    show("vno", win(t, 20.2, 21.6, 0.4, 0.4), 0, 0); show("vyes", win(t, 26.4, 31, 0.5, 0.6), 0, 0);
+    show("prompt", win(t, 27.4, 31, 0.6, 0.6), (1 - rise(t, 27.4, 0.7)) * 40, 0);
+    show("reply", win(t, 29.2, 31, 0.6, 0.6), 0, (1 - rise(t, 29.2, 0.6)) * 12);
+
+    // ---------- scene 3: asleep (31 to 49) ----------
+    var s3 = win(t, 31.6, 49, 0.8, 0.8);
+    show("steps", s3);
+    var stepAt = [32.6, 35.2, 39.2, 43, 45.4, 47.2];
+    stepAt.forEach(function (a, k) {
+      var e = $("st" + k), next = stepAt[k + 1] || 48.6;
+      e.classList.toggle("done", t >= next); e.classList.toggle("now", t >= a && t < next);
+    });
+    show("graph", s3);
+    silas.setAttribute("opacity", rise(t, 33.2, 0.6)); silasT.setAttribute("opacity", rise(t, 33.2, 0.6));
+    nodes.forEach(function (n, k) {
+      var a = 33.8 + k * 0.32, o = rise(t, a, 0.6);
+      n.g.setAttribute("opacity", o); n.t.setAttribute("opacity", o);
+      var len = Math.hypot(n.x - C.x, n.y - C.y), grow = rise(t, a - 0.1, 0.6);
+      n.e.setAttribute("x2", (C.x + (n.x - C.x) * grow).toFixed(1)); n.e.setAttribute("y2", (C.y + (n.y - C.y) * grow).toFixed(1));
+      n.e.setAttribute("opacity", grow * 0.8);
+    });
+    hulls.forEach(function (h, k) { var o = rise(t, 37.6 + k * 0.4, 0.8); h.p.setAttribute("opacity", o); h.t.setAttribute("opacity", o); });
+    // what changed: Portland and Denver retired, Spokane current
+    [["portland", "denver", 39.8], ["library", "maple", 40.6]].forEach(function (pair) {
+      var sup = rise(t, pair[2], 0.8), old = byId[pair[0]], cur = byId[pair[1]];
+      old.e.setAttribute("stroke", sup > 0.5 ? "#59617f" : "#5fa8c8"); old.e.setAttribute("stroke-dasharray", sup > 0.5 ? "7 6" : "");
+      old.g.setAttribute("fill-opacity", (0.22 - 0.14 * sup).toFixed(3)); old.t.setAttribute("fill", sup > 0.5 ? "#7d85a3" : "#dde2ef");
+      cur.e.setAttribute("stroke-width", (1.8 + 1.6 * sup).toFixed(2)); cur.e.setAttribute("stroke", sup > 0.5 ? "#7fdbff" : "#5fa8c8");
+    });
+    repl.setAttribute("opacity", win(t, 40.2, 49, 0.6, 0.8));
+    repl2.setAttribute("opacity", win(t, 41, 49, 0.6, 0.8));
+    plan.setAttribute("opacity", win(t, 41.8, 49, 0.6, 0.8));
+    show("task", win(t, 43.2, 45.6, 0.6, 0.5), (1 - rise(t, 43.2, 0.6)) * 30, 0);
+    show("quiz", win(t, 45.6, 49, 0.6, 0.8), (1 - rise(t, 45.6, 0.6)) * 30, 0);
+
+    // ---------- scene 4: you can see it (49 to 57) ----------
+    var i1 = win(t, 49.2, 53.4, 0.8, 0.7), i2 = win(t, 53, 57.2, 0.8, 0.7);
+    show("shot1", i1, 0, (1 - rise(t, 49.2, 0.9)) * 24, 1 + 0.08 * ease(clamp((t - 49.6) / 3.8)));
+    show("shot2", i2, 0, (1 - rise(t, 53, 0.9)) * 24, 1 + 0.03 * clamp((t - 53) / 4.2));
+    show("call1", win(t, 50, 53.4, 0.6, 0.6), (1 - rise(t, 50, 0.6)) * 16, 0);
+    show("call2", win(t, 53.8, 57.2, 0.6, 0.6), (1 - rise(t, 53.8, 0.6)) * -16, 0);
+
+    // ---------- scene 5: where it goes (57 to 66) ----------
+    ["p1", "p2", "p3", "p4", "p5"].forEach(function (id, k) { var a = 57.6 + k * 0.9; show(id, win(t, a, 63.2, 0.6, 0.6), (1 - rise(t, a, 0.6)) * 24, 0); });
+    show("end", rise(t, 63.4, 0.9), 0, 0, 1.02 - 0.02 * rise(t, 63.4, 0.9));
+  }
+
+  // ---------- playback ----------
+  var frame = $("frame"), stage = $("stage"), scrub = $("scrub"), play = $("play"), clock = $("clock");
+  var rendering = /[?&]render\b/.test(location.search);
+  if (rendering) document.body.classList.add("render");
+  function fit() {
+    var w = rendering ? 1280 : frame.clientWidth, k = w / 1280;
+    stage.style.transform = "scale(" + k + ")"; frame.style.height = (720 * k) + "px";
+  }
+  window.addEventListener("resize", fit); fit();
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var t = 0, playing = !rendering && !reduce, last = null;
+  var fmt = function (x) { x = Math.floor(x); return Math.floor(x / 60) + ":" + String(x % 60).padStart(2, "0"); };
+  var chWrap = $("chapters");
+  var chButtons = CH.map(function (c, i) {
+    var b = document.createElement("button"); b.type = "button"; b.textContent = i === 0 ? "Start" : c.title;
+    b.addEventListener("click", function () { seek(c.t + (i === 0 ? 0 : 0.05)); }); chWrap.appendChild(b); return b;
+  });
+  function seek(x) { t = Math.max(0, Math.min(DUR, x)); draw(); }
+  function draw() {
+    render(t); scrub.value = t.toFixed(2); clock.textContent = fmt(t) + " / " + fmt(DUR);
+    var ch = 0; for (var i = 0; i < CH.length; i++) if (t >= CH[i].t) ch = i;
+    chButtons.forEach(function (b, i) { b.classList.toggle("on", i === ch); });
+    play.textContent = playing ? "Pause" : (t >= DUR ? "Replay" : "Play");
+  }
+  function tick(now) {
+    if (playing) { if (last != null) { t += (now - last) / 1000; if (t >= DUR) { t = DUR; playing = false; } } last = now; draw(); }
+    else last = null;
+    requestAnimationFrame(tick);
+  }
+  play.addEventListener("click", function () { if (t >= DUR) t = 0; playing = !playing; last = null; draw(); });
+  scrub.addEventListener("input", function () { playing = false; seek(parseFloat(scrub.value)); });
+  window.seek = function (x) { t = x; render(t); };        // used to render the video frame by frame
+  window.SOPHIA_DURATION = DUR;
+  draw();
+  if (!rendering) requestAnimationFrame(tick);
+  if (reduce) seek(5.05);
+  var img1 = $("img1"), img2 = $("img2");
+  img1.src = "__GRAPH__"; img2.src = "__RECALL__";
+  img1.alt = "The Sophia tab's graph, grouped into clusters"; img2.alt = "The Sophia tab's recall view for one message";
+})();
+</script>
