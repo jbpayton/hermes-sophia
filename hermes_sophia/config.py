@@ -18,17 +18,19 @@ SERVER_APIS = ("lmstudio", "openai")
 
 DEFAULTS: Dict[str, Any] = {
     # models, and the servers that host them
-    "lmstudio_url": "http://127.0.0.1:1234",   # default server for every job
+    "server_url": "",                         # the server every job uses unless given its own ("" = lmstudio_url)
+    "server_type": "lmstudio",                # openai (llama-server, vLLM, LM Studio's OpenAI mode, …) | lmstudio
+    "lmstudio_url": "http://127.0.0.1:1234",   # the older name for server_url, still read when server_url is unset
     "lms_cli": "~/.cache/lm-studio/bin/lms",
     "embed_model": "text-embedding-nomic-embed-text-v1.5",
-    "embed_url": "default",                   # "default" = lmstudio_url
-    "embed_api": "lmstudio",                  # lmstudio | openai (llama-server, vLLM, …)
+    "embed_url": "default",                   # "default" = server_url
+    "embed_api": "default",                   # "default" = server_type
     "decider_model": "qwen/qwen3.5-9b",
     "decider_url": "default",
-    "decider_api": "lmstudio",
+    "decider_api": "default",
     "sleep_model": "qwen/qwen3.8-27b",
     "sleep_url": "default",
-    "sleep_api": "lmstudio",
+    "sleep_api": "default",
     "sleep_guard_models": None,          # models that must be idle before each sleep call; default [sleep_model]
     # identity
     "user_name": "user",
@@ -103,7 +105,7 @@ DEFAULTS: Dict[str, Any] = {
     "task_judge_chars": 6000,         # a task's action log as the night's judge reads it (start and end kept)
     "night_judge": "decider",         # one-token night judgments on the decider (fast; thresholds measured there) or "night"
     "header_roles": "all",            # "user": model headers only for the user's lines (cheaper on chat-heavy memories)
-    "night_parallel": 2,              # night model calls in flight at once (LM Studio's parallel slots)
+    "night_parallel": 2,              # night model calls in flight at once (the server's parallel slots)
     "promote_min_instances": 5,
     "promote_min_sessions": 2,
     "page_min_facts": 3,
@@ -125,7 +127,10 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
                        "message (comma-separated); their lines are labelled with their name instead of yours",
      {"when": _ADVANCED}),
     ("agent_name", "The agent's name — the speaker label for its lines", {}),
-    ("lmstudio_url", "Default model server URL (LM Studio); every job uses it unless given its own", {}),
+    ("server_url", "Model server URL, for example http://127.0.0.1:8080 (llama-server) or http://127.0.0.1:1234 "
+                   "(LM Studio); every job uses it unless given its own", {"default": "http://127.0.0.1:1234"}),
+    ("server_type", "Server type: openai = llama-server, vLLM or any OpenAI-compatible server that returns logprobs; "
+                    "lmstudio = LM Studio's own API", {"choices": ["openai", "lmstudio"], "default": "openai"}),
     ("embed_model", "Embedding model — every embedding, day and night (nomic-embed-text-v1.5 recommended)", {}),
     ("decider_model", "Decider model — the per-turn check whether memory has anything relevant; reads "
                       "first-token logprobs only (a small instruct model, reasoning off)", {}),
@@ -133,20 +138,21 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
     ("server_layout", "Model servers: one shared server, or a server per job?",
      {"choices": ["shared", "per-job"], "default": "shared"}),
     ("embed_url", "Embedding server URL ('default' = the default server)", {"when": _SERVERS}),
-    ("embed_api", "Embedding server type", {"when": _SERVERS, "choices": list(SERVER_APIS)}),
+    ("embed_api", "Embedding server type ('default' = the server type above)", {"when": _SERVERS, "choices": ["default", *SERVER_APIS]}),
     ("decider_url", "Decider server URL ('default' = the default server)", {"when": _SERVERS}),
-    ("decider_api", "Decider server type (openai = llama-server, vLLM or another OpenAI-compatible server "
-                    "that returns chat logprobs)", {"when": _SERVERS, "choices": list(SERVER_APIS)}),
+    ("decider_api", "Decider server type ('default' = the server type above; openai = llama-server, vLLM or another "
+                    "OpenAI-compatible server that returns chat logprobs)", {"when": _SERVERS, "choices": ["default", *SERVER_APIS]}),
     ("sleep_url", "Night model server URL ('default' = the default server)", {"when": _SERVERS}),
-    ("sleep_api", "Night model server type", {"when": _SERVERS, "choices": list(SERVER_APIS)}),
+    ("sleep_api", "Night model server type ('default' = the server type above)", {"when": _SERVERS, "choices": ["default", *SERVER_APIS]}),
     ("show_advanced", "Customize recall, capture and night tuning?",
      {"choices": ["no", "yes"], "default": "no"}),
     ("sleep_guard_models", "Models that must be idle before each night call, comma-separated "
                            "(blank = the night model)", {"when": _ADVANCED}),
-    ("lms_cli", "Path to LM Studio's lms CLI (used to see whether a model is busy)", {"when": _ADVANCED}),
+    ("lms_cli", "Only for LM Studio: path to its lms CLI (used to see whether a model is busy)", {"when": _ADVANCED}),
+    ("lmstudio_url", "The older name for the server URL, read only when server_url is unset", {"when": _ADVANCED}),
     ("skip_gate", "Inject without asking the decider at or above this top-1 cosine", {"when": _ADVANCED}),
     ("gate_threshold", "Decider probability needed to inject", {"when": _ADVANCED}),
-    ("gate_permutations", "Option orders averaged per gate decision (2 cancels position bias, at twice the time on LM Studio)",
+    ("gate_permutations", "Option orders averaged per gate decision (2 cancels position bias, at twice the time)",
      {"when": _ADVANCED}),
     ("recall_k", "Candidates fetched per recall", {"when": _ADVANCED}),
     ("gate_top", "Candidates the gate looks at", {"when": _ADVANCED}),
@@ -234,7 +240,7 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
                     "fast decider, or the night model", {"when": _ADVANCED, "choices": ["decider", "night"]}),
     ("header_roles", "Whose lines get model-written context headers at night: everyone's, or only the user's "
                      "(cheaper when the agent's replies are long)", {"when": _ADVANCED, "choices": ["all", "user"]}),
-    ("night_parallel", "Night model calls in flight at once (match the model's parallel slots in LM Studio)",
+    ("night_parallel", "Night model calls in flight at once (match the server's parallel slots for the night model)",
      {"when": _ADVANCED}),
     ("promote_min_instances", "Instances before an emergent relation is promoted", {"when": _ADVANCED}),
     ("promote_min_sessions", "Sessions before an emergent relation is promoted", {"when": _ADVANCED}),
@@ -282,8 +288,10 @@ def endpoint(cfg: Dict[str, Any], role: str) -> Tuple[str, str]:
     """(url, api) of the server that runs ``role`` (embed | decider | sleep)."""
     url = str(cfg.get(f"{role}_url") or "").strip()
     if url.lower() in ("", "default"):
-        url = cfg["lmstudio_url"]
-    api = str(cfg.get(f"{role}_api") or "lmstudio").strip().lower()
+        url = str(cfg.get("server_url") or "").strip() or cfg["lmstudio_url"]
+    api = str(cfg.get(f"{role}_api") or "").strip().lower()
+    if api in ("", "default"):
+        api = str(cfg.get("server_type") or "lmstudio").strip().lower()
     if api not in SERVER_APIS:
         logger.warning("Sophia: %s_api=%r is not one of %s; using lmstudio", role, api, SERVER_APIS)
         api = "lmstudio"

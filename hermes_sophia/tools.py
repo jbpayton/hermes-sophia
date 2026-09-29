@@ -68,7 +68,7 @@ CORRECT = {
                     "can never be changed. Every correction is journaled with your reason and the user can undo it "
                     "(`hermes sophia undo <id>`)."),
     "parameters": {"type": "object", "properties": {
-        "item_id": {"type": "string", "description": "Id of a recalled item (from sophia_recall)."},
+        "item_id": {"type": "string", "description": "Id of a line (from sophia_recall) or of a fact (from sophia_query)."},
         "speaker": {"type": "string", "description": "For a line: who actually said it. The whole message is relabelled."},
         "retract": {"type": "boolean", "description": "For an extracted fact: true to retract it."},
         "reason": {"type": "string", "description": "The evidence, in a sentence (for example: the line says 'I'll tell "
@@ -106,14 +106,19 @@ def _d(ts):
     return dt.datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M") if ts else None
 
 
-def _scope(phrase: str):
+def _scope(phrase: str, now: float, end: bool = False):
+    """A 'from'/'to' bound: an ISO date or datetime, or a phrase like "last week" or "March". For 'to' (end=True) a
+    phrase or a bare date counts through its end, so "to March" includes March."""
     if not phrase:
         return None
     try:
-        return dt.datetime.fromisoformat(phrase).timestamp()
+        t = dt.datetime.fromisoformat(phrase)
+        if end and len(phrase) <= 10:                     # a bare date: through the end of that day
+            t += dt.timedelta(days=1)
+        return t.timestamp()
     except ValueError:
-        sc = query_time_scope(phrase, self.e.now())
-        return sc[0] if sc else None
+        sc = query_time_scope(phrase, now)
+        return (sc[1] if end else sc[0]) if sc else None
 
 
 class Tools:
@@ -181,7 +186,7 @@ class Tools:
 
     def _sophia_query(self, a):
         s = self.e.store
-        t0, t1 = _scope(a.get("from", "")), _scope(a.get("to", ""))
+        t0, t1 = _scope(a.get("from", ""), self.e.now()), _scope(a.get("to", ""), self.e.now(), end=True)
         if a.get("to") and not a.get("from"):
             t0 = 0
         if a.get("spans_type"):

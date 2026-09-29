@@ -19,7 +19,8 @@ def _print(obj):
 def cmd(args):
     sub = getattr(args, "sophia_cmd", None)
     if sub is None:
-        print("usage: hermes sophia <status|sleep|journal|recall|undo|relabel|reconsolidate|ingest-history>")
+        print("usage: hermes sophia <status|sleep|journal|recall|undo|relabel|audit-facts|drop-compaction|reconsolidate|"
+              "ingest-history>")
         return
     e = _engine()
     try:
@@ -132,7 +133,7 @@ def register_cli(subparser) -> None:
     p.add_argument("query", nargs="+")
     p.add_argument("--gate", action="store_true", help="Run the full prefetch path including the decider gate")
     p.add_argument("-k", type=int, default=10)
-    p = subs.add_parser("undo", help="Revert a supersession, merge or plan change recorded in the journal")
+    p = subs.add_parser("undo", help="Revert a journaled change: a supersession, a plan change, a correction or a review")
     p.add_argument("journal_id", type=int)
     p = subs.add_parser("audit-facts", help="List facts whose people aren't grounded in the lines they came from "
                                             "(e.g. a relayed 'your' read as the user); --apply retracts them, journaled")

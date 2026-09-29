@@ -159,6 +159,12 @@ def test_tools(engine):
     engine.capture.remember("Paid $40 for the Half Dome permit and $12.40 at Trader Joe's.", speaker="Joey")
     r = json.loads(engine.tools.dispatch("sophia_query", {"spans_type": "money"}))
     assert r["sum_by_currency"]["USD"] == 52.4
+    # date bounds may be phrases as well as ISO dates, and "to" counts through the end of its range
+    r = json.loads(engine.tools.dispatch("sophia_query", {"spans_type": "money", "from": "last week", "to": "today"}))
+    assert "error" not in r and r["sum_by_currency"]["USD"] == 52.4
+    today = time.strftime("%Y-%m-%d")
+    r = json.loads(engine.tools.dispatch("sophia_query", {"spans_type": "money", "from": today, "to": today}))
+    assert r["sum_by_currency"]["USD"] == 52.4
     r = json.loads(engine.tools.dispatch("sophia_recall", {"query": "Half Dome permit cost"}))
     assert r["items"] and "Half Dome" in r["items"][0]["text"]
     iid = r["items"][0]["id"]

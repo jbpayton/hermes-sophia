@@ -19,10 +19,11 @@ def test_every_setting_is_in_setup_and_gated():
     keys = [k for k, _, _ in FIELDS]
     assert set(DEFAULTS) <= set(keys)
     schema = {f["key"]: f for f in config_schema()}
-    for k in ("user_name", "embed_model", "decider_model", "sleep_model", "lmstudio_url"):
+    for k in ("user_name", "embed_model", "decider_model", "sleep_model", "server_url", "server_type"):
         assert "when" not in schema[k]                                   # basics always shown
     assert schema["decider_url"]["when"] == {"server_layout": "per-job"}
-    assert schema["decider_api"]["choices"] == ["lmstudio", "openai"]
+    assert schema["decider_api"]["choices"] == ["default", "lmstudio", "openai"]
+    assert schema["server_type"]["choices"] == ["openai", "lmstudio"] and schema["server_type"]["default"] == "openai"
     assert schema["skip_gate"]["when"] == {"show_advanced": "yes"}
     assert schema["capture_tools"]["default"] == "web_extract, browser_snapshot, browser_navigate"
     assert keys.index("server_layout") < keys.index("embed_url")        # gates come before what they gate
@@ -49,6 +50,17 @@ def test_endpoints_default_to_the_shared_server():
     assert endpoint(cfg, "embed") == ("http://box:1234", "lmstudio")
     assert endpoint(cfg, "decider") == ("http://gpu1:8081", "openai")
     assert endpoint(cfg, "sleep") == ("http://box:1234", "lmstudio")    # unknown api falls back
+
+
+def test_one_server_url_and_type_cover_every_job():
+    cfg = load_config(overrides={"server_url": "http://127.0.0.1:8080", "server_type": "openai"})
+    assert all(endpoint(cfg, r) == ("http://127.0.0.1:8080", "openai") for r in ("embed", "decider", "sleep"))
+    cfg = load_config(overrides={"server_url": "http://127.0.0.1:8080", "server_type": "openai", "sleep_api": "lmstudio",
+                                 "sleep_url": "http://box:1234"})
+    assert endpoint(cfg, "sleep") == ("http://box:1234", "lmstudio") and endpoint(cfg, "embed")[1] == "openai"
+    # an existing config that never named a server type keeps LM Studio's API, and lmstudio_url still counts
+    old = load_config(overrides={"lmstudio_url": "http://box:1234"})
+    assert endpoint(old, "decider") == ("http://box:1234", "lmstudio")
 
 
 def test_engine_builds_one_client_per_server(tmp_path):

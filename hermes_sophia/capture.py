@@ -1,7 +1,8 @@
 """Awake capture: turn messages -> windows, spans, events, outcomes, citations; reads -> external chunks.
 
-No generated text here. The only model call is one batched embedding request per turn; if it fails the
-windows are stored without vectors and the night embeds them.
+No generated text here. Model calls: one batched embedding request per turn (if it fails, the windows are stored
+without vectors and the night embeds them), and a one-token decider check of a live reply that names people, places
+or numbers (ground_check), so an invented claim can't become memory.
 """
 from __future__ import annotations
 

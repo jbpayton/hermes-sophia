@@ -1,6 +1,7 @@
 """SQLite store: raw windows, typed spans, threads/links, facts, entities, credit, logs, sleep jobs.
 
-One file per profile, WAL mode, shared safely by the CLI, gateway and cron processes. Vectors are
+One file per profile, shared safely by the CLI, gateway, dashboard and cron processes: WAL where the linked SQLite is
+free of the WAL-reset bug, a rollback journal otherwise (see wal_safe). Vectors are
 float32 blobs keyed by (id, model); an in-memory matrix per table is refreshed incrementally by rowid,
 so appends and night-time rewrites from other processes become visible without full reloads.
 """
