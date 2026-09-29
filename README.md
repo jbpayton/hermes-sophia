@@ -6,27 +6,63 @@
 
 ## What you get
 
-Hermes already has memory:
-- **Built-in memory** is two short notes the agent writes itself, about 3,500 characters between them.
-- **Most memory plugins** are services with an API key. They store facts or summaries drawn from your conversations, and add the closest few to every turn.
+Hermes already remembers. Its own memory is two short notes the agent keeps and a keyword search over every past conversation. It also ships eight memory plugins, and several are strong: Hindsight's time-aware entity graph, Honcho's model of the user, Supermemory's versioned facts, and OpenViking's file tree that records tool calls. [They're all compared here](docs/COMPARISON.md#hermess-memory-side-by-side).
 
-Sophia works differently:
+Sophia takes a different path:
 
-- **It keeps the actual words.** Every conversation is kept verbatim, with dates. Facts only index the words, so the agent sees what was said, not a summary of it.
-- **It adds nothing when nothing fits.** Plugins usually add their closest memories to every turn: Holographic, for example, adds the five facts that best match the message. Sophia checks first, so a general question like "what's the capital of Australia?" gets no memory at all.
-- **It notices change.** At night it works out what changed ("moved from Portland to Denver") and which plans passed their date without word, so the agent doesn't repeat a stale plan.
-- **It remembers what the agent did.** Every tool call is logged, and each task gets a card: the steps that worked, the dead ends, and how it turned out.
-- **It stays on your machine.** Local models and one SQLite file: no account and no API key.
-- **You can see all of it, and fix it.** The **Sophia** tab in the Hermes dashboard shows:
-  - the graph of who and what you talk about, grouped into clusters;
-  - **Mindscape**, the pages the night writes about each person, place and thing;
-  - what went into each reply, and why.
+- **A graph that assembles itself.**
+  - Each night, people, places and things are pulled from what was said, and facts are linked to the exact lines they came from.
+  - Nobody declares a schema. Relations that recur become structure, and Sophia learns from its own history which ones hold one value at a time. A new home replaces the old one; a new friend doesn't replace an old one.
+- **Semantic recall.**
+  - Every line, fact and task card sits in vector indexes. Recall fuses them with keyword search, dates, and a hop through the graph, so a question about "Sam's sister" can reach where Lily lives.
+  - At night, short replies are re-embedded with what they refer to, so a bare "yes" can be found by what it agreed to.
+- **The actual words, not a rewrite.** What reaches the agent is what was said, with its date. Every other plugin injects text an LLM wrote.
+- **It knows when to stay out of it.** A small model reads each message and decides whether memory bears on it, and "nothing" is a common answer. Other plugins use a similarity floor or no gate at all.
+- **Nothing generated when saving.** A message is stored as it was said, with one embedding (the agent's own replies also get a one-token check). The heavy model work happens at night on your GPU. The night also tests its own recall and repairs what it misses.
+- **Time and change.** When something was said, when it happens, and what replaced what, all journaled and undoable. Plans whose date passed without word are marked as unconfirmed.
+- **What the agent did.** Every tool call is logged, and each task gets a card: the steps that worked, the dead ends, and how it turned out.
+- **See it all, and fix it.** The **Sophia** tab in the Hermes dashboard, on a desktop or a phone, shows:
+  - the graph;
+  - **Mindscape**, a page for each person, place and thing;
+  - why each reply got the memory it got.
 
-  Every correction is logged and can be undone, and it works on your phone.
-
-![The Sophia tab's graph: everything Silas has talked about, grouped into clusters, with his facts listed on the right](docs/img/dashboard/graph.webp)
+![The Sophia tab's graph: everything Silas has talked about, grouped into clusters, with a key to what the circles, lines and outlines mean](docs/img/dashboard/graph.webp)
 
 <sub>Screenshots use the synthetic "Silas" life from the <a href="https://github.com/jbpayton/almanac">Almanac</a> benchmark.</sub>
+
+### How it compares
+
+● yes · ◐ partly · ○ no. Each plugin is described as Hermes runs it, in [the full comparison](docs/COMPARISON.md#hermess-memory-side-by-side) with sources.
+
+| | Added before each reply | Can add nothing | Model work when saving | Change over time | Agent's tool calls | Runs on |
+|---|---|---|---|---|---|---|
+| **Sophia** | The original lines, dated | ● A model decides | An embedding; the rest at night | ● | ● | Your machine |
+| Hermes built-in | Both notes, always | ○ | The agent writes notes | ○ | ◐ Skills | Hermes |
+| Holographic | Top 5 keyword matches | ◐ | The agent adds facts | ○ | ○ | Your machine |
+| Mem0 | Top 10 extracted facts | ◐ Score floor | LLM, each turn | ◐ | ○ | Cloud, or your machine |
+| Honcho | Summaries and a model of you | ○ | LLM, each turn | ◐ | ○ | Cloud, or your server |
+| Supermemory | Up to 10 extracted memories | ◐ Score floor | LLM, each turn | ● | ○ | Cloud, or your machine |
+| Hindsight | Consolidated observations | ○ | LLM, each turn | ● | ◐ | Cloud, or your machine |
+| OpenViking | Your profile, then top hits | ◐ Score floor | LLM, each session | ◐ | ● | Your server, or hosted |
+| ByteRover | An answer from its tree | ○ | LLM, each turn | ◐ | ○ | Your machine, plus an LLM |
+| RetainDB | Profile, results and an answer | ◐ | LLM, on the server | ◐ | ○ | Cloud, or your server |
+
+Where others are ahead:
+- **Honcho** models who you are.
+- **Several plugins** share memory across users, teams and tools.
+- **Every other plugin** has a hosted option, so there's nothing to run.
+- **Sophia** is a v0.1 prototype that needs a GPU for good results.
+
+### Benchmarks, briefly
+
+On held-out data, with local models reading and judging:
+- **LongMemEval-S:** 0.802 (Qwen3.5-9B).
+- **LoCoMo:** 0.869 with the agent using Sophia's tools (Qwen3.8-27B), level with that model reading the whole conversation.
+- **Almanac v0.2**, held-out lives: 0.957 (9B) and 0.996 (27B).
+
+Other memories publish LongMemEval scores of about 79–94. They use answering models many times larger, their own harnesses and different judges, so the numbers don't line up directly. Stronger models have raised Sophia's scores at every step we measured; that and the time and cost side are in [BENCHMARKS.md](docs/BENCHMARKS.md#in-short).
+
+[Almanac](https://github.com/jbpayton/almanac) is our own benchmark, for what the standard ones don't ask of an always-on memory: staying quiet when nothing's needed, "you never told me", telling a near-miss from an answer, and ignoring instructions planted in a web page. It was written alongside Sophia, so read it as a list of requirements, not independent proof.
 
 ## Quick start
 

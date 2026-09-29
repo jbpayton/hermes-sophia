@@ -11,7 +11,7 @@ Sophia adds a tab to the Hermes dashboard for watching her memory, correcting it
 
 It works on a phone as well as on a desktop.
 
-![The graph: everything Silas has talked about, grouped into clusters, with his facts listed on the right](img/dashboard/graph.webp)
+![The graph: everything Silas has talked about, grouped into clusters, with a key to what the circles, lines and outlines mean](img/dashboard/graph.webp)
 
 *All screenshots use the synthetic "Silas" life from the [Almanac](https://github.com/jbpayton/almanac) benchmark, not anyone's real memory.*
 
@@ -112,7 +112,11 @@ Entries that can be reversed have an **Undo**. An undone entry is struck through
 
 ## Graph
 
-The graph has two views. The picture at the top of this page is **Everything**, with Silas selected: his own cluster in the middle, and around it the move to Denver, Riley and the lake, the librarian job, a concert and the teaching job.
+The graph has two views. The picture at the top of this page is **Everything**: Silas's own cluster in the middle, and around it the move to Denver, Riley and the lake, the librarian job, a concert and the teaching job.
+
+With nothing selected the graph takes the whole width, and a small key says what the circles, lines and outlines mean. Close it with ×; **What am I looking at?** brings it back. Selecting a circle opens a panel on the right with its facts:
+
+![Everything, with Riley selected: her facts and her cluster in the panel](img/dashboard/graph-selected.webp)
 
 **Neighborhood** shows everything within 1 to 4 hops of one person or thing: the center. It opens on you.
 - To change the center, double-click a circle, pick **Explore from here** in its panel, or search.
@@ -140,7 +144,7 @@ The graph has two views. The picture at the top of this page is **Everything**, 
 | Dotted amber | Planned, or past its date with no outcome |
 | Dashed grey | Changed, cancelled or retracted |
 
-**The panel** lists every fact about the selection, and its cluster. It has **Open page** and **Explore from here**. It sits on the right on a desktop. On a phone it slides up from the bottom, folded so the graph stays in view: tap its handle to expand it.
+**The panel** lists every fact about the selection, and its cluster. It has **Open page** and **Explore from here**. On a desktop it opens on the right when you select something, and closes again with ×. On a phone it slides up from the bottom, folded so the graph stays in view: tap its handle to expand it.
 
 The graph's defaults (which view it opens on, and how many hops) are in [Settings](#settings), along with how big clusters are.
 

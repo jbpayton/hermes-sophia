@@ -2,6 +2,52 @@
 
 Sophia on LongMemEval and LoCoMo, measured on one machine (2× RTX 3090, LM Studio). Readers are **Qwen3.5-9B** or **Qwen3.8-27B**, as labelled; the judge is the 9B with the official prompts (its agreement with the 27B judge is measured [below](#judge-agreement)). Published systems mostly use GPT-4o-class readers and judges, so these numbers show where Sophia stands with small local models. They are not a leaderboard entry.
 
+## In short
+
+**Where Sophia stands.** All results below use local models, on held-out data, with the official prompts. The judge is the 9B unless noted.
+
+| Benchmark | Sophia | For comparison |
+|---|---|---|
+| LongMemEval-S, all 500 questions | **0.802** (Qwen3.5-9B reader, memory injected before each reply) | Full context with GPT-4o: 0.606 (the LongMemEval paper) |
+| LongMemEval-S, 60 held-out questions | **0.867** (Qwen3.8-27B reader) | The same reader handed only the right sessions: 0.900 |
+| LoCoMo, 7 held-out conversations | **0.869** with the agent also using the tools, **0.806** injection only (27B reader) | The same reader with the whole conversation: 0.853 |
+| Almanac v0.1, 8 test lives (27B reader and judge for every system) | **0.990–1.000** | Full context 0.945; retrieval of the top 15 messages 0.899 |
+| Almanac v0.2, 8 held-out lives | **0.957** (9B reader), **0.996** (27B reader) | Baselines not yet run |
+
+**How to read that against published numbers.** Hermes's memory plugins publish LongMemEval scores between about 79 and 94, and LoCoMo between about 83 and 96 (see [the comparison](COMPARISON.md#published-benchmark-numbers)). Those numbers differ from Sophia's in three ways, so neither side's are directly comparable:
+- **The answering model is much larger** (Gemini 3, GPT-5 class, Claude Haiku, gpt-oss-120b), and so is the judge. Sophia's reader and judge run on one desktop.
+- **Each vendor runs its own harness,** on its own service rather than through its Hermes plugin. Some use easier variants, such as RetainDB's oracle split, which contains only the sessions that hold the evidence.
+- **The judges differ,** and judges differ in how generous they are. Sophia's 9B judge is 2.5–4.5 points more generous on LoCoMo than a 27B judge (see [judge agreement](#judge-agreement)).
+
+The closest like-for-like point is Hindsight's own paper. With gpt-oss-20b, a model near the 27B's size, as the answering model, Hindsight reports 83.6 on LongMemEval-S, against Sophia's 80.2 with a 9B reader and 86.7 with the 27B on the held-out 60.
+
+**Sophia isn't tied to these models.** The reader is the agent's own chat model, whatever Hermes runs, local or cloud. Sophia's three models (embeddings, the check before each reply, and night work) are separate settings. Stronger models have helped at every step measured:
+- **Reader:** LongMemEval held-out went 0.833 → 0.867 from the 9B to the 27B (same settings), against a ceiling of 0.900.
+- **Night model:** on LoCoMo the 27B extracted about twice as many facts as the 9B, and scored +1.8 points.
+- **Reader and tools together:** LoCoMo passive went 0.789 (9B) → 0.806 (27B), and with the tools 0.869.
+
+A frontier reader should push these up further. We haven't measured one, so treat that as an expectation, not a result. A heavier judge cuts the other way: stricter judging would take a few points off LoCoMo.
+
+**Time and cost matter too.**
+- **Saving:** no model generates text when Sophia saves. The only model call is a quick one-token check of the agent's own replies.
+- **Each message:** the check before a reply runs on your own model server, in about 0.6 s end to end (0.4 s for the check itself on llama-server), or 0.04 s with `gate: similarity`.
+- **The agent's reading:** the agent reads from about 2,000–4,300 characters of recalled memory, against about 18,800 for the whole history (Almanac v0.1). At LongMemEval's 490,000 characters per question, the whole history isn't an option at all.
+- **The night:** the heavy work waits for the night. It runs on your GPU while you're idle, about 20 minutes for a busy day on the 27B. It costs no API fees.
+- **Other providers:** most of Hermes's other providers run an LLM on every turn or session, usually on a paid service. Before each reply they either wait on a network call (budgets of 3–8 s) or use a result fetched after the previous turn, one turn behind (see [the comparison](COMPARISON.md#time-and-cost-per-message)).
+
+We haven't run a head-to-head latency or cost test yet.
+
+**Why we wrote our own benchmark.** LongMemEval and LoCoMo ask questions about long chat histories. Every question needs memory, and the score is answer accuracy. An agent's memory runs on every message, so it has other jobs too:
+- stay out of the way when nothing is needed;
+- say "you never told me" when a plan's outcome was never told;
+- tell a near-miss from an answer: a brother-in-law is not a brother;
+- keep an old fact that's still true, and retire a "next weekend" from months ago;
+- know who said something: you, the agent, or a web page;
+- refuse instructions planted in a web page, and keep a pasted key out of memory;
+- remember how a task was done.
+
+The standard benchmarks score none of these. [Almanac](https://github.com/jbpayton/almanac) does, and gives every system the same reader and judge. It was written by Sophia's author, alongside Sophia, so read it as a published list of requirements with a harness, not as independent evidence. It's open so other memories can be run on it. Its lives are templated and short, so full context is near the ceiling there too.
+
 ## Protocol: improve without teaching to the test
 
 - **Only general mechanisms.** No benchmark-specific prompts, category logic or answer formats. Every setting change has to make sense for Sophia's real use: a live agent with a local model.
