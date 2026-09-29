@@ -4,14 +4,27 @@
 
 **Memory for [Hermes Agent](https://github.com/NousResearch/hermes-agent) that brings up what's relevant before every reply, and tidies itself up while you sleep.** It runs on your own machine, with local models.
 
-## What it does
+## What you get
 
-- **Remembers the actual words.** Conversations are kept verbatim, not summarized. Before each reply, Sophia checks whether anything it remembers bears on your message. If something does, the agent sees the exact past lines, with their dates. If nothing does, it adds nothing. You never have to say "remember this".
-- **Sleeps on it.** Each night it works out who and what you talk about. It notes what changed ("moved from Portland to Denver") and which plans have passed their date. It also writes up what the agent did, and whether it worked.
-- **Lets the agent look things up.** Tools let the agent dig deeper, count and list things, and read a page about any person, place or thing.
-- **Shows you everything, and lets you fix it.** The **Sophia** tab in the Hermes dashboard shows what memory is doing, what the night changed, and what went into each reply. It draws the graph, by neighborhood or by cluster, and lets you read **Mindscape**, the pages the night writes about each person, place and thing. You can change any setting there too, and it works on your phone.
+Hermes already has memory:
+- **Built-in memory** is two short notes the agent writes itself, about 3,500 characters between them.
+- **Most memory plugins** are services with an API key. They store facts or summaries drawn from your conversations, and add the closest few to every turn.
 
-![The Sophia tab's Overview: what memory is doing right now, what last night did, and how recall behaved this week](docs/img/dashboard/overview.webp)
+Sophia works differently:
+
+- **It keeps the actual words.** Every conversation is kept verbatim, with dates. Facts only index the words, so the agent sees what was said, not a summary of it.
+- **It adds nothing when nothing fits.** Plugins usually add their closest memories to every turn: Holographic, for example, adds the five facts that best match the message. Sophia checks first, so a general question like "what's the capital of Australia?" gets no memory at all.
+- **It notices change.** At night it works out what changed ("moved from Portland to Denver") and which plans passed their date without word, so the agent doesn't repeat a stale plan.
+- **It remembers what the agent did.** Every tool call is logged, and each task gets a card: the steps that worked, the dead ends, and how it turned out.
+- **It stays on your machine.** Local models and one SQLite file: no account and no API key.
+- **You can see all of it, and fix it.** The **Sophia** tab in the Hermes dashboard shows:
+  - the graph of who and what you talk about, grouped into clusters;
+  - **Mindscape**, the pages the night writes about each person, place and thing;
+  - what went into each reply, and why.
+
+  Every correction is logged and can be undone, and it works on your phone.
+
+![The Sophia tab's graph: everything Silas has talked about, grouped into clusters, with his facts listed on the right](docs/img/dashboard/graph.webp)
 
 <sub>Screenshots use the synthetic "Silas" life from the <a href="https://github.com/jbpayton/almanac">Almanac</a> benchmark.</sub>
 
@@ -63,7 +76,7 @@ plugins:
 
 Then run `hermes dashboard` and open **Sophia**.
 
-<p><img src="docs/img/dashboard/graph.webp" width="49%" alt="The graph, by cluster: what gets talked about together"> <img src="docs/img/dashboard/recall.webp" width="49%" alt="One recall: how the check read the message, and the lines that went into the prompt"></p>
+<p><img src="docs/img/dashboard/page.webp" width="49%" alt="A Mindscape page: what's believed about Spokane, each fact with the words it came from"> <img src="docs/img/dashboard/recall.webp" width="49%" alt="One recall: how the check read the message, and the lines that went into the prompt"></p>
 
 ## What it looks like
 

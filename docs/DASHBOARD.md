@@ -11,7 +11,7 @@ Sophia adds a tab to the Hermes dashboard for watching her memory, correcting it
 
 It works on a phone as well as on a desktop.
 
-![The Overview on a desktop: the Right now strip, last night, what's in memory, and recall this week](img/dashboard/overview.webp)
+![The graph: everything Silas has talked about, grouped into clusters, with his facts listed on the right](img/dashboard/graph.webp)
 
 *All screenshots use the synthetic "Silas" life from the [Almanac](https://github.com/jbpayton/almanac) benchmark, not anyone's real memory.*
 
@@ -49,6 +49,8 @@ The tab never starts anything on its own:
 - It changes memory only when you press a button.
 
 ## Overview
+
+![The Overview on a desktop: the Right now strip, last night, what's in memory, and recall this week](img/dashboard/overview.webp)
 
 ### Right now
 
@@ -110,9 +112,7 @@ Entries that can be reversed have an **Undo**. An undone entry is struck through
 
 ## Graph
 
-![Everything, by cluster: Silas's own cluster in the middle, and around it the move to Denver, Riley and the lake, the librarian job, a concert and the teaching job](img/dashboard/graph.webp)
-
-The graph has two views.
+The graph has two views. The picture at the top of this page is **Everything**, with Silas selected: his own cluster in the middle, and around it the move to Denver, Riley and the lake, the librarian job, a concert and the teaching job.
 
 **Neighborhood** shows everything within 1 to 4 hops of one person or thing: the center. It opens on you.
 - To change the center, double-click a circle, pick **Explore from here** in its panel, or search.
@@ -218,7 +218,7 @@ Every setting is described in [CONFIGURATION.md](CONFIGURATION.md).
 
 ## On a phone
 
-![Overview, Graph, a page, and the correction sheet on a phone](img/dashboard/phone.webp)
+![The graph, a Mindscape page, the Overview, and the correction sheet on a phone](img/dashboard/phone.webp)
 
 ## Troubleshooting
 
