@@ -12,6 +12,7 @@ import fcntl
 import json
 import logging
 import math
+import os
 import re
 import threading
 import time
@@ -88,6 +89,11 @@ class SleepRunner:
         self.stats: Dict[str, Dict[str, Any]] = {}
         self.new_facts: List[str] = []
         self.snapshot = now or time.time()
+        # What the night is doing right now, for the dashboard: kept in meta 'sleep_progress', written at each step
+        # and at most every few seconds between (model calls counted; 'total' known inside a parallel batch).
+        self._prog_lock = threading.Lock()
+        self._prog: Dict[str, Any] = {}
+        self._prog_written = 0.0
 
     # ------------------------------------------------------------- guards
     def busy(self) -> List[str]:
@@ -123,7 +129,10 @@ class SleepRunner:
 
     def llm(self, prompt: str, max_tokens: int = 1500) -> str:
         self._guard()
-        return self.client.chat(self.model, prompt, max_tokens=max_tokens, timeout=self.cfg["sleep_call_timeout"])
+        try:
+            return self.client.chat(self.model, prompt, max_tokens=max_tokens, timeout=self.cfg["sleep_call_timeout"])
+        finally:
+            self._progress(calls=1)
 
     def judge(self, state: Any, instructions: str, permutations: int = 1) -> float:
         """Probability the statement holds. If the model fails even after retries, the answer is "no" (0.0):
@@ -136,6 +145,32 @@ class SleepRunner:
                 self.judge_errors += 1
             logger.warning("Sophia night: judgment failed, treated as 'no': %s", str(e)[:200])
             return 0.0
+        finally:
+            self._progress(calls=1)
+
+    def _progress(self, force: bool = False, calls: int = 0, done: int = 0, total: int = 0, reset: bool = False,
+                  **fields) -> None:
+        """Update what the night is doing (meta 'sleep_progress'); written when forced or every 3 s at most.
+        ``reset``: a new step starts, so its counters start from zero."""
+        with self._prog_lock:
+            p = self._prog
+            if not p:
+                return
+            if reset:
+                p["calls"] = p["done"] = p["total"] = 0
+            p["calls"] += calls
+            p["done"] += done
+            p["total"] += total
+            p.update(fields)
+            now = time.time()
+            if not force and now - self._prog_written < 3:
+                return
+            self._prog_written = p["updated"] = now
+            snap = dict(p)
+        try:
+            self.s.set_meta("sleep_progress", snap)
+        except Exception as e:                       # progress is for watching; it must never cost the night
+            logger.debug("Sophia night: progress not written: %s", e)
 
     # ---------------------------------------------------------------- run
     def run(self) -> Dict[str, Any]:
@@ -146,11 +181,17 @@ class SleepRunner:
         except OSError:
             return {"night": self.night, "status": "another sleep is running"}
         status, failed = "complete", []
+        todo = [st for st in ALL_STEPS if st in self.steps]
+        with self._prog_lock:
+            self._prog = {"night_id": self.night, "pid": os.getpid(), "model": self.model, "started": time.time(),
+                          "steps": todo, "step": None, "index": 0, "step_started": None,
+                          "calls": 0, "done": 0, "total": 0, "status": "running"}
         try:
             for step in ALL_STEPS:
                 if step not in self.steps:
                     continue
                 t0 = time.time()
+                self._progress(force=True, reset=True, step=step, index=todo.index(step) + 1, step_started=t0)
                 try:
                     out = getattr(self, "step_" + step)() or {}
                 except Yielded:
@@ -179,6 +220,9 @@ class SleepRunner:
             self.s.set_meta("last_sleep_ts", self.snapshot)
         self.s.set_meta("last_sleep", {"night_id": self.night, "status": status, "model": self.model,
                                        "finished": time.time(), "stats": self.stats})
+        self._progress(force=True, step=None, status=status, finished=time.time())
+        with self._prog_lock:
+            self._prog = {}
         return {"night": self.night, "status": status, "stats": self.stats}
 
     # ============================================================ SETTLE
@@ -239,8 +283,13 @@ class SleepRunner:
     def _pmap(self, fn, items: List[Any]) -> List[Any]:
         """Model calls in parallel (up to night_parallel at once), results in input order."""
         n = max(1, int(self.cfg.get("night_parallel", 1)))
+        self._progress(total=len(items))
         if n == 1 or len(items) <= 1:
-            return [fn(x) for x in items]
+            out = []
+            for x in items:
+                out.append(fn(x))
+                self._progress(done=1)
+            return out
         from concurrent.futures import ThreadPoolExecutor
 
         def run(x):
@@ -249,6 +298,7 @@ class SleepRunner:
                 return fn(x)
             finally:
                 self._batch.on = False
+                self._progress(done=1)
         out: List[Any] = []
         with ThreadPoolExecutor(max_workers=n) as ex:
             for i in range(0, len(items), n):          # the guard is checked between batches, with nothing of ours in flight

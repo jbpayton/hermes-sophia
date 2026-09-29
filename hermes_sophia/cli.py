@@ -58,24 +58,8 @@ def cmd(args):
                     head = " | ".join(it["fact"]) if it["kind"] == "fact" else it["speaker"]
                     print(f"  {it['sim']:.3f} {it['kind']:6s} {head}: {it['text'][:140]}")
         elif sub == "undo":
-            row = e.store.one("SELECT * FROM journal WHERE id=?", (args.journal_id,))
-            if not row or not row["undo"]:
-                print(f"journal entry {args.journal_id} has nothing to undo")
-            else:
-                u = json.loads(row["undo"])
-                for wid, flags in (u.get("flags") or {}).items():     # dropped lines: their old flags back
-                    e.store.x("UPDATE windows SET flags=? WHERE id=?", (flags, wid))
-                if "windows" in u:                      # a speaker correction: put the old label back
-                    ids = u["windows"]
-                    e.store.x(f"UPDATE windows SET speaker=? WHERE id IN ({','.join('?' * len(ids))})",
-                              [u["speaker"], *ids])
-                if "fact" in u:
-                    e.store.x("UPDATE facts SET status=?, valid_to=NULL, superseded_by=NULL WHERE id=?",
-                              (u.get("status", "active"), u["fact"]))
-                    e.store.x("DELETE FROM credit_events WHERE item_id=? AND kind='contradicted' AND night_id=?",
-                              (u["fact"], row["night_id"]))
-                e.store.journal("manual", "undo", "undone", {"journal_id": args.journal_id, "detail": row["detail"]})
-                print(f"undone: {row['kind']} {row['detail'][:160]}")
+            what = e.store.undo_journal(args.journal_id)
+            print(f"undone: {what}" if what else f"journal entry {args.journal_id} has nothing to undo (or was undone)")
         elif sub == "drop-compaction":
             refs = [r["ref"] for r in e.store.q("SELECT DISTINCT ref FROM windows WHERE text LIKE '[CONTEXT COMPACTION%'")]
             ids = [r["id"] for ref in refs for r in e.store.q("SELECT id FROM windows WHERE ref=?", (ref,))]

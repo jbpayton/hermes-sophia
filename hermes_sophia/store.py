@@ -166,6 +166,7 @@ class Store:
         self.conn = sqlite3.connect(str(self.path), check_same_thread=False, timeout=30)
         self.conn.row_factory = sqlite3.Row
         self.lock = threading.RLock()
+        self.last_journal_id: Optional[int] = None        # the entry this instance wrote last (for "undo" links)
         with self.lock:
             self.conn.execute("PRAGMA busy_timeout=30000")
             # WAL only where SQLite is free of the WAL-reset bug; a store already in WAL stays WAL, because switching
@@ -347,10 +348,14 @@ class Store:
         self.x("INSERT INTO credit_events(item_id,item_kind,class,kind,delta,night_id,ts) VALUES(?,?,?,?,?,?,?)",
                (item_id, item_kind, cls, kind, delta, night_id, time.time()))
 
-    def journal(self, night_id: str, step: str, kind: str, detail: Any, undo: Any = None) -> None:
-        self.x("INSERT INTO journal(night_id,step,kind,detail,undo,ts) VALUES(?,?,?,?,?,?)",
-               (night_id, step, kind, json.dumps(detail, default=str),
-                json.dumps(undo, default=str) if undo is not None else None, time.time()))
+    def journal(self, night_id: str, step: str, kind: str, detail: Any, undo: Any = None) -> int:
+        with self.lock:
+            cur = self.conn.execute("INSERT INTO journal(night_id,step,kind,detail,undo,ts) VALUES(?,?,?,?,?,?)",
+                                    (night_id, step, kind, json.dumps(detail, default=str),
+                                     json.dumps(undo, default=str) if undo is not None else None, time.time()))
+            self.conn.commit()
+            self.last_journal_id = cur.lastrowid
+        return self.last_journal_id
 
     # --------------------------------------------------------- corrections
     # Only what was derived can be corrected: who a line is attributed to, and extracted facts. The verbatim text is
@@ -393,6 +398,53 @@ class Store:
                      {"fact": [f["subject"], f["relation"], f["object"]], "reason": reason, "by": by},
                      undo={"fact": fact_id, "status": f["status"]})
         return True
+
+    def resolve_plan(self, fact_id: str, outcome: str, reason: str = "", by: str = "manual") -> bool:
+        """A plan whose date passed: ``happened`` makes it an asserted fact, ``didnt`` sets it 'cancelled' (kept, not
+        recalled as current). Journaled with the old status and modality, so it can be undone."""
+        if outcome not in ("happened", "didnt"):
+            raise ValueError(f"unknown plan outcome {outcome!r}")
+        f = self.one("SELECT id, subject, relation, object, status, modality FROM facts WHERE id=?", (fact_id,))
+        if not f:
+            return False
+        status, modality = ("active", "asserted") if outcome == "happened" else ("cancelled", f["modality"])
+        if (f["status"], f["modality"]) == (status, modality):
+            return False
+        self.x("UPDATE facts SET status=?, modality=? WHERE id=?", (status, modality, fact_id))
+        self.journal("manual", "correct", "plan_resolved",
+                     {"fact": [f["subject"], f["relation"], f["object"]], "outcome": outcome, "reason": reason,
+                      "by": by, "id": fact_id},
+                     undo={"fact": fact_id, "status": f["status"], "modality": f["modality"]})
+        return True
+
+    def mark_reviewed(self, item: str, note: str = "", by: str = "manual") -> None:
+        """Someone looked at a flagged item (a journal entry 'j:<id>' or a fact 'f:<id>') and left it as it is."""
+        self.journal("manual", "review", "reviewed", {"item": item, "note": note, "by": by}, undo={"reviewed": item})
+
+    def undone_ids(self) -> set:
+        return {json.loads(r["detail"]).get("journal_id") for r in self.q("SELECT detail FROM journal WHERE kind='undone'")}
+
+    def undo_journal(self, journal_id: int, by: str = "manual") -> Optional[str]:
+        """Revert one journaled change (supersession, plan change, correction, review). Returns what was undone,
+        or None when the entry has nothing to undo or was undone already."""
+        row = self.one("SELECT * FROM journal WHERE id=?", (int(journal_id),))
+        if not row or not row["undo"] or int(journal_id) in self.undone_ids():
+            return None
+        u = json.loads(row["undo"])
+        for wid, flags in (u.get("flags") or {}).items():         # dropped lines: their old flags back
+            self.x("UPDATE windows SET flags=? WHERE id=?", (flags, wid))
+        if "windows" in u:                                        # a speaker correction: the old label back
+            ids = u["windows"]
+            self.x(f"UPDATE windows SET speaker=? WHERE id IN ({','.join('?' * len(ids))})", [u["speaker"], *ids])
+        if "fact" in u:
+            self.x("UPDATE facts SET status=?, valid_to=NULL, superseded_by=NULL WHERE id=?",
+                   (u.get("status", "active"), u["fact"]))
+            if u.get("modality"):
+                self.x("UPDATE facts SET modality=? WHERE id=?", (u["modality"], u["fact"]))
+            self.x("DELETE FROM credit_events WHERE item_id=? AND kind='contradicted' AND night_id=?",
+                   (u["fact"], row["night_id"]))
+        self.journal("manual", "undo", "undone", {"journal_id": int(journal_id), "detail": row["detail"], "by": by})
+        return f"{row['kind']} {row['detail'][:160]}"
 
     def job_done(self, night_id: str, step: str, item: str) -> bool:
         r = self.one("SELECT status FROM jobs WHERE night_id=? AND step=? AND item=?", (night_id, step, item))

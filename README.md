@@ -127,7 +127,39 @@ Real output of `sophia_browse {"view": "entity", "key": "Dr. Patel"}`, trimmed:
                "text": "Also, my dentist Dr. Patel moved his office to 55 Oak Avenue in Palo Alto. …"}, …]}
 ```
 
-Today the agent reaches Mindscape through `sophia_browse`. In SophiaAMS, Mindscape was a visual graph browser; a visual browser over these views is on the roadmap.
+The agent reaches Mindscape through `sophia_browse`. You reach it in the Hermes dashboard.
+
+### The Mindscape tab
+
+Sophia adds a **Mindscape** tab to the Hermes dashboard (`hermes dashboard`), for watching memory and correcting it. It works on a phone as well as on a desktop.
+
+| View | What it shows |
+|---|---|
+| **Overview** | **Right now:** whether the night is running and which step it's on, the lines waiting for tonight, each model's health, the last line captured, and the latest recalls. Then what last night did, what's in memory, how recall behaved this week, what needs a look, and recent changes |
+| **Graph** | The people and things facts are about, and how they connect. Select one to spread out its facts; lines show whether a fact is current, planned, past its date, or changed |
+| **Pages** | A Mindscape page per entity: believed now, planned, past its date, before, every mention, and what it links to |
+| **Recall** | For each message: how the gate read it, what went into the prompt, and what the gate weighed |
+
+**Needs a look** collects what a person should check:
+- changes the night made that may be wrong (undo, or keep);
+- plans whose date passed without word (it happened, it didn't, or leave it);
+- facts rehearsal couldn't find again;
+- failed steps and degraded models.
+
+From a fact, a line or an injected line you can:
+- relabel who said it;
+- retract a fact;
+- keep a line out of recall.
+
+Every change needs a reason. It goes through the same journal as `hermes sophia undo`, so it can be undone from the dashboard or the CLI. The verbatim record is never edited.
+
+The tab reads the store through short-lived read-only connections, so watching never blocks the gateway or a night. To turn it on, list the plugin under `plugins.enabled`, then restart the dashboard. Hermes loads a plugin's backend only when this is set.
+
+```yaml
+plugins:
+  enabled:
+    - sophia
+```
 
 ## 4. Task memory: what the agent did, and how it turned out
 
@@ -375,7 +407,7 @@ pytest -q        # 72 tests against a fake model server; no GPU needed
 
 Sophia is a clean-sheet redesign, not a port. It combines two earlier projects:
 
-- [SophiaAMS](https://github.com/jbpayton/SophiaAMS): associative triple memory, and the original Mindscape graph browser.
+- [SophiaAMS](https://github.com/jbpayton/SophiaAMS): associative triple memory, its memory-graph view, and the original Mindscape navigator.
 - [Gemmery](https://github.com/jbpayton/gemmery): credit-earning memory, and the finding that retrieval over the raw record beats write-time summaries.
 
 [docs/STORY.md](docs/STORY.md) tells how it got here.

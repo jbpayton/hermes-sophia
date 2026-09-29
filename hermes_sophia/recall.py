@@ -496,6 +496,7 @@ class Recall:
                                **({"vouched": (it["kind"], it["id"]) in relevant} if relevant is not None else {})}
                                for it in chosen]),
                    json.dumps({"gate": gate, "passed": passed, "top_sim": round(top[0]["sim"], 4) if top else None,
+                               "uncertain": info["uncertain"], "referential": referential, "ms": info["ms"],
                                "candidates": [it["id"] for it in top]}),
                    decision_id, time.time()))
         info["injection_id"] = inj_id

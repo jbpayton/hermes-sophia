@@ -1,0 +1,11 @@
+{
+  "name": "sophia",
+  "label": "Mindscape",
+  "description": "Watch and curate Sophia's memory: what's happening now, what the night changed, the graph, entity pages and why recall injected what it did.",
+  "icon": "Eye",
+  "version": "0.1.0",
+  "tab": { "path": "/mindscape", "position": "end" },
+  "entry": "dist/index.js",
+  "css": "dist/style.css",
+  "api": "plugin_api.py"
+}

@@ -4,6 +4,8 @@ __pycache__/
 *.egg-info/
 build/
 dist/
+# the dashboard tab has no build step: its dist/ is the source
+!hermes_sophia/dashboard/dist/
 .venv/
 venv/
 # runtime data never belongs in the repo
