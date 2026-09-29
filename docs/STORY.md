@@ -307,7 +307,7 @@ Which brings us here.
 
 ## What's next
 
-Some of the list written on 23 September is done: nights have run on the 27B, LongMemEval and LoCoMo harnesses are in `bench/` with results in [BENCHMARKS.md](BENCHMARKS.md), and the Mindscape tab in the Hermes dashboard shows what the night builds. Still open:
+Some of the list written on 23 September is done: nights have run on the 27B, LongMemEval and LoCoMo harnesses are in `bench/` with results in [BENCHMARKS.md](BENCHMARKS.md), and the Sophia tab in the Hermes dashboard shows what the night builds. Still open:
 
 - **Calibrate the decider.** The night fits a temperature once it has 50 labels, and only for yes/no readouts; the default choice gate isn't calibrated yet.
 - **Finish the evaluation:** a hand-written question set and a scale test. Some thresholds (the 0.82 skip and the 0.5 junk floor) still come from the 76-fact test and should be re-measured on real windows at scale.

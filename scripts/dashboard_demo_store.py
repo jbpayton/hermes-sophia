@@ -1,6 +1,6 @@
-"""Build a demo store for Mindscape screenshots from a synthetic Almanac life (never from real memory).
+"""Build a demo store for the dashboard tab's screenshots from a synthetic Almanac life (never from real memory).
 
-    python scripts/mindscape_demo_store.py bench/work/almanac02_dev10/memories/life-01-night-end.db /tmp/demo/plugin-data/sophia/sophia.db
+    python scripts/dashboard_demo_store.py bench/work/almanac02_dev10/memories/life-01-night-end.db /tmp/demo/plugin-data/sophia/sophia.db
 
 Copies the store, then moves its two clocks (the life's own timeline and the benchmark's run time) onto one recent
 timeline in whole days: the conversation ends yesterday at its own time of day and the night ran at 03:30 today.

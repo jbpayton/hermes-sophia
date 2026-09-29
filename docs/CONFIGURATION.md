@@ -2,12 +2,12 @@
 
 Sophia reads the `memory.sophia` section of the active profile's `config.yaml`, on top of the defaults in [`hermes_sophia/config.py`](../hermes_sophia/config.py).
 
-There are three ways to set a value:
+There are four ways to set a value. All of them show and save the same fields:
 
 - **`hermes -p <profile> memory setup`**, then pick sophia. It always asks for the basics: names, the model server's URL and type, and a model for each job. Then it asks two gate questions, whose answers are saved and only affect what setup shows:
   - `server_layout: shared | per-job` reveals the per-job server settings;
   - `show_advanced: no | yes` reveals every tuning setting below.
-- **The Hermes dashboard**, which shows the same fields.
+- **The Hermes dashboard:** **Plugins**, under the memory provider, or the **Settings** view of the Sophia tab (see [DASHBOARD.md](DASHBOARD.md#settings)). Each field there shows the value Sophia uses now. Hermes saves every visible field, so these defaults are what Sophia uses now, not the generic defaults below: saving without a change changes nothing.
 - **Directly:**
 
   ```bash
@@ -81,6 +81,18 @@ To run one night on a different model or server:
 ```bash
 hermes sophia sleep --model M [--url U --api openai]
 ```
+
+
+## The dashboard's graph
+
+These shape the Graph view of the Sophia tab. They don't affect recall: recall's own graph walk is `graph_hops`.
+
+| Key | Default | |
+|---|---|---|
+| `dashboard_graph_view` | `neighborhood` | What the graph opens on: `neighborhood` (everything within a few hops of you) or `everything` (every person and thing, by cluster) |
+| `dashboard_graph_hops` | 2 | How far a neighborhood reaches, 1 to 4 |
+| `dashboard_graph_resolution` | 1.0 | Cluster size, for Louvain clustering: higher splits memory into more, smaller clusters |
+| `dashboard_graph_mention_weight` | 0.5 | How strongly naming two people or things in the same line ties them, next to a fact between them (1.0) |
 
 ## Identity
 

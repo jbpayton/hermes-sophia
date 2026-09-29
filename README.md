@@ -9,9 +9,9 @@
 - **Remembers the actual words.** Conversations are kept verbatim, not summarized. Before each reply, Sophia checks whether anything it remembers bears on your message. If something does, the agent sees the exact past lines, with their dates. If nothing does, it adds nothing. You never have to say "remember this".
 - **Sleeps on it.** Each night it works out who and what you talk about. It notes what changed ("moved from Portland to Denver") and which plans have passed their date. It also writes up what the agent did, and whether it worked.
 - **Lets the agent look things up.** Tools let the agent dig deeper, count and list things, and read a page about any person, place or thing.
-- **Shows you everything, and lets you fix it.** The **Mindscape** tab in the Hermes dashboard shows what memory is doing, what the night changed, and what went into each reply. It works on your phone too.
+- **Shows you everything, and lets you fix it.** The **Sophia** tab in the Hermes dashboard shows what memory is doing, what the night changed, and what went into each reply. It draws the graph, by neighborhood or by cluster, and lets you read **Mindscape**, the pages the night writes about each person, place and thing. You can change any setting there too, and it works on your phone.
 
-![Mindscape's Overview: what memory is doing right now, what last night did, and how recall behaved this week](docs/img/mindscape/overview.webp)
+![The Sophia tab's Overview: what memory is doing right now, what last night did, and how recall behaved this week](docs/img/dashboard/overview.webp)
 
 <sub>Screenshots use the synthetic "Silas" life from the <a href="https://github.com/jbpayton/almanac">Almanac</a> benchmark.</sub>
 
@@ -61,9 +61,9 @@ plugins:
     - sophia
 ```
 
-Then run `hermes dashboard` and open **Mindscape**.
+Then run `hermes dashboard` and open **Sophia**.
 
-<p><img src="docs/img/mindscape/graph.webp" width="49%" alt="The graph, with one person's facts spread out around them"> <img src="docs/img/mindscape/recall.webp" width="49%" alt="One recall: how the check read the message, and the lines that went into the prompt"></p>
+<p><img src="docs/img/dashboard/graph.webp" width="49%" alt="The graph, by cluster: what gets talked about together"> <img src="docs/img/dashboard/recall.webp" width="49%" alt="One recall: how the check read the message, and the lines that went into the prompt"></p>
 
 ## What it looks like
 
@@ -88,7 +88,7 @@ Sophia was the only link between the chats. This is condensed; the verbatim run 
 | Page | What's in it |
 |---|---|
 | [How it works](docs/HOW-IT-WORKS.md) | What the agent sees and how the check decides, the memory tools, task memory, the nightly run, and every command |
-| [The Mindscape tab](docs/MINDSCAPE.md) | Starting it (including on a phone), every view, correcting memory, troubleshooting |
+| [The Sophia tab](docs/DASHBOARD.md) | Starting it (including on a phone), every view, the graph and its clusters, correcting memory, settings, troubleshooting |
 | [Configuration](docs/CONFIGURATION.md) | Every setting, and serving the models faster |
 | [Benchmarks](docs/BENCHMARKS.md) | LongMemEval, LoCoMo and Almanac: protocol and results |
 | [Comparison](docs/COMPARISON.md) | How Sophia compares with other agent memories |
@@ -109,7 +109,7 @@ Details are in [BENCHMARKS.md](docs/BENCHMARKS.md).
 
 ```bash
 pip install -e ".[test]"
-pytest -q        # 88 tests against a fake model server; no GPU needed
+pytest -q        # 91 tests against a fake model server; no GPU needed
 ```
 
 The code is in `hermes_sophia/`, including the dashboard tab in `hermes_sophia/dashboard/` (plain JS, no build step). The benchmark harness is in `bench/`, and the experiments behind the design are in `research/`.

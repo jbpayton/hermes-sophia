@@ -110,7 +110,7 @@ Every fact also carries a **modality** (prescribed, because each changes behavio
   2026-09-21 becomes 2026-09-29 forever.
 - **Plan lifecycle:** each night, `planned` facts whose *happens* time has passed become
   `unconfirmed`; the night doesn't yet look for later evidence that they happened ("we got back from
-  Yosemite"). Recall shows unconfirmed plans as such. In the Mindscape tab a person can resolve one
+  Yosemite"). Recall shows unconfirmed plans as such. In the Sophia tab a person can resolve one
   as happened (it becomes an asserted fact) or not (`cancelled`: kept, but not recalled as current),
   journaled and undoable.
 - `hypothetical` and `negated` never become current state; `reported` keeps who said it.
@@ -461,7 +461,7 @@ The code is this repository. It is tested on the `sophiadev` profile (a clone of
 - When the prompt told the agent to use `sophia_browse` (view=entity for Dr. Patel), it called the tool correctly and cited where the fact came from. Unprompted tool use was measured later, in the benchmarks' active-recall runs, where the model gets the same tools, system note and skill and decides for itself when to call them.
 - `ingest-history` reads the session store read-only and is idempotent: live and stored message shapes hash to the same identity.
 - Per-job model servers. Embeddings, decider and night each have a model and an optional server, of type `lmstudio` or `openai` (llama-server, vLLM). Verified against LM Studio and a CPU llama-server: chat, logprob readout, routed recall, and the night's busy check.
-- Hermes setup (`hermes memory setup`) and the dashboard expose all 80 settings. The basics are always shown; servers and tuning sit behind two gate questions.
+- Hermes setup (`hermes memory setup`) and the dashboard expose all 84 settings. The basics are always shown; servers and tuning sit behind two gate questions.
 - Graph expansion at recall: one hop from bridge entities, with hub damping, plus conversation links. Live, "Where does Sam's sister live?" reached `Lily | moved to | Denver` (similarity 0.57, below the cutoff) through Lily.
 - Grounding check at capture. Live agent replies whose claims about the user are unsupported are kept out of recall. Found live: an invented answer was recalled as memory in the next session. The positive wording, read in both option orders, separated six hand-labelled cases (bad ≥ 0.59, good ≤ 0.34); the negative wording did not.
 - Bare earlier questions are never injected passively.
@@ -473,13 +473,13 @@ The code is this repository. It is tested on the `sophiadev` profile (a clone of
 - Benchmarks (docs/BENCHMARKS.md): tuned on development splits and reported on held-out data with a 9B reader and judge. LongMemEval-S (60 questions): 0.633 → 0.750. LoCoMo (7 conversations): J 0.671 by day, 0.730 after one night, against 0.768 with the whole conversation in context. Later results, including nights on the 27B, are in BENCHMARKS.md.
 - The choice gate (the default since v8): one decider readout over the top 10 with an option per memory, plus "nothing needed" and "none fits". A second reading in reverse option order when the first is unsure and could still change the decision; a whole block headed "possible matches only" when "none fits" outweighs the memories; the Relevant / Possible matches split is opt-in (`gate_split`).
 - Other speakers (`other_speakers`): a user-role message that opens with `Name:` or `**Name:**` is stored under that name. At night, facts from their lines must be grounded in the line (a participant named, "I"/"my" for the speaker, "you"/"your" for the agent), and a fact that only gives a participant a role ("X is the assistant") is dropped on every line. `hermes sophia audit-facts [--apply]` checks the facts already stored.
-- Corrections of what was derived, never of the words: `sophia_correct` (relabel a line's speaker, retract a fact; a reason is required), `hermes sophia relabel`, and the Mindscape tab. Every correction is journaled with its reason and can be undone (`hermes sophia undo`).
+- Corrections of what was derived, never of the words: `sophia_correct` (relabel a line's speaker, retract a fact; a reason is required), `hermes sophia relabel`, and the Sophia tab. Every correction is journaled with its reason and can be undone (`hermes sophia undo`).
 - Hermes's context-compaction summaries are skipped at capture; `hermes sophia drop-compaction` keeps those stored by older versions out of recall.
 - A morning note: for 36 hours after a night, the system block carries one line on what it did.
-- The Mindscape tab in the Hermes dashboard (`hermes_sophia/dashboard/`, `hermes_sophia/observe.py`): the night's progress as it runs (it writes `sleep_progress` to the store), the journal, the graph and entity pages, each recall with its gate reading and timing, and curation: undo, plan outcomes, reviews and corrections.
+- The Sophia tab in the Hermes dashboard (`hermes_sophia/dashboard/`, `hermes_sophia/observe.py`): the night's progress as it runs (it writes `sleep_progress` to the store), the journal, the graph (neighborhoods of 1-4 hops, and everything grouped into clusters by Louvain on facts and co-mentions), the Mindscape pages, each recall with its gate reading and timing, curation (undo, plan outcomes, reviews and corrections), and every setting, saved through Hermes's provider-config API.
 - SQLite journal mode: WAL only where SQLite is free of the WAL-reset bug, otherwise a rollback journal with `synchronous=FULL` (§8).
 - The night's steps as built: settle, sort, contextualize, headroom, relate, integrate, tasks, index, outcomes, replay, rehearse, calibrate, promote, views, anticipate, tidy.
-- Unit tests: 87, run against a fake model server (the dashboard API test is skipped where fastapi isn't installed).
+- Unit tests: 91, run against a fake model server (the dashboard API test is skipped where fastapi isn't installed).
 
 **Answers to §14 verify items**
 - `ctx.llm` is not forwarded to memory providers (`_ProviderCollector`), so Sophia talks to its model servers directly. `reasoning_effort: "none"` works on `/v1/chat/completions`, and `/v1/responses` returns first-token logprobs.
@@ -499,7 +499,7 @@ The code is this repository. It is tested on the `sophiadev` profile (a clone of
 - The hand set and the scale test (§9). The LongMemEval and LoCoMo harnesses are in `bench/`; Almanac runs from its own repository.
 - Entity merges (entities are keyed by their normalized name), demotion (§4), and the people, places and trust views.
 - Session titles for day-level questions (§5.2).
-- A scheduled nightly run. The README has a cron line; Sophia installs none. The Mindscape tab reads the next run from the crontab.
+- A scheduled nightly run. The README has a cron line; Sophia installs none. The Sophia tab reads the next run from the crontab.
 
 **Lessons that changed the code**
 - Extraction must never read the model's context header as a source. The header once absorbed an assistant hallucination and extraction attributed it to the user. `relate` now sends verbatim `TEXT` with `CONTEXT` labelled, and never extracts from assistant lines.

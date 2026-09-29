@@ -10,7 +10,7 @@ The [README](../README.md) is the short version. This page shows what Sophia doe
 - [The machinery](#the-machinery): capture by day, the nightly run;
 - [How it compares](#how-it-compares), [principles](#principles), [models and servers](#models-and-servers), [commands](#commands).
 
-For the tab you watch and correct memory in, see [MINDSCAPE.md](MINDSCAPE.md). For every setting, see [CONFIGURATION.md](CONFIGURATION.md).
+For the dashboard tab where you watch, correct and configure memory, see [DASHBOARD.md](DASHBOARD.md). For every setting, see [CONFIGURATION.md](CONFIGURATION.md).
 
 ## Memory injected before every reply
 
@@ -120,7 +120,7 @@ Real output of `sophia_browse {"view": "entity", "key": "Dr. Patel"}`, trimmed:
                "text": "Also, my dentist Dr. Patel moved his office to 55 Oak Avenue in Palo Alto. …"}, …]}
 ```
 
-The agent reaches Mindscape through `sophia_browse`. You reach it in the Hermes dashboard: see [MINDSCAPE.md](MINDSCAPE.md).
+The agent reaches Mindscape through `sophia_browse`. You read the same pages in the Sophia tab of the Hermes dashboard: see [DASHBOARD.md](DASHBOARD.md#mindscape).
 
 ## Task memory: what the agent did, and how it turned out
 
@@ -241,7 +241,7 @@ Nothing generates text on the chat's critical path.
 | **Organize** | Promote recurring relations and build the Mindscape views |
 | **Tidy** | Decay only what was repeatedly judged irrelevant, never facts flagged important (health, money, key dates). Journal everything with undo. Advance the watermark last, so an interrupted night simply reruns |
 
-The night waits while the big model is serving chat, and yields rather than competing with you. It records its progress as it goes, and the Mindscape tab shows it live.
+The night waits while the big model is serving chat, and yields rather than competing with you. It records its progress as it goes, and the Sophia tab shows it live.
 
 ## How it compares
 
@@ -265,7 +265,7 @@ These aren't directly comparable with published GPT-4o-judged numbers. The compa
 - **Similarity ranks; the decider judges.** Cosine scores can't tell "related" from "answers it": unanswerable near-misses scored up to 0.78.
 - **Emergent over prescribed.** Design how to read values, not what the world contains.
 - **Credit orders what is shown; it never decides what may be shown.**
-- **Degrade loudly.** If a model is missing, Sophia carries on without it, and `sophia status` and the Mindscape tab say so.
+- **Degrade loudly.** If a model is missing, Sophia carries on without it, and `sophia status` and the Sophia tab say so.
 
 The full reasoning is in [DESIGN.md](DESIGN.md).
 
@@ -302,7 +302,7 @@ hermes -p <profile> sophia audit-facts [--apply]   # facts from relayed lines th
 hermes -p <profile> sophia drop-compaction         # keep old context-compaction summaries out of recall
 hermes -p <profile> sophia reconsolidate           # drop derived facts; the next night rebuilds them from raw
 hermes -p <profile> sophia ingest-history --days 7 # import past sessions (idempotent)
-hermes dashboard                                    # the Mindscape tab (see MINDSCAPE.md)
+hermes dashboard                                    # the Sophia tab (see DASHBOARD.md)
 ```
 
 Every correction is journaled with its reason, and `undo` reverts it.
@@ -313,7 +313,7 @@ Nothing is scheduled for you. When you're ready, add a nightly run:
 30 3 * * * hermes -p <profile> sophia sleep >> ~/.hermes/profiles/<profile>/logs/sophia-sleep.log 2>&1
 ```
 
-The Mindscape tab reads this line to show when the next night is due.
+The Sophia tab reads this line to show when the next night is due.
 
 ## Install notes
 

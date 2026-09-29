@@ -1,15 +1,17 @@
-# The Mindscape tab
+# The Sophia tab
 
-Mindscape is a tab in the Hermes dashboard for watching Sophia's memory and correcting it. It shows:
+Sophia adds a tab to the Hermes dashboard for watching her memory, correcting it and configuring it. It shows:
 - what memory is doing right now;
 - what last night changed;
 - what a person should check;
-- the graph of who and what facts are about, with a page for each;
-- for every message, what recall put in front of the agent, and why.
+- the graph of who and what facts are about: neighborhoods of any size, and clusters;
+- **Mindscape**, a page for each person, place and thing;
+- for every message, what recall put in front of the agent, and why;
+- every setting.
 
 It works on a phone as well as on a desktop.
 
-![The Overview on a desktop: the Right now strip, last night, what's in memory, and recall this week](img/mindscape/overview.webp)
+![The Overview on a desktop: the Right now strip, last night, what's in memory, and recall this week](img/dashboard/overview.webp)
 
 *All screenshots use the synthetic "Silas" life from the [Almanac](https://github.com/jbpayton/almanac) benchmark, not anyone's real memory.*
 
@@ -30,7 +32,7 @@ It works on a phone as well as on a desktop.
    hermes dashboard            # http://127.0.0.1:9119
    ```
 
-   Open **Mindscape** in the sidebar, or go to `/mindscape`.
+   Open **Sophia** in the sidebar, or go to `/sophia`.
 
 4. **On a phone.** The dashboard has to be reachable from the phone. Either:
    - bind it to the network with `hermes dashboard --host 0.0.0.0`, which requires a dashboard login (a password or OAuth provider);
@@ -68,7 +70,7 @@ While a night runs, the first cell shows it:
 
 The night writes this as it works, at most every few seconds. If the night's process ends without finishing (killed, or a reboot), the cell says which step it stopped in; the next night reruns the unfinished work.
 
-![Right now while a night runs: step 6 of 16, Integrate, 140 of 380 items](img/mindscape/night-in-progress.webp)
+![Right now while a night runs: step 6 of 16, Integrate, 140 of 380 items](img/dashboard/night-in-progress.webp)
 
 ### Last night, what's in memory, recall
 
@@ -84,7 +86,7 @@ The night writes this as it works, at most every few seconds. If the night's pro
 
 What a person should check. Every button writes to the same journal as the CLI, with a way back.
 
-![Needs a look and Recent changes](img/mindscape/needs-a-look.webp)
+![Needs a look and Recent changes](img/dashboard/needs-a-look.webp)
 
 | Item | Why it's here | Buttons |
 |---|---|---|
@@ -108,18 +110,27 @@ Entries that can be reversed have an **Undo**. An undone entry is struck through
 
 ## Graph
 
-![The graph with Silas selected: his facts spread around him, with the list on the right](img/mindscape/graph.webp)
+![Everything, by cluster: Silas's own cluster in the middle, and around it the move to Denver, Riley and the lake, the librarian job, a concert and the teaching job](img/dashboard/graph.webp)
 
-**Big circles** are subjects: the people and things that facts are about.
-- The user is violet, the agent cyan, and other speakers pink.
-- Lines between circles are facts. Faint lines join subjects that were mentioned together.
+The graph has two views.
 
-**To explore:**
-- Select a subject to spread its facts around it; select it again to fold them.
-- **Fold everything** clears them all.
-- **Every fact** shows the whole graph at once.
+**Neighborhood** shows everything within 1 to 4 hops of one person or thing: the center. It opens on you.
+- To change the center, double-click a circle, pick **Explore from here** in its panel, or search.
+- The last ring is trimmed to its best-connected members when a neighborhood gets very large, and the graph says how many were left out.
+- Your own neighborhood reaches almost everything in one or two hops. Neighborhoods around other people and things are smaller, and show how they connect.
+
+**Everything** shows every person and thing, grouped into clusters: what gets talked about together.
+- A soft outline and a name mark each cluster, taken from its best-connected members.
+- The list under **Clusters** picks one: the graph zooms to it and dims the rest.
+- Clusters are computed from the facts and from which people and things are named in the same lines. A fact about a hub that has facts about everything (usually you) counts for less, so your own facts split into topics instead of one big star. Clusters under three members count as loose.
+
+![A 1-hop neighborhood around Riley, with her facts and her cluster in the panel](img/dashboard/graph-neighborhood.webp)
+
+**To read the graph:**
+- **Colour by** switches between clusters and who each circle is (you in violet, the agent in cyan, other speakers in pink).
+- Big circles are subjects, the people and things that facts are about.
+- Lines are facts. Faint lines join subjects mentioned together; turn them off with **Mentioned together**.
 - Drag to move, and scroll or pinch to zoom.
-- Search jumps to a person, place or thing, and opens whatever it belongs to.
 
 **Line styles** match the filters:
 
@@ -129,13 +140,17 @@ Entries that can be reversed have an **Undo**. An undone entry is struck through
 | Dotted amber | Planned, or past its date with no outcome |
 | Dashed grey | Changed, cancelled or retracted |
 
-**The panel** (on the right on a desktop; sliding up from the bottom on a phone) lists every fact about the selection. It has **Open page** and **Spread its facts** / **Fold its facts**. On a phone the panel opens folded so the graph stays in view; tap its handle to expand it.
+**The panel** lists every fact about the selection, and its cluster. It has **Open page** and **Explore from here**. It sits on the right on a desktop. On a phone it slides up from the bottom, folded so the graph stays in view: tap its handle to expand it.
 
-## Pages
+The graph's defaults (which view it opens on, and how many hops) are in [Settings](#settings), along with how big clusters are.
 
-![Spokane's page: what's believed now, each fact with the words it came from, and what it links to](img/mindscape/page.webp)
+## Mindscape
 
-A page per person, place or thing:
+Mindscape is Sophia's wiki: the pages the night builds about each person, place and thing. The agent reads them with `sophia_browse`; here you read them too.
+
+![Spokane's page: what's believed now, each fact with the words it came from, and what it links to](img/dashboard/page.webp)
+
+Each page has:
 
 | Section | What it holds |
 |---|---|
@@ -150,7 +165,7 @@ Every fact shows the verbatim words it came from, who said them and when. **Show
 
 ## Recall
 
-![A recall where two lines from a prompt-injection page were injected before the night caught it](img/mindscape/recall.webp)
+![A recall where two lines from a prompt-injection page were injected before the night caught it](img/dashboard/recall.webp)
 
 Every message the agent received, newest first, each with what recall did. Select one to see:
 - **The gate's reading:** the three shares the decider gave (a general request, none of the memories fits, a memory bears on it), with the 0.8 cutoff marked, and a sentence saying why memory was or wasn't added. It also says when the strong-match rule let memory through regardless.
@@ -173,23 +188,45 @@ Corrections change what was *derived*, never the words themselves. Each needs a 
 | **This fact is wrong: retract it** | "…" on a fact | The fact stops being recalled; the words stay on record | same |
 | **Keep this line out of recall** | "…" on a line, **Keep out** in Recall | The message's lines are flagged and never injected | same |
 | **Undo / Keep** a change | Needs a look | The supersession is reversed, or kept and taken off the list | same |
-| **It happened / It didn't / Leave** | Needs a look, Pages | The plan becomes a fact, is cancelled, or is left unconfirmed | same |
+| **It happened / It didn't / Leave** | Needs a look, Mindscape | The plan becomes a fact, is cancelled, or is left unconfirmed | same |
 
 The same journal is readable with `hermes sophia journal`.
 
 For lines relayed by another agent, run `hermes sophia audit-facts`. It lists the facts that don't name the people they're about in the line they came from; `--apply` retracts them, journaled.
 
+## Settings
+
+![Settings: the same fields as Hermes's own settings for Sophia, each showing the value in use](img/dashboard/settings.webp)
+
+Every one of Sophia's settings, grouped:
+- **Basics:** names, the model server, and the three models.
+- **A server per job:** shown when "Model servers" is per-job.
+- **Tuning:** recall, capture, the night, and the graph.
+
+Each field shows the value Sophia uses now, so saving without a change changes nothing. **Find a setting** searches all of them, including ones the current choices hide.
+
+Saving goes through Hermes's own settings API, with the same validation as Hermes's **Plugins** page. The new values apply here at once, to new conversations, and to the next night.
+
+The same settings are in Hermes itself:
+- **Plugins**, under the memory provider;
+- `hermes memory setup`;
+- `hermes config set memory.sophia.<key> <value>`.
+
+Every setting is described in [CONFIGURATION.md](CONFIGURATION.md).
+
+![The same settings on Hermes's Plugins page](img/dashboard/hermes-settings.webp)
+
 ## On a phone
 
-![Overview, Graph, a page, and the correction sheet on a phone](img/mindscape/phone.webp)
+![Overview, Graph, a page, and the correction sheet on a phone](img/dashboard/phone.webp)
 
 ## Troubleshooting
 
 | You see | Why |
 |---|---|
-| No Mindscape tab | `sophia` isn't in `plugins.enabled`, or the dashboard can't find the plugin: check that `~/.hermes/plugins/sophia/dashboard/manifest.json` exists (the plugin directory, or a link to `hermes_sophia/`) |
+| No Sophia tab | `sophia` isn't in `plugins.enabled`, or the dashboard can't find the plugin: check that `~/.hermes/plugins/sophia/dashboard/manifest.json` exists (the plugin directory, or a link to `hermes_sophia/`) |
 | The tab opens but says "Couldn't load this" (Not Found) | The dashboard was started before `sophia` was enabled. Restart it: it loads the plugin's backend only at startup |
 | "No memory here yet" | This profile has no Sophia store. Set `memory.provider: sophia` and talk for a while |
 | "Not scheduled" under The night | No crontab line runs `sophia sleep`. See [Commands](HOW-IT-WORKS.md#commands) |
 | The last run "stopped during" a step | The night's process ended early. The next night reruns what was left |
-| A crowded graph | Fold what you don't need, turn filters off, or search |
+| A crowded graph | Use a neighborhood with fewer hops, focus one cluster, turn filters or "Mentioned together" off, or search |
