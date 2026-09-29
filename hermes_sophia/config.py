@@ -32,6 +32,11 @@ DEFAULTS: Dict[str, Any] = {
     "sleep_url": "default",
     "sleep_api": "default",
     "sleep_guard_models": None,          # models that must be idle before each sleep call; default [sleep_model]
+    # the dashboard's graph (not recall's graph_hops, which is how far recall walks)
+    "dashboard_graph_view": "neighborhood",  # neighborhood (n hops around one entity) | everything (all, by cluster)
+    "dashboard_graph_hops": 2,               # how far a neighborhood reaches, 1-4
+    "dashboard_graph_resolution": 1.0,       # cluster size: higher splits memory into more, smaller clusters
+    "dashboard_graph_mention_weight": 0.5,   # how strongly a line naming two entities ties them, next to a fact (1.0)
     # identity
     "user_name": "user",
     "agent_name": "assistant",
@@ -144,6 +149,9 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
                     "OpenAI-compatible server that returns chat logprobs)", {"when": _SERVERS, "choices": ["default", *SERVER_APIS]}),
     ("sleep_url", "Night model server URL ('default' = the default server)", {"when": _SERVERS}),
     ("sleep_api", "Night model server type ('default' = the server type above)", {"when": _SERVERS, "choices": ["default", *SERVER_APIS]}),
+    ("dashboard_graph_view", "Dashboard graph: open on one entity's neighborhood, or on everything, coloured by cluster",
+     {"choices": ["neighborhood", "everything"]}),
+    ("dashboard_graph_hops", "Dashboard graph: how many hops a neighborhood reaches (1-4)", {"minimum": 1, "maximum": 4}),
     ("show_advanced", "Customize recall, capture and night tuning?",
      {"choices": ["no", "yes"], "default": "no"}),
     ("sleep_guard_models", "Models that must be idle before each night call, comma-separated "
@@ -248,19 +256,51 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
     ("calibration_min_labels", "Gold labels needed before the decider is calibrated", {"when": _ADVANCED}),
     ("supersede_threshold", "Decider probability needed before a newer fact retires an older one (high on purpose: "
                             "a wrong retirement hides a true memory)", {"when": _ADVANCED}),
+    ("dashboard_graph_resolution", "Dashboard graph: cluster size (higher splits memory into more, smaller clusters)",
+     {"when": _ADVANCED, "minimum": 0.2, "maximum": 5}),
+    ("dashboard_graph_mention_weight", "Dashboard graph: how strongly a line mentioning two entities ties them, next to a fact "
+                             "(1.0)", {"when": _ADVANCED, "minimum": 0, "maximum": 2}),
 ]
 
 
-def config_schema() -> List[Dict[str, Any]]:
-    """Fields for Hermes's ``hermes memory setup`` and dashboard (key, description, default, choices, when)."""
+# Short names for setup screens; any key not listed is shown title-cased.
+LABELS: Dict[str, str] = {
+    "user_name": "Your name", "agent_name": "The agent's name", "other_speakers": "Other speakers",
+    "server_url": "Model server URL", "server_type": "Server type", "lmstudio_url": "Server URL (older name)",
+    "embed_model": "Embedding model", "decider_model": "Check model", "sleep_model": "Night model",
+    "server_layout": "Model servers", "show_advanced": "Show tuning",
+    "embed_url": "Embedding server URL", "embed_api": "Embedding server type", "decider_url": "Check server URL",
+    "decider_api": "Check server type", "sleep_url": "Night server URL", "sleep_api": "Night server type",
+    "dashboard_graph_view": "Graph opens on", "dashboard_graph_hops": "Graph neighborhood hops",
+    "dashboard_graph_resolution": "Graph cluster size", "dashboard_graph_mention_weight": "Graph co-mention weight",
+    "graph_hops": "Recall graph hops", "lms_cli": "LM Studio lms CLI", "sleep_guard_models": "Night waits for",
+}
+
+
+def config_schema(current: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
+    """Fields for Hermes's ``hermes memory setup`` and dashboard (key, description, default, choices, when).
+
+    ``current``: the effective config. Hermes saves every visible field, filling any the user didn't touch with its
+    default, so each default here is what Sophia uses now: a save from setup or the dashboard never changes behaviour
+    (an older config's lmstudio_url, say, isn't overwritten by a new field's generic default)."""
+    effective: Dict[str, Any] = {}
+    if current:
+        effective = {k: current.get(k) for k in DEFAULTS if k in current}
+        effective["server_url"] = str(current.get("server_url") or current.get("lmstudio_url") or "")
+        effective["server_type"] = endpoint(current, "decider")[1]
+        for role in ROLES:                      # a job that follows the shared server stays on "default"
+            for suffix in ("_url", "_api"):
+                if str(current.get(role + suffix) or "default").strip().lower() in ("", "default"):
+                    effective[role + suffix] = "default"
     out = []
     for key, desc, extra in FIELDS:
-        default = extra.get("default", DEFAULTS.get(key))
+        default = effective[key] if key in effective and effective[key] is not None else extra.get("default", DEFAULTS.get(key))
         if isinstance(default, list):
             default = ", ".join(default)
         elif default is None:
             default = ""
-        field = {"key": key, "description": desc, "default": default}
+        field = {"key": key, "label": LABELS.get(key, key.replace("_", " ").capitalize()), "description": desc,
+                 "default": default}
         field.update({k: v for k, v in extra.items() if k != "default"})
         out.append(field)
     return out

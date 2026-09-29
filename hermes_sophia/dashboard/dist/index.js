@@ -1,6 +1,6 @@
-/* Mindscape — the Hermes dashboard tab for watching and curating Sophia's memory.
+/* Sophia — the Hermes dashboard tab for watching, curating and configuring Sophia's memory.
  * Plain IIFE against the dashboard's plugin SDK (its React, its authenticated fetch); no build step.
- * Views: Overview (live state, last night, what needs a look), Graph, Pages, Recall. Sub-views live in the URL
+ * Views: Overview (live state, last night, what needs a look), Graph, Mindscape (the pages), Recall, Settings. Sub-views live in the URL
  * query (?mv=graph, ?mv=pages&mk=<entity>, ?mv=recall&mk=<id>): the dashboard routes plugin tabs by exact path and
  * rewrites the URL on load (it keeps other query parameters, but not the hash). */
 (function () {
@@ -91,7 +91,8 @@
     minus: '<path d="M5 12h14"/>',
     fit: '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',
     check: '<path d="m5 12 5 5 9-10"/>',
-    more: '<path d="M5 12h.01M12 12h.01M19 12h.01" stroke-width="3"/>'
+    more: '<path d="M5 12h.01M12 12h.01M19 12h.01" stroke-width="3"/>',
+    gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>'
   };
   function Icon(p) {
     return h("svg", { width: p.size || 20, height: p.size || 20, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor",
@@ -134,7 +135,8 @@
     return st[0];
   }
 
-  var VIEWS = [["overview", "Overview", "grid"], ["graph", "Graph", "graph"], ["pages", "Pages", "book"], ["recall", "Recall", "message"]];
+  var VIEWS = [["overview", "Overview", "grid"], ["graph", "Graph", "graph"], ["pages", "Mindscape", "book"], ["recall", "Recall", "message"],
+               ["settings", "Settings", "gear"]];
   function parseRoute() {
     var q = new URLSearchParams(window.location.search);
     var view = q.get("mv") || "", arg = q.get("mk") || "";
@@ -544,14 +546,25 @@
     check: { color: "var(--sm-amber)", dash: "2 5" },
     before: { color: "var(--sm-grey)", dash: "7 6" }
   };
-
+  var CLUSTER_COLORS = ["#7fdbff", "#b39dff", "#f2be72", "#8fe3b0", "#f2a7d8", "#9fb4ff", "#ffa38a", "#6ee7d7",
+                        "#e6d36f", "#c9a6ff", "#86c8ff", "#f59ec0"];
+  function clusterColor(c) { return c == null || c < 0 ? "var(--sm-grey)" : CLUSTER_COLORS[c % CLUSTER_COLORS.length]; }
   function radius(n) { return n.subject ? Math.min(30, 7 + 2.6 * Math.sqrt(n.facts)) : Math.min(12, 4 + Math.sqrt(n.facts)); }
 
-  // A small force layout: settled nodes keep their place (they move a little), new nodes start beside a neighbour.
-  function settle(vis, links, pos, iters) {
+  // A small force layout. Placed nodes keep their place (they move a little); new ones start beside a placed
+  // neighbour, or beside their cluster's anchor. ``group`` (node -> cluster) also pulls each cluster together.
+  function settle(vis, links, pos, iters, group) {
     var n = vis.length, P = new Array(n), idx = {};
     vis.forEach(function (v, i) { idx[v.id] = i; });
-    var fresh = 0;
+    var fresh = 0, groups = {};
+    if (group) vis.forEach(function (v) { var c = group[v.id]; if (c != null && c >= 0) groups[c] = true; });
+    var gl = Object.keys(groups).map(Number).sort(function (a, b) { return a - b; }), G = gl.length || 1;
+    var anchor = {};
+    gl.forEach(function (c, i) {
+      if (i === 0) { anchor[c] = { x: 0, y: 0 }; return; }
+      var a = 2 * Math.PI * (i - 1) / Math.max(1, G - 1) - Math.PI / 2, r = 300 + 55 * Math.sqrt(G);
+      anchor[c] = { x: Math.cos(a) * r, y: Math.sin(a) * r };
+    });
     vis.forEach(function (v, i) {
       var p = pos[v.id];
       if (!p) {
@@ -561,8 +574,10 @@
           if (l.a === v.id && pos[l.b]) near = pos[l.b];
           else if (l.b === v.id && pos[l.a]) near = pos[l.a];
         }
-        var ang = Math.random() * Math.PI * 2, dist = near ? 30 + Math.random() * 30 : 40 + Math.random() * 120;
-        p = pos[v.id] = { x: (near ? near.x : 0) + Math.cos(ang) * dist, y: (near ? near.y : 0) + Math.sin(ang) * dist, fresh: true };
+        var ang = Math.random() * Math.PI * 2, base = { x: 0, y: 0 }, dist = 40 + Math.random() * 120;
+        if (near) { base = near; dist = 30 + Math.random() * 30; }
+        else if (group && anchor[group[v.id]]) { base = anchor[group[v.id]]; dist = 20 + Math.random() * 60; }
+        p = pos[v.id] = { x: base.x + Math.cos(ang) * dist, y: base.y + Math.sin(ang) * dist, fresh: true };
         fresh++;
       }
       P[i] = p;
@@ -570,6 +585,7 @@
     if (!fresh && iters < 100) return;
     var R = vis.map(radius), L = links.map(function (l) { return [idx[l.a], idx[l.b], l.len, l.k]; })
       .filter(function (l) { return l[0] != null && l[1] != null; });
+    var gi = group ? vis.map(function (v) { var c = group[v.id]; return c == null || c < 0 ? -1 : c; }) : null;
     var dx = new Float64Array(n), dy = new Float64Array(n);
     for (var it = 0; it < iters; it++) {
       var temp = 1 + 24 * (1 - it / iters);
@@ -588,8 +604,15 @@
         var s = (dl - L[m][2]) * L[m][3] / dl;
         dx[a] += lx * s; dy[a] += ly * s; dx[b] -= lx * s; dy[b] -= ly * s;
       }
+      if (gi) {                                              // each cluster gathers at its own anchor
+        for (var h2 = 0; h2 < n; h2++) {
+          var an = anchor[gi[h2]];
+          if (!an) continue;
+          dx[h2] -= (P[h2].x - an.x) * 0.05; dy[h2] -= (P[h2].y - an.y) * 0.05;
+        }
+      }
       for (var q = 0; q < n; q++) {
-        dx[q] -= P[q].x * 0.03; dy[q] -= P[q].y * 0.03;
+        if (!gi || gi[q] < 0) { dx[q] -= P[q].x * 0.012; dy[q] -= P[q].y * 0.012; }
         var lim = P[q].fresh ? temp : temp * 0.3, mag = Math.sqrt(dx[q] * dx[q] + dy[q] * dy[q]);
         if (mag > lim) { dx[q] *= lim / mag; dy[q] *= lim / mag; }
         P[q].x += dx[q]; P[q].y += dy[q];
@@ -598,79 +621,150 @@
     P.forEach(function (p) { p.fresh = false; });
   }
 
+  function hull(pts) {                                       // convex hull (monotone chain)
+    if (pts.length < 3) return pts.slice();
+    var p = pts.slice().sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; });
+    var cross = function (o, a, b) { return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]); };
+    var lo = [], up = [];
+    p.forEach(function (q) { while (lo.length >= 2 && cross(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); });
+    for (var i = p.length - 1; i >= 0; i--) { var q = p[i]; while (up.length >= 2 && cross(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); }
+    up.pop(); lo.pop();
+    return lo.concat(up);
+  }
+
+  // everything within ``hops`` of ``center``; the last ring is trimmed to the best-connected when it would pass ``cap``
+  function neighborhood(center, hops, adj, degree, cap) {
+    var depth = {}, order = [center], frontier = [center], trimmed = 0;
+    depth[center] = 0;
+    for (var d = 1; d <= hops && frontier.length; d++) {
+      var next = [];
+      frontier.forEach(function (n) {
+        (adj[n] || []).forEach(function (m) { if (depth[m] == null) { depth[m] = d; next.push(m); } });
+      });
+      if (order.length + next.length > cap) {
+        next.sort(function (a, b) { return (degree[b] || 0) - (degree[a] || 0); });
+        var keep = next.slice(0, Math.max(0, cap - order.length));
+        next.slice(keep.length).forEach(function (m) { delete depth[m]; });
+        trimmed += next.length - keep.length;
+        next = keep;
+      }
+      order = order.concat(next);
+      frontier = next;
+    }
+    return { depth: depth, ids: order, trimmed: trimmed };
+  }
+
+  function Seg(p) {                                           // a small segmented control
+    return h("div", { className: "sm-seg", role: "group", "aria-label": p.label },
+      p.caption ? h("span", { className: "sm-seg-caption", "aria-hidden": "true" }, p.caption) : null,
+      p.options.map(function (o) {
+        var on = p.value === o[0];
+        return h("button", { key: String(o[0]), type: "button", className: on ? "sm-on" : "", "aria-pressed": on,
+          "aria-label": o[2] || undefined, onClick: function () { p.onChange(o[0]); } }, o[1]);
+      }));
+  }
+
   function GraphView(p) {
     var g = useApi("/graph", 0);
     var ctx = useContext(Ctx);
     useEffect(function () { g.reload(); }, [ctx.version]);   // eslint-disable-line
-    var wide = p.wide;
+    var wide = p.wide, data = g.data;
+    var st = useState({ view: null, hops: null, center: p.arg || null, colorBy: "cluster" }), vs = st[0], setVs = st[1];
     var selS = useState(p.arg || null), sel = selS[0], setSel = selS[1];
-    var expS = useState(function () { return p.arg ? [p.arg] : []; }), expanded = expS[0], setExpanded = expS[1];
     var showS = useState({ now: true, planned: true, check: true, before: true }), show = showS[0], setShow = showS[1];
-    var allS = useState(false), showAll = allS[0];
     var togS = useState(true), together = togS[0];
+    var hullS = useState(true), hulls = hullS[0];
+    var focusS = useState(null), focusCl = focusS[0], setFocus = focusS[1];
     var qS = useState(""), query = qS[0];
     var sheetS = useState(false), sheetOpen = sheetS[0];
-    var pos = useRef({});
+    var posN = useRef({}), posE = useRef({});
     var viewS = useState({ k: 1, x: 0, y: 0 }), view = viewS[0], setView = viewS[1];
     var boxRef = useRef(null), svgRef = useRef(null);
     var sizeS = useState({ w: 0, h: 0 }), size = sizeS[0];
-    var fitted = useRef(false);
+    var refit = useRef(true), picked = useRef(0), lastTap = useRef({ id: null, t: 0 });
 
-    useEffect(function () { if (p.arg) { setSel(p.arg); setExpanded(function (e) { return e.indexOf(p.arg) >= 0 ? e : e.concat([p.arg]); }); } }, [p.arg]);
+    // the dashboard's own defaults (Settings), once the data arrives
+    var mode = vs.view || (data && data.settings && data.settings.view) || "neighborhood";
+    var hops = vs.hops || (data && data.settings && data.settings.hops) || 2;
 
+    useEffect(function () {
+      if (p.arg) { setSel(p.arg); setVs(function (v) { return Object.assign({}, v, { center: p.arg, view: "neighborhood" }); }); refit.current = true; }
+    }, [p.arg]);
     useEffect(function () {
       var el = boxRef.current;
       if (!el) return undefined;
       var ro = new ResizeObserver(function () { sizeS[1]({ w: el.clientWidth, h: el.clientHeight }); });
       ro.observe(el);
       return function () { ro.disconnect(); };
-    }, [g.data]);
+    }, [!!data]);
 
-    var data = g.data;
     var byId = useMemo(function () {
       var m = {};
       (data ? data.nodes : []).forEach(function (n) { m[n.id] = n; });
       return m;
     }, [data]);
+    var clusters = (data && data.clusters) || [];
+    var defaultCenter = useMemo(function () {
+      if (!data) return null;
+      var you = data.nodes.filter(function (n) { return n.role === "user"; })[0];
+      return (you || data.nodes.slice().sort(function (a, b) { return b.facts - a.facts; })[0] || {}).id || null;
+    }, [data]);
+    var center = vs.center && byId[vs.center] ? vs.center : defaultCenter;
 
     var shown = useMemo(function () {
-      if (!data) return { nodes: [], edges: [], links: [], ties: [] };
-      var exp = {};
-      expanded.forEach(function (x) { exp[x] = true; });
-      var edges = data.edges.filter(function (e) {
-        if (!show[statusGroup(e)]) return false;
-        var hubPair = byId[e.s] && byId[e.s].subject && byId[e.o] && byId[e.o].subject;
-        return showAll || hubPair || exp[e.s] || exp[e.o];
-      });
-      var ids = {};
-      data.nodes.forEach(function (n) { if (n.subject) ids[n.id] = true; });
-      edges.forEach(function (e) { ids[e.s] = true; ids[e.o] = true; });
+      if (!data || !center) return { nodes: [], edges: [], links: [], ties: [], depth: {}, trimmed: 0 };
+      var edges = data.edges.filter(function (e) { return show[statusGroup(e)]; });
+      var ties = together ? data.together : [];
+      var adj = {}, degree = {};
+      var link = function (a, b) { (adj[a] = adj[a] || []).push(b); (adj[b] = adj[b] || []).push(a); degree[a] = (degree[a] || 0) + 1; degree[b] = (degree[b] || 0) + 1; };
+      edges.forEach(function (e) { link(e.s, e.o); });
+      ties.forEach(function (t) { link(t.a, t.b); });
+      var ids = {}, depth = {}, trimmed = 0;
+      if (mode === "neighborhood") {
+        var nb = neighborhood(center, hops, adj, degree, wide ? 360 : 220);
+        nb.ids.forEach(function (x) { ids[x] = true; });
+        depth = nb.depth; trimmed = nb.trimmed;
+      } else {
+        data.nodes.slice().sort(function (a, b) { return b.facts - a.facts; }).slice(0, 700)
+          .forEach(function (n) { ids[n.id] = true; });
+      }
+      var vEdges = edges.filter(function (e) { return ids[e.s] && ids[e.o]; });
+      var vTies = ties.filter(function (t) { return ids[t.a] && ids[t.b]; });
       var nodes = data.nodes.filter(function (n) { return ids[n.id]; });
-      var ties = together ? data.together.filter(function (t) { return ids[t.a] && ids[t.b]; }) : [];
-      // a hub's facts sit farther out the more it has, alternating over three rings so their labels don't collide
-      var seen = {}, links = [], degree = {}, nth = {};
-      edges.forEach(function (e) { degree[e.s] = (degree[e.s] || 0) + 1; degree[e.o] = (degree[e.o] || 0) + 1; });
-      edges.forEach(function (e) {
+      // a busy node's facts sit farther out, over three staggered rings, so their labels don't collide
+      var seen = {}, links = [], deg = {}, nth = {};
+      vEdges.forEach(function (e) { deg[e.s] = (deg[e.s] || 0) + 1; deg[e.o] = (deg[e.o] || 0) + 1; });
+      vEdges.forEach(function (e) {
         var key = e.s < e.o ? e.s + "|" + e.o : e.o + "|" + e.s;
         if (seen[key]) return;
         seen[key] = true;
         var hub = byId[e.s].subject && byId[e.o].subject;
-        var owner = (degree[e.s] || 0) >= (degree[e.o] || 0) ? e.s : e.o, deg = degree[owner] || 0;
-        var spread = Math.min(200, 2.2 * deg);
+        var owner = (deg[e.s] || 0) >= (deg[e.o] || 0) ? e.s : e.o, dg = deg[owner] || 0;
+        var spread = Math.min(200, 2.2 * dg);
         nth[owner] = (nth[owner] || 0) + 1;
-        var ring = deg > 20 ? (nth[owner] % 3) * 46 : 0;
-        links.push({ a: e.s, b: e.o, len: hub ? 110 + spread * 1.4 : 30 + radius(byId[e.s]) + radius(byId[e.o]) + spread + ring,
-                     k: hub ? 0.02 : 0.08 });
+        var ring = dg > 20 ? (nth[owner] % 3) * 46 : 0;
+        var across = mode === "everything" && byId[e.s].cluster !== byId[e.o].cluster;
+        links.push({ a: e.s, b: e.o, len: (hub ? 110 + spread * 1.4 : 30 + radius(byId[e.s]) + radius(byId[e.o]) + spread + ring) + (across ? 160 : 0),
+                     k: (hub ? 0.02 : 0.08) * (across ? 0.1 : 1) });
       });
-      ties.forEach(function (t) { links.push({ a: t.a, b: t.b, len: 220, k: 0.004 * Math.min(t.n, 5) }); });
-      return { nodes: nodes, edges: edges, links: links, ties: ties };
-    }, [data, byId, expanded, show, showAll, together]);
+      vTies.forEach(function (t) {
+        var across = mode === "everything" && byId[t.a].cluster !== byId[t.b].cluster;
+        links.push({ a: t.a, b: t.b, len: 220, k: 0.004 * Math.min(t.n, 5) * (across ? 0.1 : 1) });
+      });
+      return { nodes: nodes, edges: vEdges, links: links, ties: vTies, depth: depth, trimmed: trimmed };
+    }, [data, byId, center, mode, hops, show, together, wide]);
 
+    var pos = mode === "everything" ? posE : posN;
+    var groupOf = useMemo(function () {
+      var m = {};
+      (data ? data.nodes : []).forEach(function (n) { m[n.id] = n.cluster; });
+      return m;
+    }, [data]);
     var laid = useMemo(function () {
       if (!shown.nodes.length) return 0;
-      settle(shown.nodes, shown.links, pos.current, shown.nodes.length > 150 ? 140 : 220);
+      settle(shown.nodes, shown.links, pos.current, shown.nodes.length > 250 ? 150 : 220, mode === "everything" ? groupOf : null);
       return Date.now();
-    }, [shown]);
+    }, [shown, mode]);
 
     var fitTo = useCallback(function (ids, maxK) {
       if (!ids.length || !size.w) return;
@@ -681,43 +775,36 @@
         x0 = Math.min(x0, q.x); y0 = Math.min(y0, q.y); x1 = Math.max(x1, q.x); y1 = Math.max(y1, q.y);
       });
       if (x0 === Infinity) return;
-      var hh = wide ? size.h : Math.max(180, size.h - 170);   // phones: keep it above the folded panel
-      var m = 60, k = Math.min((size.w - 2 * m) / Math.max(1, x1 - x0), (hh - 2 * m) / Math.max(1, y1 - y0));
-      k = Math.max(0.15, Math.min(maxK || 2.2, k));
+      var hh = wide ? size.h : Math.max(180, size.h - (sel ? 170 : 0));
+      var m = 50, k = Math.min((size.w - 2 * m) / Math.max(1, x1 - x0), (hh - 2 * m) / Math.max(1, y1 - y0));
+      k = Math.max(wide ? 0.12 : 0.3, Math.min(maxK || 2.2, k));
       setView({ k: k, x: size.w / 2 - k * (x0 + x1) / 2, y: hh / 2 - k * (y0 + y1) / 2 });
-    }, [size, wide]);
-    var focus = useRef(null);
-    useEffect(function () {
-      var id = focus.current;
-      if (!id || !laid) return;
-      focus.current = null;
-      if (!wide) {                 // phones: centre it at a readable size above the panel; pan or pinch for the rest
-        var q = pos.current[id];
-        if (q && size.w) setView({ k: 0.9, x: size.w / 2 - 0.9 * q.x, y: Math.max(180, size.h - 170) / 2 - 0.9 * q.y });
-        return;
-      }
-      var ids = [id];
-      shown.edges.forEach(function (e) { if (e.s === id) ids.push(e.o); else if (e.o === id) ids.push(e.s); });
-      fitTo(ids, 1.6);
-    }, [laid, sel, fitTo]);   // eslint-disable-line
+    }, [size, wide, mode, sel]);
+    var fit = useCallback(function () { fitTo(shown.nodes.map(function (n) { return n.id; }), 1.8); }, [shown, fitTo]);
+    var topLabels = useMemo(function () {                     // which names show at a glance
+      var m = {};
+      shown.nodes.slice().sort(function (a, b) { return b.facts - a.facts; }).slice(0, mode === "everything" ? 28 : 60)
+        .forEach(function (n) { m[n.id] = true; });
+      return m;
+    }, [shown, mode]);
 
-    var fit = useCallback(function () {
-      var ns = shown.nodes;
-      if (!ns.length) return;
-      var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-      ns.forEach(function (n) {
-        var q = pos.current[n.id];
-        if (!q) return;
-        x0 = Math.min(x0, q.x); y0 = Math.min(y0, q.y); x1 = Math.max(x1, q.x); y1 = Math.max(y1, q.y);
-      });
-      var m = 60, k = Math.min((size.w - 2 * m) / Math.max(1, x1 - x0), (size.h - 2 * m) / Math.max(1, y1 - y0));
-      k = Math.max(0.15, Math.min(2.2, k));
-      setView({ k: k, x: size.w / 2 - k * (x0 + x1) / 2, y: size.h / 2 - k * (y0 + y1) / 2 });
-    }, [shown, size]);
+    useEffect(function () {                                   // after a change of view, centre, hops or cluster
+      if (!laid || !size.w || !refit.current) return;
+      refit.current = false;
+      if (focusCl != null && mode === "everything") {
+        fitTo(shown.nodes.filter(function (n) { return n.cluster === focusCl; }).map(function (n) { return n.id; }), 1.8);
+      } else fit();
+    }, [laid, size, focusCl]);   // eslint-disable-line
 
-    useEffect(function () { if (laid && size.w > 0 && !fitted.current) { fitted.current = true; fit(); } }, [laid, size, fit]);
+    function change(next) { refit.current = true; setVs(function (v) { return Object.assign({}, v, next); }); }
+    function explore(id) { setSel(id); setFocus(null); change({ center: id, view: "neighborhood" }); }
+    function focusCluster(id) {
+      refit.current = true;
+      setFocus(function (f) { return f === id ? null : id; });
+      if (mode !== "everything") setVs(function (v) { return Object.assign({}, v, { view: "everything" }); });
+    }
 
-    // pan (drag), zoom (wheel, pinch), tap to select
+    // pan (drag), zoom (wheel, pinch), tap to select, double-tap to explore from there
     var ptrs = useRef({}), gesture = useRef(null);
     function toLocal(e) {
       var r = svgRef.current.getBoundingClientRect();
@@ -725,7 +812,7 @@
     }
     function zoomAt(pt, factor) {
       setView(function (v) {
-        var k = Math.max(0.12, Math.min(4, v.k * factor)), f = k / v.k;
+        var k = Math.max(0.08, Math.min(4, v.k * factor)), f = k / v.k;
         return { k: k, x: pt.x - (pt.x - v.x) * f, y: pt.y - (pt.y - v.y) * f };
       });
     }
@@ -735,7 +822,7 @@
       var onWheel = function (e) { e.preventDefault(); zoomAt(toLocal(e), Math.exp(-e.deltaY * 0.0015)); };
       el.addEventListener("wheel", onWheel, { passive: false });
       return function () { el.removeEventListener("wheel", onWheel); };
-    }, [g.data]);
+    }, [!!data]);
     function onDown(e) {
       var pt = toLocal(e);
       ptrs.current[e.pointerId] = pt;
@@ -763,7 +850,7 @@
         var ids = Object.keys(ptrs.current);
         if (ids.length < 2) return;
         var a = ptrs.current[ids[0]], b = ptrs.current[ids[1]], d = Math.hypot(a.x - b.x, a.y - b.y);
-        var k = Math.max(0.12, Math.min(4, gs.view.k * d / gs.d)), f = k / gs.view.k;
+        var k = Math.max(0.08, Math.min(4, gs.view.k * d / gs.d)), f = k / gs.view.k;
         setView({ k: k, x: gs.mid.x - (gs.mid.x - gs.view.x) * f, y: gs.mid.y - (gs.mid.y - gs.view.y) * f });
       }
     }
@@ -771,25 +858,15 @@
       var gs = gesture.current;
       delete ptrs.current[e.pointerId];
       if (gs && gs.type === "pan" && !gs.moved) {
-        if (gs.node) pick(gs.node); else setSel(null);
+        if (gs.node) {
+          var now = Date.now(), twice = lastTap.current.id === gs.node && now - lastTap.current.t < 400;
+          lastTap.current = { id: gs.node, t: now };
+          picked.current = now;
+          if (twice) explore(gs.node);
+          else { if (sel !== gs.node) sheetS[1](false); setSel(gs.node); }
+        } else setSel(null);
       }
       if (!Object.keys(ptrs.current).length) gesture.current = null;
-    }
-    var picked = useRef(0);
-    function pick(id) {
-      var n = byId[id];
-      if (!n) return;
-      picked.current = Date.now();
-      if (sel === id && n.subject) {
-        setExpanded(function (e) { return e.indexOf(id) >= 0 ? e.filter(function (x) { return x !== id; }) : e.concat([id]); });
-        return;
-      }
-      if (sel !== id) sheetS[1](false);               // phones: the panel opens folded so the graph stays in view
-      setSel(id);
-      if (n.subject) {
-        focus.current = id;
-        setExpanded(function (e) { return e.indexOf(id) >= 0 ? e : e.concat([id]); });
-      }
     }
     function find(e) {
       e.preventDefault();
@@ -798,15 +875,7 @@
       var hit = data.nodes.filter(function (n) { return n.label.toLowerCase().indexOf(q) >= 0; })
         .sort(function (a, b) { return (b.subject - a.subject) || (b.facts - a.facts); })[0];
       if (!hit) { ctx.notify("Nothing in the graph matches “" + query + "”."); return; }
-      if (!hit.subject) {
-        var owner = data.edges.filter(function (x) { return x.o === hit.id || x.s === hit.id; })[0];
-        if (owner) setExpanded(function (ex) { var o = owner.s === hit.id ? owner.o : owner.s; return ex.indexOf(o) >= 0 ? ex : ex.concat([o]); });
-      }
-      setSel(hit.id);
-      setTimeout(function () {
-        var q2 = pos.current[hit.id];
-        if (q2) setView(function (v) { var k = Math.max(v.k, 1.1); return { k: k, x: size.w / 2 - k * q2.x, y: size.h / 2 - k * q2.y }; });
-      }, 30);
+      explore(hit.id);
     }
 
     if (g.error && !data) return h(Failed, { error: g.error, retry: g.reload });
@@ -818,23 +887,48 @@
       shown.edges.forEach(function (e) { if (e.s === sel) near[e.o] = true; if (e.o === sel) near[e.s] = true; });
     }
     var selEdges = sel ? shown.edges.filter(function (e) { return e.s === sel || e.o === sel; }) : [];
-    var labelAll = view.k >= 1.25;
+    var everything = mode === "everything";
+    var colorOf = function (n) { return vs.colorBy === "cluster" ? clusterColor(n.cluster) : ROLE[n.role][1]; };
+    var dimmed = function (n) {
+      if (focusCl != null && everything) return n.cluster !== focusCl;
+      return sel && !near[n.id];
+    };
+
+    // clusters: a soft outline around each, and its name
+    var hullEls = [];
+    if (everything && hulls) {
+      clusters.forEach(function (c) {
+        var pts = shown.nodes.filter(function (n) { return n.cluster === c.id; })
+          .map(function (n) { var q = pos.current[n.id]; return q ? [q.x, q.y] : null; }).filter(Boolean);
+        if (pts.length < 3) return;
+        var hp = hull(pts), col = clusterColor(c.id), faded = focusCl != null && focusCl !== c.id;
+        hullEls.push(h("path", { key: "h" + c.id, d: "M" + hp.map(function (q) { return q[0] + "," + q[1]; }).join("L") + "Z",
+          fill: col, fillOpacity: faded ? 0.02 : 0.07, stroke: col, strokeOpacity: faded ? 0.04 : 0.14,
+          strokeWidth: 30 / view.k, strokeLinejoin: "round", className: "sm-hull" }));
+        var top = hp.reduce(function (a, q) { return q[1] < a[1] ? q : a; }, hp[0]);
+        var cxm = pts.reduce(function (a, q) { return a + q[0]; }, 0) / pts.length;
+        if (c.size >= 4) hullEls.push(h("text", { key: "t" + c.id, x: cxm, y: top[1] - 30 / view.k, textAnchor: "middle",
+          className: "sm-cluster-label", fill: col, fontSize: 13 / view.k, opacity: faded ? 0.3 : 1 }, trunc(c.label, 42)));
+      });
+    }
 
     var svg = h("svg", { ref: svgRef, className: "sm-svg", width: size.w, height: size.h, role: "img",
-        "aria-label": "Memory graph: " + shown.nodes.length + " entities, " + shown.edges.length + " facts shown",
+        "aria-label": "Memory graph: " + shown.nodes.length + " people and things, " + shown.edges.length + " facts shown",
         onPointerDown: onDown, onPointerMove: onMove, onPointerUp: onUp, onPointerCancel: onUp },
       h("g", { transform: "translate(" + view.x + "," + view.y + ") scale(" + view.k + ")" },
+        hullEls,
         shown.ties.map(function (t) {
           var a = pos.current[t.a], b = pos.current[t.b];
           if (!a || !b) return null;
-          return h("line", { key: "t" + t.a + t.b, x1: a.x, y1: a.y, x2: b.x, y2: b.y, className: "sm-tie", strokeWidth: Math.min(4, 0.6 + t.n * 0.4) / view.k });
+          return h("line", { key: "t" + t.a + "|" + t.b, x1: a.x, y1: a.y, x2: b.x, y2: b.y, className: "sm-tie", strokeWidth: Math.min(4, 0.6 + t.n * 0.4) / view.k });
         }),
         shown.edges.map(function (e) {
           var a = pos.current[e.s], b = pos.current[e.o];
           if (!a || !b) return null;
-          var st = EDGE[statusGroup(e)], lit = sel && (e.s === sel || e.o === sel);
-          return h("line", { key: e.id, x1: a.x, y1: a.y, x2: b.x, y2: b.y, stroke: st.color, strokeDasharray: st.dash,
-            strokeWidth: (lit ? 2.2 : 1.3) / Math.sqrt(view.k), opacity: sel ? (lit ? 1 : 0.18) : 0.6 });
+          var es = EDGE[statusGroup(e)], lit = sel && (e.s === sel || e.o === sel);
+          var faded = (focusCl != null && everything && (byId[e.s].cluster !== focusCl || byId[e.o].cluster !== focusCl)) || (sel && !lit);
+          return h("line", { key: e.id, x1: a.x, y1: a.y, x2: b.x, y2: b.y, stroke: es.color, strokeDasharray: es.dash,
+            strokeWidth: (lit ? 2.2 : 1.2) / Math.sqrt(view.k), opacity: faded ? 0.12 : lit ? 1 : 0.5 });
         }),
         selEdges.length <= 12 ? selEdges.map(function (e) {
           var a = pos.current[e.s], b = pos.current[e.o];
@@ -845,20 +939,25 @@
         shown.nodes.map(function (n) {
           var q = pos.current[n.id];
           if (!q) return null;
-          var r = radius(n), on = n.id === sel, dim = sel && !near[n.id], col = ROLE[n.role][1];
-          var showLabel = n.subject || on || (sel && near[n.id]) || labelAll;
+          var r = radius(n), on = n.id === sel, isCenter = !everything && n.id === center, col = colorOf(n), dim = dimmed(n);
+          var d = shown.depth[n.id];
+          var showLabel = on || isCenter || (sel && near[n.id]) || view.k >= (everything ? 1.6 : 1.25) ||
+            (topLabels[n.id] && !dim) || (!everything && d != null && d <= 1) ||
+            (focusCl != null && everything && n.cluster === focusCl && n.subject);
           return h("g", { key: n.id, "data-node": n.id, className: cx("sm-node", dim && "sm-dim"), transform: "translate(" + q.x + "," + q.y + ")" },
             h("circle", { r: Math.max(r, (wide ? 10 : 22) / view.k), fill: "transparent" }),
-            on && h("circle", { r: r + 6, className: "sm-halo" }),
-            h("circle", { r: Math.max(r, 3.5 / view.k), fill: col, fillOpacity: n.subject ? 0.22 : 0.14, stroke: col, strokeWidth: (on ? 2.5 : 1.5) / view.k }),
+            (on || isCenter) && h("circle", { r: r + 6, className: isCenter && !on ? "sm-halo sm-halo-center" : "sm-halo" }),
+            h("circle", { r: Math.max(r, 3.5 / view.k), fill: col, fillOpacity: n.subject ? 0.24 : 0.16, stroke: col, strokeWidth: (on ? 2.5 : 1.5) / view.k }),
             showLabel && h("text", { y: r + 13 / view.k, className: cx("sm-node-label", n.subject && "sm-node-hub"), fontSize: (n.subject ? 12.5 : 11) / view.k,
               textAnchor: "middle" }, trunc(n.label, n.subject ? 26 : 30)));
         })));
 
     var selNode = sel ? byId[sel] : null;
-    var detail = selNode ? h(GraphDetail, { node: selNode, edges: selEdges.length ? selEdges : data.edges.filter(function (e) { return e.s === sel || e.o === sel; }),
-      byId: byId, expanded: expanded.indexOf(sel) >= 0, go: p.go, pick: pick,
-      toggle: function () { setExpanded(function (e) { return e.indexOf(sel) >= 0 ? e.filter(function (x) { return x !== sel; }) : e.concat([sel]); }); },
+    var cl = selNode && selNode.cluster >= 0 ? clusters.filter(function (c) { return c.id === selNode.cluster; })[0] : null;
+    var detail = selNode ? h(GraphDetail, { node: selNode, edges: data.edges.filter(function (e) { return e.s === sel || e.o === sel; }),
+      byId: byId, cluster: cl, isCenter: !everything && sel === center, hops: hops, go: p.go,
+      pick: function (id) { picked.current = Date.now(); setSel(id); },
+      explore: function () { explore(sel); }, focusCluster: function () { if (cl) focusCluster(cl.id); },
       close: function () { setSel(null); } }) : null;
 
     var toolbar = h("div", { className: "sm-graph-tools" },
@@ -866,10 +965,9 @@
       h(IconBtn, { icon: "minus", label: "Zoom out", onClick: function () { zoomAt({ x: size.w / 2, y: size.h / 2 }, 1 / 1.3); } }),
       h(IconBtn, { icon: "fit", label: "Fit to screen", onClick: fit }));
 
-    var filters = [["now", "Current", "solid"], ["planned", "Planned", "dotted"], ["check", "Date passed", "dotted"], ["before", "Changed or cancelled", "dashed"]];
     var counts = {};
     data.edges.forEach(function (e) { var k = statusGroup(e); counts[k] = (counts[k] || 0) + 1; });
-    var filterEls = filters.map(function (f) {
+    var filterEls = [["now", "Current"], ["planned", "Planned"], ["check", "Date passed"], ["before", "Changed or cancelled"]].map(function (f) {
       var on = show[f[0]];
       return h("button", { key: f[0], type: "button", className: cx("sm-toggle", on && "sm-on"), "aria-pressed": on,
         onClick: function () { setShow(function (s) { var n = Object.assign({}, s); n[f[0]] = !s[f[0]]; return n; }); } },
@@ -879,26 +977,46 @@
       h(Icon, { name: "search", size: 18 }),
       h("input", { type: "search", value: query, placeholder: "Find a person, place, thing…", "aria-label": "Find in the graph",
         onChange: function (e) { qS[1](e.target.value); } }));
+    var centerNode = byId[center];
+    var viewControls = h("div", { className: "sm-graph-view" },
+      h(Seg, { label: "View", value: mode, onChange: function (v) { setFocus(null); change({ view: v }); },
+        options: [["neighborhood", "Neighborhood"], ["everything", "Everything"]] }),
+      !everything && h(Seg, { label: "Hops", caption: "Hops", value: hops, onChange: function (v) { change({ hops: v }); },
+        options: [[1, "1", "1 hop"], [2, "2", "2 hops"], [3, "3", "3 hops"], [4, "4", "4 hops"]] }),
+      h(Seg, { label: "Colour by", value: vs.colorBy, onChange: function (v) { setVs(function (x) { return Object.assign({}, x, { colorBy: v }); }); },
+        options: [["cluster", "Clusters"], ["role", "Who"]] }));
+    var stat = h("p", { className: "sm-graph-stat" }, everything
+      ? "All " + shown.nodes.length + " people and things, in " + clusters.length + " clusters" + (focusCl != null ? " · one in focus" : "")
+      : [hops + (hops === 1 ? " hop" : " hops") + " around ", h("strong", { key: "c" }, centerNode ? centerNode.label : "?"),
+         ": " + (shown.nodes.length - 1) + " people and things" + (shown.trimmed ? " (the " + shown.trimmed + " least connected left out)" : "")]);
+    var legend = clusters.length ? h("div", { className: "sm-clusters" },
+      h("div", { className: "sm-sub-head" }, "Clusters"),
+      h("ul", null, clusters.map(function (c) {
+        var on = focusCl === c.id;
+        return h("li", { key: c.id }, h("button", { type: "button", className: cx("sm-cluster", on && "sm-on"), "aria-pressed": on,
+          onClick: function () { focusCluster(c.id); } },
+          h("span", { className: "sm-swatch", style: { background: clusterColor(c.id) } }),
+          h("span", { className: "sm-cluster-name" }, c.label), h("span", { className: "sm-index-n" }, c.size)));
+      }))) : null;
     var extras = h("div", { className: "sm-graph-extras" },
-      h("label", { className: "sm-check" }, h("input", { type: "checkbox", checked: showAll, onChange: function (e) { allS[1](e.target.checked); } }), "Every fact (" + data.edges.length + ")"),
-      h("label", { className: "sm-check" }, h("input", { type: "checkbox", checked: together, onChange: function (e) { togS[1](e.target.checked); } }), "Faint lines: mentioned together"),
-      expanded.length ? h(Btn, { small: true, onClick: function () { setExpanded([]); } }, "Fold everything") : null);
+      h("label", { className: "sm-check" }, h("input", { type: "checkbox", checked: together, onChange: function (e) { togS[1](e.target.checked); refit.current = true; } }), "Mentioned together (faint lines)"),
+      everything && h("label", { className: "sm-check" }, h("input", { type: "checkbox", checked: hulls, onChange: function (e) { hullS[1](e.target.checked); } }), "Outline clusters"));
 
     if (wide) {
       return h("div", { className: "sm-graph sm-graph-wide" },
-        h("aside", { className: "sm-graph-side", "aria-label": "Filters" },
-          search,
+        h("aside", { className: "sm-graph-side", "aria-label": "Graph controls" },
+          search, viewControls, stat,
           h("div", { className: "sm-sub-head" }, "Show"), h("div", { className: "sm-toggles" }, filterEls),
-          extras,
-          h("p", { className: "sm-hint" }, "Big circles are subjects: the people and things facts are about. Click one to spread out its facts; click again to fold them. Drag to move around, scroll to zoom.")),
+          extras, legend,
+          h("p", { className: "sm-hint" }, "Click a circle to see its facts; double-click it to explore from there. Drag to move, scroll to zoom.")),
         h("div", { className: "sm-graph-canvas", ref: boxRef }, svg, toolbar),
         h("aside", { className: "sm-graph-detail", "aria-label": "Selected" }, detail || h(Empty, null, "Select a circle to see what memory holds about it.")));
     }
     return h("div", { className: "sm-graph sm-graph-narrow" },
-      search,
+      search, viewControls, stat,
       h("div", { className: "sm-chips-row" }, filterEls),
       h("div", { className: "sm-graph-canvas", ref: boxRef }, svg, toolbar),
-      extras,
+      extras, legend,
       detail && h("section", { className: cx("sm-sheet", !sheetOpen && "sm-sheet-folded"), "aria-label": "Selected",
         // the click a phone sends after a tap lands on whatever just appeared under the finger: ignore it
         onClickCapture: function (e) { if (Date.now() - picked.current < 450) { e.stopPropagation(); e.preventDefault(); } } },
@@ -914,9 +1032,12 @@
     return h("div", { className: "sm-gd" },
       h("div", { className: "sm-gd-kind" }, h("span", { className: "sm-dot", style: { background: ROLE[n.role][1] } }), roleLabel(n.role, n.subject) + " · " + n.facts + " fact" + (n.facts === 1 ? "" : "s")),
       h("h2", { className: "sm-gd-title" }, n.label),
+      p.cluster && h("button", { type: "button", className: "sm-cluster sm-cluster-inline", onClick: p.focusCluster, title: "Show this cluster" },
+        h("span", { className: "sm-swatch", style: { background: clusterColor(p.cluster.id) } }),
+        h("span", { className: "sm-cluster-name" }, "Cluster: " + p.cluster.label), h("span", { className: "sm-index-n" }, p.cluster.size)),
       h("div", { className: "sm-gd-actions" },
         n.entity && h(Btn, { primary: true, onClick: function () { p.go("pages", n.id); } }, "Open page"),
-        n.subject && h(Btn, { onClick: p.toggle }, p.expanded ? "Fold its facts" : "Spread its facts"),
+        !p.isCenter && h(Btn, { onClick: p.explore }, "Explore from here"),
         h(IconBtn, { icon: "close", label: "Clear selection", onClick: p.close, className: "sm-gd-close" })),
       h("ul", { className: "sm-gd-facts" }, order.reduce(function (acc, k) {
         return acc.concat(groups[k].slice(0, 60).map(function (e) {
@@ -1161,6 +1282,96 @@
         : h(Empty, null, "Pick a message to see how the gate read it and what went into the prompt.")));
   }
 
+  // ------------------------------------------------------------------ settings
+  // Sophia's settings, read and saved through Hermes's memory-provider config API: the same fields and validation as
+  // Plugins → Sophia in Hermes and `hermes memory setup`. Each field shows the value Sophia uses now.
+  var SETTING_GROUPS = [["basics", "Basics", "Who's talking, the model server, and the three models"],
+                        ["servers", "A server per job", "Shown when “Model servers” is per-job"],
+                        ["advanced", "Tuning", "Recall, capture, the night and the dashboard's graph"]];
+  function fieldGroup(f) {
+    if (!f.when) return "basics";
+    return f.when.server_layout ? "servers" : "advanced";
+  }
+  function SettingsView() {
+    var ctx = useContext(Ctx);
+    var st = useState({ fields: null, error: null }), cfg = st[0], setCfg = st[1];
+    var valS = useState({}), values = valS[0], setValues = valS[1];
+    var dirtyS = useState({}), dirty = dirtyS[0];
+    var busy = useState(false);
+    var qS = useState(""), q = qS[0];
+    var load = useCallback(function () {
+      if (!SDK.api || !SDK.api.getMemoryProviderConfig) { setCfg({ fields: null, error: "This Hermes version has no settings API for plugins." }); return; }
+      SDK.api.getMemoryProviderConfig("sophia").then(function (r) {
+        var v = {};
+        (r.fields || []).forEach(function (f) { v[f.key] = f.value; });
+        setCfg({ fields: r.fields || [], error: null }); setValues(v); dirtyS[1]({});
+      }, function (e) { setCfg({ fields: null, error: errText(e) }); });
+    }, []);
+    useEffect(function () { load(); }, [load]);
+    if (cfg.error) return h(Failed, { error: cfg.error, retry: load });
+    if (!cfg.fields) return h(Loading);
+    function visible(f) {
+      if (!f.when) return true;
+      return Object.keys(f.when).every(function (k) { return String(values[k]) === String(f.when[k]); });
+    }
+    function set(key, v) {
+      setValues(function (o) { var n = Object.assign({}, o); n[key] = v; return n; });
+      dirtyS[1](function (o) { var n = Object.assign({}, o); n[key] = true; return n; });
+    }
+    function save() {
+      busy[1](true);
+      var out = {};
+      cfg.fields.forEach(function (f) { if (f.kind !== "secret" || values[f.key]) out[f.key] = values[f.key]; });
+      SDK.api.updateMemoryProviderConfig("sophia", out).then(function () {
+        busy[1](false); dirtyS[1]({});
+        ctx.notify("Saved. New conversations and tonight's run use it; this dashboard already does.");
+        ctx.changed(); load();
+      }, function (e) { busy[1](false); ctx.notify("Couldn't save: " + errText(e)); });
+    }
+    var ql = q.trim().toLowerCase();
+    var n = Object.keys(dirty).length;
+    var input = function (f) {
+      var v = values[f.key], id = "sm-set-" + f.key;
+      if (f.kind === "select") {
+        return h("select", { id: id, value: String(v), onChange: function (e) { set(f.key, e.target.value); } },
+          f.options.map(function (o) { return h("option", { key: o.value, value: o.value }, o.label); }));
+      }
+      if (f.kind === "boolean") {
+        return h("input", { id: id, type: "checkbox", checked: !!v, onChange: function (e) { set(f.key, e.target.checked); } });
+      }
+      var num = f.kind === "integer" || f.kind === "number";
+      return h("input", { id: id, type: f.kind === "secret" ? "password" : num ? "number" : "text", value: v == null ? "" : String(v),
+        min: f.minimum != null ? f.minimum : undefined, max: f.maximum != null ? f.maximum : undefined,
+        step: f.step != null ? f.step : f.kind === "integer" ? 1 : num ? "any" : undefined, placeholder: f.placeholder || "",
+        onChange: function (e) { set(f.key, num && e.target.value !== "" ? Number(e.target.value) : e.target.value); } });
+    };
+    return h("div", { className: "sm-settings" },
+      h("div", { className: "sm-settings-head" },
+        h("p", { className: "sm-hint" }, "The same settings as Plugins → Sophia in Hermes, and `hermes memory setup`. New conversations and the next night pick up a change; this dashboard does at once."),
+        h("div", { className: "sm-search" }, h(Icon, { name: "search", size: 18 }),
+          h("input", { type: "search", value: q, placeholder: "Find a setting…", "aria-label": "Find a setting", onChange: function (e) { qS[1](e.target.value); } }))),
+      SETTING_GROUPS.map(function (g) {
+        var fields = cfg.fields.filter(function (f) {
+          return fieldGroup(f) === g[0] && (ql ? (f.key + " " + f.label + " " + f.description).toLowerCase().indexOf(ql) >= 0 : visible(f));
+        });
+        if (!fields.length) return null;
+        return h("section", { key: g[0], className: "sm-card sm-settings-group", "aria-label": g[1] },
+          h("div", { className: "sm-card-head" }, h("h2", { className: "sm-h2" }, g[1]), h("span", { className: "sm-card-aside sm-muted" }, g[2])),
+          fields.map(function (f) {
+            return h("div", { key: f.key, className: cx("sm-setting", dirty[f.key] && "sm-setting-dirty", !visible(f) && "sm-setting-hidden") },
+              h("label", { htmlFor: "sm-set-" + f.key },
+                h("span", { className: "sm-setting-name" }, f.label), h("code", { className: "sm-setting-key" }, f.key)),
+              h("div", { className: "sm-setting-input" }, input(f)),
+              f.description && h("p", { className: "sm-setting-desc" }, f.description),
+              !visible(f) && h("p", { className: "sm-setting-desc sm-warn" }, "Not in use with the current choices above."));
+          }));
+      }),
+      h("div", { className: "sm-settings-bar" },
+        h("span", { className: "sm-muted" }, n ? n + " unsaved change" + (n === 1 ? "" : "s") : "No unsaved changes"),
+        h(Btn, { onClick: load, disabled: !n || busy[0] }, "Discard"),
+        h(Btn, { primary: true, onClick: save, disabled: !n || busy[0] }, "Save")));
+  }
+
   // ------------------------------------------------------------------ corrections
   function CorrectSheet(p) {
     var t = p.target, ctx = useContext(Ctx);
@@ -1213,7 +1424,7 @@
   }
 
   // ------------------------------------------------------------------ the tab
-  function Mindscape() {
+  function SophiaTab() {
     var rt = useRoute(), route = rt[0], go = rt[1];
     var wide = useMedia("(min-width: 900px)");
     var now = useApi("/now", 5000);
@@ -1244,11 +1455,12 @@
 
     var missing = now.error && /No Sophia store|404/.test(now.error) && !now.data;
     var body;
-    if (missing) body = h(Card, { title: "No memory here yet" }, h("p", { className: "sm-lede" }, now.error),
-      h("p", { className: "sm-hint" }, "Mindscape reads Sophia's store for the active profile. Set memory.provider to sophia and talk for a while."));
+    if (missing && route.view !== "settings") body = h(Card, { title: "No memory here yet" }, h("p", { className: "sm-lede" }, now.error),
+      h("p", { className: "sm-hint" }, "This tab reads Sophia's store for the active profile. Set memory.provider to sophia and talk for a while."));
     else if (route.view === "graph") body = h(GraphView, { arg: route.arg, go: go, wide: wide, key: "graph" });
     else if (route.view === "pages") body = h(PagesView, { arg: route.arg, go: go, wide: wide });
     else if (route.view === "recall") body = h(RecallView, { arg: route.arg, go: go, wide: wide });
+    else if (route.view === "settings") body = h(SettingsView, null);
     else body = h(Overview, { now: now.data, go: go });
 
     var tab = function (v, cls) {
@@ -1259,15 +1471,15 @@
     return h(Ctx.Provider, { value: ctx },
       h("div", { className: cx("sm", wide ? "sm-wide" : "sm-narrow") },
         h("header", { className: "sm-top" },
-          wide && h("h1", { className: "sm-title" }, "Mindscape"),
-          wide && h("nav", { className: "sm-tabs", "aria-label": "Mindscape views" }, VIEWS.map(function (v) { return tab(v, "sm-tab"); })),
+          wide && h("h1", { className: "sm-title" }, "Sophia"),
+          wide && h("nav", { className: "sm-tabs", "aria-label": "Sophia views" }, VIEWS.map(function (v) { return tab(v, "sm-tab"); })),
           h(LivePill, { now: now.data, onClick: function () { go("overview"); } })),
         h("main", { className: "sm-body" }, body),
-        !wide && h("nav", { className: "sm-tabbar", "aria-label": "Mindscape views" }, VIEWS.map(function (v) { return tab(v, "sm-tabbar-item"); })),
+        !wide && h("nav", { className: "sm-tabbar", "aria-label": "Sophia views" }, VIEWS.map(function (v) { return tab(v, "sm-tabbar-item"); })),
         fixS[0] && h(CorrectSheet, { target: fixS[0], close: function () { fixS[1](null); } }),
         toast && h("div", { className: "sm-toast", role: "status" }, h("span", null, toast.msg),
           toast.undoId ? h(Btn, { small: true, onClick: function () { var id = toast.undoId; setToast(null); ctx.undo(id); } }, "Undo") : null)));
   }
 
-  window.__HERMES_PLUGINS__.register("sophia", Mindscape);
+  window.__HERMES_PLUGINS__.register("sophia", SophiaTab);
 })();

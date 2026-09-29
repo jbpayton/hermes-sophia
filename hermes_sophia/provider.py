@@ -152,7 +152,11 @@ class SophiaProvider(MemoryProvider):
 
     # ---------------------------------------------------------------- config
     def get_config_schema(self) -> List[Dict[str, Any]]:
-        return config_schema()
+        try:
+            current = load_config()             # the active profile's effective settings
+        except Exception:
+            current = None
+        return config_schema(current)
 
     def save_config(self, values: Dict[str, Any], hermes_home: str) -> None:
         from hermes_cli.config import save_config

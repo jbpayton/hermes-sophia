@@ -1,4 +1,4 @@
-/* Mindscape — surfaces, text and fonts come from the active dashboard theme; the status colours are Mindscape's own. */
+/* Sophia's dashboard tab — surfaces, text and fonts come from the active dashboard theme; the status colours are its own. */
 @import url("https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap");
 
 .sm {
@@ -46,7 +46,7 @@
 .sm-tab:hover { color: var(--sm-fg); background: var(--sm-faint); }
 .sm-tab.sm-on { color: var(--sm-fg); background: var(--sm-raise); box-shadow: inset 0 0 0 1px var(--sm-line); }
 .sm-tab:focus-visible, .sm-tabbar-item:focus-visible, .sm button:focus-visible, .sm input:focus-visible { outline: 2px solid var(--sm-cyan); outline-offset: 2px; }
-.sm-tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+.sm-tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
   padding: 6px 8px calc(8px + env(safe-area-inset-bottom, 0px)); background: var(--sm-bg); border-top: 1px solid var(--sm-line); }
 .sm-tabbar-item { min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border-radius: 12px;
   color: var(--sm-muted); text-decoration: none; font-size: 11px; }
@@ -347,3 +347,47 @@
 @media (prefers-reduced-motion: reduce) {
   .sm-pill-sleep .sm-dot, .sm-live-dot, .sm-progress-busy span { animation: none; }
 }
+
+/* graph: views, clusters */
+.sm-seg { display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 3px; border-radius: 11px; background: var(--sm-bg); border: 1px solid var(--sm-line); }
+.sm-seg button { min-height: 32px; padding: 0 11px; border: 0; border-radius: 8px; background: transparent; color: var(--sm-muted); cursor: pointer; font-size: 13px; }
+.sm-seg-caption { align-self: center; padding: 0 6px 0 8px; font-size: 12px; color: var(--sm-muted); }
+.sm-seg button.sm-on { background: var(--sm-raise); color: var(--sm-fg); box-shadow: inset 0 0 0 1px var(--sm-line); }
+.sm-narrow .sm-seg button { min-height: 40px; padding: 0 12px; }
+.sm-graph-view { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.sm-narrow .sm-graph-view { flex-direction: row; flex-wrap: wrap; }
+.sm-graph-stat { margin: 0; font-size: 13px; line-height: 1.45; color: var(--sm-muted); }
+.sm-graph-stat strong { color: var(--sm-fg); font-weight: 600; }
+.sm-clusters { display: flex; flex-direction: column; gap: 6px; }
+.sm-clusters ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.sm-cluster { width: 100%; min-height: 34px; display: flex; align-items: center; gap: 9px; padding: 0 8px; border: 1px solid transparent; border-radius: 9px;
+  background: transparent; cursor: pointer; text-align: left; font-size: 13px; }
+.sm-narrow .sm-cluster { min-height: 44px; }
+.sm-cluster:hover { background: var(--sm-faint); }
+.sm-cluster.sm-on { background: var(--sm-raise); border-color: var(--sm-line); }
+.sm-cluster-name { flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sm-cluster-inline { width: auto; max-width: 100%; border-color: var(--sm-line); }
+.sm-hull { pointer-events: none; }
+.sm-cluster-label { font-weight: 700; paint-order: stroke; stroke: var(--sm-bg); stroke-width: 4px; stroke-linejoin: round; pointer-events: none; letter-spacing: 0.02em; }
+.sm-halo-center { stroke: var(--sm-violet); stroke-dasharray: 4 4; }
+
+/* settings */
+.sm-settings { display: flex; flex-direction: column; gap: 16px; max-width: 980px; }
+.sm-settings-head { display: flex; flex-direction: column; gap: 10px; }
+.sm-settings-group { gap: 4px; }
+.sm-setting { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 320px); gap: 4px 18px; align-items: center; padding: 12px 0; border-top: 1px solid var(--sm-faint); }
+.sm-narrow .sm-setting { grid-template-columns: minmax(0, 1fr); }
+.sm-setting label { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sm-setting-name { font-size: 14px; }
+.sm .sm-setting-key { font-family: var(--sm-mono); font-size: 11px; color: var(--sm-muted); background: transparent; padding: 0; border: 0; }
+.sm-setting-input select, .sm-setting-input input[type="text"], .sm-setting-input input[type="number"], .sm-setting-input input[type="password"] {
+  width: 100%; height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--sm-line); background: var(--sm-bg); color: var(--sm-fg); font: inherit; font-size: 14px; }
+.sm-narrow .sm-setting-input select, .sm-narrow .sm-setting-input input { height: 46px; }
+.sm-setting-input input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--sm-cyan); }
+.sm-setting-desc { grid-column: 1 / -1; margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--sm-muted); }
+.sm-setting-dirty .sm-setting-name::after { content: " · changed"; color: var(--sm-amber); font-size: 12px; }
+.sm-setting-hidden { opacity: 0.55; }
+.sm-settings-bar { position: sticky; bottom: 12px; z-index: 5; display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 10px 14px;
+  border-radius: 14px; background: var(--sm-raise); border: 1px solid var(--sm-line); box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35); }
+.sm-settings-bar .sm-muted { margin-right: auto; font-size: 13px; }
+.sm-narrow .sm-settings-bar { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }

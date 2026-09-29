@@ -8,6 +8,7 @@ journal every change with a way back.
 from __future__ import annotations
 
 import json
+import math
 import sqlite3
 import statistics
 import subprocess
@@ -349,6 +350,72 @@ def _roles(c: sqlite3.Connection, cfg: Dict[str, Any]) -> Dict[str, str]:
     return roles
 
 
+def communities(weights: Dict[Tuple[str, str], float], resolution: float = 1.0, min_size: int = 3) -> Dict[str, int]:
+    """Louvain modularity clustering on an undirected weighted graph ({(a, b): weight}), deterministic. Returns
+    {node: cluster}, clusters numbered by size (0 = largest); nodes in clusters smaller than ``min_size`` get -1."""
+    adj: Dict[str, Dict[str, float]] = defaultdict(dict)
+    for (a, b), w in weights.items():
+        if a == b or w <= 0:
+            continue
+        adj[a][b] = adj[a].get(b, 0.0) + w
+        adj[b][a] = adj[b].get(a, 0.0) + w
+    if not adj:
+        return {}
+    member: Dict[str, List[str]] = {n: [n] for n in adj}          # super-node -> original nodes
+    deg = {n: sum(nb.values()) for n, nb in adj.items()}
+    m2 = sum(deg.values())
+    while True:
+        comm = {n: n for n in adj}
+        tot = dict(deg)
+        moved_any, improved = False, True
+        order = sorted(adj, key=lambda n: (-deg[n], n))
+        while improved:
+            improved = False
+            for n in order:
+                c0, k = comm[n], deg[n]
+                tot[c0] -= k
+                links: Dict[str, float] = defaultdict(float)
+                for nb, w in adj[n].items():
+                    if nb != n:
+                        links[comm[nb]] += w
+                best, gain = c0, links.get(c0, 0.0) - resolution * tot[c0] * k / m2
+                for c, w in sorted(links.items()):
+                    g = w - resolution * tot[c] * k / m2
+                    if g > gain + 1e-12:
+                        best, gain = c, g
+                comm[n] = best
+                tot[best] += k
+                if best != c0:
+                    improved = moved_any = True
+        if not moved_any:
+            break
+        # fold each community into one node and go again
+        new_adj: Dict[str, Dict[str, float]] = defaultdict(dict)
+        new_member: Dict[str, List[str]] = defaultdict(list)
+        new_deg: Dict[str, float] = defaultdict(float)
+        for n, c in comm.items():
+            new_member[c].extend(member[n])
+            new_deg[c] += deg[n]
+            for nb, w in adj[n].items():
+                cb = comm[nb]
+                if cb != c:
+                    new_adj[c][cb] = new_adj[c].get(cb, 0.0) + w
+        for c in new_member:
+            new_adj.setdefault(c, {})
+        if len(new_member) == len(adj):
+            break
+        adj, member, deg = new_adj, dict(new_member), dict(new_deg)
+    groups = sorted(member.values(), key=lambda g: (-len(g), min(g)))
+    out: Dict[str, int] = {}
+    rank = 0
+    for g in groups:
+        cid = rank if len(g) >= min_size else -1
+        rank += len(g) >= min_size
+        for n in g:
+            out[n] = cid
+    return out
+
+
 def graph(path: str | Path, cfg: Dict[str, Any]) -> Dict[str, Any]:
     """Every entity and every fact between them. The client shows the hubs (entities that are subjects) first and
     expands a hub into its facts on demand."""
@@ -377,9 +444,12 @@ def graph(path: str | Path, cfg: Dict[str, Any]) -> Dict[str, Any]:
                           "modality": f["modality"], "happens": f["happens"]})
         # lines that mention two hubs together tie them even without a fact between them
         hubs = {k for k, n in nodes.items() if n["subject"]}
-        per_window = defaultdict(set)
-        for r in c.execute("SELECT fs.window_id, f.subject_norm, f.object FROM fact_sources fs JOIN facts f ON f.id=fs.fact_id"):
+        per_window, per_line = defaultdict(set), defaultdict(set)
+        for r in c.execute("""SELECT fs.window_id, f.subject_norm, f.object FROM fact_sources fs JOIN facts f ON f.id=fs.fact_id
+                              WHERE f.status != 'retracted'"""):
             for k in (r["subject_norm"], norm_entity(r["object"])):
+                if k in nodes:
+                    per_line[r["window_id"]].add(k)
                 if k in hubs:
                     per_window[r["window_id"]].add(k)
         together = Counter()
@@ -388,8 +458,33 @@ def graph(path: str | Path, cfg: Dict[str, Any]) -> Dict[str, Any]:
             for i in range(len(ks)):
                 for j in range(i + 1, len(ks)):
                     together[(ks[i], ks[j])] += 1
-    return {"nodes": list(nodes.values()), "edges": edges,
-            "together": [{"a": a, "b": b, "n": n} for (a, b), n in together.most_common(200)]}
+    # clusters are what gets talked about together. A fact ties its subject and object, but less when one of them is
+    # a hub with facts about everything (the user, typically: 1/sqrt(degree/4)); entities named in the same line tie
+    # each other too, so a busy person's facts split into topics instead of forming one star.
+    deg = Counter()
+    for e in edges:
+        deg[e["s"]] += 1
+        deg[e["o"]] += 1
+    w: Dict[Tuple[str, str], float] = defaultdict(float)
+    for e in edges:
+        w[tuple(sorted((e["s"], e["o"])))] += min(1.0, 1.0 / math.sqrt(max(1, deg[e["s"]], deg[e["o"]]) / 4.0))
+    mention = float(cfg.get("dashboard_graph_mention_weight", 0.5))
+    for ks in per_line.values():
+        ks = sorted(ks)
+        for i in range(len(ks)):
+            for j in range(i + 1, len(ks)):
+                w[(ks[i], ks[j])] += mention
+    cl = communities(w, resolution=float(cfg.get("dashboard_graph_resolution", 1.0)))
+    for n in nodes.values():
+        n["cluster"] = cl.get(n["id"], -1)
+    clusters = []
+    for cid in sorted({c for c in cl.values() if c >= 0}):
+        members = sorted((n for n in nodes.values() if n["cluster"] == cid), key=lambda n: (-n["subject"], -n["facts"], n["label"]))
+        clusters.append({"id": cid, "size": len(members), "label": " · ".join(m["label"] for m in members[:3]),
+                         "top": [m["id"] for m in members[:8]]})
+    return {"nodes": list(nodes.values()), "edges": edges, "clusters": clusters,
+            "together": [{"a": a, "b": b, "n": n} for (a, b), n in together.most_common(400)],
+            "settings": {"hops": int(cfg.get("dashboard_graph_hops", 2)), "view": cfg.get("dashboard_graph_view", "neighborhood")}}
 
 
 def entities(path: str | Path, cfg: Dict[str, Any], q: str = "") -> Dict[str, Any]:

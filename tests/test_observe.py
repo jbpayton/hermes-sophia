@@ -142,3 +142,22 @@ def test_the_dashboard_api(engine, fake, monkeypatch):
     assert c.post("/api/plugins/sophia/undo", json={"journal_id": r["journal_id"]}).status_code == 409
     fid = engine.store.one("SELECT id FROM facts WHERE status='unconfirmed'")["id"]
     assert c.post("/api/plugins/sophia/plan", json={"fact_id": fid, "outcome": "happened"}).json()["ok"]
+
+
+def test_clusters_find_groups_and_leave_strays_loose():
+    w = {("a", "b"): 1, ("b", "c"): 1, ("a", "c"): 1, ("x", "y"): 1, ("y", "z"): 1, ("x", "z"): 1, ("c", "x"): 0.2,
+         ("p", "q"): 1}
+    cl = O.communities(w)
+    assert cl["a"] == cl["b"] == cl["c"] != cl["x"] == cl["y"] == cl["z"]
+    assert cl["p"] == cl["q"] == -1                      # a pair is too small to call a cluster
+    assert O.communities({}) == {}
+
+
+def test_graph_carries_clusters_and_the_dashboard_defaults(engine, fake):
+    _day_and_night(engine, fake)
+    engine.cfg["dashboard_graph_hops"] = 3
+    g = O.graph(engine.store.path, engine.cfg)
+    assert all("cluster" in n for n in g["nodes"])
+    assert g["settings"] == {"hops": 3, "view": "neighborhood"}
+    for c in g["clusters"]:
+        assert c["size"] >= 3 and c["label"] and set(c["top"]) <= {n["id"] for n in g["nodes"]}

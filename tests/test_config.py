@@ -17,6 +17,7 @@ def no_hermes(monkeypatch):
 
 def test_every_setting_is_in_setup_and_gated():
     keys = [k for k, _, _ in FIELDS]
+    assert len(keys) == len(set(keys)), "a key appears twice in setup"
     assert set(DEFAULTS) <= set(keys)
     schema = {f["key"]: f for f in config_schema()}
     for k in ("user_name", "embed_model", "decider_model", "sleep_model", "server_url", "server_type"):
@@ -170,3 +171,21 @@ def test_wal_only_where_sqlite_is_free_of_the_wal_reset_bug(tmp_path):
     st = Store(tmp_path / "s.db")
     mode = st.conn.execute("PRAGMA journal_mode").fetchone()[0]
     assert mode == ("wal" if wal_safe() else "delete")
+
+
+def test_setup_defaults_are_the_current_settings():
+    """Hermes saves every visible field, untouched ones at their default: those defaults must be what Sophia uses
+    now, or a save from the dashboard would quietly repoint an older config (lmstudio_url) at a generic server."""
+    cfg = load_config(overrides={"lmstudio_url": "http://127.0.0.1:8090", "embed_api": "openai", "decider_api": "openai",
+                                 "sleep_api": "openai", "supersede_threshold": 0.92, "other_speakers": "Claude"})
+    schema = {f["key"]: f for f in config_schema(cfg)}
+    assert schema["server_url"]["default"] == "http://127.0.0.1:8090"
+    assert schema["server_type"]["default"] == "openai"
+    assert schema["decider_url"]["default"] == "default" and schema["embed_api"]["default"] == "openai"
+    assert schema["supersede_threshold"]["default"] == 0.92 and schema["other_speakers"]["default"] == "Claude"
+    saved = {k: f["default"] for k, f in schema.items()}                     # what an untouched save writes
+    again = load_config(overrides={k: v for k, v in saved.items() if k in DEFAULTS})
+    assert all(endpoint(again, r) == endpoint(cfg, r) for r in ("embed", "decider", "sleep"))
+    # an old LM Studio config that never named a type keeps LM Studio's API through a save
+    old = load_config(overrides={"lmstudio_url": "http://box:1234"})
+    assert {f["key"]: f for f in config_schema(old)}["server_type"]["default"] == "lmstudio"
