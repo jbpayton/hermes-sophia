@@ -37,6 +37,13 @@ _IMPORTANT = re.compile(r"(?:\b(?:allerg\w*|medic\w*|doctor|dentist|dental|clini
 _QUESTION_REL = re.compile(r"\b(wants? to know|asks?|asked|asking|wonders?|wondering|inquir\w*|is curious|request\w*|"
                            r"wants? (?:me|you|the assistant|hermes) to|told (?:me|you) to)\b", re.I)
 _REL_HAS_OBJECT = re.compile(r"(?<!^)\b[A-Z][A-Za-z]+|\d")
+# Lines from other speakers (another agent relaying through the CLI, say) are written to the agent, so a fact they
+# yield about a participant must be grounded in the line itself: named, or "I/my" for the speaker, or "you/your" for
+# the agent. Otherwise the night guesses: "your real store" became the user's, and a speaker's label its subject.
+_FIRST_PERSON = re.compile(r"\b(i|i'm|i've|i'll|i'd|me|my|mine|myself|we|we're|we've|we'll|us|our|ours)\b", re.I)
+_SECOND_PERSON = re.compile(r"\b(you|you're|you've|you'll|you'd|your|yours|yourself)\b", re.I)
+_ROLE = re.compile(r"^(?:the |an? )?(?:ai |an ai )?(?:assistant|user|agent|chatbot|bot)$", re.I)
+_COPULA = re.compile(r"^(?:is|am|are|was|were|is called|is named|acts as|serves as)$", re.I)
 _NEG = re.compile(r"\b(not|never|no longer|isn't|aren't|won't|doesn't|don't|didn't|can't|n't)\b", re.I)
 ALL_STEPS = ["settle", "sort", "contextualize", "headroom", "relate", "integrate", "tasks", "index", "outcomes", "replay",
              "rehearse", "calibrate", "promote", "views", "anticipate", "tidy"]
@@ -60,6 +67,33 @@ def norm_relation(r: str) -> str:
     r = (r or "").strip().lower()
     r = re.sub(r"\b(is|are|was|were|has been|have been|will be|am)\b\s*", "", r).strip()
     return re.sub(r"\s+", " ", r) or (r or "")
+
+
+def is_other_speaker(cfg: Dict[str, Any], speaker: str) -> bool:
+    return (speaker or "").lower() in {n.lower() for n in cfg.get("other_speakers") or []}
+
+
+def fact_grounded(cfg: Dict[str, Any], f: Dict[str, Any], speaker: str, text: str) -> Tuple[bool, str]:
+    """Participants in a fact must be grounded in its line (see _FIRST_PERSON). Applies to other speakers' lines,
+    where "you" is the agent and the user appears only by name; and "X is the assistant" is a role, not a fact."""
+    user, agent = cfg["user_name"], cfg["agent_name"]
+    people = {norm_entity(n): n for n in [user, agent, *(cfg.get("other_speakers") or [])] if n}
+    s_key, o_key = norm_entity(f["subject"]), norm_entity(f["object"])
+    if s_key in people and _COPULA.match(f["relation"].strip()) and _ROLE.match(f["object"].strip()):
+        return False, "role, not a fact"
+    if not is_other_speaker(cfg, speaker):
+        return True, ""
+    for key in (s_key, o_key):
+        if key not in people:
+            continue
+        if re.search(r"\b" + re.escape(people[key]) + r"\b", text or "", re.I):
+            continue
+        if key == norm_entity(speaker) and _FIRST_PERSON.search(text or ""):
+            continue
+        if key == norm_entity(agent) and _SECOND_PERSON.search(text or ""):
+            continue
+        return False, "participant not in the line"
+    return True, ""
 
 
 class SleepRunner:
@@ -387,8 +421,11 @@ class SleepRunner:
                 batch = rows[b:b + 30]
                 lines = "\n".join(f"w{i+1} ({r['speaker']}, {_d(r['said'])}) {self._context_of(r)}TEXT: {r['text'][:700]}"
                                   for i, r in enumerate(batch))
+                others = sorted({r["speaker"] for r in batch if self._other_speaker(r["speaker"])})
+                note = (OTHER_SPEAKERS_NOTE.format(others=", ".join(others), user=self.cfg["user_name"],
+                                                   agent=self.cfg["agent_name"]) if others else "")
                 jobs.append((batch, RELATE_PROMPT.format(user=self.cfg["user_name"], agent=self.cfg["agent_name"],
-                                                         lines=lines)))
+                                                         lines=lines, others_note=note)))
         if self.limit:
             jobs = jobs[:self.limit]
         outs = self._pmap(lambda j: self.llm(j[1], max_tokens=1600), jobs)
@@ -399,6 +436,8 @@ class SleepRunner:
                 if "assistant" in (w["flags"] or "") and f["modality"] != "reported":
                     f["modality"] = "reported"
                 ok, why = self._validate(f)
+                if ok:
+                    ok, why = self.grounded(f, w["speaker"], w["text"])
                 if not ok:
                     rejected += 1
                     why_rejected[why] += 1
@@ -433,6 +472,12 @@ class SleepRunner:
         if _REL_HAS_OBJECT.search(f["relation"].strip()):
             return False, "entity inside relation"
         return True, ""
+
+    def _other_speaker(self, speaker: str) -> bool:
+        return is_other_speaker(self.cfg, speaker)
+
+    def grounded(self, f, speaker: str, text: str) -> Tuple[bool, str]:
+        return fact_grounded(self.cfg, f, speaker, text)
 
     def _store_fact(self, f, w) -> Tuple[str, bool]:
         sn, rn, on = norm_entity(f["subject"]), norm_relation(f["relation"]), norm_entity(f["object"])
@@ -784,7 +829,7 @@ What to extract: who people are (identity, job, relationships, where they live o
 - when: the time the fact happens, copied from the TEXT (e.g. "yesterday", "second week of May", "2007", "last year"), or - if the text states no time. Never use the line's own date.
 - Extract only what the TEXT states. CONTEXT is there only to resolve words like "it", "that" or "yes"; never take facts from it. A "[shares a photo: ...]" note describes a photo the speaker shared.
 - A question states no fact. Skip greetings, thanks, compliments and filler, and skip general advice or common knowledge.
-
+{others_note}
 Example lines:
 w1 ({user}, 2026-09-21) CONTEXT: {user} plans the Yosemite trip TEXT: I booked Yosemite for the second week of May, and Sam is coming.
 w2 (Maria, 2026-09-21) TEXT: I went to my first pottery class yesterday! It reminded me of my grandma back in Lisbon.
@@ -802,6 +847,9 @@ Curry Village | has | canvas tent cabins | w4 | asserted | -
 
 Lines:
 {lines}"""
+
+OTHER_SPEAKERS_NOTE = """- Lines by {others} are written to {agent}: in them "you" and "your" mean {agent}, "I" and "my" mean the speaker, and {user} is someone they mention only by name. Never make a fact from a speaker's name alone.
+"""
 
 REHEARSE_PROMPT = """Write one short question a person might ask months later whose answer is this remembered fact. Output only the question.
 Fact: {fact}"""

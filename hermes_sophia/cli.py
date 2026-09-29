@@ -60,6 +60,22 @@ def cmd(args):
         elif sub == "undo":
             what = e.store.undo_journal(args.journal_id)
             print(f"undone: {what}" if what else f"journal entry {args.journal_id} has nothing to undo (or was undone)")
+        elif sub == "audit-facts":
+            from .sleep.runner import fact_grounded
+            found = 0
+            for f in e.store.q("SELECT id, subject, relation, object FROM facts WHERE status IN ('active','unconfirmed')"):
+                srcs = e.store.q("""SELECT w.speaker, w.text FROM fact_sources fs JOIN windows w ON w.id=fs.window_id
+                                    WHERE fs.fact_id=?""", (f["id"],))
+                verdicts = [fact_grounded(e.cfg, dict(f), w["speaker"], w["text"]) for w in srcs]
+                if not verdicts or any(ok for ok, _ in verdicts):
+                    continue
+                found += 1
+                why = verdicts[0][1]
+                print(f"  {f['id']}  {f['subject']} | {f['relation']} | {f['object']}   ({why}; said by {srcs[0]['speaker']})")
+                if args.apply:
+                    e.store.retract_fact(f["id"], f"audit: {why} (the line doesn't say it about them)", by="audit")
+            print(f"{found} facts fail the participant check" + (" and were retracted (journaled; `sophia undo <id>` reverts)"
+                                                                if args.apply and found else ""))
         elif sub == "drop-compaction":
             refs = [r["ref"] for r in e.store.q("SELECT DISTINCT ref FROM windows WHERE text LIKE '[CONTEXT COMPACTION%'")]
             ids = [r["id"] for ref in refs for r in e.store.q("SELECT id FROM windows WHERE ref=?", (ref,))]
@@ -118,6 +134,9 @@ def register_cli(subparser) -> None:
     p.add_argument("-k", type=int, default=10)
     p = subs.add_parser("undo", help="Revert a supersession, merge or plan change recorded in the journal")
     p.add_argument("journal_id", type=int)
+    p = subs.add_parser("audit-facts", help="List facts whose people aren't grounded in the lines they came from "
+                                            "(e.g. a relayed 'your' read as the user); --apply retracts them, journaled")
+    p.add_argument("--apply", action="store_true")
     subs.add_parser("drop-compaction", help="Keep Hermes's context-compaction summaries (stored as user lines by older "
                                              "versions) out of recall; journaled and undoable")
     p = subs.add_parser("relabel", help="Correct who a session's lines are attributed to (journaled, undoable; the "

@@ -136,6 +136,60 @@ def test_validation_rules():
     assert ok({"subject": "Dr. Patel", "relation": "moved his office to", "object": "55 Oak Avenue"})[0]
 
 
+def test_facts_from_another_speaker_must_name_the_people_they_are_about():
+    """Sophia's first-night flag: relayed lines by Claude yielded "Joey has a real store" (it was "your real store",
+    i.e. hers), "Claude has a 4k window" (the 9B's) and "Claude is the assistant"."""
+    from hermes_sophia.sleep.runner import fact_grounded
+    cfg = {"user_name": "Joey", "agent_name": "Sophia", "other_speakers": ["Claude"]}
+    f = lambda s, r, o: {"subject": s, "relation": r, "object": o}
+    g = lambda fact, who, text: fact_grounded(cfg, fact, who, text)
+    real_store = "The night on your real store: every one of 792 windows survived with identical text."
+    assert g(f("Joey", "has", "a real store"), "Claude", real_store) == (False, "participant not in the line")
+    assert g(f("Sophia", "has", "a real store"), "Claude", real_store)[0]            # "your" is Sophia's
+    assert g(f("Joey", "has", "a real store"), "Claude", "Joey has a real store now.")[0]
+    assert not g(f("Claude", "has", "a 4k window"), "Claude", "One log was too big for the 9B's 4k window.")[0]
+    assert g(f("Claude", "fixed", "the export label"), "Claude", "I fixed the export label.")[0]
+    assert g(f("Claude", "is", "the assistant"), "Claude", "Still Claude.") == (False, "role, not a fact")
+    # the user's own lines are not second-guessed: people often leave out "I"
+    assert g(f("Joey", "works at", "Maple Street School"), "Joey", "Started at Maple Street School today!")[0]
+    assert g(f("Riley", "works as", "an assistant"), "Joey", "Riley works as an assistant now.")[0]
+
+
+def test_the_night_drops_misattributed_facts_from_relayed_lines(engine, fake):
+    engine.cfg["other_speakers"] = ["Claude"]
+    prompts = []
+
+    def chat(prompt):
+        prompts.append(prompt)
+        if prompt.startswith("You are indexing"):
+            n = len(re.findall(r"^w\d+ \(", prompt, re.M))
+            return "\n".join(f"w{i} | ctx {i} | -" for i in range(1, n + 1))
+        if prompt.startswith("Extract facts"):
+            out = []
+            for m in re.finditer(r"^w(\d+) \((\w+), [^)]*\) (?:CONTEXT: .*?)?TEXT: (.*)$", prompt.split("Lines:\n")[-1], re.M):
+                if "real store" in m.group(3):
+                    out += [f"Joey | has | a real store | w{m.group(1)} | asserted | -",
+                            f"Sophia | has | a real store | w{m.group(1)} | asserted | -"]
+            return "\n".join(out)
+        return "What does Sophia have?"
+    fake.chat_fn = chat
+    fake.readout = lambda p: [("A", -0.05), ("B", -3.0)]
+    engine.capture.process_messages("relay", [
+        {"role": "user", "content": "**Claude:** The night on your real store finished cleanly.", "timestamp": time.time() - 600}])
+    out = SleepRunner(engine, model="fake-9b", max_wait_s=0).run()
+    facts = {(r["subject"], r["object"]) for r in engine.store.q("SELECT subject, object FROM facts")}
+    assert ("Sophia", "a real store") in facts and ("Joey", "a real store") not in facts
+    assert out["stats"]["relate"]["rejected_by"].get("participant not in the line") == 1
+    relate = next(p for p in prompts if p.startswith("Extract facts"))
+    assert "Lines by Claude are written to Sophia" in relate or "Lines by Claude are written to Hermes" in relate
+
+
+def test_the_relate_prompt_is_unchanged_without_other_speakers():
+    from hermes_sophia.sleep.runner import RELATE_PROMPT
+    p = RELATE_PROMPT.format(user="Joey", agent="Sophia", lines="w1 (Joey, 2026-09-21) TEXT: hi", others_note="")
+    assert "common knowledge.\n\nExample lines:" in p and "Lines by" not in p
+
+
 def test_events_do_not_supersede_each_other(engine, fake):
     photos = {"cup": "a cup with a dog face", "sunset": "a sunset painting"}
 
