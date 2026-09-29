@@ -526,3 +526,17 @@ def test_the_morning_after_a_night_says_what_it_did(engine):
     engine.store.set_meta("last_sleep", {"status": "yielded: the night model stayed busy", "finished": _t.time()})
     assert "deferred" in engine.morning_note() and "stayed busy" in engine.morning_note()
     assert engine.morning_note(now=_t.time() + 3 * 86400) == ""        # an old night isn't news
+
+
+def test_hermes_compaction_summaries_are_not_the_users_words(engine):
+    engine.capture.process_messages("c", [
+        {"role": "user", "content": "[CONTEXT COMPACTION — REFERENCE ONLY] Earlier turns were compacted into the "
+                                    "summary below. Joey asked about the Tokyo hotel."},
+        {"role": "assistant", "content": "Noted."},
+        {"role": "user", "content": "Where was our hotel in Tokyo?"},
+        {"role": "assistant", "content": "Otemachi."}])
+    texts = [r["text"] for r in engine.store.q("SELECT text FROM windows WHERE session_id='c'")]
+    assert not any("COMPACTION" in t for t in texts) and any("hotel in Tokyo" in t for t in texts)
+    ids = [r["id"] for r in engine.store.q("SELECT id FROM windows WHERE session_id='c'")]
+    assert engine.store.drop_windows(ids[:1], "test") == 1
+    assert "dropped" in engine.store.one("SELECT flags FROM windows WHERE id=?", (ids[0],))["flags"]

@@ -63,6 +63,8 @@ def cmd(args):
                 print(f"journal entry {args.journal_id} has nothing to undo")
             else:
                 u = json.loads(row["undo"])
+                for wid, flags in (u.get("flags") or {}).items():     # dropped lines: their old flags back
+                    e.store.x("UPDATE windows SET flags=? WHERE id=?", (flags, wid))
                 if "windows" in u:                      # a speaker correction: put the old label back
                     ids = u["windows"]
                     e.store.x(f"UPDATE windows SET speaker=? WHERE id IN ({','.join('?' * len(ids))})",
@@ -74,6 +76,11 @@ def cmd(args):
                               (u["fact"], row["night_id"]))
                 e.store.journal("manual", "undo", "undone", {"journal_id": args.journal_id, "detail": row["detail"]})
                 print(f"undone: {row['kind']} {row['detail'][:160]}")
+        elif sub == "drop-compaction":
+            refs = [r["ref"] for r in e.store.q("SELECT DISTINCT ref FROM windows WHERE text LIKE '[CONTEXT COMPACTION%'")]
+            ids = [r["id"] for ref in refs for r in e.store.q("SELECT id FROM windows WHERE ref=?", (ref,))]
+            n = e.store.drop_windows(ids, "Hermes context-compaction summary, stored as if the user wrote it")
+            print(f"kept {n} lines from {len(refs)} compaction summaries out of recall (journaled, undoable)")
         elif sub == "relabel":
             rows = e.store.q("SELECT id FROM windows WHERE session_id=? AND speaker=? AND flags NOT LIKE '%assistant%'",
                              (args.session, args.from_speaker))
@@ -127,6 +134,8 @@ def register_cli(subparser) -> None:
     p.add_argument("-k", type=int, default=10)
     p = subs.add_parser("undo", help="Revert a supersession, merge or plan change recorded in the journal")
     p.add_argument("journal_id", type=int)
+    subs.add_parser("drop-compaction", help="Keep Hermes's context-compaction summaries (stored as user lines by older "
+                                             "versions) out of recall; journaled and undoable")
     p = subs.add_parser("relabel", help="Correct who a session's lines are attributed to (journaled, undoable; the "
                                         "text itself is never changed)")
     p.add_argument("--session", required=True)

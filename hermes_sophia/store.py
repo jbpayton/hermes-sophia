@@ -372,6 +372,18 @@ class Store:
                          undo={"windows": ids, "speaker": old})
         return len(rows)
 
+    def drop_windows(self, window_ids: Sequence[str], reason: str, by: str = "manual") -> int:
+        """Keep lines out of recall (flag 'dropped') without deleting them: the text stays, the journal can undo it."""
+        rows = [r for r in (self.q(f"SELECT id, flags FROM windows WHERE id IN ({','.join('?' * len(window_ids))})",
+                                   list(window_ids)) if window_ids else []) if "dropped" not in (r["flags"] or "")]
+        for r in rows:
+            self.x("UPDATE windows SET flags=? WHERE id=?", (((r["flags"] or "") + " dropped").strip(), r["id"]))
+        if rows:
+            self.journal("manual", "correct", "windows_dropped",
+                         {"windows": len(rows), "reason": reason, "by": by, "first": rows[0]["id"]},
+                         undo={"flags": {r["id"]: r["flags"] or "" for r in rows}})
+        return len(rows)
+
     def retract_fact(self, fact_id: str, reason: str, by: str = "manual") -> bool:
         f = self.one("SELECT id, subject, relation, object, status FROM facts WHERE id=?", (fact_id,))
         if not f or f["status"] == "retracted":

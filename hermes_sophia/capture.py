@@ -18,6 +18,9 @@ from . import text as T
 from .spans import extract_spans
 from .store import sha
 
+# Hermes hands a compacted conversation back as a user-role summary; it restates earlier turns, in the model's words
+_COMPACTION = re.compile(r"\s*\[CONTEXT COMPACTION\b")
+
 logger = logging.getLogger(__name__)
 
 _PYTEST = re.compile(r"(\d+ failed|\d+ passed|\d+ errors?)[^\n]*")
@@ -189,6 +192,8 @@ class Capture:
             for tc in tcs:
                 tool_map[tc.get("id") or ""] = _args(tc)
             is_new = h not in seen
+            if role == "user" and _COMPACTION.match(content or ""):
+                continue                      # Hermes's context-compaction handoff: a summary of turns already kept
             if role in ("user", "assistant") and content.strip():
                 if is_new:
                     if full:
