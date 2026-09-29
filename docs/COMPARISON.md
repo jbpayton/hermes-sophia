@@ -13,20 +13,30 @@ Hermes gives an agent memory out of the box, and ships eight memory plugins. Sev
 
 ● yes · ◐ partly · ○ no
 
-| | Where it runs | Model work when saving | Added before each reply | Can add nothing | Keeps the words | Change over time | Agent's tool calls | Look and correct |
+| | Where it runs | AI work when saving a message | What it adds before each reply | Leaves memory out when it isn't needed | Keeps the original words | Tracks what changed | Remembers what the agent did | You can inspect and correct it |
 |---|---|---|---|---|---|---|---|---|
 | **Sophia** | Your machine: SQLite in the Hermes process, plus your model server | None; facts, context and task cards are made at night | Matching lines word for word, with dates, and the facts that point at them | ● A model reads the message and decides | ● Every line; each fact links to its lines | ● When said, when it happens, when believed; replacements journaled and undoable; plans past their date marked | ● Every call, and a card per task | ● The Sophia tab: graph, pages, each recall's reasoning, undo |
 | **Hermes built-in** | Hermes | The agent writes notes when it chooses, and is reminded every 10 turns | Both notes, always (up to 3,575 characters) | ○ Always there | ◐ Every past message, by keyword search when the agent asks (`session_search`) | ○ | ◐ Skills: procedures the agent writes, with an audit trail | ◐ `hermes journey`, or the files |
 | **Holographic** | Local SQLite, no models | None: the agent adds facts | Top 5 keyword matches | ◐ When no keyword matches | ○ The agent's own wording | ○ Updates overwrite | ○ | ○ The agent's tools only |
-| **Mem0** | Cloud, a server, or in-process with Ollama | An LLM extracts facts each turn (messages cut to 450 characters) | Top 10 facts, without dates | ◐ Weak score floor (0.1) | ◐ History keeps the cut input | ◐ Old and new kept; ranking decides | ○ | ● Dashboard: edit, delete, history |
+| **Mem0** | Cloud, a server, or in-process with Ollama | An LLM extracts facts each turn (messages cut to 450 characters) | Top 10 facts, without dates | ◐ A low similarity cut-off (0.1) | ◐ History keeps the cut input | ◐ Old and new kept; ranking decides | ○ | ● Dashboard: edit, delete, history |
 | **Honcho** | Cloud, or self-hosted (Postgres, Redis, a worker) | An LLM derives conclusions about you; messages kept verbatim | Session summary, models of you and the agent, a reasoned answer; one turn behind | ○ | ● Messages, searchable by the agent | ◐ "Dreaming" rewrites outdated conclusions | ○ | ● Dashboard |
-| **Supermemory** | Cloud, or a local binary | LLM extraction | Up to 10 memories, with age and similarity | ◐ Server threshold (0.5) | ◐ Kept on the server; the plugin shows only memories | ● Versions, event dates, expiry | ○ Left out on purpose | ● Console |
+| **Supermemory** | Cloud, or a local binary | LLM extraction | Up to 10 memories, with age and similarity | ◐ Similarity cut-off, on the server (0.5) | ◐ Kept on the server; the plugin shows only memories | ● Versions, event dates, expiry | ○ Left out on purpose | ● Console |
 | **Hindsight** | Cloud, or local (a daemon with Postgres) | LLM extraction, entity resolution, consolidation | Consolidated observations, up to 4,096 tokens; one turn behind | ○ Fills its budget | ◐ Kept on the server; not injected | ● Event time and mention time; invalidate and revert | ◐ An "experience" network, inferred from replies | ● A control plane with a graph view and audit trail |
-| **OpenViking** | Self-hosted server, or hosted | An LLM extracts when a session is committed | Your profile, then the top hits (up to 4,000 characters) | ◐ Score floor (0.15) | ◐ Session archives | ◐ A diff per commit; merges overwrite | ● Calls and results | ● Studio; memories are Markdown files |
+| **OpenViking** | Self-hosted server, or hosted | An LLM extracts when a session is committed | Your profile, then the top hits (up to 4,000 characters) | ◐ Similarity cut-off (0.15) | ◐ Session archives | ◐ A diff per commit; merges overwrite | ● Calls and results | ● Studio; memories are Markdown files |
 | **ByteRover** | Local files, plus an LLM (hosted or yours) | An LLM curates each turn into a Markdown tree | An answer from the tree | ○ Only an output-length check | ○ Curated text only | ◐ Git-like history, decay, "dreaming" | ○ | ● Markdown on disk, web UI, review of changes |
 | **RetainDB** | Cloud, or self-hosted (Postgres) | LLM extraction on the server | Profile, 5 results and a synthesised answer; one turn behind | ◐ On the server | Unknown | ◐ Versions upstream; not exposed by the plugin | ○ | ● Dashboard |
 
-"One turn behind" means the plugin fetches recall after a turn, for the next one. It adds no wait before a reply, but it answers the previous message.
+**Reading the table:**
+- **AI work when saving a message:** whether an AI model extracts, summarises or rewrites each message as it's saved. That costs time, and money on a hosted service, on every turn.
+- **What it adds before each reply:** the text that lands in the agent's prompt. "Extracted", "conclusions" and "observations" are an AI's rewording of what was said.
+- **Leaves memory out when it isn't needed:** many messages need nothing about you, and irrelevant memory can mislead the agent.
+  - ●: a model reads the message and decides.
+  - ◐: memory is left out only when nothing passes a similarity cut-off. Similarity can't tell an answer from a near-miss, so a near-miss still gets in.
+  - ○: something is added every turn.
+- **Keeps the original words:** whether what was actually said can come back, word for word.
+- **Tracks what changed:** whether it knows that a newer fact replaced an older one, and keeps the history.
+- **Remembers what the agent did:** whether the agent's tool calls (commands run, pages read, files written) are kept.
+- **One turn behind:** the plugin fetches memory after a turn, ready for the next one. That adds no wait before a reply, but what arrives was chosen for the previous message.
 
 ### What each does well
 
@@ -58,7 +68,7 @@ Hermes gives an agent memory out of the box, and ships eight memory plugins. Sev
   - Records tool calls and their outcomes.
   - Three levels of detail to browse.
   - Ingests documents and repositories.
-  - A relevance floor, and a diff for every commit.
+  - A similarity cut-off, so it can leave memory out, and a diff for every commit.
 - **ByteRover:**
   - Human-readable Markdown you can version and review.
   - Lossless archiving.
@@ -75,7 +85,7 @@ Hermes gives an agent memory out of the box, and ships eight memory plugins. Sev
   - it's about you, but none of these fits;
   - this one bears on it most directly.
 
-  Three plugins use a similarity floor instead, and three have no gate. Sophia measured why a floor isn't enough: similarity can't separate an answer from a near-miss. Unanswerable near-misses scored up to 0.78, against 0.80 for real answers.
+  Three plugins use a similarity cut-off instead, and three add something every turn. Sophia measured why a cut-off isn't enough: similarity can't separate an answer from a near-miss. Unanswerable near-misses scored up to 0.78, against 0.80 for real answers.
 - **Nothing is generated when saving.** The night does the model work in batch, on your GPU, and then tests its own recall:
   - it replays the day's injections to see which helped;
   - it asks itself questions about new facts, and repairs what it misses.
@@ -163,7 +173,7 @@ SodaMem is the closest relative: its data model is nearly Sophia's. It reports 9
 ## Where Sophia plausibly differs
 
 1. **No generated text when something is saved.** Graphiti, Mem0 and Hindsight run LLM extraction as each message is saved. Sophia stores the words and their embeddings immediately and extracts at night on a local model. The only other model call at capture is a one-token check of each live agent reply (point 3). Letta shares the night idea, but for memory blocks rather than a fact graph.
-2. **A check that can inject nothing.** The providers we checked rank memories and inject the top few. For example, Hermes's bundled Holographic provider injects the 5 facts that best match the message, above a trust floor, on every turn. Sophia measured that similarity can't separate an answer from a near-miss (unanswerable near-misses reached 0.78 against 0.80 for real answers). So before anything is injected, a small model reads one token's probabilities over a few options: nothing about you is needed, it's about you but none of these memories fits, or which memory bears on it most directly. Memory stays out when "nothing needed" is clear, and the block is marked as possible matches only when "none fits" outweighs the memories. Rerankers and Self-RAG's "should I retrieve?" step are relatives.
+2. **A check that can leave memory out.** The providers we checked rank memories and inject the top few. For example, Hermes's bundled Holographic provider injects the 5 facts that best match the message, above a trust floor, on every turn. Sophia measured that similarity can't separate an answer from a near-miss (unanswerable near-misses reached 0.78 against 0.80 for real answers). So before anything is injected, a small model reads one token's probabilities over a few options: nothing about you is needed, it's about you but none of these memories fits, or which memory bears on it most directly. Memory stays out when "nothing needed" is clear, and the block is marked as possible matches only when "none fits" outweighs the memories. Rerankers and Self-RAG's "should I retrieve?" step are relatives.
 3. **Its own words can't poison it.** The agent's replies are checked as they are captured. A reply that states facts about you that nothing in the turn supported is kept out of recall. This came from a real failure: in testing, an agent invented where someone's sister lived, and the next session recalled that as memory.
 4. **A memory that tests itself.** Each night Sophia:
    - replays the day's injections to judge which ones were used;

@@ -17,7 +17,7 @@ Sophia takes a different path:
   - Every line, fact and task card sits in vector indexes. Recall fuses them with keyword search, dates, and a hop through the graph, so a question about "Sam's sister" can reach where Lily lives.
   - At night, short replies are re-embedded with what they refer to, so a bare "yes" can be found by what it agreed to.
 - **The actual words, not a rewrite.** What reaches the agent is what was said, with its date. Every other plugin injects text an LLM wrote.
-- **It knows when to stay out of it.** A small model reads each message and decides whether memory bears on it, and "nothing" is a common answer. Other plugins use a similarity floor or no gate at all.
+- **It knows when to stay out of it.** A small model reads each message and decides whether memory bears on it, and "nothing" is a common answer. Other plugins use a similarity cut-off, or add something every turn.
 - **Nothing generated when saving.** A message is stored as it was said, with one embedding (the agent's own replies also get a one-token check). The heavy model work happens at night on your GPU. The night also tests its own recall and repairs what it misses.
 - **Time and change.** When something was said, when it happens, and what replaced what, all journaled and undoable. Plans whose date passed without word are marked as unconfirmed.
 - **What the agent did.** Every tool call is logged, and each task gets a card: the steps that worked, the dead ends, and how it turned out.
@@ -32,20 +32,32 @@ Sophia takes a different path:
 
 ### How it compares
 
-● yes · ◐ partly · ○ no. Each plugin is described as Hermes runs it, in [the full comparison](docs/COMPARISON.md#hermess-memory-side-by-side) with sources.
+A memory provider puts text into the agent's prompt before each reply, and saves each conversation as it goes. The table compares how each option does that, as Hermes runs it. Sources and details are in [the full comparison](docs/COMPARISON.md#hermess-memory-side-by-side).
 
-| | Added before each reply | Can add nothing | Model work when saving | Change over time | Agent's tool calls | Runs on |
+| | What it adds before each reply | Leaves memory out when it isn't needed | AI work when saving a message | Tracks what changed | Remembers what the agent did | Where it runs |
 |---|---|---|---|---|---|---|
-| **Sophia** | The original lines, dated | ● A model decides | An embedding; the rest at night | ● | ● | Your machine |
-| Hermes built-in | Both notes, always | ○ | The agent writes notes | ○ | ◐ Skills | Hermes |
-| Holographic | Top 5 keyword matches | ◐ | The agent adds facts | ○ | ○ | Your machine |
-| Mem0 | Top 10 extracted facts | ◐ Score floor | LLM, each turn | ◐ | ○ | Cloud, or your machine |
-| Honcho | Summaries and a model of you | ○ | LLM, each turn | ◐ | ○ | Cloud, or your server |
-| Supermemory | Up to 10 extracted memories | ◐ Score floor | LLM, each turn | ● | ○ | Cloud, or your machine |
-| Hindsight | Consolidated observations | ○ | LLM, each turn | ● | ◐ | Cloud, or your machine |
-| OpenViking | Your profile, then top hits | ◐ Score floor | LLM, each session | ◐ | ● | Your server, or hosted |
-| ByteRover | An answer from its tree | ○ | LLM, each turn | ◐ | ○ | Your machine, plus an LLM |
-| RetainDB | Profile, results and an answer | ◐ | LLM, on the server | ◐ | ○ | Cloud, or your server |
+| **Sophia** | The original lines, with dates | ● A model decides | Only an embedding; the rest overnight | ● | ● | Your machine |
+| Hermes built-in | Both notes, every time | ○ | The agent writes notes when it chooses | ○ | ◐ Skills | Hermes |
+| Holographic | Top 5 keyword matches | ◐ | None: the agent adds facts | ○ | ○ | Your machine |
+| Mem0 | Top 10 extracted facts | ◐ Similarity cut-off | An LLM, every turn | ◐ | ○ | Cloud, or your machine |
+| Honcho | Summaries and a model of you | ○ | An LLM, every turn | ◐ | ○ | Cloud, or your server |
+| Supermemory | Up to 10 extracted memories | ◐ Similarity cut-off | An LLM, every turn | ● | ○ | Cloud, or your machine |
+| Hindsight | Consolidated observations | ○ | An LLM, every turn | ● | ◐ | Cloud, or your machine |
+| OpenViking | Your profile, then the top matches | ◐ Similarity cut-off | An LLM, each session | ◐ | ● | Your server, or hosted |
+| ByteRover | An answer from its knowledge tree | ○ | An LLM, every turn | ◐ | ○ | Your machine, plus an LLM |
+| RetainDB | Profile, matches and a written answer | ◐ | An LLM, on its server | ◐ | ○ | Cloud, or your server |
+
+● yes · ◐ partly · ○ no
+
+**Reading the table:**
+- **What it adds before each reply:** the text that lands in the agent's prompt. "Extracted" and "summaries" mean an AI's rewording of what you said, not your words.
+- **Leaves memory out when it isn't needed:** many messages need nothing about you ("what's the capital of Australia?"), and irrelevant memory in the prompt can mislead the agent.
+  - ●: a model reads the message and decides whether memory applies.
+  - ◐: memory is left out only when nothing is similar enough. Similarity can't tell an answer from a near-miss, so a near-miss still gets in.
+  - ○: something is added every turn.
+- **AI work when saving a message:** whether an AI model processes every message as it's saved. That takes time and, on a hosted service, money on every turn. Sophia saves the words with one embedding (a numeric fingerprint used for search), and does the rest overnight on your own GPU.
+- **Tracks what changed:** whether it knows that a newer fact replaced an older one ("moved from Portland to Denver") and keeps the history.
+- **Remembers what the agent did:** whether the agent's tool calls (commands run, pages read, files written) are kept, so it can reuse what worked.
 
 Where others are ahead:
 - **Honcho** models who you are.
