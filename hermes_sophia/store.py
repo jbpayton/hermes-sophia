@@ -78,6 +78,10 @@ CREATE TABLE IF NOT EXISTS processed(session_id TEXT, msg_hash TEXT, PRIMARY KEY
 CREATE TABLE IF NOT EXISTS eval_questions(id TEXT PRIMARY KEY, question TEXT, category TEXT, answer_refs TEXT,
   origin TEXT, created_night TEXT);
 CREATE VIRTUAL TABLE IF NOT EXISTS fts USING fts5(item_id UNINDEXED, kind UNINDEXED, text);
+CREATE TABLE IF NOT EXISTS images(id TEXT PRIMARY KEY, file TEXT, mime TEXT, bytes INT, source TEXT, first_said REAL,
+  session_id TEXT, ref TEXT, caption TEXT, caption_by TEXT, caption_at REAL);
+CREATE TABLE IF NOT EXISTS activations(item_id TEXT, item_kind TEXT, ts REAL, cue TEXT);
+CREATE INDEX IF NOT EXISTS activations_item ON activations(item_id, ts);
 """
 
 _FTS_TOKEN = re.compile(r"[A-Za-z0-9][A-Za-z0-9_\-\.]*")
@@ -378,6 +382,22 @@ class Store:
                          undo={"windows": ids, "speaker": old})
         return len(rows)
 
+    def mark_events(self, window_ids: Sequence[str], reason: str, by: str = "manual", speaker: str = "system") -> int:
+        """Lines stored as someone's words that were really Hermes's own notices (a finished background job, a
+        delegation result): relabelled as events, which recall labels and the night never reads facts from."""
+        rows = [r for r in (self.q(f"SELECT id, speaker, stream, flags FROM windows WHERE id IN "
+                                   f"({','.join('?' * len(window_ids))})", list(window_ids)) if window_ids else [])
+                if r["stream"] != "event"]
+        for r in rows:
+            self.x("UPDATE windows SET speaker=?, stream='event', flags=? WHERE id=?",
+                   (speaker, " ".join(sorted(set((r["flags"] or "").split()) | {"event"})), r["id"]))
+        if rows:
+            self.journal("manual", "correct", "marked_as_event",
+                         {"windows": len(rows), "reason": reason, "by": by, "first": rows[0]["id"]},
+                         undo={"restore": {r["id"]: {"speaker": r["speaker"], "stream": r["stream"],
+                                                     "flags": r["flags"] or ""} for r in rows}})
+        return len(rows)
+
     def drop_windows(self, window_ids: Sequence[str], reason: str, by: str = "manual") -> int:
         """Keep lines out of recall (flag 'dropped') without deleting them: the text stays, the journal can undo it."""
         rows = [r for r in (self.q(f"SELECT id, flags FROM windows WHERE id IN ({','.join('?' * len(window_ids))})",
@@ -434,6 +454,9 @@ class Store:
         u = json.loads(row["undo"])
         for wid, flags in (u.get("flags") or {}).items():         # dropped lines: their old flags back
             self.x("UPDATE windows SET flags=? WHERE id=?", (flags, wid))
+        for wid, old in (u.get("restore") or {}).items():          # lines relabelled as events: as they were
+            self.x("UPDATE windows SET speaker=?, stream=?, flags=? WHERE id=?",
+                   (old["speaker"], old["stream"], old["flags"], wid))
         if "windows" in u:                                        # a speaker correction: the old label back
             ids = u["windows"]
             self.x(f"UPDATE windows SET speaker=? WHERE id IN ({','.join('?' * len(ids))})", [u["speaker"], *ids])

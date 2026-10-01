@@ -19,8 +19,8 @@ def _print(obj):
 def cmd(args):
     sub = getattr(args, "sophia_cmd", None)
     if sub is None:
-        print("usage: hermes sophia <status|sleep|journal|recall|undo|relabel|audit-facts|drop-compaction|reconsolidate|"
-              "ingest-history>")
+        print("usage: hermes sophia <status|sleep|journal|recall|associate|thoughts|undo|relabel|audit-facts|notices|"
+              "drop-compaction|reconsolidate|ingest-history>")
         return
     e = _engine()
     try:
@@ -58,6 +58,50 @@ def cmd(args):
                 for it in items:
                     head = " | ".join(it["fact"]) if it["kind"] == "fact" else it["speaker"]
                     print(f"  {it['sim']:.3f} {it['kind']:6s} {head}: {it['text'][:140]}")
+        elif sub == "associate":
+            from .recall import own_label
+            items, info = e.recall.associate(" ".join(args.cue), k=args.k, hops=args.hops, record=not args.dry)
+            for it in items:
+                head = " | ".join(it["fact"]) if it["kind"] == "fact" else (it["speaker"] or it["kind"])
+                damp = f" (raised recently: {it['habituation']:.2f})" if it["habituation"] > 0.05 else ""
+                via = f" [{it['via']}]" if it.get("via") else ""
+                print(f"  {it['activation']:.3f} {head}{own_label(it.get('flags', ''))}{via}{damp}: {it['text'][:140]}")
+            if not items:
+                print("  (nothing comes to mind)")
+        elif sub == "thoughts":
+            for r in e.store.q("""SELECT ref, MIN(said) AS said, GROUP_CONCAT(text, ' ') AS text FROM windows
+                                  WHERE stream='thought' GROUP BY ref ORDER BY said DESC LIMIT ?""", (args.n,)):
+                print(f"  {time.strftime('%Y-%m-%d %H:%M', time.localtime(r['said']))}  {r['text'][:300]}")
+        elif sub == "notices":
+            from .capture import _NOTICE, _SKILL
+            refs = {}
+            for r in e.store.q("""SELECT ref, text FROM windows WHERE stream!='event' AND flags NOT LIKE '%assistant%'
+                                  AND (text LIKE '[%' OR text LIKE ' [%')"""):
+                if _NOTICE.match(r["text"]):
+                    refs.setdefault(r["ref"], "notice")
+                elif r["text"].startswith(_SKILL):
+                    refs.setdefault(r["ref"], "skill text")
+            ids, facts = [], set()
+            for ref, kind in refs.items():
+                rows = e.store.q("SELECT id, speaker, said, text FROM windows WHERE ref=? ORDER BY id", (ref,))
+                ids += [w["id"] for w in rows]
+                first = min(rows, key=lambda w: w["said"])
+                print(f"  {time.strftime('%Y-%m-%d %H:%M', time.localtime(first['said']))}  {kind:10s} "
+                      f"(as {first['speaker']})  {first['text'][:110]}")
+            for i in range(0, len(ids), 400):
+                part = ids[i:i + 400]
+                facts |= {r["fact_id"] for r in e.store.q(f"""SELECT fs.fact_id FROM fact_sources fs JOIN facts f
+                          ON f.id=fs.fact_id WHERE f.status IN ('active','unconfirmed') AND fs.window_id IN
+                          ({','.join('?' * len(part))})""", part)}
+            print(f"{len(refs)} messages ({len(ids)} lines) are Hermes's notices or skill text stored as someone's words; "
+                  f"{len(facts)} facts were read from them")
+            if args.apply and ids:
+                n = e.store.mark_events(ids, "Hermes's own notice or a skill's text, stored as someone's words by an "
+                                             "older version", by="notices")
+                for fid in facts:
+                    e.store.retract_fact(fid, "read from a Hermes notice or skill text, not anyone's words", by="notices")
+                print(f"relabelled {n} lines as events and retracted {len(facts)} facts (journaled; `sophia journal "
+                      f"--night manual` lists them, `sophia undo <id>` reverts)")
         elif sub == "undo":
             what = e.store.undo_journal(args.journal_id)
             print(f"undone: {what}" if what else f"journal entry {args.journal_id} has nothing to undo (or was undone)")
@@ -133,6 +177,17 @@ def register_cli(subparser) -> None:
     p.add_argument("query", nargs="+")
     p.add_argument("--gate", action="store_true", help="Run the full prefetch path including the decider gate")
     p.add_argument("-k", type=int, default=10)
+    p = subs.add_parser("associate", help="What a phrase brings to mind, without a question (no gate)")
+    p.add_argument("cue", nargs="+")
+    p.add_argument("-k", type=int, default=0, help="How many (default associate_k)")
+    p.add_argument("--hops", type=int, default=None, help="How far through the graph (default associate_hops)")
+    p.add_argument("--dry", action="store_true", help="Don't record what came up (no damping afterwards)")
+    p = subs.add_parser("thoughts", help="The agent's most recent kept thoughts")
+    p.add_argument("-n", type=int, default=20)
+    p = subs.add_parser("notices", help="List Hermes's own notices (finished jobs, delegation results) and skill text "
+                                        "stored as someone's words by older versions; --apply relabels them as events "
+                                        "and retracts facts read from them, journaled")
+    p.add_argument("--apply", action="store_true")
     p = subs.add_parser("undo", help="Revert a journaled change: a supersession, a plan change, a correction or a review")
     p.add_argument("journal_id", type=int)
     p = subs.add_parser("audit-facts", help="List facts whose people aren't grounded in the lines they came from "

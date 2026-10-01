@@ -210,6 +210,12 @@ def _speaker_group(speaker: str, flags: str, cfg: Dict[str, Any]) -> str:
     s, f = speaker or "", flags or ""
     if "assistant" in f:
         return cfg.get("agent_name") or "Assistant"
+    if "thought" in f:
+        return "Own thoughts"
+    if "event" in f:
+        return "System notices"
+    if "caption" in f:
+        return "Image descriptions"
     if s == cfg.get("user_name"):
         return s
     if s.startswith("memory:") or s == "note":

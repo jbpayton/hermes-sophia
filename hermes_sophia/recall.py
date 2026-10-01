@@ -4,9 +4,11 @@ from __future__ import annotations
 import datetime as dt
 import json
 import logging
+import math
 import re
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from collections import Counter
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from .decider import DeciderError
 from .spans import query_time_scope
@@ -52,6 +54,22 @@ GATE_INSTRUCTIONS = ("At least one memory item is directly relevant to the messa
                      "the reply should take into account.")
 
 
+def own_label(flags: str) -> str:
+    """How a line that isn't anyone's words to the agent is labelled wherever it is shown."""
+    flags = flags or ""
+    if "thought" in flags:
+        return " (own earlier thought, not an observation)"
+    if "event" in flags:
+        return " (system notice)"
+    if "caption" in flags:
+        return " (image description written by a vision model)"
+    return ""
+
+
+def _agent_authored(flags: str) -> bool:
+    return "assistant" in (flags or "") or "thought" in (flags or "")
+
+
 def _date(ts: Optional[float]) -> str:
     return dt.datetime.fromtimestamp(ts).strftime("%Y-%m-%d") if ts else "?"
 
@@ -62,8 +80,11 @@ class Recall:
 
     # ------------------------------------------------------------- candidates
     def candidates(self, query: str, k: int = 20, history: bool = False, use_scope: bool = True,
-                   session_id: str = "", now: Optional[float] = None) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
-        """``now``: the moment the question is asked (defaults to the clock; benchmarks replay other dates)."""
+                   session_id: str = "", now: Optional[float] = None, hops: Optional[int] = None,
+                   thoughts: bool = True) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+        """``now``: the moment the question is asked (defaults to the clock; benchmarks replay other dates).
+        ``hops``: how far the graph walk goes (default graph_hops). ``thoughts``: include the agent's own kept
+        thoughts."""
         e, cfg, store = self.e, self.e.cfg, self.e.store
         info: Dict[str, Any] = {}
         qv = None
@@ -122,6 +143,8 @@ class Recall:
             r = rows.get(wid)
             if r is None or any(f in (r["flags"] or "") for f in ("echo", "dropped", "ungrounded")):
                 continue
+            if not thoughts and "thought" in (r["flags"] or ""):
+                continue
             if session_id and r["session_id"] == session_id and "compacted" not in (r["flags"] or ""):
                 continue                                   # already in the live context window
             lexical = cfg["fts_weight"] * fts_grade.get(wid, 0.0) if cfg["fts_weight"] else \
@@ -129,7 +152,7 @@ class Recall:
             bonus = lexical + (cfg["type_bonus"] if wid in typed else 0) + \
                     (cfg["time_scope_bonus"] if wid in in_scope else 0) + \
                     (cfg["recency_bonus"] if r["said"] > last_sleep else 0) - \
-                    (a_pen if "assistant" in (r["flags"] or "") and not asks_agent else 0) - \
+                    (a_pen if _agent_authored(r["flags"]) and not asks_agent else 0) - \
                     (cfg["question_penalty"] if (r["text"] or "").rstrip().endswith("?") and len(r["text"]) < 240
                      and not (asks_advice and cfg["advice_keeps_questions"]) else 0)
             if s < cfg["junk_floor"] and wid not in fts_ids:
@@ -178,8 +201,8 @@ class Recall:
                                  "said": t["last_said"], "speaker": "", "flags": "", "ref": t["request_ref"],
                                  "outcome": t["outcome"]}
         # the graph: walk from what matched to what it connects to
-        if cfg["graph_hops"] > 0:
-            info["graph"] = self._expand(items, query, qv, history, scope, session_id)
+        if (cfg["graph_hops"] if hops is None else hops) > 0:
+            info["graph"] = self._expand(items, query, qv, history, scope, session_id, hops)
         # raw windows that stated a fact since superseded: label what changed, keep the verbatim evidence
         by_window: Dict[str, List[Dict[str, Any]]] = {}
         for it in items.values():
@@ -195,6 +218,8 @@ class Recall:
                     note = f"{r['subject']} {r['relation']} {r['object']} → {r['new_object'] or '?'} ({_date(r['valid_to'])})"
                     if note not in it.setdefault("changed", []):
                         it["changed"].append(note)
+        if not thoughts:                                  # the graph walk and links can bring them in too
+            items = {i: it for i, it in items.items() if "thought" not in (it.get("flags") or "")}
         ranked = sorted(items.values(), key=lambda it: it["score"], reverse=True)[:k]
         self._attach_times(ranked, now)
         credit = store.credit([it["id"] for it in ranked])
@@ -292,7 +317,7 @@ class Recall:
         return changed
 
     def _expand(self, items: Dict[str, Dict[str, Any]], query: str, qv, history: bool, scope,
-                session_id: str) -> Dict[str, Any]:
+                session_id: str, hops: Optional[int] = None) -> Dict[str, Any]:
         """Graph expansion. Bridge entities -- named in the top items but not in the question, which
         similarity already covers -- are seeds. Facts one hop away join the candidates (or are raised) at
         the seed's score times ``graph_decay`` (or their own similarity, if higher), damped for hub entities
@@ -300,6 +325,7 @@ class Recall:
         are never expanded: everything connects to them."""
         e, cfg, store = self.e, self.e.cfg, self.e.store
         decay, fanout, hub = cfg["graph_decay"], cfg["graph_fanout"], cfg["graph_hub_degree"]
+        n_hops = cfg["graph_hops"] if hops is None else hops
         skip = {T.norm_entity(cfg["user_name"]), T.norm_entity(cfg["agent_name"]), "i", "me", "user", "assistant"}
         skip |= {T.norm_entity(n) for n in T.names_in(query)}
         seeds = sorted(items.values(), key=lambda it: it["score"], reverse=True)[:cfg["gate_top"]]
@@ -327,7 +353,7 @@ class Recall:
         frontier = sorted(((w, eid) for eid, w in weight.items() if eid in known), reverse=True)[:cfg["graph_entities"]]
         added, walked = 0, []
         fidx = store.index("fact", cfg["embed_model"]) if qv is not None else None
-        for hop in range(cfg["graph_hops"]):
+        for hop in range(n_hops):
             nxt: Dict[str, float] = {}
             for w, eid in frontier:
                 deg = max(1, known[eid]["fact_count"] if eid in known else 1)
@@ -367,7 +393,7 @@ class Recall:
                             nxt[other] = max(nxt.get(other, 0.0), score)
                 if reached:
                     walked.append(via)
-            if hop + 1 < cfg["graph_hops"] and nxt:
+            if hop + 1 < n_hops and nxt:
                 more = {r["id"]: r for r in store.q(
                     f"SELECT id, name, fact_count FROM entities WHERE id IN ({','.join('?' * len(nxt))})", list(nxt))}
                 known.update(more)
@@ -408,14 +434,67 @@ class Recall:
                     continue
                 if session_id and w["session_id"] == session_id and "compacted" not in (w["flags"] or ""):
                     continue
-                rel = r["kind"] if r["src"] == other else {"answers": "answered by", "corrects": "corrected by"}.get(
-                    r["kind"], r["kind"])
+                rel = r["kind"] if r["src"] == other else {"answers": "answered by", "corrects": "corrected by",
+                                                           "about": "thought about in"}.get(r["kind"], r["kind"])
                 items[other] = {"kind": "window", "id": other, "score": wseeds[parent]["score"] * decay,
                                 "sim": wseeds[parent]["sim"], "text": w["text"], "said": w["said"],
                                 "speaker": w["speaker"], "flags": w["flags"] or "", "ref": w["ref"],
                                 "via": f"{rel} a match"}
                 added += 1
         return {"entities": walked, "raised_or_added": added}
+
+    # --------------------------------------------------------------- associate
+    def associate(self, cue: str, k: int = 0, hops: Optional[int] = None, session_id: str = "",
+                  record: bool = True, exclude: Sequence[str] = (),
+                  now: Optional[float] = None) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+        """What a cue brings to mind, with no question to answer and no gate deciding whether to use it.
+
+        The same search as recall (meaning, keywords, the graph), walking further (associate_hops), so a cue can
+        reach what is two steps away; every step weakens the pull (graph_decay). Each memory raised is recorded,
+        and a memory raised recently is damped: its pull is divided by 1 + the sum of exp(-age / τ) over its
+        recent raisings (τ = associate_habituation_hours). The same things don't keep coming back, and they recover
+        as time passes. Damping only reorders what the cue is about: everything raised scores within associate_band
+        of the best match, so when what's relevant has all come up lately, it comes back weaker rather than being
+        replaced by whatever is next. Neighbouring turns ("next to a match") help a question's context, not
+        association, and are left out. At most associate_per_source items come from one message or page."""
+        cfg, store = self.e.cfg, self.e.store
+        k = k or cfg["associate_k"]
+        now = now if now is not None else self.e.now()
+        ranked, info = self.candidates(cue, max(20, k * 4), use_scope=False, session_id=session_id, now=now,
+                                       hops=cfg["associate_hops"] if hops is None else hops)
+        hab = self.habituation([it["id"] for it in ranked], now)
+        skip, per_source, out = set(exclude), Counter(), []
+        top = max((it["score"] for it in ranked if it.get("via") != "next to a match"), default=0.0)
+        for it in ranked:
+            if it["id"] in skip or it.get("bare_question") or it.get("via") == "next to a match":
+                continue
+            if it["score"] < top - cfg["associate_band"]:
+                continue
+            src = it.get("ref") or it["id"]
+            if per_source[src] >= cfg["associate_per_source"]:
+                continue
+            per_source[src] += 1
+            h = hab.get(it["id"], 0.0)
+            out.append({**it, "activation": it["score"] / (1.0 + h), "habituation": h})
+        out.sort(key=lambda it: it["activation"], reverse=True)
+        out = out[:k]
+        if record and out:
+            store.xmany("INSERT INTO activations(item_id,item_kind,ts,cue) VALUES(?,?,?,?)",
+                        [(it["id"], it["kind"], now, cue[:200]) for it in out])
+        info["damped"] = sum(1 for it in out if it["habituation"] > 0.05)
+        return out, info
+
+    def habituation(self, ids: Sequence[str], now: float) -> Dict[str, float]:
+        """Per item: the sum of exp(-age / τ) over the times it was raised in the last 5 τ."""
+        tau = max(1.0, float(self.e.cfg["associate_habituation_hours"]) * 3600)
+        out: Dict[str, float] = {}
+        ids = list(ids)
+        for i in range(0, len(ids), 400):
+            part = ids[i:i + 400]
+            for r in self.e.store.q(f"SELECT item_id, ts FROM activations WHERE ts>? AND ts<=? AND item_id IN "
+                                    f"({','.join('?' * len(part))})", [now - 5 * tau, now, *part]):
+                out[r["item_id"]] = out.get(r["item_id"], 0.0) + math.exp(-(now - r["ts"]) / tau)
+        return out
 
     # ---------------------------------------------------------------- prefetch
     def _previous_user_line(self, session_id: str) -> str:
@@ -432,7 +511,8 @@ class Recall:
         if referential:                                   # resolve the follow-up with the previous message
             prev = self._previous_user_line(session_id)
             search = f"{prev} {query}".strip() if prev else query
-        items, info = self.candidates(search, cfg["recall_k"], session_id=session_id, now=now)
+        items, info = self.candidates(search, cfg["recall_k"], session_id=session_id, now=now,
+                                      thoughts=bool(cfg["inject_thoughts"]))
         top = items[:cfg["gate_top"]]
         gate, decision_id, passed = "none", "", False
         info["uncertain"] = False
@@ -514,7 +594,7 @@ class Recall:
                 continue
             if it.get("bare_question"):             # an earlier question carries no facts; sophia_recall still finds it
                 continue
-            if "assistant" in it.get("flags", "") and not agent_asked:
+            if _agent_authored(it.get("flags", "")) and not agent_asked:
                 if n_asst >= cfg["max_assistant_items"]:
                     continue
                 n_asst += 1
@@ -530,7 +610,8 @@ class Recall:
             s, r, o = it["fact"]
             return f"({_date(it['said'])}) {s} | {r} | {o} — \"{it['text'][:200]}\""
         facts = "; ".join(" | ".join(x["fact"]) for x in it.get("facts", [])[:2])
-        return f"({_date(it['said'])}, {it['speaker']}) {it['text'][:260]}" + (f" [fact: {facts}]" if facts else "")
+        return (f"({_date(it['said'])}, {it['speaker']}{own_label(it.get('flags', ''))}) {it['text'][:260]}"
+                + (f" [fact: {facts}]" if facts else ""))
 
     @classmethod
     def fit(cls, items: List[Dict[str, Any]], budget: int) -> List[Dict[str, Any]]:
@@ -586,7 +667,7 @@ class Recall:
                 line = f"- [{_date(it['said'])} · fact · {mod}{when}{status}{num}{via}] {s} | {r} | {o} — \"{it['text']}\"{changed}"
             else:
                 who = it["speaker"] + (" (assistant said)" if "assistant" in it["flags"] else "") + \
-                      (" (untrusted source text)" if "external" in it["flags"] else "")
+                      (" (untrusted source text)" if "external" in it["flags"] else "") + own_label(it["flags"])
                 changed = f" · later changed: {'; '.join(it['changed'])}" if it.get("changed") else ""
                 via = f" · {it['via']}" if it.get("via") else ""
                 fx = ""

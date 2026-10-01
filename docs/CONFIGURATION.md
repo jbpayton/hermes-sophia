@@ -115,6 +115,7 @@ Lines from other speakers are written to the agent, so at night a fact drawn fro
 | `test_tools` | `terminal`, `shell`, `bash`, `run_command`, `execute_code` | Their output is scanned for pytest outcomes |
 | `full_capture_contexts` | `primary` | Agent contexts captured in full. Other contexts (subagents, cron) record a short event per task prompt and their tool calls (the action log, so they still get task cards), but no conversation windows and no web reads |
 | `echo_threshold` | 0.5 | Shingle containment above which a reply that just repeats injected memory is fenced off as an echo |
+| `keep_images` | on | Keep a copy of each image you send in `plugin-data/sophia/images/` (Hermes deletes its own after a day), so it can be looked at again later. Off keeps only a reference |
 | `ground_check` | on | Each live agent reply that names people, places or numbers is checked by the decider (both option orders). The question is whether every claim it makes about you is in your message, the memory it was given, or the turn's tool results. If not, the reply is kept out of recall. Imported history is not checked, because what was injected then is unknown |
 
 ## Awake: recall and injection
@@ -161,6 +162,19 @@ After the search, recall walks the memory graph from bridge entities: people and
 | `graph_adjacent`, `graph_adjacent_decay` | 1, 0.9 | Turns immediately before and after a matched message (a question and its answer) join the candidates at the match's score × decay |
 
 Conversation links are followed too: a matched message brings what corrects it, or what it answered.
+
+## Association and thoughts
+
+What a phrase brings to mind without a question (`sophia_associate`, `hermes sophia associate`), and the agent's own kept thoughts (`sophia_thought`). See [How it works](HOW-IT-WORKS.md#thoughts-and-association).
+
+| Key | Default | |
+|---|---|---|
+| `associate_k` | 8 | Memories raised per phrase |
+| `associate_hops` | 2 | How far the graph walk goes from what the phrase matches. Each step weakens the pull by `graph_decay` |
+| `associate_band` | 0.1 | Only memories scoring within this of the best match come up. Damping reorders them; it never lets unrelated ones in |
+| `associate_per_source` | 2 | Most memories raised from one message or page |
+| `associate_habituation_hours` | 6 | A memory raised recently is damped: its pull is divided by 1 + Σ exp(−age / this). Raised once an hour ago, it pulls about half as hard; after a day it's back to full |
+| `inject_thoughts` | on | The agent's kept thoughts can be part of the memory injected before a reply, always labelled as its thoughts |
 
 ## Asleep
 

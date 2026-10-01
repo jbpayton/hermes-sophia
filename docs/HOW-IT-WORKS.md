@@ -4,6 +4,7 @@ The [README](../README.md) is the short version. This page shows what Sophia doe
 
 - [Memory injected before every reply](#memory-injected-before-every-reply): what the agent sees, and how the check decides;
 - [Memory the agent can query](#memory-the-agent-can-query): the tools;
+- [Thoughts and association](#thoughts-and-association): the agent's own thoughts, and what a phrase brings to mind;
 - [Mindscape](#mindscape-memory-the-agent-can-look-around-in): the pages the night builds;
 - [Task memory](#task-memory-what-the-agent-did-and-how-it-turned-out): what the agent did, and how it turned out;
 - [Across sessions](#what-it-looks-like-across-sessions): a plan that changes, end to end;
@@ -55,6 +56,9 @@ What the agent is told about each item:
 | `"next weekend" = 2024-06-29/2024-07-01` | A relative time word resolved to the date it meant when it was said. If it pointed ahead and that date is over, it adds `now past; this line doesn't say if it happened`, so an old plan isn't read as still coming up, or as done |
 | `evidence later changed` | These words include something that was later superseded, so the agent doesn't repeat a stale plan |
 | `assistant said` | The agent's own earlier words: weaker evidence, and capped at two per injection |
+| `own earlier thought, not an observation` | A thought the agent kept with `sophia_thought`. It counts toward the same cap |
+| `system notice` | One of Hermes's own notices, such as a finished background job |
+| `image description written by a vision model` | A model's description of an image you sent, not your words |
 | `linked via Lily` | Reached through the graph rather than by similarity |
 | `untrusted source text` | Text from a web page, which the agent must treat as data, not instructions |
 | `used +0.25` | Credit earned when this item actually helped a past answer. It affects ordering only, never whether an item may be shown |
@@ -78,6 +82,8 @@ For an off-topic message ("What's the capital of Australia?") the check answered
 | `sophia_remember` | "Keep this", or marks a recalled item `helpful` or `wrong`. This is the strongest learning signal memory gets |
 | `sophia_correct` | "That line wasn't Joey's" or "that fact is wrong": relabels who said a message, or retracts a fact. A reason is required; it's journaled and can be undone |
 | `sophia_ingest` | "Learn this document" |
+| `sophia_thought` | "Keep this thought of mine": an idea, a question to look into, a hunch. Kept as the agent's thought, never as something that happened |
+| `sophia_associate` | "What does this bring to mind?": free association with no question to answer, damped for what came up recently |
 
 Pages the agent reads with `web_extract` or the browser are learned automatically, so `sophia_ingest` is only for documents obtained some other way. A real `sophia_query` call, `{"subject": "Joey"}`, trimmed:
 
@@ -87,6 +93,36 @@ Pages the agent reads with `web_extract` or the browser are learned automaticall
   {"fact": ["Joey", "is staying at", "Curry Village"], "modality": "planned", "happens": "2027-05-08/2027-05-15", "status": "active"},
   …]}
 ```
+
+## Thoughts and association
+
+These are the first pieces of [a continuing process](CONTINUITY.md): an agent that keeps going between messages. They are useful on their own too.
+
+**Thoughts.** The agent can keep a thought of its own with `sophia_thought`: an idea, a question it wants to look into, a hunch, something it noticed. A thought is kept apart from what was said:
+- it is stored as the agent's thought, and comes back labelled "own earlier thought, not an observation";
+- it ranks below what you actually said, like the agent's own replies;
+- the night never reads facts from it, so a thought can't turn into the memory of something that happened;
+- `about` links it to the line that prompted it, so each brings the other along in recall.
+
+Set `inject_thoughts: off` to keep thoughts out of the memory injected before replies; the agent can still search them.
+
+**Association.** `sophia_associate` (or `hermes sophia associate "…"`) shows what a phrase brings to mind when there's no question to answer. It runs the same search as recall, but:
+- **there's no gate:** nothing decides whether the memories are needed;
+- **it walks further:** two hops through the graph by default, each step weakening the pull;
+- **it damps what came up recently:** each memory raised is recorded, and one raised recently is weaker the next time. After an hour it pulls about half as hard, and after a day it is back to full strength. So asking again surfaces other things, and a train of thought doesn't loop;
+- **it stays on topic:** damping only reorders what the phrase is about. When everything relevant has come up lately, it comes back weaker rather than being replaced by something unrelated.
+
+On the synthetic Silas store, "coffee" reaches a bakery through the graph. The Portland line had come up a few minutes earlier for "moving to a new city", so it's damped:
+
+```text
+$ hermes sophia associate "coffee"
+  0.699 Assistant: Portland sounds like a great place for coffee lovers!
+  0.699 Assistant: A flat white has less milk and a thinner layer of microfoam, so the coffee tastes stronger…
+  0.633 Silas [linked via Riley's wife]: My coworker Riley's wife just opened a bakery downtown, the croissants are unreal.
+  0.360 Silas (raised recently: 1.00): I've lived in Portland for about four years now, and I still find new coffee shops…
+```
+
+It takes 20–80 ms. The settings are under [association](CONFIGURATION.md#association-and-thoughts).
 
 ## Mindscape: memory the agent can look around in
 
@@ -226,6 +262,9 @@ Nothing generates text on the chat's critical path.
 - **Turns.** Each turn is split into small verbatim windows. Each window gets a cheap header (speaker, date, the question it answers, names in play) and deterministic typed values: times, durations, quantities, money, contacts, artifacts.
 - **Actions.** Every tool call is recorded with its arguments, the start and end of its result, its exit code, and the request it served. This is the raw material for task memory.
 - **Web reads.** Pages the agent reads are captured as sources. Failed fetches are dropped, and credential or vault tools are never captured.
+- **Hermes's own notices.** Hermes hands the agent some notices as if you had typed them: a finished background job, a delegation's result, a budget warning, a hand-off from the CLI. They're kept as system notices, never as your words, and the night reads no facts from them.
+- **Skill commands.** A `/skill` turn carries the whole skill's text. Only what you typed is kept as yours ("/work fix the title leak").
+- **Images.** Hermes deletes its copy of an image you send after a day, so Sophia keeps its own (`keep_images`), and your line gets an `[image …]` marker in place of the file path. When a text-only model is in use, Hermes has a vision model describe the image. That description is kept as the image's caption, labelled as written by a vision model, never as your words. Captioning at night isn't built yet.
 - **Speed.** Capture takes about 0.1 s per turn, off the critical path. The search-check-inject step takes 260–460 ms on the test profile.
 
 ### Asleep: the nightly run
@@ -294,12 +333,15 @@ If other people or agents write into your conversations (another agent relaying 
 ```bash
 hermes -p <profile> sophia status                  # sizes, where each job runs, last night, degraded modes
 hermes -p <profile> sophia recall "what camera…" --gate
+hermes -p <profile> sophia associate "coffee"       # what a phrase brings to mind (no gate); --dry records nothing
+hermes -p <profile> sophia thoughts                # the agent's most recent kept thoughts
 hermes -p <profile> sophia sleep [--model M] [--url U --api openai] [--steps a,b] [--max-wait S]
 hermes -p <profile> sophia journal                 # what last night learned; #ids marked undoable
 hermes -p <profile> sophia undo <id>
 hermes -p <profile> sophia relabel --session S --from Joey --to Claude --reason "…"   # who said a session's lines
 hermes -p <profile> sophia audit-facts [--apply]   # facts from relayed lines that don't name who they're about
 hermes -p <profile> sophia drop-compaction         # keep old context-compaction summaries out of recall
+hermes -p <profile> sophia notices [--apply]       # Hermes notices and skill text older versions kept as someone's words
 hermes -p <profile> sophia reconsolidate           # drop derived facts; the next night rebuilds them from raw
 hermes -p <profile> sophia ingest-history --days 7 # import past sessions (idempotent)
 hermes dashboard                                    # the Sophia tab (see DASHBOARD.md)

@@ -8,10 +8,13 @@ from __future__ import annotations
 
 import collections
 import datetime as dt
+import hashlib
 import json
 import logging
+import mimetypes
 import re
 import time
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 from urllib.parse import urlparse
 
@@ -21,6 +24,41 @@ from .store import sha
 
 # Hermes hands a compacted conversation back as a user-role summary; it restates earlier turns, in the model's words
 _COMPACTION = re.compile(r"\s*\[CONTEXT COMPACTION\b")
+# Hermes's own notices also arrive as user-role turns: a finished background job, a delegation's result, a budget
+# warning, a hand-off from the CLI. They are events, not the user's words.
+_NOTICE = re.compile(r"\s*\[(?:IMPORTANT: (?!The user has invoked the )|SYSTEM\b|ASYNC DELEGATION\b|"
+                     r"Background process \S+ heartbeat|Session was just handed off\b)")
+# A /skill turn carries the whole skill's text; only the instruction typed with it is the user's
+_SKILL = '[IMPORTANT: The user has invoked the '
+_SKILL_NAME = re.compile(re.escape(_SKILL) + r'"([^"]*)"')
+# Hermes's image hints. A vision-capable model gets the path; a text-only one gets a description a vision model
+# wrote, then the path. Hermes deletes its cached copy after a day.
+_IMG_HINT = re.compile(r"\[Image attached(?: at)?: (?P<src>[^\]\n]+)\]")
+_IMG_NOTE = re.compile(r"\[The user sent an image(?P<body>.*?)image_url: (?P<src>[^\]\s]+?)(?: ~)?\]", re.S)
+_IMG_DESC = re.compile(r"Here's what I can see:\n(.*?)\]\s*\[If you need a closer look", re.S)
+_IMG_FILLERS = ("What do you see in this image?", "(The user sent a message with no text content)")
+
+
+def skill_typed(content: str) -> str:
+    """What the user typed for a /skill turn ("/name instruction"), else the text unchanged."""
+    if not (content or "").startswith(_SKILL):
+        return content
+    try:                                    # Hermes's own reading of its scaffolding, when running inside Hermes
+        from agent.skill_commands import extract_user_instruction_from_skill_message as extract
+        said = extract(content)
+    except Exception:
+        said = None
+        for marker, stop, last in (("\nUser instruction: ", "\n\n[Loaded as part of the ", False),
+                                   ("The user has provided the following instruction alongside the skill "
+                                    "invocation: ", "\n\n[Runtime note:", True)):
+            i = content.rfind(marker) if last else content.find(marker)
+            if i >= 0:
+                said = content[i + len(marker):].split(stop, 1)[0].strip() or None
+                break
+    m = _SKILL_NAME.match(content)
+    name = (m.group(1) if m else "skill").strip()
+    label = name if name.startswith("/") else "/" + name
+    return f"{label} {said}" if said and said is not content else label
 
 logger = logging.getLogger(__name__)
 
@@ -195,6 +233,24 @@ class Capture:
             is_new = h not in seen
             if role == "user" and _COMPACTION.match(content or ""):
                 continue                      # Hermes's context-compaction handoff: a summary of turns already kept
+            if role == "user" and _NOTICE.match(content or ""):
+                if is_new and full:
+                    ws = self._windows_for(session_id, role, content, _said(m, now), h, prev, recent_names, injected,
+                                           speaker="system")
+                    for w in ws:
+                        w["stream"] = "event"
+                        w["flags"] = " ".join(sorted(set(w["flags"].split()) | {"event"}))
+                    new_windows.extend(ws)
+                    stats["notices"] += 1
+                turn_user, turn_tools = content, []     # a reply to a notice is grounded in it; the request stays
+                if is_new:
+                    new_hashes.append(h)
+                continue
+            images: List[Dict[str, Any]] = []
+            if role == "user":
+                content = skill_typed(content)
+                if _IMG_HINT.search(content) or "[The user sent an image" in content:
+                    content, images = self._images(content, session_id, h, _said(m, now), keep=full and is_new)
             if role in ("user", "assistant") and content.strip():
                 if is_new:
                     if full:
@@ -206,8 +262,15 @@ class Capture:
                             for w in ws:
                                 w["flags"] = " ".join(sorted(set(w["flags"].split()) | {"ungrounded"}))
                             stats["ungrounded"] += 1
+                        for w in ws if images else ():
+                            w["flags"] = " ".join(sorted(set(w["flags"].split()) | {"image"}))
                         new_windows.extend(ws)
                         stats["windows"] += len(ws)
+                        for img in images:
+                            if img.get("desc"):
+                                new_windows.extend(self._caption_windows(img, _said(m, now), ws[0]["speaker"]
+                                                                         if ws else cfg["user_name"]))
+                                stats["captions"] += 1
                     if role == "assistant":
                         for c in _CITE.findall(content):
                             citations.append((session_id, f"hermes:{session_id}:{h[:12]}", c, _said(m, now)))
@@ -348,6 +411,92 @@ class Capture:
                         "text": wtext, "index_text": f"{hdr} {wtext}", "flags": " ".join(sorted(flags)),
                         "stream": "conversation", "spans": _spans(wtext, said)})
         return out
+
+    # -------------------------------------------------------------- images
+    def _images(self, content: str, session_id: str, h: str, said: float,
+                keep: bool) -> Tuple[str, List[Dict[str, Any]]]:
+        """Hermes's image hints -> the user's own words plus an "[image <id>]" marker per image. With ``keep``, each
+        image Hermes cached is copied into Sophia's store, and a description a vision model wrote when it arrived
+        becomes that image's caption, labelled as model-written (it is never the user's words)."""
+        found: List[Tuple[str, Optional[str]]] = []
+
+        def take(m, desc=None):
+            found.append((m.group("src").strip(), desc))
+            return ""
+        text = _IMG_NOTE.sub(lambda m: take(m, (_IMG_DESC.search(m.group(0)) or [None, None])[1]), content)
+        text = _IMG_HINT.sub(take, text)
+        if not found:
+            return content, []
+        text = re.sub(r"\n{3,}", "\n\n", text.replace("[image]", "")).strip()
+        if text in _IMG_FILLERS:
+            text = ""
+        refs = [self._keep_image(src, session_id, h, said, (desc or "").strip() or None) if keep
+                else {"id": sha("image", src), "desc": None} for src, desc in found]
+        markers = " ".join(f"[image {r['id'][:8]}]" for r in refs)
+        return (f"{text}\n{markers}" if text else markers), refs
+
+    def _keep_image(self, src: str, session_id: str, h: str, said: float, desc: Optional[str]) -> Dict[str, Any]:
+        store = self.e.store
+        path = Path(src).expanduser()
+        data = None
+        if self.e.cfg["keep_images"] and not src.startswith(("http://", "https://", "data:")):
+            try:
+                data = path.read_bytes() if path.is_file() else None
+            except OSError:
+                data = None
+        file, size = None, None
+        if data is not None:
+            iid = hashlib.sha256(data).hexdigest()[:16]
+            folder = store.path.parent / "images"
+            folder.mkdir(parents=True, exist_ok=True)
+            target = folder / (iid + (path.suffix.lower() or ".bin"))
+            if not target.exists():
+                target.write_bytes(data)
+            file, size = target.name, len(data)
+        else:
+            iid = sha("image", src)                     # gone already, or a URL: the reference is still kept
+        store.x("""INSERT OR IGNORE INTO images(id,file,mime,bytes,source,first_said,session_id,ref)
+                   VALUES(?,?,?,?,?,?,?,?)""", (iid, file, mimetypes.guess_type(src)[0], size, src, said, session_id,
+                                                f"hermes:{session_id}:{h[:12]}"))
+        if file:
+            store.x("UPDATE images SET file=?, bytes=? WHERE id=? AND file IS NULL", (file, size, iid))
+        if desc:
+            store.x("UPDATE images SET caption=?, caption_by=?, caption_at=? WHERE id=? AND caption IS NULL",
+                    (T.redact(desc)[0], "vision model, when the image arrived", said, iid))
+        return {"id": iid, "file": file, "desc": desc}
+
+    def _caption_windows(self, img: Dict[str, Any], said: float, sender: str) -> List[Dict[str, Any]]:
+        cfg = self.e.cfg
+        ref = f"image:{img['id']}"
+        text = T.redact(img["desc"])[0]
+        day = dt.datetime.fromtimestamp(said).strftime("%Y-%m-%d")
+        hdr = f"[vision · {day} · image {img['id'][:8]} from {sender}]"
+        return [{"id": sha(ref, i), "ref": ref, "session_id": "", "speaker": "vision", "said": said, "text": w,
+                 "index_text": f"{hdr} {w}", "flags": " ".join(sorted({"caption", *wf.split()})), "stream": "caption",
+                 "spans": _spans(w, said)}
+                for i, (w, wf) in enumerate(T.make_windows(text, cfg["window_sentences"], cfg["window_chars"],
+                                                           cfg["code_block_chars"]))]
+
+    # ------------------------------------------------------------- thoughts
+    def think(self, content: str, about: str = "", session_id: str = "", now: Optional[float] = None) -> List[str]:
+        """One of the agent's own thoughts: an idea, a question to come back to, a hunch. Stored as its thought:
+        recall labels it so, it ranks below what was actually said, and the night never reads facts about the world
+        from it, so a thought can't come back as the memory of something that happened. ``about``: the id of the
+        line that prompted it; recall then brings each one along with the other."""
+        now = now or time.time()
+        text, _ = T.redact(content)
+        speaker = self.e.cfg["agent_name"]
+        ref = f"thought:{sha(text, now)}"
+        hdr = T.header(f"{speaker} (thought)", now)
+        ws = [{"id": sha(ref, i), "ref": ref, "session_id": session_id, "speaker": speaker, "said": now, "text": w,
+               "index_text": f"{hdr} {w}", "flags": " ".join(sorted({"thought", *wf.split()})), "stream": "thought",
+               "spans": _spans(w, now)}
+              for i, (w, wf) in enumerate(T.make_windows(text, 3, 480, 800))]
+        self._persist(ws)
+        if about and self.e.store.one("SELECT 1 FROM windows WHERE id=?", (about,)):
+            self.e.store.xmany("INSERT OR IGNORE INTO links(src,dst,kind,night_id) VALUES(?,?,'about','')",
+                               [(w["id"], about) for w in ws])
+        return [w["id"] for w in ws]
 
     # ------------------------------------------------------------ external
     def _chunk(self, url: str, content: str, title: str, said: float, stream: str) -> List[Dict[str, Any]]:

@@ -161,6 +161,7 @@ Sophia was the only link between the chats. This is condensed; the verbatim run 
 | [Comparison](docs/COMPARISON.md) | How Sophia compares with other agent memories |
 | [Design](docs/DESIGN.md) | The reasoning behind it, and what's built so far |
 | [Story](docs/STORY.md) | How it got here: the research, the dead ends, and the bugs only real use found |
+| [Continuity](docs/CONTINUITY.md) | Where it's going: an agent that keeps going between messages, starts conversations, and sets its own goals |
 
 ## Status
 
@@ -176,7 +177,7 @@ Details are in [BENCHMARKS.md](docs/BENCHMARKS.md).
 
 ```bash
 pip install -e ".[test]"
-pytest -q        # 91 tests against a fake model server; no GPU needed
+pytest -q        # 103 tests against a fake model server; no GPU needed
 ```
 
 The code is in `hermes_sophia/`, including the dashboard tab in `hermes_sophia/dashboard/` (plain JS, no build step). The benchmark harness is in `bench/`, and the experiments behind the design are in `research/`. The animated tour is one HTML page, rendered to video by `scripts/explainer/build.py --video`.

@@ -29,6 +29,11 @@ Two edges, both kept passive: sleep's *anticipate* step only warms caches, it ne
 surfaces anything unasked; the morning note (one line in the system prompt, for 36 hours after a
 night, saying what it did) reports on the night and surfaces no memory.
 
+An agent that keeps going between messages, starting conversations and pursuing its own goals,
+is planned as a separate companion plugin ([CONTINUITY.md](CONTINUITY.md)). Sophia stays its
+memory and stays passive: it answers "what does this bring to mind?" (`associate`) and keeps the
+agent's thoughts as thoughts, never as evidence of what happened.
+
 ---
 
 ## 1. Principles
@@ -475,11 +480,14 @@ The code is this repository. It is tested on the `sophiadev` profile (a clone of
 - Other speakers (`other_speakers`): a user-role message that opens with `Name:` or `**Name:**` is stored under that name. At night, facts from their lines must be grounded in the line (a participant named, "I"/"my" for the speaker, "you"/"your" for the agent), and a fact that only gives a participant a role ("X is the assistant") is dropped on every line. `hermes sophia audit-facts [--apply]` checks the facts already stored.
 - Corrections of what was derived, never of the words: `sophia_correct` (relabel a line's speaker, retract a fact; a reason is required), `hermes sophia relabel`, and the Sophia tab. Every correction is journaled with its reason and can be undone (`hermes sophia undo`).
 - Hermes's context-compaction summaries are skipped at capture; `hermes sophia drop-compaction` keeps those stored by older versions out of recall.
+- What isn't anyone's words to the agent is kept apart: Hermes's own notices (finished background jobs, delegation results, budget warnings) as system events; from a `/skill` turn, only what was typed; images copied into the store (Hermes deletes its own after a day), with a vision model's description kept as a labelled caption. The night reads no facts from any of them. `hermes sophia notices [--apply]` relabels what older versions stored.
+- The agent's own thoughts (`sophia_thought`): a stream of their own, labelled wherever they're shown, ranked like the agent's replies, never a source of facts.
+- Association (`sophia_associate`, `Recall.associate`): the recall search without a gate, two graph hops, damped for what came up recently (`activations`), within a band of the best match.
 - A morning note: for 36 hours after a night, the system block carries one line on what it did.
 - The Sophia tab in the Hermes dashboard (`hermes_sophia/dashboard/`, `hermes_sophia/observe.py`): the night's progress as it runs (it writes `sleep_progress` to the store), the journal, the graph (neighborhoods of 1-4 hops, and everything grouped into clusters by Louvain on facts and co-mentions), the Mindscape pages, each recall with its gate reading and timing, curation (undo, plan outcomes, reviews and corrections), and every setting, saved through Hermes's provider-config API.
 - SQLite journal mode: WAL only where SQLite is free of the WAL-reset bug, otherwise a rollback journal with `synchronous=FULL` (§8).
 - The night's steps as built: settle, sort, contextualize, headroom, relate, integrate, tasks, index, outcomes, replay, rehearse, calibrate, promote, views, anticipate, tidy.
-- Unit tests: 91, run against a fake model server (the dashboard API test is skipped where fastapi isn't installed).
+- Unit tests: 103, run against a fake model server (the dashboard API test is skipped where fastapi isn't installed).
 
 **Answers to §14 verify items**
 - `ctx.llm` is not forwarded to memory providers (`_ProviderCollector`), so Sophia talks to its model servers directly. `reasoning_effort: "none"` works on `/v1/chat/completions`, and `/v1/responses` returns first-token logprobs.
@@ -494,7 +502,7 @@ The code is this repository. It is tested on the `sophiadev` profile (a clone of
 - The decider is uncalibrated: `calibrate` needs 50 labels and fits only yes/no readouts, so the default choice gate isn't calibrated.
 
 **Not built yet**
-- Image captions.
+- Image captions at night (images are kept, and a description from when one arrived is stored as its caption).
 - The Gemmery layer, milestone M4. The outcomes step is a placeholder.
 - The hand set and the scale test (§9). The LongMemEval and LoCoMo harnesses are in `bench/`; Almanac runs from its own repository.
 - Entity merges (entities are keyed by their normalized name), demotion (§4), and the people, places and trust views.

@@ -1148,6 +1148,9 @@
   function speakerLabel(w) {
     var f = w.flags || [];
     if (f.indexOf("assistant") >= 0) return who(w.speaker) + " · reply, weaker";
+    if (f.indexOf("thought") >= 0) return who(w.speaker) + " · own thought";
+    if (f.indexOf("event") >= 0) return "System notice";
+    if (f.indexOf("caption") >= 0) return "Image description (vision model)";
     return who(w.speaker);
   }
   function FlagTags(p) {

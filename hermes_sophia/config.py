@@ -90,6 +90,14 @@ DEFAULTS: Dict[str, Any] = {
     "graph_entities": 6,              # entities expanded per hop
     "graph_adjacent": 1,              # turns before/after a matched window that join the candidates
     "graph_adjacent_decay": 0.9,
+    # association: what a cue brings to mind, without a question (sophia_associate; a continuing process's cue)
+    "associate_k": 8,                 # memories raised per cue
+    "associate_hops": 2,              # how far the graph walk goes (each step weakens the pull by graph_decay)
+    "associate_per_source": 2,        # most memories raised from one message or page
+    "associate_band": 0.1,            # only memories scoring within this of the cue's best match are raised
+    "associate_habituation_hours": 6.0,  # a memory raised recently is damped; it recovers over about this long
+    # the agent's own thoughts (sophia_thought)
+    "inject_thoughts": True,          # its kept thoughts can be injected, always labelled as its thoughts
     # capture
     "capture_tools": ["web_extract", "browser_snapshot", "browser_navigate"],
     "never_capture_substrings": ["vault", "credential", "secret", "password"],
@@ -97,6 +105,7 @@ DEFAULTS: Dict[str, Any] = {
     "full_capture_contexts": ["primary"],
     "echo_threshold": 0.5,
     "ground_check": True,             # flag agent replies that assert facts about the user out of nowhere
+    "keep_images": True,              # copy images Hermes cached (it deletes them after a day) into Sophia's store
     # timeouts (seconds)
     "embed_timeout": 5.0,
     "embed_max_chars": 3000,          # longer inputs are embedded from their start (embedding servers cap context;
@@ -216,6 +225,18 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
     ("graph_adjacent", "Turns before and after a matched message that join the candidates (0 = off)",
      {"when": _ADVANCED}),
     ("graph_adjacent_decay", "A neighbouring turn scores its match's score times this", {"when": _ADVANCED}),
+    ("associate_k", "Association: memories raised per cue", {"when": _ADVANCED, "minimum": 1, "maximum": 30}),
+    ("associate_hops", "Association: how far the graph walk goes from what a cue matches (each step weakens the pull)",
+     {"when": _ADVANCED, "minimum": 0, "maximum": 4}),
+    ("associate_per_source", "Association: most memories raised from one message or page", {"when": _ADVANCED}),
+    ("associate_band", "Association: only memories scoring within this of the cue's best match come up (damping "
+                       "reorders them; it never lets unrelated ones in)", {"when": _ADVANCED}),
+    ("associate_habituation_hours", "Association: a memory raised recently is damped, and recovers over about this "
+                                    "many hours", {"when": _ADVANCED}),
+    ("inject_thoughts", "The agent's own kept thoughts can be injected before a reply, labelled as its thoughts",
+     {"when": _ADVANCED, "choices": ["on", "off"], "default": "on"}),
+    ("keep_images", "Keep a copy of each image you send (Hermes deletes its own after a day), so it can be looked at "
+                    "again later", {"when": _ADVANCED, "choices": ["on", "off"], "default": "on"}),
     ("window_sentences", "Sentences per raw-record window", {"when": _ADVANCED}),
     ("window_chars", "Characters per raw-record window", {"when": _ADVANCED}),
     ("code_block_chars", "Long code blocks become one window truncated to this many characters",
@@ -274,6 +295,9 @@ LABELS: Dict[str, str] = {
     "dashboard_graph_view": "Graph opens on", "dashboard_graph_hops": "Graph neighborhood hops",
     "dashboard_graph_resolution": "Graph cluster size", "dashboard_graph_mention_weight": "Graph co-mention weight",
     "graph_hops": "Recall graph hops", "lms_cli": "LM Studio lms CLI", "sleep_guard_models": "Night waits for",
+    "associate_k": "Association size", "associate_hops": "Association hops",
+    "associate_per_source": "Association per source", "associate_band": "Association band", "associate_habituation_hours": "Association recovery (hours)",
+    "inject_thoughts": "Inject own thoughts", "keep_images": "Keep images",
 }
 
 
