@@ -1,6 +1,6 @@
 # Continuity: an agent that keeps going between messages
 
-**Status: a design.** The memory side is built: [thoughts and association](HOW-IT-WORKS.md#thoughts-and-association), and capture that keeps Hermes's notices and images apart from your words. The rest of this page isn't built yet.
+**Status: a design.** The memory side is built: [thoughts and association](https://github.com/jbpayton/hermes-sophia/blob/main/docs/HOW-IT-WORKS.md#thoughts-and-association), and capture that keeps Hermes's notices and images apart from your words. The rest of this page isn't built yet. [Two pieces](#two-pieces) says what belongs in Sophia and what would be separate.
 
 Today an agent exists only while it answers. Sophia remembers between conversations, but nothing happens between them. This page plans the next layer: a process that keeps going on its own. Things happen, things come to mind, and the agent can:
 - start a conversation;
@@ -16,6 +16,32 @@ None of this needs a cron job or a message from you first.
 - **Driven by what happens, not by a clock.** Nothing runs because a timer fired. Time is something the agent *observes*: every step knows what time it is, what day it is, and how long it's been since things happened. That's also how it knows not to message you at 3 a.m.
 - **Not a task runner.** A thought can wander, come back, connect two things, or simply be let go. Letting go is a normal outcome, so not every passing thought turns into a task.
 - **Not a claim about consciousness.** It is a way to see what develops when a capable model takes part in a continuing process shaped by its own memory, instead of being started fresh for each request. [Measuring what develops](#measuring-what-develops) describes how.
+
+## Two pieces
+
+The memory side is part of Sophia, and stays there. The process that keeps going is a separate piece: a companion plugin that uses Sophia, but isn't part of it.
+
+| | Sophia (built) | The companion (to build) |
+|---|---|---|
+| Kind of Hermes plugin | Memory provider (`memory.provider: sophia`) | General plugin (`plugins.enabled`) |
+| Its job | Remembering: keeps every turn, recalls before replies, works through memory at night, keeps the agent's thoughts as thoughts, answers "what does this bring to mind?" | Keeping going: the queue, working state, attention, starting turns, quiet hours, goals |
+| Acts on its own | Never | Yes, by starting turns |
+| Owns | The record, facts, the graph, thoughts, credit, what came up recently | Working state, the queue, intentions, goals, its outreach budget and log |
+| Without the other | Works as it does today | Would have nothing come to mind; in practice it needs Sophia |
+
+The rule of thumb is where thoughts live. How a thought is **kept and remembered** (labelled as a thought, never a source of facts, linked to what prompted it) is memory, so it's in Sophia. **Having** thoughts (deciding what to think about next, and when) is the companion's job.
+
+**Why separate:**
+- **Hermes requires it.** A memory provider gets a restricted toolkit with no way to start a turn. A general plugin can (`ctx.inject_message`).
+- **Sophia stays passive.** Someone who installs memory doesn't get an agent that messages them, and memory stays testable and benchmarkable on its own.
+- **Its own switch.** The process can be turned on for one profile and off for another, or off entirely, without touching memory.
+- **Different state, different failures.** If the process stalls or misbehaves, memory is unaffected.
+
+**How they connect:**
+- **As a library, through the same file.** Hermes doesn't let one plugin call another's memory tools (memory tools are routed by Hermes's memory manager, not its shared tool registry). So the companion uses Sophia as a library. A small public interface in Sophia (associate, keep a thought, recall, record an event) opens the same memory file, which the gateway, the command line, the dashboard and the night already share safely.
+- **Its turns are labelled as its own.** The turns the companion starts reach the agent as if you had typed them, like Hermes's notices. They carry a marker Sophia recognises, so they're kept as the process's own events, never as your words.
+- **Dependency in one direction.** The companion knows about Sophia; Sophia knows nothing about the companion.
+- **Where the code goes.** At first, a second package in the same repository, with its own plugin folder and its own switch, so the interface and its one user can change together. It can move to its own repository once the interface settles.
 
 ## How it works
 
@@ -132,11 +158,24 @@ From reading Hermes v0.21's source:
 | Messaging you outside a turn | No | The agent has no send tool; a reply to an injected turn is the route. Holding a message during quiet hours still needs a mechanism (to verify: the `transform_llm_output` hook) |
 | Timers that start turns | Yes | cron, `/heartbeat`, `/loop` and `/goal`: what this design avoids |
 
+## Built so far
+
+All in Sophia, the memory plugin ([hermes-sophia](https://github.com/jbpayton/hermes-sophia), commit `833e38a`). It takes effect when the Hermes gateway restarts.
+
+| What | Where |
+|---|---|
+| Hermes's notices kept as system notices; from a `/skill` turn only what was typed; images copied and kept, with a vision model's description kept as a labelled caption | `hermes_sophia/capture.py`; tables `images` in `store.py`; `hermes sophia notices` |
+| The agent's thoughts: `sophia_thought` | `capture.py` (`think`), `tools.py` |
+| Association: `sophia_associate`, `hermes sophia associate "…"` | `recall.py` (`associate`, `habituation`); table `activations` |
+| The night reads no facts from thoughts, notices or captions | `sleep/runner.py` (relate) |
+| Settings | `config.py`: `associate_*`, `inject_thoughts`, `keep_images` |
+| Tests | `tests/test_thoughts.py` |
+
 ## Build order
 
 0. ✓ **Capture keeps what isn't your words apart:** Hermes's notices, `/skill` text, and images (with copies kept, since Hermes deletes its own).
 1. ✓ **Thoughts and association** in Sophia.
-2. **The loop** as a companion plugin: queue, working state, attention, energy, silent turns. It runs first on a test profile, with a view of it in the Sophia tab.
+2. **The loop** as a companion plugin: Sophia's public interface for it, then the queue, working state, attention, energy, and silent turns. It runs first on a test profile, with a view of it in the Sophia tab.
 3. **Starting conversations,** with the clock, your observed hours, held messages, and quiet hours.
 4. **Goals and interests,** with their origins and credit.
 5. **The comparison** above, with its controls.
