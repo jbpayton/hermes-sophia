@@ -111,7 +111,7 @@ flowchart LR
 
 Perception shouldn't feel like a string of separate messages from outside. When you look around, the room doesn't arrive as a packet; it's always there, and what changes is how much attention you give it. The agent should have the same: a steady view of its situation that's present in every turn, with events as changes to that view.
 
-**The standing view.** A short block, rebuilt for every turn and always at the end of the context:
+**The standing view.** A short block delivered with every turn, so the newest is always at the end of the context:
 - the time and day, and how long it's been since things happened;
 - you: when you last wrote, whether it's your usual hours, quiet hours;
 - what's running and what it's watching, and their state;
@@ -126,7 +126,7 @@ Every item says where it came from: perceived (your message, a sensor, a job), r
 **Seeing change needs the last thing seen.** A view that shows only "now" can't show what moved. So the context keeps its order, and the current scene sits on top of it:
 - **Changes, in order.** Each turn records what changed since the agent last looked, with the old value: "build: running → finished (exit 0)", "Joey: quiet 3 hours → just wrote". These entries are short, kept in the conversation, and stay in sequence. The end of the context is always the most recent, so position still means time.
 - **Since it last looked.** The comparison is against the view the model saw on its previous turn, not the sensor's last check. If three things changed while it was idle, it sees all three.
-- **The full scene only once.** The complete current view is rebuilt at the end. Older full copies can go, because the record of changes already holds what they showed.
+- **Full scenes now and then.** A complete frame arrives every few turns, and only changes in between (see [delivered as a stream](#staying-aware-what-compaction-cant-erase) below).
 - **Changes reach Sophia as events.** After compaction has summarized old changes, "what did it look like last Tuesday?" can still be answered.
 - **Images the same way.** The last image seen and its description are kept, and a new one is compared with it. The images Sophia now keeps make that possible.
 
@@ -140,7 +140,7 @@ It isn't fully solvable. Anything that has left the context is only as good as i
 The standing view doesn't belong in the system prompt. It changes every turn, which would break the cache, and the system prompt's authority is for things that don't change.
 
 **Three layers, so compaction can't destroy what matters:**
-1. **The standing view:** never part of the conversation history, so compaction never touches it. Working state lives here.
+1. **The standing view:** delivered fresh with every turn, and a full frame always follows a compaction, so compaction can't erase it. Working state lives here.
 2. **The conversation:** recent turns, which Hermes compacts as it fills.
 3. **Long-term memory:** Sophia, which keeps every word. What compaction drops is already stored and retrievable.
 
@@ -154,14 +154,21 @@ The standing view doesn't belong in the system prompt. It changes every turn, wh
 - **Everything in between:** becomes one summary written by a model, headed "[CONTEXT COMPACTION — REFERENCE ONLY]". A memory plugin can add up to 6,000 characters to what the summary is written from. Old tool output is also trimmed earlier, without a model call.
 - **Per-turn additions stay:** text added to a turn (Sophia's injected memory, a plugin's `pre_llm_call` context) is saved with your message and resent unchanged on every later turn, so Hermes's prompt cache stays valid. Per-turn context therefore builds up as a trail of snapshots until the next compaction.
 
-**Two ways to build the standing view:**
-- **The simple way:** add it to each turn through `pre_llm_call`. It works today, but every turn leaves a copy behind, so it has to say "as of 14:02" and that only the latest is current.
-- **The better way:** a context engine. Hermes lets one plugin replace its context manager, and `select_context` can assemble each request without touching the stored conversation. It keeps the short change entries where they fell, drops old full copies of the view, and puts the one current view at the end. Stripping the copies the same way every time keeps everything before the end unchanged, so the cache still works. Only one context engine can be active, so the companion would extend Hermes's own compressor rather than replace it (to be confirmed when it's built).
+**Delivered as a stream.** What's always on is simply always inserted: every turn receives a frame of the view, and frames stay where they fell. Nothing is replaced, so:
+- **Order is kept for free.** The last thing seen is always just before the newest.
+- **It's how Hermes already works.** Per-turn context (`pre_llm_call`) is saved with its message and resent unchanged. New frames are only ever added, so nothing earlier changes and the prompt cache stays valid. No custom context manager is needed.
+- **It matches perception.** The frame always arrives, and attention decides whether it matters; most frames are periphery.
+
+Near-identical frames every turn would waste the context and bring compaction sooner. So the stream works like video, with occasional full frames and changes in between:
+- **Full frame:** the whole scene, every few turns. There is always one right after a compaction, so a full scene is always among the turns compaction keeps.
+- **Change frame:** only what changed since the last frame, with old values ("build: running → finished"). When nothing changed it is one line, "unchanged since 14:02", and that line is itself a percept: time passed and nothing moved.
+
+The model only exists while it runs, so "always on" means every step receives the stream, never a step without it. Between steps, the sensors keep collecting what changes. If old frames ever cost too much, a context engine (Hermes lets one plugin replace its context manager; its `select_context` can trim what each request sends without touching the stored conversation) could thin them out later.
 
 **Can models work this way?** A clearly labelled state block that's rebuilt each turn is something models handle well. This conversation with Claude works that way: small status notes are inserted as things change, and older parts get summarized. Three things matter:
 - **Put the view at the end,** where attention is strongest. Models attend least to the middle of a long context.
 - **Never change anything early in the prompt,** because that invalidates the cache for everything after it.
-- **Make stale copies unmistakable,** or remove them.
+- **Date every frame,** so an old one can't be mistaken for the present.
 
 **Across sleep:** the view persists. Waking, the agent sees "slept 03:30–03:51" as something perceived, along with what the night did.
 
