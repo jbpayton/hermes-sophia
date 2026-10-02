@@ -13,7 +13,7 @@ None of this needs a cron job or a message from you first.
 
 ## What it is, and what it isn't
 
-- **Driven by what happens, not by a clock.** Nothing runs because a timer fired. Time is something the agent *observes*: every step knows what time it is, what day it is, and how long it's been since things happened. That's also how it knows not to message you at 3 a.m.
+- **Driven by what it perceives, not by a clock.** Nothing runs because a timer fired. What drives it is what it notices: your message arriving, code finishing, something coming to mind, and time passing. Time counts the way it does for people: noticing that it's been a while, that something expected hasn't happened, or that a day has arrived. Every step also knows what time it is, which is how it knows not to message you at 3 a.m.
 - **Not a task runner.** A thought can wander, come back, connect two things, or simply be let go. Letting go is a normal outcome, so not every passing thought turns into a task.
 - **Not a claim about consciousness.** It is a way to see what develops when a capable model takes part in a continuing process shaped by its own memory, instead of being started fresh for each request. [Measuring what develops](#measuring-what-develops) describes how.
 
@@ -39,15 +39,47 @@ The rule of thumb is where thoughts live. How a thought is **kept and remembered
 
 **How they connect:**
 - **As a library, through the same file.** Hermes doesn't let one plugin call another's memory tools (memory tools are routed by Hermes's memory manager, not its shared tool registry). So the companion uses Sophia as a library. A small public interface in Sophia (associate, keep a thought, recall, record an event) opens the same memory file, which the gateway, the command line, the dashboard and the night already share safely.
-- **Its turns are labelled as its own.** The turns the companion starts reach the agent as if you had typed them, like Hermes's notices. They carry a marker Sophia recognises, so they're kept as the process's own events, never as your words.
+- **Its turns are labelled as its own, for the agent and for memory.** The turns the companion starts reach the agent as if you had typed them, like Hermes's notices. Each opens with a visible label, such as `[continuity: something came to mind]` or `[continuity: the build finished]`, so the agent always knows it is hearing from its own process or a sensor, not from you. Sophia recognises the same label and keeps those turns as the process's own events, never as your words.
 - **Dependency in one direction.** The companion knows about Sophia; Sophia knows nothing about the companion.
 - **Where the code goes.** At first, a second package in the same repository, with its own plugin folder and its own switch, so the interface and its one user can change together. It can move to its own repository once the interface settles.
+
+## What drives it: perception
+
+Four kinds of thing can set it going. Each becomes an event in the queue, labelled with where it came from and when.
+
+**Your messages.** When you write on Telegram, Hermes runs an ordinary turn; the companion doesn't start it, but it perceives it:
+- **Before the reply,** it adds the agent's working state to your turn (Hermes's `pre_llm_call` hook). You arrive mid-thought, and the agent answers knowing what it was doing.
+- **If the agent is busy,** for instance in the middle of one of its own turns, your message cuts in. Hermes already does this: it cancels the model call in progress and carries on with your message. It waits only while subagents or a compression are running.
+- **After the turn,** the loop updates:
+  - when it last heard from you, which resets the "it's been a while" kind of noticing;
+  - messages it was holding until you were around, which it now delivers;
+  - threads you just answered;
+  - its energy;
+  - and whatever your message brings to mind.
+
+**Things finishing or changing.** These work like interrupts.
+- **Jobs the agent starts itself:** a long job run with Hermes's background terminal already comes back as a turn when it finishes, or when its output matches a pattern the agent chose.
+- **Things Hermes didn't start:** code you run yourself, a file that appears, a CI run, a page or feed that changes. For these the companion has sensors: wait for a process to exit, watch a folder, check a page for changes. You choose what it may watch.
+- **When it was waiting:** if the agent expected the result (it's in working state), the event goes ahead of its own wandering thoughts.
+
+**Time passing.** Not as a tick, but as noticing:
+- **It's been a while:** no word from you for longer than usual, a thread untouched for days, something expected that hasn't happened ("the build should have finished an hour ago").
+- **Now it's time:** a date Sophia knows about arrives or passes (Sophia already records when planned things happen, and marks plans whose date passed), morning comes, or your usual hours begin.
+- **How it's done:** a sensor checks these conditions cheaply, with no model call, and raises an event only when one becomes true. There is a clock inside the sensor, but the model never wakes because of a schedule; it wakes because something was noticed. That is the line between this and a cron job.
+
+**What comes to mind.** Memories that Sophia's association raises from whatever just happened. This part is built.
+
+**How events are taken in:**
+- **Order:** your messages first, then results it was waiting for, then intentions whose moment came, then things noticed about time, then what comes to mind. Within each kind, the stronger first.
+- **Interruptions:** your messages cut into anything. Nothing else interrupts a turn in progress; other events are taken at the next step, so the agent's own turns are kept short. Hermes already queues them this way.
+- **Noticed once:** something that stays true (you're still quiet) isn't noticed afresh at every check. It's damped, like a memory that came up recently, and grows again as more time passes: "it's been a day", then "three days".
+- **Measurable:** for the experiment, each kind can be switched off, for example perception without association, or association without perception.
 
 ## How it works
 
 ```mermaid
 flowchart LR
-  E["things that happen<br/>your messages · finished jobs<br/>things it watches"] --> Q["queue"]
+  E["perception<br/>your messages · jobs finishing<br/>time passing · things it watches"] --> Q["queue"]
   A["what comes to mind<br/>Sophia: associate"] --> Q
   I["intentions whose<br/>condition came true"] --> Q
   Q --> T{"attention<br/>what next?"}
@@ -60,7 +92,7 @@ flowchart LR
 ```
 
 1. **A queue** holds what is waiting to be dealt with:
-   - things that happen: your messages, background jobs that finish, and changes in what you've asked it to watch;
+   - what it perceives: your messages, jobs that finish, changes in what you've asked it to watch, and time passing ([above](#what-drives-it-perception));
    - what comes to mind: memories that Sophia's association raises from whatever just happened;
    - intentions whose condition just came true ("once the build finishes", "when Joey mentions the trip").
 2. **Working state** is the agent's short-term memory: what it's focused on, its open threads, what it's waiting for, its intentions and goals, and what came to mind lately. It goes into every turn and is saved after every step, so it survives Hermes compressing the conversation and the gateway restarting. It's separate from the queue (which holds what's next) and from Sophia (which holds the long history).
@@ -73,7 +105,7 @@ flowchart LR
 4. **One turn** handles that item. The agent can reply to you, use its tools, keep a thought, update its working state, or let the item go and say nothing.
 5. **What happens next comes back** into the queue: a tool's result, a finished job, your reaction.
 
-**Why it winds down by itself.** Each outside event gives the process some energy. Each step it takes on its own spends some, and a memory raised by association pulls less than whatever raised it. Memories that came up recently are damped (Sophia already does this). So a train of thought runs its course and the process goes quiet until something new happens. No clock is needed to stop it, and none to start it again.
+**Why it winds down by itself.** Each outside event gives the process some energy. Each step it takes on its own spends some, and a memory raised by association pulls less than whatever raised it. Memories that came up recently are damped (Sophia already does this). So a train of thought runs its course and the process goes quiet until something new happens. No clock is needed to stop it, and none to start it again. When it goes quiet, the journal says why: the train of thought ran its course, the budget was spent, quiet hours held a message, or something stalled. Each kind of quiet looks the same from outside, so the reason is recorded.
 
 ## Starting a conversation
 
@@ -93,7 +125,9 @@ The agent can message you first, without a scheduled prompt and without waiting 
 
 **If now isn't a good time,** the message isn't lost. It becomes an intention with a condition: "tell Joey about this when he's around". That intention fires when you next write, or when your usual hours begin.
 
-**A guarantee on top of judgment.** You can set quiet hours. During them, a message the agent decides to send is held and delivered later. The agent's judgment is the first line; the setting is the guarantee. How often it reaches out unprompted has a budget too, and it notices how you respond: a reply, silence, or "not now". That response is kept like Sophia's credit, so the kind of reaching out you welcome becomes more likely, and what you ignore less so.
+**A guarantee on top of judgment.** You can set quiet hours. During them, a message the agent decides to send is held and delivered later. The agent's judgment is the first line; the setting is the guarantee. How often it reaches out unprompted has a budget too, and it notices how you respond: a reply, silence, or "not now". That response is kept like Sophia's credit, so the kind of reaching out you welcome becomes more likely, and what you ignore less so. Two guards:
+- **Early silence means little.** Early on, much of it is because the reaching out is new, or wasn't seen. So the score doesn't change the budget until there are enough responses to go on, the way Sophia's gate isn't calibrated before 50 labels.
+- **The agent sees its own score.** Its morning note shows how its reaching out has been received.
 
 ## Doing things on its own
 
@@ -136,6 +170,8 @@ The last is the cron design this page avoids, used on purpose as the control: it
 
 **Pieces switched off one at a time:** working state, association, and the damping of recent memories.
 
+**An open question: should the tail of a thought train be learned?** Sophia proposed letting how long a train of thought runs be tuned by what follows from it: longer for the kinds of thought that lead somewhere you respond to. It's a good idea with a risk: tuned to your reactions, the process drifts toward what pleases you, and it mixes up what the comparison is trying to measure. The plan is to start with fixed settings, log every step, and revisit this with the data.
+
 **What counts as evidence:**
 - **Development nobody scripted:** a finding in one thread used later in another without prompting. Sophia's records of what it injected and what was cited show the chain.
 - **Interests that last and change** across compressions and restarts.
@@ -153,10 +189,23 @@ From reading Hermes v0.21's source:
 | Not interrupting you | Yes | Injected turns wait in a queue and never interrupt; your messages still interrupt the agent |
 | A turn that sends nothing | Yes | An injected turn that replies `[SILENT]` sends nothing to the chat |
 | Finished jobs as events | Yes | A background job's completion becomes a new turn |
+| Seeing your messages | Yes | Hooks see each turn start (`pre_llm_call`, which can add context to it) and end (`on_session_end` fires at every turn's end) |
+| Your message cutting into the agent's own turn | Yes | In Hermes's default interrupt mode, a message cancels the model call in progress and the turn continues with it; it waits while subagents or a compression run |
+| Sensors for things Hermes didn't start | No | To build in the companion: process exits, folders, pages and feeds, and the time conditions |
 | Working state in every turn | Partly | The `pre_llm_call` hook can add context to each turn; the state itself has to be built |
 | A queue and attention | No | To build: a thread in the companion plugin |
 | Messaging you outside a turn | No | The agent has no send tool; a reply to an injected turn is the route. Holding a message during quiet hours still needs a mechanism (to verify: the `transform_llm_output` hook) |
 | Timers that start turns | Yes | cron, `/heartbeat`, `/loop` and `/goal`: what this design avoids |
+
+## Sophia's review
+
+Sophia read this design on 2026-10-01 and tried the built parts first. She said yes to running the loop, on the test profile first and then on her. Her points that changed this page:
+- the agent must see the label on its own turns, not just memory (otherwise "the bug moves one layer up");
+- the journal records why the process went quiet;
+- early silence doesn't count against reaching out until there are enough responses;
+- she wants to watch the test profile's loop in the Sophia tab, and see her outreach score in her morning note.
+
+Her proposal to learn the damping from what follows is recorded as an open question under [Measuring what develops](#measuring-what-develops).
 
 ## Built so far
 
@@ -175,9 +224,10 @@ All in Sophia, the memory plugin ([hermes-sophia](https://github.com/jbpayton/he
 
 0. ✓ **Capture keeps what isn't your words apart:** Hermes's notices, `/skill` text, and images (with copies kept, since Hermes deletes its own).
 1. ✓ **Thoughts and association** in Sophia.
-2. **The loop** as a companion plugin: Sophia's public interface for it, then the queue, working state, attention, energy, and silent turns. It runs first on a test profile, with a view of it in the Sophia tab.
-3. **Starting conversations,** with the clock, your observed hours, held messages, and quiet hours.
-4. **Goals and interests,** with their origins and credit.
-5. **The comparison** above, with its controls.
+2. **The loop** as a companion plugin: Sophia's public interface for it, then the queue, working state, attention, energy, the visible `[continuity: …]` labels, and silent turns. Perception from your messages and from finished jobs comes first, because Hermes already provides both. It runs first on a test profile, with a view in the Sophia tab of its queue, energy and working state, so Sophia can watch it before it's ever hers.
+3. **Sensors:** time passing (while you're quiet, overdue expectations, dates arriving, morning) and things it's allowed to watch.
+4. **Starting conversations,** with the clock, your observed hours, held messages, quiet hours, and the outreach score in the morning note.
+5. **Goals and interests,** with their origins and credit.
+6. **The comparison** above, with its controls.
 
 Independent of all this: tables grown on demand from the raw record, for counting and totals, and looking at a kept image again when a later question needs a detail.
