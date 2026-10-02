@@ -123,6 +123,22 @@ Every item says where it came from: perceived (your message, a sensor, a job), r
 
 **Events change the view.** Sensors keep the view current even while the model is idle. So whenever the model runs, for any reason (your message, a finished job, a thought), it sees the whole present scene. The event that woke it is where its attention goes; the rest is the periphery. Your message arrives into a scene that was already there.
 
+**Seeing change needs the last thing seen.** A view that shows only "now" can't show what moved. So the context keeps its order, and the current scene sits on top of it:
+- **Changes, in order.** Each turn records what changed since the agent last looked, with the old value: "build: running → finished (exit 0)", "Joey: quiet 3 hours → just wrote". These entries are short, kept in the conversation, and stay in sequence. The end of the context is always the most recent, so position still means time.
+- **Since it last looked.** The comparison is against the view the model saw on its previous turn, not the sensor's last check. If three things changed while it was idle, it sees all three.
+- **The full scene only once.** The complete current view is rebuilt at the end. Older full copies can go, because the record of changes already holds what they showed.
+- **Changes reach Sophia as events.** After compaction has summarized old changes, "what did it look like last Tuesday?" can still be answered.
+- **Images the same way.** The last image seen and its description are kept, and a new one is compared with it. The images Sophia now keeps make that possible.
+
+It isn't fully solvable. Anything that has left the context is only as good as its summary or Sophia's recall, the way people miss changes they weren't attending to.
+
+**Where things sit in the context.** There's no special slot inside the model. A system prompt is the first text in the sequence, wrapped in role markers (`<|im_start|>system` in Qwen's chat format). APIs that take it as a separate field still put it at the start, as far as is publicly known. It carries weight for two reasons: models are trained to give system-role text more authority, and the beginning and end of a context get the most attention while the middle gets the least. So:
+- **Beginning (the system prompt):** who the agent is and its standing rules. They're stable, and Hermes builds them once per session and resends them unchanged, so they stay cached.
+- **Middle:** the conversation and the record of changes, in order. This is what compaction summarizes.
+- **End:** the current scene and whatever woke it, where attention is strongest.
+
+The standing view doesn't belong in the system prompt. It changes every turn, which would break the cache, and the system prompt's authority is for things that don't change.
+
 **Three layers, so compaction can't destroy what matters:**
 1. **The standing view:** never part of the conversation history, so compaction never touches it. Working state lives here.
 2. **The conversation:** recent turns, which Hermes compacts as it fills.
@@ -140,7 +156,7 @@ Every item says where it came from: perceived (your message, a sensor, a job), r
 
 **Two ways to build the standing view:**
 - **The simple way:** add it to each turn through `pre_llm_call`. It works today, but every turn leaves a copy behind, so it has to say "as of 14:02" and that only the latest is current.
-- **The better way:** a context engine. Hermes lets one plugin replace its context manager, and `select_context` can assemble each request without touching the stored conversation. It can drop old copies of the view and put the one current view at the end. Stripping the copies the same way every time keeps everything before the end unchanged, so the cache still works. Only one context engine can be active, so the companion would extend Hermes's own compressor rather than replace it (to be confirmed when it's built).
+- **The better way:** a context engine. Hermes lets one plugin replace its context manager, and `select_context` can assemble each request without touching the stored conversation. It keeps the short change entries where they fell, drops old full copies of the view, and puts the one current view at the end. Stripping the copies the same way every time keeps everything before the end unchanged, so the cache still works. Only one context engine can be active, so the companion would extend Hermes's own compressor rather than replace it (to be confirmed when it's built).
 
 **Can models work this way?** A clearly labelled state block that's rebuilt each turn is something models handle well. This conversation with Claude works that way: small status notes are inserted as things change, and older parts get summarized. Three things matter:
 - **Put the view at the end,** where attention is strongest. Models attend least to the middle of a long context.
