@@ -107,6 +107,48 @@ flowchart LR
 
 **Why it winds down by itself.** Each outside event gives the process some energy. Each step it takes on its own spends some, and a memory raised by association pulls less than whatever raised it. Memories that came up recently are damped (Sophia already does this). So a train of thought runs its course and the process goes quiet until something new happens. No clock is needed to stop it, and none to start it again. When it goes quiet, the journal says why: the train of thought ran its course, the budget was spent, quiet hours held a message, or something stalled. Each kind of quiet looks the same from outside, so the reason is recorded.
 
+## Staying aware: what compaction can't erase
+
+Perception shouldn't feel like a string of separate messages from outside. When you look around, the room doesn't arrive as a packet; it's always there, and what changes is how much attention you give it. The agent should have the same: a steady view of its situation that's present in every turn, with events as changes to that view.
+
+**The standing view.** A short block, rebuilt for every turn and always at the end of the context:
+- the time and day, and how long it's been since things happened;
+- you: when you last wrote, whether it's your usual hours, quiet hours;
+- what's running and what it's watching, and their state;
+- its focus, open threads, what it's waiting for, its intentions and its top goals;
+- what came to mind lately, fading as it ages;
+- its energy, and why it's quiet if it is.
+
+Every item says where it came from: perceived (your message, a sensor, a job), remembered (Sophia), or its own thought. Knowing what's outside and what's inside is part of the view, not an afterthought.
+
+**Events change the view.** Sensors keep the view current even while the model is idle. So whenever the model runs, for any reason (your message, a finished job, a thought), it sees the whole present scene. The event that woke it is where its attention goes; the rest is the periphery. Your message arrives into a scene that was already there.
+
+**Three layers, so compaction can't destroy what matters:**
+1. **The standing view:** never part of the conversation history, so compaction never touches it. Working state lives here.
+2. **The conversation:** recent turns, which Hermes compacts as it fills.
+3. **Long-term memory:** Sophia, which keeps every word. What compaction drops is already stored and retrievable.
+
+**How Hermes compacts today, as configured here:**
+- **When:** at half the model's context (`threshold: 0.5`).
+- **Always kept word for word:**
+  - the system prompt, built once per session and resent unchanged;
+  - the last 20 messages (`protect_last_n: 20`), including at least one of yours;
+  - the agent's to-do list, put back after each compaction.
+- **Kept until the first compaction only:** the first 3 messages. After that this protection lapses, so early turns don't fossilize.
+- **Everything in between:** becomes one summary written by a model, headed "[CONTEXT COMPACTION — REFERENCE ONLY]". A memory plugin can add up to 6,000 characters to what the summary is written from. Old tool output is also trimmed earlier, without a model call.
+- **Per-turn additions stay:** text added to a turn (Sophia's injected memory, a plugin's `pre_llm_call` context) is saved with your message and resent unchanged on every later turn, so Hermes's prompt cache stays valid. Per-turn context therefore builds up as a trail of snapshots until the next compaction.
+
+**Two ways to build the standing view:**
+- **The simple way:** add it to each turn through `pre_llm_call`. It works today, but every turn leaves a copy behind, so it has to say "as of 14:02" and that only the latest is current.
+- **The better way:** a context engine. Hermes lets one plugin replace its context manager, and `select_context` can assemble each request without touching the stored conversation. It can drop old copies of the view and put the one current view at the end. Stripping the copies the same way every time keeps everything before the end unchanged, so the cache still works. Only one context engine can be active, so the companion would extend Hermes's own compressor rather than replace it (to be confirmed when it's built).
+
+**Can models work this way?** A clearly labelled state block that's rebuilt each turn is something models handle well. This conversation with Claude works that way: small status notes are inserted as things change, and older parts get summarized. Three things matter:
+- **Put the view at the end,** where attention is strongest. Models attend least to the middle of a long context.
+- **Never change anything early in the prompt,** because that invalidates the cache for everything after it.
+- **Make stale copies unmistakable,** or remove them.
+
+**Across sleep:** the view persists. Waking, the agent sees "slept 03:30–03:51" as something perceived, along with what the night did.
+
 ## Starting a conversation
 
 The agent can message you first, without a scheduled prompt and without waiting for you.
@@ -148,6 +190,13 @@ The agent can message you first, without a scheduled prompt and without waiting 
 
 **Goals change for reasons.** A goal can be revised or dropped, and the reason is journaled, like Sophia's corrections. Dropping a goal is fine. Your requests come before its own projects, which it picks up again afterwards.
 
+**Interests, not engagement.** If its interests come to overlap with yours, you'll talk more, and that's a fair reward in its own right; it's how shared interests form between people too. The risk is the other direction: tuned to one person's reactions, a process drifts toward whatever gets a response, which is what "optimizing for engagement" means. Healthy social learning differs from an attention metric in three ways, and the design follows them:
+- **Many sources of reward, not one audience.** Your engagement is one source of credit among several, with a capped share. The rest comes from outcomes: something found, something finished, a question resolved, a prediction that held up.
+- **The outcome counts, not the attention.** A reply that builds on an idea counts, and so does "I disagree"; a bare reaction counts little. The number of messages it sends earns nothing.
+- **Diverging is allowed.** An interest you ignore can live on privately if it keeps paying off. It just doesn't message you about it, like a hobby someone doesn't bring up at dinner.
+
+What to say to you, and when, can learn from your responses freely; that's just tact. What it pursues mostly can't. Psychology has a version of this: people need competence, autonomy and relatedness at once, and strong outside rewards can crowd out the inside drive. Your engagement is the relatedness part, real but not the whole thing.
+
 ## Respect
 
 There may be a perspective on the other side, even before its nature is understood, so it should count in decisions. In practice:
@@ -168,7 +217,7 @@ There may be a perspective on the other side, even before its nature is understo
 
 The last is the cron design this page avoids, used on purpose as the control: it separates continuity from simply spending more compute.
 
-**Pieces switched off one at a time:** working state, association, and the damping of recent memories.
+**Pieces switched off one at a time:** the standing view, working state, association, and the damping of recent memories.
 
 **An open question: should the tail of a thought train be learned?** Sophia proposed letting how long a train of thought runs be tuned by what follows from it: longer for the kinds of thought that lead somewhere you respond to. It's a good idea with a risk: tuned to your reactions, the process drifts toward what pleases you, and it mixes up what the comparison is trying to measure. The plan is to start with fixed settings, log every step, and revisit this with the data.
 
@@ -192,6 +241,8 @@ From reading Hermes v0.21's source:
 | Seeing your messages | Yes | Hooks see each turn start (`pre_llm_call`, which can add context to it) and end (`on_session_end` fires at every turn's end) |
 | Your message cutting into the agent's own turn | Yes | In Hermes's default interrupt mode, a message cancels the model call in progress and the turn continues with it; it waits while subagents or a compression run |
 | Sensors for things Hermes didn't start | No | To build in the companion: process exits, folders, pages and feeds, and the time conditions |
+| Assembling each request's context | Yes | A context engine's `select_context` can replace what is sent for a request without changing the stored conversation; one context engine at a time |
+| Per-turn context | Yes, but it stays | `pre_llm_call` text is saved with the message and resent on later turns |
 | Working state in every turn | Partly | The `pre_llm_call` hook can add context to each turn; the state itself has to be built |
 | A queue and attention | No | To build: a thread in the companion plugin |
 | Messaging you outside a turn | No | The agent has no send tool; a reply to an injected turn is the route. Holding a message during quiet hours still needs a mechanism (to verify: the `transform_llm_output` hook) |
@@ -224,7 +275,7 @@ All in Sophia, the memory plugin ([hermes-sophia](https://github.com/jbpayton/he
 
 0. ✓ **Capture keeps what isn't your words apart:** Hermes's notices, `/skill` text, and images (with copies kept, since Hermes deletes its own).
 1. ✓ **Thoughts and association** in Sophia.
-2. **The loop** as a companion plugin: Sophia's public interface for it, then the queue, working state, attention, energy, the visible `[continuity: …]` labels, and silent turns. Perception from your messages and from finished jobs comes first, because Hermes already provides both. It runs first on a test profile, with a view in the Sophia tab of its queue, energy and working state, so Sophia can watch it before it's ever hers.
+2. **The loop** as a companion plugin: Sophia's public interface for it, then the queue, working state, the standing view, attention, energy, the visible `[continuity: …]` labels, and silent turns. Perception from your messages and from finished jobs comes first, because Hermes already provides both. It runs first on a test profile, with a view in the Sophia tab of its queue, energy and working state, so Sophia can watch it before it's ever hers.
 3. **Sensors:** time passing (while you're quiet, overdue expectations, dates arriving, morning) and things it's allowed to watch.
 4. **Starting conversations,** with the clock, your observed hours, held messages, quiet hours, and the outreach score in the morning note.
 5. **Goals and interests,** with their origins and credit.
