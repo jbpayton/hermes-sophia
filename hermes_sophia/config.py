@@ -95,6 +95,8 @@ DEFAULTS: Dict[str, Any] = {
     "associate_hops": 2,              # how far the graph walk goes (each step weakens the pull by graph_decay)
     "associate_per_source": 2,        # most memories raised from one message or page
     "associate_band": 0.1,            # only memories scoring within this of the cue's best match are raised
+    "associate_superseded_weight": 0.5,  # a line that stated something later superseded pulls this much as hard
+    "associate_min_words": 4,         # shorter lines ("yes", "ok") say nothing alone and aren't raised
     "associate_habituation_hours": 6.0,  # a memory raised recently is damped; it recovers over about this long
     # the agent's own thoughts (sophia_thought)
     "inject_thoughts": True,          # its kept thoughts can be injected, always labelled as its thoughts
@@ -231,6 +233,10 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
     ("associate_per_source", "Association: most memories raised from one message or page", {"when": _ADVANCED}),
     ("associate_band", "Association: only memories scoring within this of the cue's best match come up (damping "
                        "reorders them; it never lets unrelated ones in)", {"when": _ADVANCED}),
+    ("associate_superseded_weight", "Association: a line that stated something later superseded pulls this much as "
+                                    "hard (it keeps its 'later changed' note)", {"when": _ADVANCED, "minimum": 0, "maximum": 1}),
+    ("associate_min_words", "Association: lines shorter than this many words (a bare 'yes') aren't raised",
+     {"when": _ADVANCED}),
     ("associate_habituation_hours", "Association: a memory raised recently is damped, and recovers over about this "
                                     "many hours", {"when": _ADVANCED}),
     ("inject_thoughts", "The agent's own kept thoughts can be injected before a reply, labelled as its thoughts",
@@ -296,7 +302,8 @@ LABELS: Dict[str, str] = {
     "dashboard_graph_resolution": "Graph cluster size", "dashboard_graph_mention_weight": "Graph co-mention weight",
     "graph_hops": "Recall graph hops", "lms_cli": "LM Studio lms CLI", "sleep_guard_models": "Night waits for",
     "associate_k": "Association size", "associate_hops": "Association hops",
-    "associate_per_source": "Association per source", "associate_band": "Association band", "associate_habituation_hours": "Association recovery (hours)",
+    "associate_per_source": "Association per source", "associate_band": "Association band",
+    "associate_superseded_weight": "Association weight for superseded lines", "associate_min_words": "Association minimum words", "associate_habituation_hours": "Association recovery (hours)",
     "inject_thoughts": "Inject own thoughts", "keep_images": "Keep images",
 }
 

@@ -1,6 +1,8 @@
 """What isn't anyone's words to the agent: Hermes's notices, skill text, images, and the agent's own thoughts.
 And association: what a cue brings to mind, damped for what came up recently."""
 import json
+
+import pytest
 import re
 import time
 
@@ -181,3 +183,23 @@ def test_damping_reorders_what_is_relevant_and_never_lets_the_unrelated_in(engin
     again, _ = engine.recall.associate("camera", k=8, now=now + 60)
     assert {it["id"] for it in again} <= {it["id"] for it in first}
     assert not any("Lily" in it["text"] for it in again)
+
+
+def test_association_puts_the_current_version_first_and_skips_bare_replies(engine):
+    _seed(engine)
+    engine.capture.process_messages("q", [
+        {"role": "assistant", "content": "Should I book the Curry Village cabin for you?"},
+        {"role": "user", "content": "yes"}])
+    items, _ = engine.recall.associate("camera", k=8, record=False)
+    top = next(it for it in items if "camera" in it["text"].lower())
+    stale = dict(top, changed=["Joey is bringing Fujifilm X-T5 → Sony A7 IV (2026-09-23)"])
+    import hermes_sophia.recall as R
+    orig = R.Recall.candidates
+    R.Recall.candidates = lambda self, *a, **k: ([dict(it) for it in [stale]], {})
+    try:
+        damped, _ = engine.recall.associate("camera", k=8, record=False)
+    finally:
+        R.Recall.candidates = orig
+    assert damped[0]["activation"] == pytest.approx(top["score"] * 0.5)
+    yes, _ = engine.recall.associate("yes", k=8, record=False)
+    assert not any(it["text"].strip().lower() == "yes" for it in yes)

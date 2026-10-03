@@ -458,7 +458,12 @@ class Recall:
         as time passes. Damping only reorders what the cue is about: everything raised scores within associate_band
         of the best match, so when what's relevant has all come up lately, it comes back weaker rather than being
         replaced by whatever is next. Neighbouring turns ("next to a match") help a question's context, not
-        association, and are left out. At most associate_per_source items come from one message or page."""
+        association, and are left out. At most associate_per_source items come from one message or page.
+
+        Two kinds of line pull less. One that stated something later superseded keeps its "later changed" note and
+        pulls associate_superseded_weight as hard, so the current version ranks first and an old one rarely starts
+        a train of thought. A bare reply ("yes", "ok, thanks") under associate_min_words is skipped: it says nothing
+        without the line it answered, which can come up on its own."""
         cfg, store = self.e.cfg, self.e.store
         k = k or cfg["associate_k"]
         now = now if now is not None else self.e.now()
@@ -470,6 +475,9 @@ class Recall:
         for it in ranked:
             if it["id"] in skip or it.get("bare_question") or it.get("via") == "next to a match":
                 continue
+            if it["kind"] == "window" and not it.get("facts") and \
+                    len(re.findall(r"\w+", it.get("text") or "")) < cfg["associate_min_words"]:
+                continue
             if it["score"] < top - cfg["associate_band"]:
                 continue
             src = it.get("ref") or it["id"]
@@ -477,7 +485,8 @@ class Recall:
                 continue
             per_source[src] += 1
             h = hab.get(it["id"], 0.0)
-            out.append({**it, "activation": it["score"] / (1.0 + h), "habituation": h})
+            weight = cfg["associate_superseded_weight"] if it.get("changed") else 1.0
+            out.append({**it, "activation": it["score"] * weight / (1.0 + h), "habituation": h})
         out.sort(key=lambda it: it["activation"], reverse=True)
         out = out[:k]
         if record and out:
