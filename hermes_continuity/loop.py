@@ -120,7 +120,7 @@ class Continuity:
         return True, ""
 
     # ------------------------------------------------------- the standing view
-    def frame(self, st: Dict[str, Any], now: float, force_full: bool = False) -> str:
+    def frame(self, st: Dict[str, Any], now: float, force_full: bool = False, turn: Optional[Dict[str, Any]] = None) -> str:
         held = [r["text"] for r in self.store.q("SELECT text FROM outbox WHERE status='held' ORDER BY id")]
         queued = len(self.store.queued())
         sc = V.scene(st, now, self.user_name, held, queued)
@@ -132,7 +132,10 @@ class Continuity:
             kind = "unchanged" if "unchanged since" in text.splitlines()[0] else "change"
         st["last_scene"], st["last_frame_ts"] = V.as_stored(sc), now
         st["turns_since_full"] = 0 if full else st.get("turns_since_full", 0) + 1
-        self.store.x("INSERT INTO frames(ts, kind, text, chars) VALUES(?,?,?,?)", (now, kind, text, len(text)))
+        turn = turn or {}
+        self.store.x("""INSERT INTO frames(ts, kind, text, chars, turn_kind, step_id, context_chars)
+                        VALUES(?,?,?,?,?,?,?)""", (now, kind, text, len(text), turn.get("kind"), turn.get("step_id"),
+                                                    turn.get("context_chars")))
         return text
 
     # ------------------------------------------------------------- hooks
@@ -173,7 +176,7 @@ class Continuity:
             after_compaction = bool(mark) and mark != st.get("compaction_mark")
             if mark:
                 st["compaction_mark"] = mark
-            text = self.frame(st, now, force_full=after_compaction) if self.cfg["view"] else ""
+            text = self.frame(st, now, force_full=after_compaction, turn=turn) if self.cfg["view"] else ""
             self.store.save_state(st)
         return {"context": text} if text else None
 
@@ -305,7 +308,13 @@ class Continuity:
                 self.store.enqueue("association", "memory", it["text"], pull, c["depth"],
                                    {"memory_id": it["id"], "said": it.get("said"), "speaker": it.get("speaker"),
                                     "label": it.get("label", ""), "via": it.get("via"),
-                                    "changed": it.get("changed") or []}, now)
+                                    "changed": it.get("changed") or [],
+                                    # how the pull came about: there is no gate here, only search and damping
+                                    "why": {"similarity": it.get("sim"), "score": it.get("score"),
+                                            "recently_raised": it.get("habituation"),
+                                            "superseded": bool(it.get("changed")), "memory_pull": it["pull"],
+                                            "chain_factor": round(self.cfg["chain_decay"] ** (c["depth"] - 1), 4)}},
+                                   now)
 
     def _attend(self, st: Dict[str, Any], now: float) -> Tuple[Optional[Dict[str, Any]], str]:
         """What to take next, or why nothing: the order is held messages (when they may go), then what came to mind."""

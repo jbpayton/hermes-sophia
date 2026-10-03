@@ -204,3 +204,65 @@ def correct(body: Correct) -> Dict[str, Any]:
     finally:
         s.close()
     return {"ok": bool(n), "changed": n, "journal_id": jid}
+
+
+# ---------------------------------------------------------------- continuity
+# The companion plugin's state, for watching it (on a test profile first). It isn't scoped to the dashboard's
+# profile: every profile that has a continuity store can be chosen.
+_CONT_ALIAS = "continuity_dash_pkg"
+
+
+def _continuity(sub: str):
+    if _CONT_ALIAS not in sys.modules:
+        for cand in (PKG_DIR.parent / "hermes_continuity", _root() / "plugins" / "continuity"):
+            if (cand / "__init__.py").exists():
+                spec = importlib.util.spec_from_file_location(_CONT_ALIAS, cand / "__init__.py",
+                                                              submodule_search_locations=[str(cand)])
+                mod = importlib.util.module_from_spec(spec)
+                sys.modules[_CONT_ALIAS] = mod
+                spec.loader.exec_module(mod)
+                break
+        else:
+            raise HTTPException(404, "The continuity companion isn't installed next to Sophia")
+    return importlib.import_module(f"{_CONT_ALIAS}.{sub}")
+
+
+def _root() -> Path:
+    home = _home()
+    return home.parent.parent if home.parent.name == "profiles" else home
+
+
+def _continuity_homes() -> Dict[str, Path]:
+    root = _root()
+    found = {"default": root} if (root / "plugin-data" / "continuity" / "continuity.db").exists() else {}
+    for p in sorted((root / "profiles").glob("*")) if (root / "profiles").is_dir() else []:
+        if (p / "plugin-data" / "continuity" / "continuity.db").exists():
+            found[p.name] = p
+    return found
+
+
+def _continuity_settings(home: Path):
+    try:
+        import yaml
+        cfg = yaml.safe_load((home / "config.yaml").read_text()) or {}
+        settings = ((cfg.get("plugins") or {}).get("entries") or {}).get("continuity", {}).get("settings") or {}
+    except Exception:
+        settings = {}
+    return lambda key, default=None: settings.get(key, default)
+
+
+@router.get("/continuity")
+def continuity(profile: str = "") -> Dict[str, Any]:
+    homes = _continuity_homes()
+    if not homes:
+        return {"profiles": [], "profile": None, "report": None}
+    current = _home().name if _home().parent.name == "profiles" else "default"
+    name = profile if profile in homes else current if current in homes else next(iter(homes))
+    home = homes[name]
+    cfg = _continuity("config").load(_continuity_settings(home))
+    try:
+        user = _pkg("config").load_config(str(home))["user_name"]
+    except Exception:
+        user = "the user"
+    rep = _continuity("report").build(home / "plugin-data" / "continuity" / "continuity.db", cfg, user=user)
+    return {"profiles": list(homes), "profile": name, "report": rep}

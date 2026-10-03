@@ -1,0 +1,165 @@
+"""What the continuing process is doing, in one place: for ``hermes continuity report`` and the Sophia tab.
+
+Read-only. Built so that whoever watches it (Joey, or the agent it would run on) can tell at a glance whether a
+quiet stretch was the right kind of quiet, what's waiting and why it pulls as hard as it does, what it held back,
+and how much of each turn's context the standing view takes.
+"""
+from __future__ import annotations
+
+import datetime as dt
+import json
+import sqlite3
+import time
+from collections import Counter
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+from . import view as V
+
+HEALTHY = ("ran its course", "today's budget")          # quiet for the right reasons; anything "stalled" is to chase
+AROUND_S = 2 * 3600
+
+
+def _reader(path: Path) -> sqlite3.Connection:
+    c = sqlite3.connect(f"file:{path}?mode=ro", uri=True, timeout=10)
+    c.row_factory = sqlite3.Row
+    return c
+
+
+def _d(ts: Optional[float]) -> Optional[str]:
+    return dt.datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M") if ts else None
+
+
+def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional[float] = None) -> Dict[str, Any]:
+    now = now or time.time()
+    path = Path(path)
+    if not path.exists():
+        return {"exists": False, "path": str(path)}
+    c = _reader(path)
+    try:
+        meta = {r["key"]: json.loads(r["value"]) for r in c.execute("SELECT key, value FROM meta")}
+        st = meta.get("state", {})
+        paused = bool(meta.get("paused"))
+        midnight = dt.datetime.fromtimestamp(now).replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
+
+        steps_today = c.execute("SELECT outcome, ms FROM steps WHERE ts>=?", (midnight,)).fetchall()
+        outcomes = Counter((r["outcome"] or "running") for r in steps_today)
+        quiet_reason = st.get("quiet_reason") or ""
+        quiet = {"reason": quiet_reason or None, "since": _d(st.get("quiet_since")) if quiet_reason else None,
+                 "kind": None if not quiet_reason else "healthy" if quiet_reason.startswith(HEALTHY) else "chase"}
+
+        queued = c.execute("SELECT * FROM queue WHERE status='queued' ORDER BY salience DESC, id").fetchall()
+        ttl = cfg["item_ttl_minutes"] * 60
+        queue = []
+        for r in queued[:12]:
+            data = json.loads(r["data"] or "{}")
+            queue.append({"id": r["id"], "text": r["text"], "pull": round(r["salience"], 3),
+                          "clears_threshold": r["salience"] >= cfg["min_pull"], "depth": r["depth"],
+                          "age_min": round((now - r["created"]) / 60), "fades_in_min": max(0, round((r["created"] + ttl - now) / 60)),
+                          "superseded": bool(data.get("changed")), "changed": data.get("changed") or [],
+                          "speaker": data.get("speaker"), "said": _d(data.get("said")), "via": data.get("via"),
+                          "why": data.get("why")})
+
+        last_user = st.get("last_user_ts") or 0
+        held = [{"id": r["id"], "created": _d(r["created"]), "reason": r["reason"], "text": r["text"]}
+                for r in c.execute("SELECT * FROM outbox WHERE status='held' ORDER BY id")]
+        sent_today = c.execute("SELECT COUNT(*) AS n FROM outbox WHERE status='sent' AND settled>=?", (midnight,)).fetchone()["n"]
+
+        journal: List[Dict[str, Any]] = []
+        for r in c.execute("""SELECT 'turn' AS what, ts, kind, outcome, reason, ms, text, NULL AS steps, NULL AS silent,
+                                     NULL AS held, context_chars, reply_chars FROM steps
+                              UNION ALL SELECT 'quiet', ts, NULL, NULL, reason, ms, NULL, steps, silent, held, NULL, NULL
+                              FROM quiet ORDER BY ts DESC LIMIT 16"""):
+            if r["what"] == "turn":
+                lines = (r["text"] or "").splitlines()
+                journal.append({"what": "turn", "at": _d(r["ts"]), "kind": r["kind"], "outcome": r["outcome"] or "running",
+                                "reason": r["reason"], "seconds": round((r["ms"] or 0) / 1000, 1),
+                                "item": lines[1][:160] if len(lines) > 1 else "", "context_chars": r["context_chars"],
+                                "reply_chars": r["reply_chars"]})
+            else:
+                journal.append({"what": "quiet", "at": _d(r["ts"]), "reason": r["reason"], "turns": r["steps"],
+                                "silent": r["silent"] or 0, "held": r["held"] or 0,
+                                "model_seconds": round((r["ms"] or 0) / 1000, 1),
+                                "kind": "healthy" if (r["reason"] or "").startswith(HEALTHY) else "chase"})
+
+        frames = c.execute("SELECT * FROM frames ORDER BY id DESC LIMIT 20").fetchall()
+        fills = [r["chars"] / r["context_chars"] for r in frames if r["context_chars"]]
+        frame_rows = [{"at": _d(r["ts"]), "kind": r["kind"], "chars": r["chars"], "turn": r["turn_kind"],
+                       "context_chars": r["context_chars"],
+                       "fill": round(r["chars"] / r["context_chars"], 4) if r["context_chars"] else None}
+                      for r in frames[:12]]
+        kinds = Counter(r["kind"] for r in frames)
+        last_full = c.execute("SELECT text, ts FROM frames WHERE kind='full' ORDER BY id DESC LIMIT 1").fetchone()
+        return {
+            "exists": True, "path": str(path), "now": _d(now), "paused": paused,
+            "energy": round(float(st.get("energy") or 0), 2), "step_cost": cfg["step_cost"], "min_pull": cfg["min_pull"],
+            "quiet": quiet,
+            "today": {"turns": len(steps_today), "budget": cfg["max_steps_per_day"], "outcomes": dict(outcomes),
+                      "model_seconds": round(sum((r["ms"] or 0) for r in steps_today) / 1000, 1),
+                      "outreach_sent": sent_today, "outreach_limit": cfg["max_outreach_per_day"],
+                      "outreach": "on" if cfg["outreach"] else "off", "quiet_hours": cfg["quiet_hours"]},
+            "user": {"name": user, "last_wrote": _d(last_user) if last_user else None,
+                     "ago": V.ago(now - last_user) if last_user else None,
+                     "around": bool(last_user) and now - last_user < AROUND_S},
+            "working_state": {"focus": st.get("focus") or None,
+                              "threads": [t["text"] for t in st.get("threads", [])],
+                              "waiting_for": [w["text"] for w in st.get("waiting_for", [])],
+                              "came_to_mind": [{"text": m["text"], "at": _d(m["ts"])} for m in st.get("came_to_mind", [])[-5:]]},
+            "queue": {"waiting": len(queued), "top": queue},
+            "outbox": {"held": held},
+            "journal": journal,
+            "frames": {"recent": frame_rows, "kinds": dict(kinds), "full_every": cfg["full_frame_every"],
+                       "mean_fill": round(sum(fills) / len(fills), 4) if fills else None,
+                       "max_fill": round(max(fills), 4) if fills else None,
+                       "latest": frames[0]["text"] if frames else None,
+                       "latest_full": last_full["text"] if last_full else None},
+            "settings": {k: cfg[k] for k in ("enabled", "view", "platform", "outreach", "quiet_hours", "max_steps_per_day",
+                                             "energy_per_event", "step_cost", "energy_max", "min_pull", "chain_decay",
+                                             "item_ttl_minutes", "settle_seconds", "full_frame_every")},
+        }
+    finally:
+        c.close()
+
+
+def text(rep: Dict[str, Any]) -> str:
+    """The same report, for a terminal (or an agent reading it)."""
+    if not rep.get("exists"):
+        return f"No continuity store at {rep.get('path')}: the companion hasn't run on this profile."
+    t, q, u = rep["today"], rep["quiet"], rep["user"]
+    out = [f"Continuity report · {rep['now']}" + (" · PAUSED" if rep["paused"] else "")]
+    out.append(f"energy {rep['energy']} (a turn costs {rep['step_cost']})"
+               + (f" · quiet: {q['reason']} [{q['kind']}] since {q['since']}" if q["reason"] else " · active"))
+    oc = ", ".join(f"{n} {k}" for k, n in sorted(t["outcomes"].items(), key=lambda kv: -kv[1])) or "none"
+    out.append(f"today: {t['turns']}/{t['budget']} turns of its own ({oc}); {t['model_seconds']}s of model time; "
+               f"outreach {t['outreach']}, {t['outreach_sent']}/{t['outreach_limit']} sent, quiet hours {t['quiet_hours']}")
+    out.append(f"{u['name']}: " + (f"last wrote {u['ago']} ({u['last_wrote']}), {'around' if u['around'] else 'not around'}"
+                                   if u["last_wrote"] else "hasn't written yet"))
+    ws = rep["working_state"]
+    out.append(f"focus: {ws['focus'] or '-'} · threads: {'; '.join(ws['threads']) or '-'} · waiting for: "
+               f"{'; '.join(ws['waiting_for']) or '-'}")
+    out.append(f"\nqueue: {rep['queue']['waiting']} waiting (a turn needs pull >= {rep['min_pull']})")
+    for it in rep["queue"]["top"]:
+        w = it.get("why") or {}
+        bits = [f"pull {it['pull']}" + ("" if it["clears_threshold"] else " (below)"), f"depth {it['depth']}",
+                f"{it['age_min']} min old, fades in {it['fades_in_min']}"]
+        if it["superseded"]:
+            bits.append("SUPERSEDED: " + "; ".join(it["changed"]))
+        if w:
+            bits.append(f"similarity {w.get('similarity')}, recently raised {w.get('recently_raised')}, "
+                        f"chain x{w.get('chain_factor')}")
+        out.append(f"  - “{it['text'][:100]}”  [{' · '.join(bits)}]")
+    out.append(f"\nheld for {u['name']}: {len(rep['outbox']['held'])}")
+    for m in rep["outbox"]["held"][:5]:
+        out.append(f"  #{m['id']} {m['created']} ({m['reason']}): {m['text'][:160]}")
+    out.append("\njournal (newest last):")
+    for j in reversed(rep["journal"]):
+        if j["what"] == "turn":
+            out.append(f"  {j['at']}  turn  {j['kind']:<11} {j['outcome']:<12} {j['seconds']:>5}s  {j['item'][:80]}"
+                       + (f"  [{j['reason']}]" if j["reason"] else ""))
+        else:
+            out.append(f"  {j['at']}  quiet [{j['kind']}] {j['reason']} ({j['turns']} turns: {j['silent']} silent, "
+                       f"{j['held']} held; {j['model_seconds']}s)")
+    f = rep["frames"]
+    fill = f"mean {f['mean_fill']:.1%}, max {f['max_fill']:.1%}" if f["mean_fill"] is not None else "not measured yet"
+    out.append(f"\nframes: {f['kinds']} (full every {f['full_every']}); share of each turn's context: {fill}")
+    return "\n".join(out)

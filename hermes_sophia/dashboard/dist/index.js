@@ -80,6 +80,7 @@
 
   // ------------------------------------------------------------------ icons
   var ICONS = {
+    pulse: '<path d="M3 12h4l2.5-6 4 12 2.5-6H21"/>',
     grid: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
     graph: '<circle cx="12" cy="12" r="3"/><circle cx="4.5" cy="6" r="2"/><circle cx="19.5" cy="6" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="18.5" r="2"/><path d="M6.2 7.2 9.6 10M17.8 7.2 14.4 10M7.4 17.6 10 14.2M16.6 17.2 14 14.2"/>',
     book: '<path d="M2 4h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7z"/>',
@@ -136,7 +137,7 @@
   }
 
   var VIEWS = [["overview", "Overview", "grid"], ["graph", "Graph", "graph"], ["pages", "Mindscape", "book"], ["recall", "Recall", "message"],
-               ["settings", "Settings", "gear"]];
+               ["continuity", "Continuity", "pulse"], ["settings", "Settings", "gear"]];
   function parseRoute() {
     var q = new URLSearchParams(window.location.search);
     var view = q.get("mv") || "", arg = q.get("mk") || "";
@@ -1460,6 +1461,122 @@
   }
 
   // ------------------------------------------------------------------ the tab
+
+  // ------------------------------------------------------------ continuity
+  // The companion plugin, watched: why it's quiet, what it did today, what's waiting and why it pulls, what it held
+  // back, and how much of each turn the standing view takes. Read-only; every profile with a continuity store can
+  // be chosen (try it on a test profile first).
+  var OUTCOME_TONE = { silent: "", held: "sm-amber", sent: "sm-ok", "not accepted": "sm-warn", "not started": "sm-warn",
+                       interrupted: "", failed: "sm-warn", running: "" };
+  function ContinuityView() {
+    var profS = useState(""), prof = profS[0];
+    var api = useApi("/continuity" + (prof ? "?profile=" + encodeURIComponent(prof) : ""), 10000);
+    var d = api.data;
+    if (!d) return h(Card, { title: "Continuity" }, h(Empty, null, api.error ? "Couldn't load: " + api.error : "Loading…"));
+    if (!d.report || !d.report.exists) return h(Card, { title: "Continuity" },
+      h("p", { className: "sm-lede" }, "The continuity companion hasn't run on any profile yet."),
+      h("p", { className: "sm-hint" }, "It lets the agent keep going between messages: what it perceives and what comes to mind start turns of its own, and an energy budget winds them down. Try it on a test profile first (docs/CONTINUITY.md, “Trying it”)."));
+    var r = d.report, t = r.today, q = r.quiet, u = r.user;
+    var picker = d.profiles.length > 1 ? h(Seg, { label: "Profile", caption: "Profile", value: d.profile,
+      options: d.profiles.map(function (n) { return [n, n]; }), onChange: profS[1] }) :
+      h("span", { className: "sm-tag" }, "profile: " + d.profile);
+    var energyPct = Math.min(1, r.energy / Math.max(r.settings.energy_max || 3, 0.01));
+    var outcomes = Object.keys(t.outcomes || {}).sort(function (a, b) { return t.outcomes[b] - t.outcomes[a]; });
+
+    var now = h(Card, { title: "Right now", aside: picker },
+      h("div", { className: "sm-now-grid" },
+        h("div", { className: "sm-now-cell" }, h("span", { className: "sm-now-label" }, "Energy"),
+          h("span", { className: "sm-now-big" }, r.energy.toFixed(2)),
+          h("div", { className: "sm-gate-bar", title: "a turn of its own costs " + r.step_cost },
+            h("span", { style: { width: pct(energyPct), background: "var(--sm-cyan)" } }),
+            h("span", { className: "sm-gate-cut", style: { left: pct(r.step_cost / (r.settings.energy_max || 3)) } })),
+          h("span", { className: "sm-now-sub" }, "a turn costs " + r.step_cost)),
+        h("div", { className: "sm-now-cell" }, h("span", { className: "sm-now-label" }, r.paused ? "Paused" : q.reason ? "Quiet" : "Ready"),
+          h("span", { className: "sm-now-sub" }, r.paused ? "It won't take turns of its own until resumed." :
+            (q.reason || "ready: it takes a turn of its own when something it perceives or remembers pulls hard enough")),
+          q.kind && h("span", { className: cx("sm-badge", q.kind === "healthy" ? "sm-ok" : "sm-warn") },
+            q.kind === "healthy" ? "the right kind of quiet" : "stalled: worth a look"),
+          q.since && h("span", { className: "sm-now-sub" }, "since " + q.since)),
+        h("div", { className: "sm-now-cell" }, h("span", { className: "sm-now-label" }, u.name),
+          h("span", { className: "sm-now-sub" }, u.last_wrote ? "last wrote " + u.ago : "hasn't written yet"),
+          h("span", { className: cx("sm-badge", u.around ? "sm-ok" : "") }, u.around ? "around" : "not around"),
+          h("span", { className: "sm-now-sub" }, "held messages go out only when allowed and " + u.name + " is around")),
+        h("div", { className: "sm-now-cell" }, h("span", { className: "sm-now-label" }, "Outreach"),
+          h("span", { className: "sm-now-big" }, t.outreach),
+          h("span", { className: "sm-now-sub" }, t.outreach_sent + " of " + t.outreach_limit + " sent today · quiet hours " + t.quiet_hours))));
+
+    var today = h(Card, { title: "Today", aside: h("span", { className: "sm-muted" }, t.model_seconds + " s of model time") },
+      h("div", { className: "sm-stats" },
+        h("div", { className: "sm-stat" }, h("span", { className: "sm-stat-n" }, t.turns + "/" + t.budget), h("span", { className: "sm-stat-l" }, "turns of its own")),
+        outcomes.map(function (k) {
+          return h("div", { key: k, className: "sm-stat" }, h("span", { className: cx("sm-stat-n", OUTCOME_TONE[k]) }, t.outcomes[k]),
+            h("span", { className: "sm-stat-l" }, k));
+        })),
+      h("p", { className: "sm-hint" }, "All silent: it's doing nothing. All held: outreach is off or it's quiet hours. Any “not accepted” or “not started”: a stall to chase."));
+
+    var queue = h(Card, { title: "Waiting to come to mind", count: r.queue.waiting, plainCount: true },
+      r.queue.top.length ? h("div", { className: "sm-lines" }, r.queue.top.map(function (it) {
+        var w = it.why || {};
+        return h("div", { key: it.id, className: "sm-line-item" },
+          h("div", { className: "sm-q-title" }, "“" + trunc(it.text, 180) + "”"),
+          h("div", { className: "sm-gate-bar", title: "pull " + it.pull + "; a turn needs " + r.min_pull },
+            h("span", { style: { width: pct(Math.min(1, it.pull)), background: it.clears_threshold ? "var(--sm-cyan)" : "var(--sm-muted)" } }),
+            h("span", { className: "sm-gate-cut", style: { left: pct(r.min_pull) } })),
+          h("div", { className: "sm-chips-row" },
+            h("span", { className: "sm-chip" }, "pull " + it.pull + (it.clears_threshold ? "" : " (below)")),
+            h("span", { className: "sm-chip" }, "depth " + it.depth),
+            h("span", { className: "sm-chip" }, it.age_min + " min old, fades in " + it.fades_in_min),
+            it.superseded && h("span", { className: "sm-badge sm-amber", title: (it.changed || []).join("; ") }, "superseded"),
+            w.similarity != null && h("span", { className: "sm-tag" }, "similarity " + w.similarity),
+            w.recently_raised ? h("span", { className: "sm-tag" }, "recently raised " + w.recently_raised) : null,
+            w.chain_factor != null && w.chain_factor < 1 && h("span", { className: "sm-tag" }, "chain ×" + w.chain_factor),
+            it.via && h("span", { className: "sm-tag" }, it.via)));
+      })) : h(Empty, null, "Nothing waiting."));
+
+    var ws = r.working_state;
+    var state = h(Card, { title: "Working state" },
+      h("div", { className: "sm-lines" },
+        h("div", null, h("span", { className: "sm-muted" }, "Focus: "), ws.focus || "nothing in particular"),
+        h("div", null, h("span", { className: "sm-muted" }, "Open threads: "), ws.threads.length ? ws.threads.join("; ") : "none"),
+        h("div", null, h("span", { className: "sm-muted" }, "Waiting for: "), ws.waiting_for.length ? ws.waiting_for.join("; ") : "nothing"),
+        h("div", null, h("span", { className: "sm-muted" }, "Came to mind lately: "),
+          ws.came_to_mind.length ? ws.came_to_mind.map(function (m) { return "“" + trunc(m.text, 80) + "”"; }).join(" · ") : "nothing")));
+
+    var outbox = h(Card, { title: "Held for " + u.name, count: r.outbox.held.length, plainCount: true },
+      r.outbox.held.length ? h("div", { className: "sm-lines" }, r.outbox.held.map(function (m) {
+        return h("div", { key: m.id, className: "sm-line-item" },
+          h("div", { className: "sm-ch-meta" }, m.created + " · " + m.reason), h("div", { className: "sm-quote" }, m.text));
+      })) : h(Empty, null, "Nothing held."));
+
+    var journal = h(Card, { title: "Journal" },
+      r.journal.length ? h("div", { className: "sm-feed-list" }, r.journal.map(function (j, i) {
+        if (j.what === "quiet") return h("div", { key: i, className: "sm-feed-row" },
+          h("span", { className: cx("sm-badge", j.kind === "healthy" ? "sm-ok" : "sm-warn") }, "quiet"),
+          h("span", { className: "sm-feed-t" }, j.at.slice(11)),
+          h("span", null, j.reason + " — " + j.turns + " turns: " + j.silent + " silent, " + j.held + " held; " + j.model_seconds + " s"));
+        return h("div", { key: i, className: "sm-feed-row" },
+          h("span", { className: cx("sm-badge", OUTCOME_TONE[j.outcome]) }, j.outcome),
+          h("span", { className: "sm-feed-t" }, j.at.slice(11)),
+          h("span", null, trunc(j.item, 140) + " · " + j.seconds + " s" + (j.reason ? " · " + j.reason : "")));
+      })) : h(Empty, null, "No turns of its own yet."));
+
+    var f = r.frames;
+    var frames = h(Card, { title: "Standing view", aside: h("span", { className: "sm-muted" }, "full every " + f.full_every + " turns") },
+      h("div", { className: "sm-stats" },
+        Object.keys(f.kinds || {}).map(function (k) {
+          return h("div", { key: k, className: "sm-stat" }, h("span", { className: "sm-stat-n" }, f.kinds[k]), h("span", { className: "sm-stat-l" }, k + " frames"));
+        }),
+        h("div", { className: "sm-stat" }, h("span", { className: "sm-stat-n" }, f.mean_fill != null ? pct(f.mean_fill) : "–"),
+          h("span", { className: "sm-stat-l" }, "of each turn's context, mean")),
+        h("div", { className: "sm-stat" }, h("span", { className: "sm-stat-n" }, f.max_fill != null ? pct(f.max_fill) : "–"),
+          h("span", { className: "sm-stat-l" }, "max"))),
+      f.latest && h("pre", { className: "sm-mono sm-frame" }, f.latest),
+      f.latest_full && f.latest_full !== f.latest && h("details", null, h("summary", { className: "sm-muted" }, "Latest full frame"),
+        h("pre", { className: "sm-mono sm-frame" }, f.latest_full)));
+
+    return h("div", { className: "sm-overview" }, now, today, queue, state, outbox, journal, frames);
+  }
+
   function SophiaTab() {
     var rt = useRoute(), route = rt[0], go = rt[1];
     var wide = useMedia("(min-width: 900px)");
@@ -1491,12 +1608,13 @@
 
     var missing = now.error && /No Sophia store|404/.test(now.error) && !now.data;
     var body;
-    if (missing && route.view !== "settings") body = h(Card, { title: "No memory here yet" }, h("p", { className: "sm-lede" }, now.error),
+    if (missing && route.view !== "settings" && route.view !== "continuity") body = h(Card, { title: "No memory here yet" }, h("p", { className: "sm-lede" }, now.error),
       h("p", { className: "sm-hint" }, "This tab reads Sophia's store for the active profile. Set memory.provider to sophia and talk for a while."));
     else if (route.view === "graph") body = h(GraphView, { arg: route.arg, go: go, wide: wide, key: "graph" });
     else if (route.view === "pages") body = h(PagesView, { arg: route.arg, go: go, wide: wide });
     else if (route.view === "recall") body = h(RecallView, { arg: route.arg, go: go, wide: wide });
     else if (route.view === "settings") body = h(SettingsView, null);
+    else if (route.view === "continuity") body = h(ContinuityView, null);
     else body = h(Overview, { now: now.data, go: go });
 
     var tab = function (v, cls) {

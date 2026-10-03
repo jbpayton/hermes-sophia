@@ -35,6 +35,8 @@ class Memory:
         return [{"id": it["id"], "kind": it["kind"], "text": it["text"], "said": it.get("said"),
                  "speaker": it.get("speaker") or "", "label": own_label(it.get("flags", "")),
                  "via": it.get("via"), "changed": list(it.get("changed") or []),
+                 "sim": round(float(it.get("sim") or 0), 4), "score": round(float(it.get("score") or 0), 4),
+                 "habituation": round(float(it.get("habituation") or 0), 4),
                  "pull": round(float(it["activation"]), 4)} for it in items]
 
     def think(self, text: str, about: str = "") -> List[str]:

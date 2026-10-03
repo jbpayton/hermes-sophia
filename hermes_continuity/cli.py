@@ -13,6 +13,9 @@ def _d(ts) -> str:
 def setup(sub) -> None:
     subs = sub.add_subparsers(dest="continuity_cmd")
     subs.add_parser("status", help="Energy, what's waiting, today's turns and outreach, why it's quiet")
+    p = subs.add_parser("report", help="Everything at once: why it's quiet, today's outcomes, the queue with why each "
+                                       "item pulls, held messages, the journal, and how much context frames take")
+    p.add_argument("--json", action="store_true")
     subs.add_parser("view", help="The standing view as it would look now (a full frame; changes nothing)")
     subs.add_parser("queue", help="What came to mind and is waiting")
     p = subs.add_parser("journal", help="Its own turns, and each quiet stretch with its reason and cost")
@@ -21,6 +24,17 @@ def setup(sub) -> None:
     subs.add_parser("pause", help="Stop taking turns of its own (its state is kept)")
     subs.add_parser("resume", help="Let it take turns of its own again")
     sub.set_defaults(func=cmd)
+
+
+def _plugin_settings():
+    """The profile's plugins.entries.continuity.settings, read the way Hermes would (the CLI has no ctx)."""
+    try:
+        from hermes_cli.config import load_config
+        entry = ((load_config() or {}).get("plugins") or {}).get("entries", {}).get("continuity") or {}
+        settings = entry.get("settings") or {}
+    except Exception:
+        settings = {}
+    return lambda key, default=None: settings.get(key, default)
 
 
 def cmd(args) -> None:
@@ -34,7 +48,12 @@ def cmd(args) -> None:
     sub = getattr(args, "continuity_cmd", None)
     st = store.state()
     now = time.time()
-    if sub in (None, "status"):
+    if sub == "report":
+        from .report import build, text
+        cfg = load(_plugin_settings())
+        rep = build(store.path, cfg, user=_user_name(cfg))
+        print(json.dumps(rep, indent=2, default=str) if args.json else text(rep))
+    elif sub in (None, "status"):
         today = dt.datetime.now().strftime("%Y-%m-%d")
         q = store.queued()
         print(json.dumps({

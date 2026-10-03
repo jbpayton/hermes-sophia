@@ -363,3 +363,44 @@ def test_empty_placeholders_are_not_reported_as_changes(tmp_path):
     c.tick()
     frame = own_turn_frame = c.on_turn_start(session_id="s", user_message=sent[-1], platform="telegram")["context"]
     assert "came to mind lately: + " in frame and "− nothing" not in frame
+
+
+def test_time_passing_alone_doesnt_change_what_came_to_mind():
+    from hermes_continuity.view import diff
+    old = {"came to mind lately": [["“Settled into Spokane.” (just now)"], "remembered"], "quiet": ["ran its course", "perceived"]}
+    new = {"came to mind lately": (["“Settled into Spokane.” (under an hour ago)"], "remembered")}
+    out = diff(old, new)
+    assert out == ["quiet: ended"]
+
+
+def test_the_dashboard_shows_any_profile_with_a_continuity_store(tmp_path, monkeypatch):
+    pytest.importorskip("fastapi")
+    import importlib.util
+    import sys
+    from pathlib import Path
+    from fastapi import FastAPI
+    from fastapi.testclient import TestClient
+    root = tmp_path / "hermes"
+    dev = root / "profiles" / "dev"
+    (dev / "plugin-data" / "continuity").mkdir(parents=True)
+    (dev / "config.yaml").write_text("plugins:\n  entries:\n    continuity:\n      settings:\n        min_pull: 0.6\n")
+    c, sent = make(dev, memory=FakeMemory())
+    c.store.close()
+    c = Continuity(Store(dev / "plugin-data" / "continuity" / "continuity.db"), c.cfg, lambda t: True,
+                   memory=FakeMemory(), user_name="Joey", clock=Clock(NOON))
+    user_turn(c)
+    c._associate_pending(NOON)
+    api_file = Path(__file__).resolve().parents[1] / "hermes_sophia" / "dashboard" / "plugin_api.py"
+    spec = importlib.util.spec_from_file_location("sophia_plugin_api_cont", api_file)
+    mod = importlib.util.module_from_spec(spec)
+    monkeypatch.setitem(sys.modules, "sophia_plugin_api_cont", mod)
+    spec.loader.exec_module(mod)
+    monkeypatch.setattr(mod, "_home", lambda: root)
+    app = FastAPI()
+    app.include_router(mod.router, prefix="/api/plugins/sophia")
+    r = TestClient(app).get("/api/plugins/sophia/continuity").json()
+    assert r["profiles"] == ["dev"] and r["profile"] == "dev"
+    rep = r["report"]
+    assert rep["exists"] and rep["min_pull"] == 0.6 and rep["queue"]["waiting"] >= 1
+    assert rep["queue"]["top"][0]["why"]["similarity"] is None or "similarity" in rep["queue"]["top"][0]["why"]
+    assert rep["frames"]["latest"].startswith("[standing view")

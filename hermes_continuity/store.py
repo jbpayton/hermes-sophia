@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS steps(id INTEGER PRIMARY KEY AUTOINCREMENT, ts REAL, 
   context_chars INT, reply_chars INT);
 CREATE TABLE IF NOT EXISTS outbox(id INTEGER PRIMARY KEY AUTOINCREMENT, created REAL, text TEXT,
   status TEXT DEFAULT 'held', reason TEXT, step_id INT, settled REAL);
-CREATE TABLE IF NOT EXISTS frames(id INTEGER PRIMARY KEY AUTOINCREMENT, ts REAL, kind TEXT, text TEXT, chars INT);
+CREATE TABLE IF NOT EXISTS frames(id INTEGER PRIMARY KEY AUTOINCREMENT, ts REAL, kind TEXT, text TEXT, chars INT,
+  turn_kind TEXT, step_id INT, context_chars INT);
 CREATE TABLE IF NOT EXISTS quiet(id INTEGER PRIMARY KEY AUTOINCREMENT, ts REAL, reason TEXT, since REAL, steps INT,
   silent INT, held INT, ms INT);
 CREATE TABLE IF NOT EXISTS percepts(id INTEGER PRIMARY KEY AUTOINCREMENT, ts REAL, kind TEXT, text TEXT);
@@ -63,6 +64,10 @@ class Store:
         with self.lock:
             self.conn.execute("PRAGMA busy_timeout=30000")
             self.conn.executescript(SCHEMA)
+            have = {r[1] for r in self.conn.execute("PRAGMA table_info(frames)")}
+            for col, typ in (("turn_kind", "TEXT"), ("step_id", "INT"), ("context_chars", "INT")):
+                if col not in have:                    # files from the first version
+                    self.conn.execute(f"ALTER TABLE frames ADD COLUMN {col} {typ}")
             self.conn.commit()
 
     def q(self, sql: str, args: Sequence[Any] = ()) -> List[sqlite3.Row]:

@@ -7,6 +7,7 @@ order: the newest frame is always the latest thing seen. Every line says where i
 from __future__ import annotations
 
 import datetime as dt
+import re
 from typing import Any, Dict, List, Tuple
 
 # where an item came from
@@ -84,6 +85,13 @@ def render_full(sc: Dict[str, Tuple[Any, str]], now: float) -> str:
 
 
 _EMPTY = {"nothing", "none"}
+# An item's age changes as time passes; that alone isn't a change in what's there
+_AGE = re.compile(r" \((?:just now|a few minutes ago|under an hour ago|about an hour ago|a few hours ago|many hours ago|"
+                  r"about a day ago|\d+ days ago|over a week ago)\)$")
+
+
+def _same(x: str) -> str:
+    return _AGE.sub("", x) if isinstance(x, str) else x
 
 
 def diff(old: Dict[str, Any], new: Dict[str, Tuple[Any, str]]) -> List[str]:
@@ -94,8 +102,10 @@ def diff(old: Dict[str, Any], new: Dict[str, Tuple[Any, str]]) -> List[str]:
         if before == v:
             continue
         if isinstance(v, list) and isinstance(before, list):
-            added = [x for x in v if x not in before and x not in _EMPTY]
-            gone = [x for x in before if x not in v and x not in _EMPTY]
+            was = {_same(x) for x in before}
+            now_ = {_same(x) for x in v}
+            added = [x for x in v if _same(x) not in was and x not in _EMPTY]
+            gone = [x for x in before if _same(x) not in now_ and x not in _EMPTY]
             bits = [f"+ {x}" for x in added] + [f"− {x}" for x in gone]
             if bits:
                 out.append(f"{k}: {'; '.join(bits)} ({src})")
@@ -105,7 +115,7 @@ def diff(old: Dict[str, Any], new: Dict[str, Tuple[Any, str]]) -> List[str]:
             out.append(f"{k}: {_fmt(before)} → {_fmt(v)} ({src})")
     for k in old:
         if k not in new:
-            out.append(f"{k}: no longer shown")
+            out.append(f"{k}: ended" if k in ("quiet", "paused") else f"{k}: no longer shown")
     return out
 
 
