@@ -6,8 +6,6 @@ license: MIT
 homepage: https://github.com/jbpayton/hermes-sophia
 description: "Continuity: lets the agent keep going between messages. What it perceives (your messages, finished jobs) and what comes to mind (Sophia's association) wake it; an energy budget winds it down; a standing view keeps it aware of its situation; its replies are held unless outreach is allowed. Companion to the Sophia memory plugin."
 tags: [agent, memory, continuity]
-requires_plugins:
-  - id: sophia
 config_schema:
   enabled: {type: bool, default: false, description: "Let it take turns of its own (perception, the standing view and the journal work either way)"}
   view: {type: bool, default: true, description: "Hand every turn a frame of the standing view"}
