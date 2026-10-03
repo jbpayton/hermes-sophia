@@ -1503,7 +1503,22 @@
           h("span", { className: "sm-now-sub" }, "held messages go out only when allowed and " + u.name + " is around")),
         h("div", { className: "sm-now-cell" }, h("span", { className: "sm-now-label" }, "Outreach"),
           h("span", { className: "sm-now-big" }, t.outreach),
-          h("span", { className: "sm-now-sub" }, t.outreach_sent + " of " + t.outreach_limit + " sent today · quiet hours " + t.quiet_hours))));
+          h("span", { className: "sm-now-sub" }, t.outreach_sent + " of " + t.outreach_limit + " sent today · quiet hours " + t.quiet_hours),
+          r.outreach && h("span", { className: "sm-now-sub" }, r.outreach.sent + " sent in all" +
+            (r.outreach.calibrated ? "" : " · not enough to act on until " + r.outreach.needed)))));
+    var okinds = r.outreach ? Object.keys(r.outreach.by_kind || {}) : [];
+    var reach = okinds.length ? h(Card, { title: "How its reaching out was received" },
+      h("div", { className: "sm-lines" }, okinds.map(function (k) {
+        var x = r.outreach.by_kind[k];
+        return h("div", { key: k, className: "sm-line-item" }, h("div", { className: "sm-q-title" }, k),
+          h("div", { className: "sm-chips-row" },
+            h("span", { className: "sm-chip" }, x.sent + " sent"),
+            h("span", { className: "sm-badge sm-ok" }, x.reply + " replied"),
+            h("span", { className: "sm-badge sm-amber" }, x["not now"] + " not now"),
+            h("span", { className: "sm-badge" }, x.silence + " silence"),
+            x.reply_gaps_min.length ? h("span", { className: "sm-tag" }, "replies after " + x.reply_gaps_min.slice(-5).map(function (g) { return "+" + g + "m"; }).join(", ")) : null));
+      })),
+      h("p", { className: "sm-hint" }, "A reply is any message within 12 hours; “not now” only a short message that says just that. The reply delay shows whether a “reply” was really an answer or just presence.")) : null;
 
     var today = h(Card, { title: "Today", aside: h("span", { className: "sm-muted" }, t.model_seconds + " s of model time · " + (t.tokens || 0) + " tokens") },
       h("div", { className: "sm-stats" },
@@ -1574,7 +1589,7 @@
       f.latest_full && f.latest_full !== f.latest && h("details", null, h("summary", { className: "sm-muted" }, "Latest full frame"),
         h("pre", { className: "sm-mono sm-frame" }, f.latest_full)));
 
-    return h("div", { className: "sm-overview" }, now, today, queue, state, outbox, journal, frames);
+    return h("div", { className: "sm-overview" }, now, today, reach, queue, state, outbox, journal, frames);
   }
 
   function SophiaTab() {

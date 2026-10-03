@@ -365,7 +365,14 @@ All in Sophia, the memory plugin ([hermes-sophia](https://github.com/jbpayton/he
    - *and morning, the one scheduled event (labelled as such so the comparison can attribute it), which carries what's due today.*
    
    *Nothing is noticed in quiet hours; a condition that still holds is noticed when they end. Watching files, processes and pages isn't built yet.*
-4. **Starting conversations,** with the clock, your observed hours, held messages, quiet hours, and the outreach score in the morning note.
+4. ◐ **Starting conversations,** with the clock, your observed hours, held messages, quiet hours, and the outreach score. *Built:*
+   - *Outreach (off by default; quiet hours and a daily limit when on), with held messages delivered when allowed and you're around.*
+   - *Your rhythm in the standing view (usual start of day, usual gap between conversations).*
+   - *The outreach score:*
+     - *after a sent message, your next message within 12 hours is a reply;*
+     - *"not now" only when a short message is exactly one of a fixed list (no model judges it, so it's reproducible);*
+     - *no message within 12 hours is silence.*
+   - *Each sent message records its kind and the reply delay. Nothing changes until 50 messages have been sent; 50 sent, not 50 responses, so silence can't hold calibration back forever. The score is shown in the standing view and the report. The companion never writes it into Sophia's memory; if it's worth keeping, the agent keeps it as a thought. What the score will change after 50 is still to decide.*
 5. **Goals and interests,** with their origins and credit.
 6. **The comparison** above, with its controls.
 

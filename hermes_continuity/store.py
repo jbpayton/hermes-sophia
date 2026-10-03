@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS frames(id INTEGER PRIMARY KEY AUTOINCREMENT, ts REAL,
 CREATE TABLE IF NOT EXISTS quiet(id INTEGER PRIMARY KEY AUTOINCREMENT, ts REAL, reason TEXT, since REAL, steps INT,
   silent INT, held INT, ms INT);
 CREATE TABLE IF NOT EXISTS percepts(id INTEGER PRIMARY KEY AUTOINCREMENT, ts REAL, kind TEXT, text TEXT);
+CREATE TABLE IF NOT EXISTS outreach(id INTEGER PRIMARY KEY AUTOINCREMENT, sent REAL, kind TEXT, text TEXT, step_id INT,
+  response TEXT, gap_s REAL, response_text TEXT, settled REAL);
 """
 
 # The working state: short-term memory. Everything the standing view shows comes from here or the tables above.

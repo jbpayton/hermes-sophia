@@ -507,3 +507,39 @@ def test_fill_is_measured_against_the_real_prompt(tmp_path):
     from hermes_continuity.report import build
     rep = build(c.store.path, c.cfg, user="Joey", now=NOON)
     assert rep["frames"]["mean_fill"] == pytest.approx((f["chars"] / 4) / 20000, abs=1e-4)
+
+
+# ------------------------------------------------------------- outreach credit
+def test_not_now_is_a_short_whole_message_never_a_substring():
+    from hermes_continuity.loop import answer_kind
+    assert answer_kind("Not now.") == "not now" and answer_kind("later!") == "not now" and answer_kind("Stop") == "not now"
+    assert answer_kind("Later I'm bringing the camera") == "reply"
+    assert answer_kind("no thanks, but tell me more about the dog parks tomorrow") == "reply"
+
+
+def test_how_its_reaching_out_is_received(tmp_path):
+    clock = Clock(NOON)
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory(), outreach=True, quiet_hours="23:59-23:59")
+    user_turn(c)
+    c.tick()
+    assert own_turn(c, sent[-1], reply="Joey, want me to look up Spokane dog parks?") is None      # sent
+    o = c.store.one("SELECT * FROM outreach")
+    assert o["kind"] == "association" and o["response"] is None
+    clock.t += 1200
+    user_turn(c, text="Yes please, the ones near the river.")
+    o = c.store.one("SELECT * FROM outreach")
+    assert o["response"] == "reply" and o["gap_s"] == 1200
+    clock.t += 30
+    c.tick()
+    assert own_turn(c, sent[-1], reply="Also, the balcony could fit a herb garden.") is None
+    clock.t += 13 * 3600
+    c.tick()                                                           # nothing within 12 hours: silence
+    rows = [r["response"] for r in c.store.q("SELECT response FROM outreach ORDER BY id")]
+    assert rows == ["reply", "silence"]
+    score = c.outreach_score()
+    assert score["sent"] == 2 and not score["calibrated"] and score["median_reply_gap_s"] == 1200
+    frame = user_turn(c, text="not now")["context"]
+    assert "→ 2 sent: 1 replied, 0 not now, 1 silence" in frame and "(2 of 50)" in frame     # old → new
+    from hermes_continuity.report import build
+    rep = build(c.store.path, c.cfg, user="Joey", now=clock.t)
+    assert rep["outreach"]["by_kind"]["association"]["sent"] == 2 and rep["outreach"]["by_kind"]["association"]["reply_gaps_min"] == [20]

@@ -46,11 +46,32 @@ def clock(ts: float) -> str:
     return dt.datetime.fromtimestamp(ts).strftime("%H:%M")
 
 
-def scene(st: Dict[str, Any], now: float, user: str, held: List[str], queued: int) -> Dict[str, Tuple[Any, str]]:
+def _hours(s: float) -> str:
+    h = s / 3600
+    return f"{round(h * 60)} min" if h < 1 else f"{round(h)} h" if h < 36 else f"{round(h / 24)} days"
+
+
+def outreach_line(score: Dict[str, Any]) -> str:
+    if not score or not score.get("sent"):
+        return f"none sent yet (calibrates after {score.get('needed', 50) if score else 50})"
+    gap = f", median reply after {_hours(score['median_reply_gap_s'])}" if score.get("median_reply_gap_s") else ""
+    cal = "calibrated" if score["calibrated"] else f"not enough to act on yet ({score['sent']} of {score['needed']})"
+    waiting = f", {score['waiting']} waiting" if score.get("waiting") else ""
+    return (f"{score['sent']} sent: {score['reply']} replied, {score['not now']} not now, {score['silence']} silence"
+            f"{waiting}{gap}; {cal}")
+
+
+def scene(st: Dict[str, Any], now: float, user: str, held: List[str], queued: int,
+          outreach: Dict[str, Any] = None) -> Dict[str, Tuple[Any, str]]:
     """field -> (value, source). Values are short strings or lists of short strings."""
     out: Dict[str, Tuple[Any, str]] = {}
     out[user] = (f"last wrote {ago(now - st['last_user_ts'])}" if st.get("last_user_ts") else "hasn't written yet",
                  PERCEIVED)
+    s = st.get("sensors") or {}
+    if s.get("usual_gap") or s.get("morning_at"):
+        bits = [f"usually starts around {s['morning_at']}" if s.get("morning_at") else "",
+                f"about {_hours(s['usual_gap'])} between conversations" if s.get("usual_gap") else ""]
+        out[f"{user}'s rhythm"] = ("; ".join(b for b in bits if b), PERCEIVED)
     jobs = [f"{j['text']} ({ago(now - j['ts'])})" for j in st.get("jobs", [])[-3:]]
     if jobs:
         out["finished jobs"] = (jobs, PERCEIVED)
@@ -62,6 +83,8 @@ def scene(st: Dict[str, Any], now: float, user: str, held: List[str], queued: in
              for c in st.get("came_to_mind", [])[-3:]]
     out["came to mind lately"] = (minds or ["nothing"], REMEMBERED)
     out[f"held for {user}"] = ([f"“{h[:100]}”" for h in held[:3]] or ["nothing"], OWN)
+    if outreach is not None:
+        out["your reaching out"] = (outreach_line(outreach), PERCEIVED)
     e = float(st.get("energy") or 0.0)
     level = "rested" if e < 0.34 else "low" if e < 1.0 else "moderate" if e < 2.0 else "high"
     out["energy"] = (f"{level} ({e:.1f}), {queued} thing{'s' if queued != 1 else ''} waiting to come to mind", PERCEIVED)

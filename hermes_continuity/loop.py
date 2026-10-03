@@ -35,6 +35,13 @@ _NOTICE = re.compile(r"\s*\[(?:IMPORTANT: (?!The user has invoked the )|SYSTEM\b
                      r"Background process \S+ heartbeat|Session was just handed off\b)")
 _JOB = re.compile(r"Background process (\S+) ([^\n\]]{0,90})")
 _SILENT = {"[SILENT]", "NO_REPLY"}
+# How the user answers outreach. Model-free on purpose, so the signal is reproducible: "not now" only when the whole
+# (short) message is one of these; any other message within the window is a reply; none is silence.
+NOT_NOW = {"not now", "later", "stop", "no thanks", "not today", "busy", "no", "nope", "maybe later", "another time",
+           "not right now", "please stop", "stop messaging me", "leave me alone", "not interested", "no thank you",
+           "im busy", "i'm busy", "talk later", "later please", "not now please"}
+REPLY_WINDOW_S = 12 * 3600
+CALIBRATE_AFTER = 50                 # messages sent, not responses: silence must not hold calibration back forever
 NOT_OURS = {"subagent", "cron"}
 AROUND_S = 2 * 3600                # the user counts as around this long after they last wrote
 OWN_TURN_START_S = 180             # a turn it started that hasn't begun after this long didn't happen
@@ -71,6 +78,13 @@ def parse_by(spec: str, now: float) -> Optional[float]:
         return dt.datetime.fromisoformat(spec).timestamp()
     except ValueError:
         return None
+
+
+def answer_kind(message: str) -> str:
+    """'not now' for a short message that is one of NOT_NOW as a whole, else 'reply'."""
+    m = re.sub(r"[^\w\s']", " ", (message or "").lower())
+    m = " ".join(m.split())
+    return "not now" if len(m.split()) <= 5 and m in NOT_NOW else "reply"
 
 
 def is_silent(text: str) -> bool:
@@ -138,10 +152,20 @@ class Continuity:
         return True, ""
 
     # ------------------------------------------------------- the standing view
+    def outreach_score(self) -> Dict[str, Any]:
+        """How its reaching out has been received: counts by answer, and whether there's enough to act on yet."""
+        rows = self.store.q("SELECT response, gap_s FROM outreach")
+        sent = len(rows)
+        counts = {k: sum(1 for r in rows if r["response"] == k) for k in ("reply", "not now", "silence")}
+        counts["waiting"] = sum(1 for r in rows if r["response"] is None)
+        gaps = sorted(r["gap_s"] for r in rows if r["response"] == "reply" and r["gap_s"] is not None)
+        return {"sent": sent, **counts, "median_reply_gap_s": gaps[len(gaps) // 2] if gaps else None,
+                "calibrated": sent >= CALIBRATE_AFTER, "needed": CALIBRATE_AFTER}
+
     def frame(self, st: Dict[str, Any], now: float, force_full: bool = False, turn: Optional[Dict[str, Any]] = None) -> str:
         held = [r["text"] for r in self.store.q("SELECT text FROM outbox WHERE status='held' ORDER BY id")]
         queued = len(self.store.queued())
-        sc = V.scene(st, now, self.user_name, held, queued)
+        sc = V.scene(st, now, self.user_name, held, queued, self.outreach_score())
         full = force_full or not st.get("last_scene") or st.get("turns_since_full", 0) >= self.cfg["full_frame_every"] - 1
         if full:
             text, kind = V.render_full(sc, now), "full"
@@ -180,6 +204,10 @@ class Continuity:
                 st["last_user_ts"] = now
                 self._energize(st, now)
                 self._percept("message", msg, now)
+                for o in self.store.q("SELECT id, sent FROM outreach WHERE response IS NULL AND sent>?",
+                                      (now - REPLY_WINDOW_S,)):          # this message answers what it sent
+                    self.store.x("UPDATE outreach SET response=?, gap_s=?, response_text=?, settled=? WHERE id=?",
+                                 (answer_kind(msg), now - o["sent"], msg[:200], now, o["id"]))
             elif kind == "notice":
                 m = _JOB.search(msg)
                 what = f"background process {m.group(1)} {m.group(2).strip()}" if m else msg.strip()[:100]
@@ -236,6 +264,10 @@ class Continuity:
             if ok:
                 st["outreach_today"] = st.get("outreach_today", 0) + 1
                 t["outcome"] = "sent"
+                item = t.get("item") or {}
+                self.store.x("INSERT INTO outreach(sent, kind, text, step_id) VALUES(?,?,?,?)",
+                             (now, item.get("sensor") or item.get("kind") or "own turn", response_text[:2000],
+                              t.get("step_id")))
                 if deliver_id:
                     self.store.x("UPDATE outbox SET status='sent', settled=? WHERE id=?", (now, deliver_id))
                 self.store.save_state(st)
@@ -425,6 +457,8 @@ class Continuity:
                                    {"sensor": ev["sensor"], "scheduled": bool(ev.get("scheduled"))}, now)
                 self._energize(st, now)
                 self._percept(ev["sensor"], ev["text"], now)
+            self.store.x("""UPDATE outreach SET response='silence', gap_s=?, settled=? WHERE response IS NULL
+                            AND sent<=?""", (REPLY_WINDOW_S, now, now - REPLY_WINDOW_S))
             ttl = self.cfg["item_ttl_minutes"] * 60
             self.store.x("UPDATE queue SET status='faded' WHERE status='queued' AND created<?", (now - ttl,))
             if self.turn is not None:

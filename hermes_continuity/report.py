@@ -82,6 +82,20 @@ def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional
                                 "model_seconds": round((r["ms"] or 0) / 1000, 1), "tokens": r["context_chars"] or 0,
                                 "kind": "healthy" if (r["reason"] or "").startswith(HEALTHY) else "chase"})
 
+        sent_rows = c.execute("SELECT * FROM outreach ORDER BY id").fetchall() if c.execute(
+            "SELECT 1 FROM sqlite_master WHERE name='outreach'").fetchone() else []
+        by_kind: Dict[str, Dict[str, Any]] = {}
+        for o in sent_rows:
+            k = by_kind.setdefault(o["kind"] or "?", {"sent": 0, "reply": 0, "not now": 0, "silence": 0, "waiting": 0,
+                                                       "reply_gaps_min": []})
+            k["sent"] += 1
+            k[o["response"] or "waiting"] += 1
+            if o["response"] == "reply" and o["gap_s"] is not None:
+                k["reply_gaps_min"].append(round(o["gap_s"] / 60))
+        outreach = {"sent": len(sent_rows), "needed": 50, "calibrated": len(sent_rows) >= 50, "by_kind": by_kind,
+                    "recent": [{"sent": _d(o["sent"]), "kind": o["kind"], "response": o["response"] or "waiting",
+                                "gap_min": round(o["gap_s"] / 60) if o["gap_s"] is not None else None,
+                                "text": (o["text"] or "")[:160]} for o in sent_rows[-6:]]}
         frames = c.execute("SELECT * FROM frames ORDER BY id DESC LIMIT 20").fetchall()
         # the frame's share of the real prompt: its characters at about 4 per token, against the prompt tokens the
         # model reported for that turn's first call (system prompt and tools included)
@@ -110,6 +124,7 @@ def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional
                               "came_to_mind": [{"text": m["text"], "at": _d(m["ts"])} for m in st.get("came_to_mind", [])[-5:]]},
             "queue": {"waiting": len(queued), "top": queue},
             "outbox": {"held": held},
+            "outreach": outreach,
             "journal": journal,
             "frames": {"recent": frame_rows, "kinds": dict(kinds), "full_every": cfg["full_frame_every"],
                        "mean_fill": round(sum(fills) / len(fills), 4) if fills else None,
@@ -152,6 +167,13 @@ def text(rep: Dict[str, Any]) -> str:
             bits.append(f"similarity {w.get('similarity')}, recently raised {w.get('recently_raised')}, "
                         f"chain x{w.get('chain_factor')}")
         out.append(f"  - “{it['text'][:100]}”  [{' · '.join(bits)}]")
+    o = rep.get("outreach") or {}
+    out.append(f"\nreaching out: {o.get('sent', 0)} sent" + ("" if o.get("calibrated") else
+                                                             f" (not enough to act on until {o.get('needed', 50)})"))
+    for kind, k in (o.get("by_kind") or {}).items():
+        gaps = ", ".join(f"+{g}m" for g in k["reply_gaps_min"][-5:])
+        out.append(f"  {kind}: {k['sent']} sent, {k['reply']} replied{(' (' + gaps + ')') if gaps else ''}, "
+                   f"{k['not now']} not now, {k['silence']} silence" + (f", {k['waiting']} waiting" if k["waiting"] else ""))
     out.append(f"\nheld for {u['name']}: {len(rep['outbox']['held'])}")
     for m in rep["outbox"]["held"][:5]:
         out.append(f"  #{m['id']} {m['created']} ({m['reason']}): {m['text'][:160]}")
