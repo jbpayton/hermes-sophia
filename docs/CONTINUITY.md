@@ -269,7 +269,7 @@ From reading Hermes v0.21's source:
 | Working state in every turn | Partly | The `pre_llm_call` hook can add context to each turn; the state itself has to be built |
 | A queue and attention | No | To build: a thread in the companion plugin |
 | Messaging you outside a turn | No | The agent has no send tool; a reply to an injected turn is the route. Holding a message during quiet hours still needs a mechanism (to verify: the `transform_llm_output` hook) |
-| Keeping its own turns quiet | Partly | Its final reply can be held (`transform_llm_output` swaps it for `[SILENT]` before delivery). But tool progress, in-between text and thinking still go out during the turn on platforms where they're on, and with streaming on, the reply streams before it's held. Hermes hides all of these only for its own heartbeat turns, because proactive work "would create a user-visible ping before its final result is known". Before the companion runs on Telegram, injected turns need the same treatment (a small Hermes change), or those displays turned off |
+| Keeping its own turns quiet | Partly | Its final reply can be held (`transform_llm_output` swaps it for `[SILENT]` before delivery). But tool progress, in-between text and thinking still go out during the turn on platforms where they're on, and with streaming on, the reply streams before it's held. Hermes hides all of these only for its own heartbeat turns, because proactive work "would create a user-visible ping before its final result is known". Before the companion runs on Telegram, injected turns need the same treatment, or those displays turned off. The change is ready, with a test: [`patches/hermes-quiet-plugin-turns.patch`](https://github.com/jbpayton/hermes-sophia/blob/main/patches/README.md) |
 | Timers that start turns | Yes | cron, `/heartbeat`, `/loop` and `/goal`: what this design avoids |
 
 ## Trying it
@@ -293,9 +293,10 @@ plugins:
         # outreach stays off: anything it writes in its own turns is held
 ```
 
-Then open an interactive chat (`hermes -p <test> chat`) and talk to it. Its own turns start a few seconds after a turn ends, when something came to mind, and stop when its energy runs out.
+Then open an interactive chat (`hermes -p <test> chat`) and talk to it. The Sophia tab's Continuity view shows every profile with a continuity store, so you can watch the test profile from your main dashboard. Its own turns start a few seconds after a turn ends, when something came to mind, and stop when its energy runs out.
 
 ```bash
+hermes -p <test> continuity report     # everything: why it's quiet, today's outcomes, the queue and why each item pulls
 hermes -p <test> continuity status     # energy, what's waiting, today's turns, why it's quiet
 hermes -p <test> continuity journal    # its turns, and each quiet stretch with its reason and cost
 hermes -p <test> continuity outbox     # what it wrote and held for you
@@ -356,7 +357,7 @@ All in Sophia, the memory plugin ([hermes-sophia](https://github.com/jbpayton/he
 
 0. ✓ **Capture keeps what isn't your words apart:** Hermes's notices, `/skill` text, and images (with copies kept, since Hermes deletes its own).
 1. ✓ **Thoughts and association** in Sophia.
-2. ◐ **The loop** as a companion plugin: Sophia's public interface for it, then the queue, working state, the standing view, attention, energy, the visible `[continuity: …]` labels, and silent turns. *Built and tested on the test profile; still to do: the Sophia tab view, and keeping its own turns quiet on Telegram (see [What Hermes provides](#what-hermes-provides)).* Perception from your messages and from finished jobs comes first, because Hermes already provides both. It runs first on a test profile, with a view in the Sophia tab of its queue, energy and working state, so Sophia can watch it before it's ever hers.
+2. ◐ **The loop** as a companion plugin: Sophia's public interface for it, then the queue, working state, the standing view, attention, energy, the visible `[continuity: …]` labels, and silent turns. *Built and tested on the test profile, with `hermes continuity report` and a Continuity view in the Sophia tab to watch it. Keeping its own turns quiet on Telegram needs a small Hermes change, which is ready as a patch but not applied (see [What Hermes provides](#what-hermes-provides)).* Perception from your messages and from finished jobs comes first, because Hermes already provides both. It runs first on a test profile, with a view in the Sophia tab of its queue, energy and working state, so Sophia can watch it before it's ever hers.
 3. **Sensors:** time passing (while you're quiet, overdue expectations, dates arriving, morning) and things it's allowed to watch.
 4. **Starting conversations,** with the clock, your observed hours, held messages, quiet hours, and the outreach score in the morning note.
 5. **Goals and interests,** with their origins and credit.
