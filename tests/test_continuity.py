@@ -709,3 +709,13 @@ def test_each_turn_records_what_it_was_allowed_to_show(tmp_path):
     user_turn(night)
     step = night.tick()
     assert night.store.one("SELECT display FROM steps WHERE id=?", (step,))["display"] == "fully quiet"
+
+
+def test_a_first_start_well_past_morning_doesnt_announce_morning(tmp_path):
+    from hermes_continuity.sensors import check
+    evening = time.mktime((2026, 10, 3, 17, 30, 0, 0, 0, -1))
+    c, _ = make(tmp_path, memory=RhythmMemory(plans=[]), sensors=True)          # usual start 09:00
+    st = c.store.state()
+    assert not [e for e in check(st, evening, c.cfg, c.memory, "Joey") if e["sensor"] == "morning"]
+    tomorrow = evening + 15.6 * 3600                                               # 09:06 the next day
+    assert [e for e in check(st, tomorrow, c.cfg, c.memory, "Joey") if e["sensor"] == "morning"]

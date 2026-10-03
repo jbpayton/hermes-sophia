@@ -85,7 +85,12 @@ def check(st: Dict[str, Any], now: float, cfg: Dict[str, Any], memory: Optional[
         s["usual_gap"] = usual_gap(times)
         s["morning_at"] = cfg["morning"] if cfg.get("morning", "auto") != "auto" else (usual_morning(times, floor) or floor)
 
-    # 4. morning: the one scheduled event, carrying what's due today
+    # 4. morning: the one scheduled event, carrying what's due today. Started for the first time well past morning,
+    # today's morning counts as already seen: "Morning" at 17:30 would be noise.
+    if "morning_day" not in s and _hm(now) >= s.get("morning_at", "08:00"):
+        h, m = (int(x) for x in s.get("morning_at", "08:00").split(":"))
+        if now - dt.datetime.fromtimestamp(now).replace(hour=h, minute=m, second=0, microsecond=0).timestamp() > 3 * 3600:
+            s["morning_day"] = _day(now)
     if s.get("morning_day") != _day(now) and _hm(now) >= s.get("morning_at", "08:00"):
         s["morning_day"] = _day(now)
         due = []
