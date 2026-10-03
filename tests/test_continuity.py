@@ -702,3 +702,10 @@ def test_the_plugin_falls_back_on_an_unpatched_hermes(tmp_path, monkeypatch):
     register(ctx)
     cont = hermes_continuity._RUNNING[str(tmp_path)]
     assert cont.inject("hello", {"interim": False}) and ctx.injected == [("hello", None)]
+
+
+def test_each_turn_records_what_it_was_allowed_to_show(tmp_path):
+    night, _ = make(tmp_path, clock=Clock(NIGHT), memory=FakeMemory())
+    user_turn(night)
+    step = night.tick()
+    assert night.store.one("SELECT display FROM steps WHERE id=?", (step,))["display"] == "fully quiet"

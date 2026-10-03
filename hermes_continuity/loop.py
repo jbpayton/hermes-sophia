@@ -560,7 +560,10 @@ class Continuity:
             step_id = self.store.x("""INSERT INTO steps(ts, kind, item_id, text, energy_before, energy_after)
                                       VALUES(?,?,?,?,?,?)""", (now, item["kind"], item.get("queue_id") or
                                                               item.get("deliver_id"), text, energy, after))
-            if not self.inject(text, self.display_for_turn(now)):
+            display = self.display_for_turn(now)
+            self.store.x("UPDATE steps SET display=? WHERE id=?",
+                         ("fully quiet" if display else "thoughts shown (display.plugin_turns)", step_id))
+            if not self.inject(text, display):
                 self.store.x("UPDATE steps SET outcome='not accepted' WHERE id=?", (step_id,))
                 self.backoff_until = now + 300
                 self._go_quiet(st, "stalled: Hermes didn't accept its turn", now)

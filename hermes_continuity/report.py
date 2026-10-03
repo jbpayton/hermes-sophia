@@ -68,16 +68,19 @@ def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional
         journal: List[Dict[str, Any]] = []
         has_outcomes = "outcomes" in {r[1] for r in c.execute("PRAGMA table_info(steps)")}
         oc_col = "outcomes" if has_outcomes else "NULL"
+        disp_col = "display" if "display" in {r[1] for r in c.execute("PRAGMA table_info(steps)")} else "NULL"
         for r in c.execute(f"""SELECT 'turn' AS what, ts, kind, outcome, reason, ms, text, NULL AS steps, NULL AS silent,
-                                     NULL AS held, context_chars, reply_chars, {oc_col} AS outcomes FROM steps
+                                     NULL AS held, context_chars, reply_chars, {oc_col} AS outcomes,
+                                     {disp_col} AS display FROM steps
                               UNION ALL SELECT 'quiet', ts, NULL, NULL, reason, ms, NULL, steps, silent, held, tokens, NULL,
-                              NULL FROM quiet ORDER BY ts DESC LIMIT 16"""):
+                              NULL, NULL FROM quiet ORDER BY ts DESC LIMIT 16"""):
             if r["what"] == "turn":
                 lines = (r["text"] or "").splitlines()
                 journal.append({"what": "turn", "at": _d(r["ts"]), "kind": r["kind"], "outcome": r["outcome"] or "running",
                                 "reason": r["reason"], "seconds": round((r["ms"] or 0) / 1000, 1),
                                 "item": lines[1][:160] if len(lines) > 1 else "", "context_chars": r["context_chars"],
-                                "reply_chars": r["reply_chars"], "led_to": json.loads(r["outcomes"] or "[]")})
+                                "reply_chars": r["reply_chars"], "led_to": json.loads(r["outcomes"] or "[]"),
+                                "display": r["display"]})
             else:
                 journal.append({"what": "quiet", "at": _d(r["ts"]), "reason": r["reason"], "turns": r["steps"],
                                 "silent": r["silent"] or 0, "held": r["held"] or 0,
@@ -203,7 +206,8 @@ def text(rep: Dict[str, Any]) -> str:
         if j["what"] == "turn":
             out.append(f"  {j['at']}  turn  {j['kind']:<11} {j['outcome']:<12} {j['seconds']:>5}s  {j['item'][:80]}"
                        + (f"  [{j['reason']}]" if j["reason"] else "")
-                       + (f"  → {', '.join(j['led_to'])}" if j.get("led_to") else ""))
+                       + (f"  → {', '.join(j['led_to'])}" if j.get("led_to") else "")
+                       + ("  [shown: fully quiet]" if j.get("display") == "fully quiet" else ""))
         else:
             out.append(f"  {j['at']}  quiet [{j['kind']}] {j['reason']} ({j['turns']} turns: {j['silent']} silent, "
                        f"{j['held']} held; {j['model_seconds']}s, {j['tokens']} tokens)")

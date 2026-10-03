@@ -26,6 +26,8 @@ display:
     tool_progress: true     # see the tools it uses, too
 ```
 
+A gateway running in proxy mode (`GATEWAY_PROXY_URL`) gives injected turns the full heartbeat treatment instead: fully quiet, no thoughts shown. That's expected, not a regression (noted by Sophia in review).
+
 A plugin can narrow the policy for one turn (`inject_message(..., display={"interim": False})`), never widen it past your settings. The continuity companion uses this to be fully quiet in quiet hours (or always, with its `show_thoughts: false`). Your own turns, heartbeats, background-process notices and delegation results are unchanged.
 
 **Tested** against Hermes v0.21.4 (`524041b`):
