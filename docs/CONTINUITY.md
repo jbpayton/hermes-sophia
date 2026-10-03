@@ -401,7 +401,9 @@ All in Sophia, the memory plugin ([hermes-sophia](https://github.com/jbpayton/he
    - *it can push back on a goal (a concern with a reason: visible, non-blocking, overridable with `hermes continuity goal-override`), and decline one you set in exactly two cases: outside its tools or permissions, or harmful. Every change carries a reason and is journaled;*
    - *each turn of its own records what it led to (a thought kept, goal progress, tools used): the raw material for interests.*
    
-   *Credit-weighted interests are held until there's data.*
+   *Credit-weighted interests are held until there's data. Goals stay a last resort (Sophia's lean, and ours): a goal never outranks something that genuinely came to mind, so in real use goals mostly show up as quiet idle-time work. A slow goal isn't a bug.*
+
+   *To watch: the agent's own in-between remarks ("Let me search for the continuity tool:") are stored as its lines and can come to mind. If they pile up, the fix belongs in capture, not the queue.*
 6. **The comparison** above, with its controls.
 
 Independent of all this: tables grown on demand from the raw record, for counting and totals, and looking at a kept image again when a later question needs a detail.

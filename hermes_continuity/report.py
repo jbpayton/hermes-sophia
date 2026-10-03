@@ -120,7 +120,9 @@ def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional
             "exists": True, "path": str(path), "now": _d(now), "paused": paused,
             "energy": round(float(st.get("energy") or 0), 2), "step_cost": cfg["step_cost"], "min_pull": cfg["min_pull"],
             "quiet": quiet,
-            "today": {"turns": len(steps_today), "budget": cfg["max_steps_per_day"], "outcomes": dict(outcomes),
+            # the number the budget gate uses (the state's counter), and every turn row since midnight
+            "today": {"turns": st.get("steps_today", 0) if st.get("day") == dt.datetime.fromtimestamp(now).strftime("%Y-%m-%d")
+                      else 0, "rows": len(steps_today), "budget": cfg["max_steps_per_day"], "outcomes": dict(outcomes),
                       "model_seconds": round(sum((r["ms"] or 0) for r in steps_today) / 1000, 1),
                       "tokens": sum((r["tokens"] or 0) for r in steps_today),
                       "outreach_sent": sent_today, "outreach_limit": cfg["max_outreach_per_day"],
@@ -159,7 +161,9 @@ def text(rep: Dict[str, Any]) -> str:
     out.append(f"energy {rep['energy']} (a turn costs {rep['step_cost']})"
                + (f" · quiet: {q['reason']} [{q['kind']}] since {q['since']}" if q["reason"] else " · active"))
     oc = ", ".join(f"{n} {k}" for k, n in sorted(t["outcomes"].items(), key=lambda kv: -kv[1])) or "none"
-    out.append(f"today: {t['turns']}/{t['budget']} turns of its own ({oc}); {t['model_seconds']}s of model time, "
+    rows = f", {t['rows']} turn rows in the journal" if t.get("rows", t["turns"]) != t["turns"] else ""
+    out.append(f"today: {t['turns']}/{t['budget']} turns of its own counted against the budget{rows} ({oc}); "
+               f"{t['model_seconds']}s of model time, "
                f"{t['tokens']} tokens; "
                f"outreach {t['outreach']}, {t['outreach_sent']}/{t['outreach_limit']} sent, quiet hours {t['quiet_hours']}")
     out.append(f"{u['name']}: " + (f"last wrote {u['ago']} ({u['last_wrote']}), {'around' if u['around'] else 'not around'}"

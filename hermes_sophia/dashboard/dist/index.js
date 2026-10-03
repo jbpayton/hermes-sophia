@@ -1536,7 +1536,8 @@
 
     var today = h(Card, { title: "Today", aside: h("span", { className: "sm-muted" }, t.model_seconds + " s of model time · " + (t.tokens || 0) + " tokens") },
       h("div", { className: "sm-stats" },
-        h("div", { className: "sm-stat" }, h("span", { className: "sm-stat-n" }, t.turns + "/" + t.budget), h("span", { className: "sm-stat-l" }, "turns of its own")),
+        h("div", { className: "sm-stat" }, h("span", { className: "sm-stat-n" }, t.turns + "/" + t.budget),
+          h("span", { className: "sm-stat-l" }, "turns of its own, against the budget" + (t.rows != null && t.rows !== t.turns ? " (" + t.rows + " in the journal)" : ""))),
         outcomes.map(function (k) {
           return h("div", { key: k, className: "sm-stat" }, h("span", { className: cx("sm-stat-n", OUTCOME_TONE[k]) }, t.outcomes[k]),
             h("span", { className: "sm-stat-l" }, k));
