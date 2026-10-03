@@ -652,3 +652,19 @@ def test_association_skips_the_live_conversation_and_logged_tool_calls(engine):
     items = mem.associate("wide-angle lens", k=8, record=False, session_id="live")
     texts = " | ".join(it["text"] for it in items)
     assert "rented last year" in texts and "keep working" not in texts and "terminal:" not in texts
+
+
+def test_outcomes_are_read_through_the_deferred_tool_bridge(tmp_path):
+    c, sent = make(tmp_path, memory=FakeMemory())
+    user_turn(c)
+    step = c.tick()
+    c.on_turn_start(session_id="s", user_message=sent[-1], conversation_history=[], platform="telegram")
+    history = [{"role": "user", "content": sent[-1]},
+               {"role": "assistant", "content": "", "tool_calls": [
+                   {"id": "1", "function": {"name": "tool_search", "arguments": "{\"queries\": [\"goal\"]}"}},
+                   {"id": "2", "function": {"name": "tool_call", "arguments": json.dumps({"calls": [
+                       {"name": "continuity_goal", "arguments": {"action": "progress", "id": 1, "note": "x"}}]})}}]}]
+    c.on_turn_done(platform="telegram", conversation_history=history)
+    c.on_reply(response_text="[SILENT]", session_id="s", platform="telegram")
+    c.on_turn_end(session_id="s", platform="telegram")
+    assert json.loads(c.store.one("SELECT outcomes FROM steps WHERE id=?", (step,))["outcomes"]) == ["goal progress"]

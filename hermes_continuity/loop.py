@@ -260,14 +260,23 @@ class Continuity:
         msgs = list(conversation_history or [])
         last_user = max((i for i, m in enumerate(msgs) if m.get("role") == "user"), default=-1)
         outcomes = []
+
+        def _args(raw: Any) -> Dict[str, Any]:
+            try:
+                return json.loads(raw or "{}") if isinstance(raw, str) else (raw or {})
+            except ValueError:
+                return {}
+        calls = []
         for m in msgs[last_user + 1:]:
             for tc in m.get("tool_calls") or []:
                 fn = tc.get("function") or tc
-                name = fn.get("name") or ""
-                try:
-                    args = json.loads(fn.get("arguments") or "{}") if isinstance(fn.get("arguments"), str) else (fn.get("arguments") or {})
-                except ValueError:
-                    args = {}
+                name, args = fn.get("name") or "", _args(fn.get("arguments"))
+                if name == "tool_call":               # Hermes's bridge to deferred tools (plugin tools are deferred)
+                    calls += [(c.get("name") or "", _args(c.get("arguments"))) for c in args.get("calls") or []
+                              if isinstance(c, dict)]
+                elif name not in ("tool_search", "tool_describe"):
+                    calls.append((name, args))
+        for name, args in calls:
                 if name == "sophia_thought":
                     outcomes.append("thought kept")
                 elif name == "continuity_goal":

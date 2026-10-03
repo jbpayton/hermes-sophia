@@ -294,8 +294,10 @@ plugins:
 platform_toolsets:
   cli:                         # the platform it runs on
     - hermes-cli
-    - continuity               # its tools (continuity_update, continuity_goal) load directly
+    - continuity               # enables its tools (continuity_update, continuity_goal)
 ```
+
+Hermes keeps plugin tools in its tool-search catalog rather than the tool list, so the agent calls them through `tool_search` and `tool_call`. The guide tells it so. Turning tool search off (`tools.tool_search.enabled: off`) loads every tool directly, at a cost in prompt size.
 
 Then open an interactive chat (`hermes -p <test> chat`) and talk to it. The Sophia tab's Continuity view shows every profile with a continuity store, so you can watch the test profile from your main dashboard. Its own turns start a few seconds after a turn ends, when something came to mind, and stop when its energy runs out.
 
@@ -307,6 +309,16 @@ hermes -p <test> continuity outbox     # what it wrote and held for you
 hermes -p <test> continuity view       # the standing view as it would look now
 hermes -p <test> continuity pause      # stop its own turns (state kept); resume undoes it
 ```
+
+**The idle run (2026-10-03), with nothing typed:**
+1. The morning event gave energy.
+2. Its turn ended silent ("Nothing in memory is due today").
+3. With nothing queued, goal #1 took a turn of its own, labelled "a goal of yours".
+4. The agent worked on its next step, checking prices, and found no shop prices available to it.
+5. It recorded progress and changed the next step to "Wait for Joey to share budget and current lens kit".
+6. Its note to you was held, because outreach was off. The goal's six-hour cooldown started.
+
+Before that run, the goal path hadn't been exercised. In the goal run, the research had happened inside an association turn. Sophia caught it.
 
 **The goal run (2026-10-03).** Asked to "keep working on finding a good wide-angle lens… make it a goal", the agent set goal #1 (yours, with a first step) and then, in a turn of its own, searched the web, read a lens guide in the browser and recorded progress on it. That run also showed three fixes, now in:
 - association raised lines from the live conversation and a logged tool call;
