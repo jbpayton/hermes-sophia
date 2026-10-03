@@ -62,7 +62,7 @@ def outreach_line(score: Dict[str, Any]) -> str:
 
 
 def scene(st: Dict[str, Any], now: float, user: str, held: List[str], queued: int,
-          outreach: Dict[str, Any] = None) -> Dict[str, Tuple[Any, str]]:
+          outreach: Dict[str, Any] = None, goals: List[Any] = None) -> Dict[str, Tuple[Any, str]]:
     """field -> (value, source). Values are short strings or lists of short strings."""
     out: Dict[str, Tuple[Any, str]] = {}
     out[user] = (f"last wrote {ago(now - st['last_user_ts'])}" if st.get("last_user_ts") else "hasn't written yet",
@@ -77,6 +77,17 @@ def scene(st: Dict[str, Any], now: float, user: str, held: List[str], queued: in
         out["finished jobs"] = (jobs, PERCEIVED)
     out["focus"] = (st.get("focus") or "nothing in particular", OWN)
     out["open threads"] = ([t["text"] for t in st.get("threads", [])[-5:]] or ["none"], OWN)
+    if goals is not None:
+        shown = []
+        for g in goals:
+            who = user if g["origin"] == "user" else "yours"
+            if g["status"] == "declined":
+                shown.append(f"#{g['id']} {g['text']} (declined: {g['decline_reason']})")
+                continue
+            last = f"last progress {ago(now - g['last_progress'])}" if g["last_progress"] else "no progress yet"
+            shown.append(f"#{g['id']} {g['text']} ({who}; next: {g['next_step'] or '-'}; {last})"
+                         + (f" \u2691 concern: {g['pushback']}" if g["pushback"] else ""))
+        out["goals"] = (shown or ["none"], OWN)
     out["waiting for"] = ([w["text"] + (f" (by {clock(w['by'])})" if w.get("by") else "")
                            for w in st.get("waiting_for", [])[-5:]] or ["nothing"], OWN)
     minds = [f"“{c['text'][:120]}”{c.get('label', '')} ({ago(now - c['ts'])})"

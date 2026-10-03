@@ -28,5 +28,6 @@ config_schema:
   sensors: {type: bool, default: true, description: "Notice time passing: quiet for longer than usual, overdue, dates passing, morning"}
   morning: {type: str, default: "auto", description: "When the day starts for the morning event: HH:MM, or auto (the user's usual first message)"}
   noticed_pull: {type: float, default: 1.0, description: "How hard something noticed pulls (above what merely comes to mind)"}
+  goals: {type: bool, default: true, description: "Let an active goal take a turn of its own when nothing else is waiting (goals never add energy)"}
   full_frame_every: {type: int, default: 6, description: "A full standing view every this many turns (and after each compaction); changes in between"}
   sophia_path: {type: str, default: "", description: "Sophia's package directory (empty = next to this plugin, then HERMES_HOME/plugins/sophia)"}

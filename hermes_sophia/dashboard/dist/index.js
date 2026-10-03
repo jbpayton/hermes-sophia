@@ -1506,6 +1506,20 @@
           h("span", { className: "sm-now-sub" }, t.outreach_sent + " of " + t.outreach_limit + " sent today · quiet hours " + t.quiet_hours),
           r.outreach && h("span", { className: "sm-now-sub" }, r.outreach.sent + " sent in all" +
             (r.outreach.calibrated ? "" : " · not enough to act on until " + r.outreach.needed)))));
+    var gl = (r.goals && r.goals.list) || [];
+    var goals = h(Card, { title: "Goals", count: gl.filter(function (g) { return g.status === "active"; }).length, plainCount: true },
+      gl.length ? h("div", { className: "sm-lines" }, gl.map(function (g) {
+        return h("div", { key: g.id, className: "sm-line-item" },
+          h("div", { className: "sm-q-title" }, "#" + g.id + " " + g.text),
+          h("div", { className: "sm-chips-row" },
+            h("span", { className: cx("sm-badge", g.status === "active" ? "sm-ok" : g.status === "declined" ? "sm-warn" : "") }, g.status),
+            h("span", { className: "sm-chip" }, g.origin === "user" ? "set by " + u.name : "its own"),
+            g.next_step && h("span", { className: "sm-chip" }, "next: " + trunc(g.next_step, 80)),
+            h("span", { className: "sm-tag" }, g.last_progress ? "last progress " + g.last_progress : "no progress yet"),
+            g.grew_from && h("span", { className: "sm-tag", title: g.grew_from }, "grew from “" + trunc(g.grew_from, 60) + "”")),
+          g.pushback && h("div", { className: "sm-hint" }, "⚑ Its concern: " + g.pushback + " (hermes continuity goal-override " + g.id + " overrides it)"),
+          g.declined && h("div", { className: "sm-hint" }, "Declined: " + g.declined));
+      })) : h(Empty, null, "No goals yet. A goal of its own must point at what it grew from; without that it stays a thought."));
     var okinds = r.outreach ? Object.keys(r.outreach.by_kind || {}) : [];
     var reach = okinds.length ? h(Card, { title: "How its reaching out was received" },
       h("div", { className: "sm-lines" }, okinds.map(function (k) {
@@ -1572,7 +1586,8 @@
         return h("div", { key: i, className: "sm-feed-row" },
           h("span", { className: cx("sm-badge", OUTCOME_TONE[j.outcome]) }, j.outcome),
           h("span", { className: "sm-feed-t" }, j.at.slice(11)),
-          h("span", null, trunc(j.item, 140) + " · " + j.seconds + " s" + (j.reason ? " · " + j.reason : "")));
+          h("span", null, trunc(j.item, 140) + " · " + j.seconds + " s" + (j.reason ? " · " + j.reason : "") +
+            (j.led_to && j.led_to.length ? " → " + j.led_to.join(", ") : "")));
       })) : h(Empty, null, "No turns of its own yet."));
 
     var f = r.frames;
@@ -1589,7 +1604,7 @@
       f.latest_full && f.latest_full !== f.latest && h("details", null, h("summary", { className: "sm-muted" }, "Latest full frame"),
         h("pre", { className: "sm-mono sm-frame" }, f.latest_full)));
 
-    return h("div", { className: "sm-overview" }, now, today, reach, queue, state, outbox, journal, frames);
+    return h("div", { className: "sm-overview" }, now, today, reach, goals, queue, state, outbox, journal, frames);
   }
 
   function SophiaTab() {

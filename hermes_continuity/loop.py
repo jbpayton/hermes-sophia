@@ -24,6 +24,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from . import sensors as SENSE
 from . import view as V
+from .goals import Goals
 from .config import in_quiet_hours
 from .store import Store
 
@@ -113,6 +114,11 @@ class Continuity:
         self._wake = threading.Event()
         self._stop = threading.Event()
         self._thread: Optional[threading.Thread] = None
+        self.goals = Goals(store, memory, clock)
+
+    def set_memory(self, memory: Any) -> None:
+        self.memory = memory
+        self.goals.memory = memory
 
     # ------------------------------------------------------------ helpers
     def ours(self, platform: str) -> bool:
@@ -165,7 +171,9 @@ class Continuity:
     def frame(self, st: Dict[str, Any], now: float, force_full: bool = False, turn: Optional[Dict[str, Any]] = None) -> str:
         held = [r["text"] for r in self.store.q("SELECT text FROM outbox WHERE status='held' ORDER BY id")]
         queued = len(self.store.queued())
-        sc = V.scene(st, now, self.user_name, held, queued, self.outreach_score())
+        sc = V.scene(st, now, self.user_name, held, queued, self.outreach_score(), self.goals.store.q(
+            "SELECT * FROM goals WHERE status IN ('active','declined') ORDER BY (status='active') DESC, (origin='user') "
+            "DESC, COALESCE(last_progress, created) DESC LIMIT 5"))
         full = force_full or not st.get("last_scene") or st.get("turns_since_full", 0) >= self.cfg["full_frame_every"] - 1
         if full:
             text, kind = V.render_full(sc, now), "full"
@@ -242,6 +250,35 @@ class Continuity:
                 if t.get("frame_id"):
                     self.store.x("UPDATE frames SET prompt_tokens=? WHERE id=?", (prompt, t["frame_id"]))
 
+    def on_turn_done(self, platform: str = "", conversation_history=None, **kw) -> None:
+        """post_llm_call: what the turn led to, read from its tool calls (a thought kept, goal progress, ...). Recorded
+        per turn of its own: the raw material for interests, not yet steering anything."""
+        if not self.ours(platform):
+            return
+        msgs = list(conversation_history or [])
+        last_user = max((i for i, m in enumerate(msgs) if m.get("role") == "user"), default=-1)
+        outcomes = []
+        for m in msgs[last_user + 1:]:
+            for tc in m.get("tool_calls") or []:
+                fn = tc.get("function") or tc
+                name = fn.get("name") or ""
+                try:
+                    args = json.loads(fn.get("arguments") or "{}") if isinstance(fn.get("arguments"), str) else (fn.get("arguments") or {})
+                except ValueError:
+                    args = {}
+                if name == "sophia_thought":
+                    outcomes.append("thought kept")
+                elif name == "continuity_goal":
+                    act = args.get("action")
+                    outcomes.append({"progress": "goal progress", "add": "goal added"}.get(act, f"goal {act}"))
+                elif name == "continuity_update":
+                    outcomes.append("working state updated")
+                elif name and not name.startswith("sophia_"):
+                    outcomes.append(f"used {name}")
+        with self.lock:
+            if self.turn is not None:
+                self.turn["outcomes"] = outcomes
+
     def on_reply(self, response_text: str = "", session_id: str = "", platform: str = "", **kw) -> Optional[str]:
         """transform_llm_output: a reply from one of its own turns is held unless outreach is allowed."""
         if not self.ours(platform):
@@ -294,9 +331,10 @@ class Continuity:
             if t["kind"] == "continuity" and t.get("step_id"):
                 outcome = t.get("outcome") or ("interrupted" if interrupted else "silent" if completed else "failed")
                 self.store.x("""UPDATE steps SET ended=?, ms=?, outcome=?, reason=COALESCE(?, reason), reply_chars=?,
-                                prompt_tokens=?, tokens=? WHERE id=?""",
+                                prompt_tokens=?, tokens=?, outcomes=? WHERE id=?""",
                              (now, int((now - t["started"]) * 1000), outcome, t.get("let_go"), len(t.get("reply") or ""),
-                              t.get("prompt_tokens"), t.get("tokens"), t["step_id"]))
+                              t.get("prompt_tokens"), t.get("tokens"), json.dumps(t.get("outcomes") or []),
+                              t["step_id"]))
             depth = int((t.get("item") or {}).get("depth", 0)) + 1 if t["kind"] == "continuity" else 1
             cue = f"{t.get('message', '')} {t.get('reply', '')}".replace(LABEL, " ").strip()
             if cue and not (t["kind"] == "continuity" and t.get("outcome") == "silent" and t.get("let_go")):
@@ -398,7 +436,13 @@ class Continuity:
             return {"kind": "deliver", "text": held["text"], "deliver_id": held["id"], "depth": 0}, ""
         best = next((r for r in self.store.queued() if r["salience"] >= self.cfg["min_pull"]), None)
         if best is None:
-            return None, "ran its course: nothing came to mind strongly enough"
+            # last resort: a goal, with energy something real provided (goals never add energy)
+            goal = self.goals.next_for_turn(now, self.cfg["min_pull"]) if self.cfg.get("goals", True) else None
+            if goal is None:
+                return None, "ran its course: nothing came to mind strongly enough"
+            if energy < cost:
+                return None, "ran its course: no energy left for turns of its own"
+            return goal, ""
         if energy < cost:
             return None, "ran its course: no energy left for turns of its own"
         d = json.loads(best["data"] or "{}")
@@ -408,6 +452,17 @@ class Continuity:
 
     def _render(self, item: Dict[str, Any]) -> str:
         u = self.user_name
+        if item["kind"] == "goal":
+            who = u if item["origin"] == "user" else "you"
+            last = V.ago(self.clock() - item["last_progress"]) if item.get("last_progress") else "none yet"
+            lines = [f"{LABEL} a goal of yours]", f"Goal #{item['goal_id']}: {item['text']} (set by {who}"
+                     + (f"; grew from \u201c{item['grew_from_text'][:120]}\u201d" if item.get("grew_from_text") else "") + ")",
+                     f"Next step: {item['next_step']}", f"Last progress: {last}"]
+            if item.get("pushback"):
+                lines.append(f"Your concern about it: {item['pushback']}")
+            lines.append("(For you: work on the next step, record progress with continuity_goal, revise or drop it with "
+                         "a reason, push back if you have a concern, or let it go for now: reply [SILENT] to say nothing.)")
+            return "\n".join(lines)
         if item["kind"] == "noticed":
             return (f"{LABEL} noticed]\n{item['text']}\n(For you: this is your own process noticing something, not "
                     f"{u}. Do what seems worthwhile, or let it go: reply [SILENT] to say nothing.)")
@@ -494,6 +549,8 @@ class Continuity:
             st["quiet_reason"] = ""
             if item.get("queue_id"):
                 self.store.x("UPDATE queue SET status='taken', taken=? WHERE id=?", (now, item["queue_id"]))
+            if item["kind"] == "goal":
+                self.goals.took_turn(item["goal_id"], now)
             if item["kind"] == "association":
                 st["came_to_mind"] = (st.get("came_to_mind", []) + [{"text": item["text"], "ts": now,
                                                                      "label": item.get("label", "")}])[-6:]

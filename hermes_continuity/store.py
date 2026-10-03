@@ -68,7 +68,7 @@ class Store:
             self.conn.executescript(SCHEMA)
             for table, cols in (("frames", (("turn_kind", "TEXT"), ("step_id", "INT"), ("context_chars", "INT"),
                                             ("prompt_tokens", "INT"))),
-                                ("steps", (("prompt_tokens", "INT"), ("tokens", "INT"))),
+                                ("steps", (("prompt_tokens", "INT"), ("tokens", "INT"), ("outcomes", "TEXT"))),
                                 ("quiet", (("tokens", "INT"),))):
                 have = {r[1] for r in self.conn.execute(f"PRAGMA table_info({table})")}
                 for col, typ in cols:

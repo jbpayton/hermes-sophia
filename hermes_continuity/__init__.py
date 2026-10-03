@@ -44,6 +44,7 @@ def guide(user: str, quiet_hours: str) -> str:
             f"You keep going between messages. Besides {user}'s messages, some turns come from your own continuing "
             f"process. They always start with \"[continuity: …]\" and are never {user}'s words:\n"
             "- \"something came to mind\": a memory raised by what happened lately;\n"
+            "- \"a goal of yours\": one of your goals, when nothing else is waiting (continuity_goal keeps them);\n"
             "- \"noticed\": time passing, noticed: quiet for longer than usual, something overdue, a planned date gone "
             "by, or the morning (the one scheduled moment of the day);\n"
             f"- \"a message you held for {user}\": something you wrote earlier that waited for a good time.\n"
@@ -126,6 +127,10 @@ def register(ctx) -> None:
     ctx.register_hook("transform_llm_output", cont.on_reply)
     ctx.register_hook("on_session_end", cont.on_turn_end)
     ctx.register_hook("post_api_request", cont.on_api)
+    ctx.register_hook("post_llm_call", cont.on_turn_done)
+    from .goals import SCHEMA_TOOL as GOAL_SCHEMA
+    ctx.register_tool(name="continuity_goal", toolset="continuity", schema=GOAL_SCHEMA,
+                      handler=lambda params, **kw: json.dumps(cont.goals.handle(params or {}), default=str))
     ctx.register_tool(name="continuity_update", toolset="continuity", schema=UPDATE_SCHEMA,
                       handler=lambda params, **kw: json.dumps(cont.update(params or {}), default=str))
     try:
@@ -143,7 +148,7 @@ def register(ctx) -> None:
     if cfg["enabled"] and should_run() and cont._thread is None:
         def boot():
             try:
-                cont.memory = sophia_module("api", cfg["sophia_path"]).Memory(str(home))
+                cont.set_memory(sophia_module("api", cfg["sophia_path"]).Memory(str(home)))
                 cont.user_name = cont.memory.user_name
             except Exception as ex:
                 logger.warning("continuity: running without Sophia (nothing will come to mind): %s", ex)

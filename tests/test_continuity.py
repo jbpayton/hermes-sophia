@@ -315,8 +315,9 @@ def test_register_wires_hooks_tool_guide_and_cli_without_starting_a_loop(tmp_pat
     hermes_continuity._RUNNING.clear()
     ctx = FakeCtx({"enabled": True, "platform": "telegram"})
     register(ctx)
-    assert set(ctx.hooks) == {"pre_llm_call", "transform_llm_output", "on_session_end", "post_api_request"}
-    assert "continuity_update" in ctx.tools and "continuity" in ctx.cli
+    assert set(ctx.hooks) == {"pre_llm_call", "transform_llm_output", "on_session_end", "post_api_request",
+                              "post_llm_call"}
+    assert {"continuity_update", "continuity_goal"} <= set(ctx.tools) and "continuity" in ctx.cli
     g = ctx.sections["continuity.guide"]
     assert "[continuity: …]" in g and "[SILENT]" in g and "never" in g
     assert not any(w in g.lower() for w in ("deleted", "punish", "or else"))       # no fear as motivation
@@ -543,3 +544,87 @@ def test_how_its_reaching_out_is_received(tmp_path):
     from hermes_continuity.report import build
     rep = build(c.store.path, c.cfg, user="Joey", now=clock.t)
     assert rep["outreach"]["by_kind"]["association"]["sent"] == 2 and rep["outreach"]["by_kind"]["association"]["reply_gaps_min"] == [20]
+
+
+# ---------------------------------------------------------------- goals
+def test_a_goal_of_its_own_must_point_at_what_it_grew_from(tmp_path):
+    c, _ = make(tmp_path)
+    out = c.goals.handle({"action": "add", "text": "get better at camera advice"})
+    assert "error" in out and "thought" in out["error"]
+    ok = c.goals.handle({"action": "add", "text": "Learn Joey's lens kit", "grew_from": "my lens answer missed what memory held",
+                         "next_step": "list the lenses Joey has mentioned"})
+    assert ok["ok"]
+    assert c.goals.handle({"action": "add", "text": "Plan the Yosemite shots", "origin": "user"})["ok"]     # Joey's: no anchor needed
+    g = c.goals.get(ok["id"])
+    assert g["origin"] == "self" and "missed" in g["grew_from_text"]
+    assert c.store.one("SELECT kind FROM goal_events WHERE goal_id=?", (ok["id"],))["kind"] == "added"
+
+
+def test_goals_spend_energy_but_never_add_it(tmp_path):
+    clock = Clock(NOON)
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory(items=[]))
+    gid = c.goals.handle({"action": "add", "text": "Find Spokane dog parks", "origin": "user", "next_step": "search the city site"})["id"]
+    assert c.tick() is None and not sent and c.store.state()["energy"] == 0      # no energy: the goal waits
+    user_turn(c)                                                                 # perception provides energy
+    clock.t += 30
+    assert c.tick() and sent[-1].startswith(LABEL + " a goal of yours]") and "Find Spokane dog parks" in sent[-1]
+    assert "set by Joey" in sent[-1] and "Next step: search the city site" in sent[-1]
+    before = c.store.state()["energy"]
+    own_turn(c, sent[-1])
+    assert c.store.state()["energy"] == before                                   # its own turn added nothing
+    clock.t += 30
+    assert c.tick() is None                                                      # cooldown: not taken again right away
+
+
+def test_a_stalled_goal_quietly_loses_its_claim(tmp_path):
+    clock = Clock(NOON)
+    c, _ = make(tmp_path, clock=clock)
+    gid = c.goals.handle({"action": "add", "text": "Sort the move photos", "grew_from": "a thought", "next_step": "x"})["id"]
+    g = c.goals.get(gid)
+    assert c.goals.pull(g, NOON) == pytest.approx(0.6)
+    assert c.goals.pull(g, NOON + 3 * 86400) == pytest.approx(0.3)               # halves every three days
+    assert c.goals.next_for_turn(NOON + 3 * 86400, 0.45) is None
+    c.goals.handle({"action": "progress", "id": gid, "note": "picked the best ten"})
+    clock.t = NOON + 3 * 86400
+    c.goals.handle({"action": "progress", "id": gid, "note": "captioned them"})
+    assert c.goals.pull(c.goals.get(gid), NOON + 3 * 86400) == pytest.approx(0.6)  # progress restores it
+
+
+def test_push_back_is_counsel_and_decline_has_exactly_two_cases(tmp_path):
+    c, _ = make(tmp_path)
+    gid = c.goals.handle({"action": "add", "text": "Message Joey every morning", "origin": "user", "next_step": "x"})["id"]
+    assert "error" in c.goals.handle({"action": "pushback", "id": gid})                       # needs a reason
+    assert c.goals.handle({"action": "pushback", "id": gid, "reason": "daily pings would read as nagging"})["ok"]
+    g = c.goals.get(gid)
+    assert g["status"] == "active" and "nagging" in g["pushback"]                            # non-blocking
+    assert "concern: daily pings" in user_turn(c)["context"]
+    out = c.goals.handle({"action": "decline", "id": gid, "reason": "I don't like it", "case": "boring"})
+    assert "error" in out and "push back" in out["error"]
+    assert c.goals.handle({"action": "decline", "id": gid, "reason": "it would need his email password",
+                           "case": "outside my tools or permissions"})["ok"]
+    assert c.goals.get(gid)["status"] == "declined"
+    own = c.goals.handle({"action": "add", "text": "mine", "grew_from": "a thought"})["id"]
+    assert "error" in c.goals.handle({"action": "decline", "id": own, "reason": "x", "case": "harmful"})  # drop your own
+    assert c.goals.override(gid, "I'll set up a token for it")
+    g = c.goals.get(gid)
+    assert g["status"] == "active" and g["pushback"] is None
+    kinds = [r["kind"] for r in c.store.q("SELECT kind FROM goal_events WHERE goal_id=? ORDER BY id", (gid,))]
+    assert kinds == ["added", "pushback", "declined", "overridden"]
+
+
+def test_what_a_turn_of_its_own_led_to_is_recorded(tmp_path):
+    c, sent = make(tmp_path, memory=FakeMemory())
+    user_turn(c)
+    step = c.tick()
+    c.on_turn_start(session_id="s", user_message=sent[-1], conversation_history=[], platform="telegram")
+    history = [{"role": "user", "content": sent[-1]},
+               {"role": "assistant", "content": "", "tool_calls": [
+                   {"id": "1", "function": {"name": "sophia_thought", "arguments": "{\"thought\": \"x\"}"}},
+                   {"id": "2", "function": {"name": "continuity_goal", "arguments": "{\"action\": \"progress\", \"id\": 1}"}},
+                   {"id": "3", "function": {"name": "web_search", "arguments": "{}"}}]},
+               {"role": "assistant", "content": "[SILENT]"}]
+    c.on_turn_done(platform="telegram", conversation_history=history)
+    c.on_reply(response_text="[SILENT]", session_id="s", platform="telegram")
+    c.on_turn_end(session_id="s", platform="telegram")
+    led = json.loads(c.store.one("SELECT outcomes FROM steps WHERE id=?", (step,))["outcomes"])
+    assert led == ["thought kept", "goal progress", "used web_search"]

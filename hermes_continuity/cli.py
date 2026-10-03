@@ -21,6 +21,11 @@ def setup(sub) -> None:
     p = subs.add_parser("journal", help="Its own turns, and each quiet stretch with its reason and cost")
     p.add_argument("-n", type=int, default=20)
     subs.add_parser("outbox", help="Messages it held for you")
+    subs.add_parser("goals", help="Its goals: who set them, what they grew from, progress, concerns and declines")
+    p = subs.add_parser("goal-override", help="Override its push-back on, or decline of, a goal (the concern stays in "
+                                              "the journal)")
+    p.add_argument("goal_id", type=int)
+    p.add_argument("--note", default="")
     subs.add_parser("pause", help="Stop taking turns of its own (its state is kept)")
     subs.add_parser("resume", help="Let it take turns of its own again")
     sub.set_defaults(func=cmd)
@@ -88,6 +93,21 @@ def cmd(args) -> None:
     elif sub == "outbox":
         for r in store.q("SELECT * FROM outbox ORDER BY id DESC LIMIT 20"):
             print(f"  #{r['id']} {_d(r['created'])} {r['status']:5s} ({r['reason']})  {r['text'][:200]}")
+    elif sub == "goals":
+        from .goals import Goals
+        g = Goals(store)
+        for r in store.q("SELECT * FROM goals ORDER BY (status='active') DESC, id DESC LIMIT 30"):
+            extra = (f"  ⚑ concern: {r['pushback']}" if r["pushback"] else "") + \
+                    (f"  declined: {r['decline_reason']}" if r["decline_reason"] else "")
+            print(f"  #{r['id']} [{r['status']}] ({'yours' if r['origin'] == 'user' else 'its own'}) {r['text']}"
+                  f"  next: {r['next_step'] or '-'}  last progress: {_d(r['last_progress'])}"
+                  + (f"  grew from: “{(r['grew_from_text'] or '')[:80]}”" if r["grew_from_text"] else "") + extra)
+        for e in store.q("SELECT * FROM goal_events ORDER BY id DESC LIMIT 10"):
+            print(f"    {_d(e['ts'])} #{e['goal_id']} {e['kind']} ({e['by']}): {e['note'][:120]}")
+    elif sub == "goal-override":
+        from .goals import Goals
+        ok = Goals(store).override(args.goal_id, args.note)
+        print("overridden: the goal is active again; its concern stays in the journal" if ok else "no such goal")
     elif sub in ("pause", "resume"):
         store.set_paused(sub == "pause")
         print("paused: it won't take turns of its own (perception and the view continue)" if sub == "pause"

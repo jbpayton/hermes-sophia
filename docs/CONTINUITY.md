@@ -373,7 +373,14 @@ All in Sophia, the memory plugin ([hermes-sophia](https://github.com/jbpayton/he
      - *"not now" only when a short message is exactly one of a fixed list (no model judges it, so it's reproducible);*
      - *no message within 12 hours is silence.*
    - *Each sent message records its kind and the reply delay. Nothing changes until 50 messages have been sent; 50 sent, not 50 responses, so silence can't hold calibration back forever. The score is shown in the standing view and the report. The companion never writes it into Sophia's memory; if it's worth keeping, the agent keeps it as a thought. What the score will change after 50 is still to decide.*
-5. **Goals and interests,** with their origins and credit.
+5. ◐ **Goals and interests,** with their origins and credit. *Goals are built (`hermes_continuity/goals.py`, the `continuity_goal` tool), shaped with Sophia:*
+   - *a goal of its own must point at what it grew from (a memory line, thought, event or outcome); without that anchor it stays a thought;*
+   - *goals never add energy: one becomes a turn of its own only with energy something real provided, and only when nothing perceived, noticed or remembered is waiting;*
+   - *its pull halves for every three days without progress, so a stalled goal quietly loses its claim instead of nagging; your goals rank above its own;*
+   - *it can push back on a goal (a concern with a reason: visible, non-blocking, overridable with `hermes continuity goal-override`), and decline one you set in exactly two cases: outside its tools or permissions, or harmful. Every change carries a reason and is journaled;*
+   - *each turn of its own records what it led to (a thought kept, goal progress, tools used): the raw material for interests.*
+   
+   *Credit-weighted interests are held until there's data.*
 6. **The comparison** above, with its controls.
 
 Independent of all this: tables grown on demand from the raw record, for counting and totals, and looking at a kept image again when a later question needs a detail.

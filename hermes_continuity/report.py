@@ -66,16 +66,18 @@ def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional
         sent_today = c.execute("SELECT COUNT(*) AS n FROM outbox WHERE status='sent' AND settled>=?", (midnight,)).fetchone()["n"]
 
         journal: List[Dict[str, Any]] = []
-        for r in c.execute("""SELECT 'turn' AS what, ts, kind, outcome, reason, ms, text, NULL AS steps, NULL AS silent,
-                                     NULL AS held, context_chars, reply_chars FROM steps
-                              UNION ALL SELECT 'quiet', ts, NULL, NULL, reason, ms, NULL, steps, silent, held, tokens, NULL
-                              FROM quiet ORDER BY ts DESC LIMIT 16"""):
+        has_outcomes = "outcomes" in {r[1] for r in c.execute("PRAGMA table_info(steps)")}
+        oc_col = "outcomes" if has_outcomes else "NULL"
+        for r in c.execute(f"""SELECT 'turn' AS what, ts, kind, outcome, reason, ms, text, NULL AS steps, NULL AS silent,
+                                     NULL AS held, context_chars, reply_chars, {oc_col} AS outcomes FROM steps
+                              UNION ALL SELECT 'quiet', ts, NULL, NULL, reason, ms, NULL, steps, silent, held, tokens, NULL,
+                              NULL FROM quiet ORDER BY ts DESC LIMIT 16"""):
             if r["what"] == "turn":
                 lines = (r["text"] or "").splitlines()
                 journal.append({"what": "turn", "at": _d(r["ts"]), "kind": r["kind"], "outcome": r["outcome"] or "running",
                                 "reason": r["reason"], "seconds": round((r["ms"] or 0) / 1000, 1),
                                 "item": lines[1][:160] if len(lines) > 1 else "", "context_chars": r["context_chars"],
-                                "reply_chars": r["reply_chars"]})
+                                "reply_chars": r["reply_chars"], "led_to": json.loads(r["outcomes"] or "[]")})
             else:
                 journal.append({"what": "quiet", "at": _d(r["ts"]), "reason": r["reason"], "turns": r["steps"],
                                 "silent": r["silent"] or 0, "held": r["held"] or 0,
@@ -96,6 +98,14 @@ def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional
                     "recent": [{"sent": _d(o["sent"]), "kind": o["kind"], "response": o["response"] or "waiting",
                                 "gap_min": round(o["gap_s"] / 60) if o["gap_s"] is not None else None,
                                 "text": (o["text"] or "")[:160]} for o in sent_rows[-6:]]}
+        has_goals = c.execute("SELECT 1 FROM sqlite_master WHERE name='goals'").fetchone()
+        goals = [{"id": g["id"], "text": g["text"], "origin": g["origin"], "status": g["status"],
+                  "next_step": g["next_step"], "grew_from": g["grew_from_text"], "last_progress": _d(g["last_progress"]),
+                  "pushback": g["pushback"], "declined": g["decline_reason"]}
+                 for g in c.execute("SELECT * FROM goals ORDER BY (status='active') DESC, (origin='user') DESC, id DESC "
+                                    "LIMIT 12")] if has_goals else []
+        goal_events = [{"at": _d(e["ts"]), "goal": e["goal_id"], "kind": e["kind"], "by": e["by"], "note": e["note"]}
+                       for e in c.execute("SELECT * FROM goal_events ORDER BY id DESC LIMIT 8")] if has_goals else []
         frames = c.execute("SELECT * FROM frames ORDER BY id DESC LIMIT 20").fetchall()
         # the frame's share of the real prompt: its characters at about 4 per token, against the prompt tokens the
         # model reported for that turn's first call (system prompt and tools included)
@@ -125,6 +135,7 @@ def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional
             "queue": {"waiting": len(queued), "top": queue},
             "outbox": {"held": held},
             "outreach": outreach,
+            "goals": {"list": goals, "events": goal_events},
             "journal": journal,
             "frames": {"recent": frame_rows, "kinds": dict(kinds), "full_every": cfg["full_frame_every"],
                        "mean_fill": round(sum(fills) / len(fills), 4) if fills else None,
@@ -174,6 +185,12 @@ def text(rep: Dict[str, Any]) -> str:
         gaps = ", ".join(f"+{g}m" for g in k["reply_gaps_min"][-5:])
         out.append(f"  {kind}: {k['sent']} sent, {k['reply']} replied{(' (' + gaps + ')') if gaps else ''}, "
                    f"{k['not now']} not now, {k['silence']} silence" + (f", {k['waiting']} waiting" if k["waiting"] else ""))
+    gl = (rep.get("goals") or {}).get("list") or []
+    out.append(f"\ngoals: {sum(1 for g in gl if g['status'] == 'active')} active")
+    for g in gl[:6]:
+        out.append(f"  #{g['id']} [{g['status']}] ({'set by ' + u['name'] if g['origin'] == 'user' else 'its own'}) "
+                   f"{g['text']} · next: {g['next_step'] or '-'} · last progress: {g['last_progress'] or 'none'}"
+                   + (f" · ⚑ {g['pushback']}" if g["pushback"] else "") + (f" · declined: {g['declined']}" if g["declined"] else ""))
     out.append(f"\nheld for {u['name']}: {len(rep['outbox']['held'])}")
     for m in rep["outbox"]["held"][:5]:
         out.append(f"  #{m['id']} {m['created']} ({m['reason']}): {m['text'][:160]}")
@@ -181,7 +198,8 @@ def text(rep: Dict[str, Any]) -> str:
     for j in reversed(rep["journal"]):
         if j["what"] == "turn":
             out.append(f"  {j['at']}  turn  {j['kind']:<11} {j['outcome']:<12} {j['seconds']:>5}s  {j['item'][:80]}"
-                       + (f"  [{j['reason']}]" if j["reason"] else ""))
+                       + (f"  [{j['reason']}]" if j["reason"] else "")
+                       + (f"  → {', '.join(j['led_to'])}" if j.get("led_to") else ""))
         else:
             out.append(f"  {j['at']}  quiet [{j['kind']}] {j['reason']} ({j['turns']} turns: {j['silent']} silent, "
                        f"{j['held']} held; {j['model_seconds']}s, {j['tokens']} tokens)")
