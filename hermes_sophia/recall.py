@@ -59,6 +59,8 @@ def own_label(flags: str) -> str:
     flags = flags or ""
     if "thought" in flags:
         return " (own earlier thought, not an observation)"
+    if "continuity" in flags:
+        return " (its own continuing process, not the user)"
     if "event" in flags:
         return " (system notice)"
     if "caption" in flags:

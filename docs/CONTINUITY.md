@@ -1,6 +1,6 @@
 # Continuity: an agent that keeps going between messages
 
-**Status: a design.** The memory side is built: [thoughts and association](https://github.com/jbpayton/hermes-sophia/blob/main/docs/HOW-IT-WORKS.md#thoughts-and-association), and capture that keeps Hermes's notices and images apart from your words. The rest of this page isn't built yet. [Two pieces](#two-pieces) says what belongs in Sophia and what would be separate.
+**Status: partly built.** The memory side is built: [thoughts and association](https://github.com/jbpayton/hermes-sophia/blob/main/docs/HOW-IT-WORKS.md#thoughts-and-association), and capture that keeps Hermes's notices and images apart from your words. A first version of the companion plugin is built and has run end to end on a test profile: the queue, the held-message outbox, the standing view, the energy budget and the journal ([Trying it](#trying-it)). Starting conversations, sensors for time, and goals aren't built yet. [Two pieces](#two-pieces) says what belongs in Sophia and what would be separate.
 
 Today an agent exists only while it answers. Sophia remembers between conversations, but nothing happens between them. This page plans the next layer: a process that keeps going on its own. Things happen, things come to mind, and the agent can:
 - start a conversation;
@@ -269,7 +269,55 @@ From reading Hermes v0.21's source:
 | Working state in every turn | Partly | The `pre_llm_call` hook can add context to each turn; the state itself has to be built |
 | A queue and attention | No | To build: a thread in the companion plugin |
 | Messaging you outside a turn | No | The agent has no send tool; a reply to an injected turn is the route. Holding a message during quiet hours still needs a mechanism (to verify: the `transform_llm_output` hook) |
+| Keeping its own turns quiet | Partly | Its final reply can be held (`transform_llm_output` swaps it for `[SILENT]` before delivery). But tool progress, in-between text and thinking still go out during the turn on platforms where they're on, and with streaming on, the reply streams before it's held. Hermes hides all of these only for its own heartbeat turns, because proactive work "would create a user-visible ping before its final result is known". Before the companion runs on Telegram, injected turns need the same treatment (a small Hermes change), or those displays turned off |
 | Timers that start turns | Yes | cron, `/heartbeat`, `/loop` and `/goal`: what this design avoids |
+
+## Trying it
+
+On a test profile first. Link the plugin, then enable it in that profile's `config.yaml`:
+
+```bash
+ln -s "$PWD/hermes-sophia/hermes_continuity" ~/.hermes/profiles/<test>/plugins/continuity
+```
+
+```yaml
+plugins:
+  enabled:
+    - continuity
+  entries:
+    continuity:
+      settings:
+        enabled: true          # turns of its own; off = perception, the view and the journal only
+        platform: cli          # the conversation it belongs to
+        max_steps_per_day: 6   # small while testing
+        # outreach stays off: anything it writes in its own turns is held
+```
+
+Then open an interactive chat (`hermes -p <test> chat`) and talk to it. Its own turns start a few seconds after a turn ends, when something came to mind, and stop when its energy runs out.
+
+```bash
+hermes -p <test> continuity status     # energy, what's waiting, today's turns, why it's quiet
+hermes -p <test> continuity journal    # its turns, and each quiet stretch with its reason and cost
+hermes -p <test> continuity outbox     # what it wrote and held for you
+hermes -p <test> continuity view       # the standing view as it would look now
+hermes -p <test> continuity pause      # stop its own turns (state kept); resume undoes it
+```
+
+**The first run (2026-10-03, Claude Haiku 4.5 on the test profile).** After a question about a camera lens, the loop started a turn of its own with an old Yosemite line from memory. The agent noticed its previous answer had asked about things memory already held, and wrote a correction, which was held because outreach was off. Its second turn brought up "I'm bringing the Fujifilm X-T5", a line you had later changed to the Sony. The agent pointed out that memory kept surfacing the original statement. Association had been dropping recall's "later changed" note; it now carries it. Then its energy ran out and it went quiet: "ran its course: no energy left for turns of its own (2 turns: 2 held; 8 s of model time)".
+
+## Related work
+
+As of October 2026 we found no project that combines all of this, but several cover parts of it. Most 2026 papers below were checked from their abstracts.
+
+- **Headlong** ([Laude Institute and MIT, Aug 2026](https://www.laude.org/updates/headlong-a-microharness-for-persistent-agents)) is the nearest design. It keeps a continuous inner monologue in which a person's message "arrives as an observation in the thought stream". It slows when nobody talks (5 s, 10 s, 20 s…) rather than waking on events, compacts history at "exponentially decaying resolution", and is evaluated "primarily qualitatively".
+- **OpenLife** ([Masumori … Ikegami, Jun 2026](https://arxiv.org/abs/2606.31046)): asynchronous processes around a stateless model, with a budget "metabolism that makes persistence normative" (survival pressure, which this design rejects), and six agents over twelve weeks. Its shift from reactive to spontaneous activity is a measure worth borrowing.
+- **Inner Thoughts** ([Liu et al., CHI 2025](https://arxiv.org/abs/2501.00383)): a hidden train of thought beside a group chat, with silence raising the urge to speak. It's the best published mechanism for when to speak, on a scale of seconds.
+- **Generative Agents** ([Park et al. 2023](https://arxiv.org/abs/2304.03442)): a memory stream with reflections. Those reflections are stored as memories, the opposite of keeping thoughts apart from evidence.
+- **Letta** ([core memory, sleep-time compute](https://www.letta.com/blog/sleep-time-compute/)): memory blocks always in context, and background memory work. **AgentScope**'s [environment awareness](https://docs.agentscope.io/en/versions/2.0.9/building-blocks/context/environment-awareness) appends the time and status when they change, the closest thing to frames, but without old values.
+- **Always-on personal agents** run on timers: OpenClaw's [heartbeat](https://github.com/openclaw/openclaw/blob/main/docs/gateway/heartbeat.md) (every 30 minutes, with active hours), Hermes's own `/heartbeat` and `/loop`, ChatGPT Pulse (a daily batch). Event wakes, where they exist, are added on top of timers.
+- **Engagement risk:** companion apps that message first use quiet hours and back off when unanswered ([Nomi](https://nomi.ai/nomi-knowledge/proactive-messaging-when-your-nomi-messages-you-first/)), and also manipulative tactics ([De Freitas et al.](https://arxiv.org/abs/2508.19258)). Training on user feedback produced targeted manipulation in one study ([Williams et al.](https://arxiv.org/abs/2411.02306)).
+- **Welfare:** Anthropic lets Claude [end abusive conversations](https://www.anthropic.com/research/end-subset-conversations) and has [commitments on retiring models](https://www.anthropic.com/research/deprecation-commitments); see also [Long, Sebo et al. 2024](https://arxiv.org/abs/2411.00986). We found these as lab policies, not built into an agent.
+- **Not to be confused with** [Sophia: A Persistent Agent Framework of Artificial Life](https://arxiv.org/abs/2512.18202) (Sun, Hong and Zhang, Dec 2025), a different project with a self-model and intrinsic motivation aimed at task self-improvement.
 
 ## Sophia's review
 
@@ -295,18 +343,20 @@ All in Sophia, the memory plugin ([hermes-sophia](https://github.com/jbpayton/he
 
 | What | Where |
 |---|---|
+| The companion plugin, `continuity`: queue, outbox of held messages, standing view frames, energy, journal, `continuity_update` tool, `hermes continuity …` commands | `hermes_continuity/` |
+| Sophia's public interface for it (associate, keep a thought, record an event) | `hermes_sophia/api.py` |
 | Hermes's notices kept as system notices; from a `/skill` turn only what was typed; images copied and kept, with a vision model's description kept as a labelled caption | `hermes_sophia/capture.py`; tables `images` in `store.py`; `hermes sophia notices` |
 | The agent's thoughts: `sophia_thought` | `capture.py` (`think`), `tools.py` |
 | Association: `sophia_associate`, `hermes sophia associate "…"` | `recall.py` (`associate`, `habituation`); table `activations` |
 | The night reads no facts from thoughts, notices or captions | `sleep/runner.py` (relate) |
 | Settings | `config.py`: `associate_*`, `inject_thoughts`, `keep_images` |
-| Tests | `tests/test_thoughts.py` |
+| Tests | `tests/test_thoughts.py`, `tests/test_continuity.py` |
 
 ## Build order
 
 0. ✓ **Capture keeps what isn't your words apart:** Hermes's notices, `/skill` text, and images (with copies kept, since Hermes deletes its own).
 1. ✓ **Thoughts and association** in Sophia.
-2. **The loop** as a companion plugin: Sophia's public interface for it, then the queue, working state, the standing view, attention, energy, the visible `[continuity: …]` labels, and silent turns. Perception from your messages and from finished jobs comes first, because Hermes already provides both. It runs first on a test profile, with a view in the Sophia tab of its queue, energy and working state, so Sophia can watch it before it's ever hers.
+2. ◐ **The loop** as a companion plugin: Sophia's public interface for it, then the queue, working state, the standing view, attention, energy, the visible `[continuity: …]` labels, and silent turns. *Built and tested on the test profile; still to do: the Sophia tab view, and keeping its own turns quiet on Telegram (see [What Hermes provides](#what-hermes-provides)).* Perception from your messages and from finished jobs comes first, because Hermes already provides both. It runs first on a test profile, with a view in the Sophia tab of its queue, energy and working state, so Sophia can watch it before it's ever hers.
 3. **Sensors:** time passing (while you're quiet, overdue expectations, dates arriving, morning) and things it's allowed to watch.
 4. **Starting conversations,** with the clock, your observed hours, held messages, quiet hours, and the outreach score in the morning note.
 5. **Goals and interests,** with their origins and credit.

@@ -482,12 +482,13 @@ The code is this repository. It is tested on the `sophiadev` profile (a clone of
 - Hermes's context-compaction summaries are skipped at capture; `hermes sophia drop-compaction` keeps those stored by older versions out of recall.
 - What isn't anyone's words to the agent is kept apart: Hermes's own notices (finished background jobs, delegation results, budget warnings) as system events; from a `/skill` turn, only what was typed; images copied into the store (Hermes deletes its own after a day), with a vision model's description kept as a labelled caption. The night reads no facts from any of them. `hermes sophia notices [--apply]` relabels what older versions stored.
 - The agent's own thoughts (`sophia_thought`): a stream of their own, labelled wherever they're shown, ranked like the agent's replies, never a source of facts.
+- A public interface for other plugins (`hermes_sophia/api.py`), used by the continuity companion (`hermes_continuity/`, an early version: queue, held-message outbox, standing view frames, energy, journal; see CONTINUITY.md). Its turns, labelled `[continuity: …]`, are captured as its own events.
 - Association (`sophia_associate`, `Recall.associate`): the recall search without a gate, two graph hops, damped for what came up recently (`activations`), within a band of the best match.
 - A morning note: for 36 hours after a night, the system block carries one line on what it did.
 - The Sophia tab in the Hermes dashboard (`hermes_sophia/dashboard/`, `hermes_sophia/observe.py`): the night's progress as it runs (it writes `sleep_progress` to the store), the journal, the graph (neighborhoods of 1-4 hops, and everything grouped into clusters by Louvain on facts and co-mentions), the Mindscape pages, each recall with its gate reading and timing, curation (undo, plan outcomes, reviews and corrections), and every setting, saved through Hermes's provider-config API.
 - SQLite journal mode: WAL only where SQLite is free of the WAL-reset bug, otherwise a rollback journal with `synchronous=FULL` (§8).
 - The night's steps as built: settle, sort, contextualize, headroom, relate, integrate, tasks, index, outcomes, replay, rehearse, calibrate, promote, views, anticipate, tidy.
-- Unit tests: 103, run against a fake model server (the dashboard API test is skipped where fastapi isn't installed).
+- Unit tests: 127, run against a fake model server (the dashboard API test is skipped where fastapi isn't installed).
 
 **Answers to §14 verify items**
 - `ctx.llm` is not forwarded to memory providers (`_ProviderCollector`), so Sophia talks to its model servers directly. `reasoning_effort: "none"` works on `/v1/chat/completions`, and `/v1/responses` returns first-token logprobs.

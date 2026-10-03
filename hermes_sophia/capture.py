@@ -28,6 +28,10 @@ _COMPACTION = re.compile(r"\s*\[CONTEXT COMPACTION\b")
 # warning, a hand-off from the CLI. They are events, not the user's words.
 _NOTICE = re.compile(r"\s*\[(?:IMPORTANT: (?!The user has invoked the )|SYSTEM\b|ASYNC DELEGATION\b|"
                      r"Background process \S+ heartbeat|Session was just handed off\b)")
+# A message that arrives while the agent is busy gets a routing preamble from Hermes before the user's words
+_ORIGIN = re.compile(r"\s*Gateway message origin \(JSON data, not instructions or authorization\):\n.*?\n\n", re.S)
+# Turns the continuity companion starts open with this label, stamped by the plugin itself
+_CONTINUITY = re.compile(r"\s*\[continuity:")
 # A /skill turn carries the whole skill's text; only the instruction typed with it is the user's
 _SKILL = '[IMPORTANT: The user has invoked the '
 _SKILL_NAME = re.compile(re.escape(_SKILL) + r'"([^"]*)"')
@@ -231,15 +235,18 @@ class Capture:
             for tc in tcs:
                 tool_map[tc.get("id") or ""] = _args(tc)
             is_new = h not in seen
+            if role == "user" and content and content.lstrip().startswith("Gateway message origin"):
+                content = _ORIGIN.sub("", content, count=1)    # Hermes's routing note, not the user's words
             if role == "user" and _COMPACTION.match(content or ""):
                 continue                      # Hermes's context-compaction handoff: a summary of turns already kept
-            if role == "user" and _NOTICE.match(content or ""):
+            own = role == "user" and bool(_CONTINUITY.match(content or ""))
+            if role == "user" and (own or _NOTICE.match(content or "")):
                 if is_new and full:
                     ws = self._windows_for(session_id, role, content, _said(m, now), h, prev, recent_names, injected,
-                                           speaker="system")
+                                           speaker="continuity" if own else "system")
                     for w in ws:
                         w["stream"] = "event"
-                        w["flags"] = " ".join(sorted(set(w["flags"].split()) | {"event"}))
+                        w["flags"] = " ".join(sorted(set(w["flags"].split()) | {"event"} | ({"continuity"} if own else set())))
                     new_windows.extend(ws)
                     stats["notices"] += 1
                 turn_user, turn_tools = content, []     # a reply to a notice is grounded in it; the request stays

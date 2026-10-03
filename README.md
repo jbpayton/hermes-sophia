@@ -177,16 +177,18 @@ Details are in [BENCHMARKS.md](docs/BENCHMARKS.md).
 
 ```bash
 pip install -e ".[test]"
-pytest -q        # 103 tests against a fake model server; no GPU needed
+pytest -q        # 127 tests against a fake model server; no GPU needed
 ```
 
-The code is in `hermes_sophia/`, including the dashboard tab in `hermes_sophia/dashboard/` (plain JS, no build step). The benchmark harness is in `bench/`, and the experiments behind the design are in `research/`. The animated tour is one HTML page, rendered to video by `scripts/explainer/build.py --video`.
+The code is in `hermes_sophia/`, including the dashboard tab in `hermes_sophia/dashboard/` (plain JS, no build step). `hermes_continuity/` is the companion plugin that lets the agent keep going between messages (an early version; see [Continuity](docs/CONTINUITY.md)). The benchmark harness is in `bench/`, and the experiments behind the design are in `research/`. The animated tour is one HTML page, rendered to video by `scripts/explainer/build.py --video`.
 
 ## Lineage
 
 Sophia is a clean-sheet redesign that combines two earlier projects:
 - [SophiaAMS](https://github.com/jbpayton/SophiaAMS): associative triple memory, its memory-graph view, and the original Mindscape navigator.
 - [Gemmery](https://github.com/jbpayton/gemmery): credit-earning memory, and the finding that retrieval over the raw record beats write-time summaries.
+
+Not to be confused with [Sophia: A Persistent Agent Framework of Artificial Life](https://arxiv.org/abs/2512.18202) (Sun, Hong and Zhang, 2025), a separate project.
 
 ## License
 

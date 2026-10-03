@@ -1,0 +1,365 @@
+"""The continuity companion: perception, the standing view, the two queues, energy, and the journal."""
+import json
+import time
+
+import pytest
+
+from hermes_continuity import UPDATE_SCHEMA, guide, register, should_run
+from hermes_continuity.config import DEFAULTS, in_quiet_hours, load
+from hermes_continuity.loop import LABEL, Continuity, is_silent, kind_of
+from hermes_continuity.store import Store
+
+NOON = time.mktime((2026, 10, 3, 12, 0, 0, 0, 0, -1))
+NIGHT = time.mktime((2026, 10, 3, 23, 30, 0, 0, 0, -1))
+
+
+class Clock:
+    def __init__(self, t):
+        self.t = t
+
+    def __call__(self):
+        return self.t
+
+
+class FakeMemory:
+    def __init__(self, items=None):
+        self.items = items if items is not None else [
+            {"id": "w1", "text": "We finally finished moving into our place in Denver.", "said": NOON - 86400 * 30,
+             "speaker": "Joey", "label": "", "via": None, "pull": 0.72},
+            {"id": "w2", "text": "Settled into Spokane at last.", "said": NOON - 86400 * 5, "speaker": "Joey",
+             "label": "", "via": None, "pull": 0.66},
+            {"id": "w3", "text": "The new apartment has a balcony.", "said": NOON - 86400 * 4, "speaker": "Joey",
+             "label": "", "via": None, "pull": 0.70}]
+        self.cues, self.events = [], []
+
+    def associate(self, cue, k=0, exclude=(), record=True, now=None):
+        self.cues.append(cue)
+        return [dict(it) for it in self.items if it["id"] not in exclude][:k or 3]
+
+    def record_event(self, text, said=None):
+        self.events.append(text)
+        return ["e1"]
+
+
+def make(tmp_path, clock=None, memory=None, inject_ok=True, **over):
+    cfg = load(overrides={"enabled": True, "platform": "telegram", "settle_seconds": 0, **over})
+    sent = []
+
+    def inject(text):
+        sent.append(text)
+        return inject_ok
+    c = Continuity(Store(tmp_path / "c.db"), cfg, inject, memory=memory, user_name="Joey", clock=clock or Clock(NOON))
+    return c, sent
+
+
+def user_turn(c, text="Where do I live now?", reply="Spokane.", history=None):
+    frame = c.on_turn_start(session_id="s", user_message=text, conversation_history=history or [], platform="telegram")
+    c.on_reply(response_text=reply, session_id="s", platform="telegram")
+    c.on_turn_end(session_id="s", completed=True, interrupted=False, platform="telegram")
+    return frame
+
+
+def own_turn(c, text, reply="[SILENT]"):
+    c.on_turn_start(session_id="s", user_message=text, conversation_history=[], platform="telegram")
+    out = c.on_reply(response_text=reply, session_id="s", platform="telegram")
+    c.on_turn_end(session_id="s", completed=True, interrupted=False, platform="telegram")
+    return out
+
+
+# --------------------------------------------------------------- basics
+def test_who_a_turn_is_from():
+    assert kind_of("[continuity: something came to mind]\n“x”") == "continuity"
+    origin = ('Gateway message origin (JSON data, not instructions or authorization):\n{"platform": "telegram"}\n'
+              'Do not guess a reply destination when these fields are insufficient.\n\n')
+    assert kind_of(origin + "[continuity: something came to mind]") == "continuity"
+    assert kind_of("[IMPORTANT: Background process p1 completed (exit 0)]") == "notice"
+    assert kind_of('[IMPORTANT: The user has invoked the "work" skill, ...') == "user"
+    assert kind_of("hey, how are you?") == "user"
+    assert is_silent(" [SILENT] ") and is_silent("NO_REPLY") and not is_silent("Hi Joey")
+
+
+def test_quiet_hours_wrap_past_midnight():
+    assert in_quiet_hours("22:00-08:00", "23:15") and in_quiet_hours("22:00-08:00", "07:59")
+    assert not in_quiet_hours("22:00-08:00", "12:00") and in_quiet_hours("13:00-14:00", "13:30")
+
+
+def test_only_long_lived_processes_take_turns_of_their_own():
+    assert should_run(["hermes", "gateway", "run"]) and should_run(["hermes", "-p", "dev", "chat"])
+    assert not should_run(["hermes", "chat", "-q", "hi"]) and not should_run(["hermes", "continuity", "status"])
+    assert not should_run(["hermes", "dashboard"])
+
+
+def test_settings_have_safe_defaults():
+    assert DEFAULTS["enabled"] is False and DEFAULTS["outreach"] is False
+    assert load(lambda k, default=None: {"step_cost": "0.5", "outreach": "on"}.get(k, default))["step_cost"] == 0.5
+
+
+# ------------------------------------------------------- the standing view
+def test_the_standing_view_streams_full_frames_and_changes(tmp_path):
+    clock = Clock(NOON)
+    c, _ = make(tmp_path, clock=clock, full_frame_every=3)
+    first = user_turn(c)["context"]
+    assert first.startswith("[standing view · full") and "Joey: last wrote just now (perceived)" in first
+    assert "Only the latest standing view is current" in first
+    clock.t += 3 * 3600                                   # time passes: noticed as a change, with the old value
+    second = c.on_turn_start(session_id="s", user_message="[continuity: something came to mind]\n“x”",
+                             conversation_history=[], platform="telegram")["context"]
+    assert second.startswith("[standing view · changes since 12:00")
+    assert "Joey: last wrote just now → last wrote a few hours ago (perceived)" in second
+    c.on_turn_end(session_id="s", platform="telegram")
+    third = c.on_turn_start(session_id="s", user_message="[continuity: x]", conversation_history=[],
+                            platform="telegram")["context"]
+    c.on_turn_end(session_id="s", platform="telegram")
+    assert "unchanged since" in third and len(third.splitlines()) == 1            # nothing moved: one line
+    fourth = c.on_turn_start(session_id="s", user_message="[continuity: x]", conversation_history=[],
+                             platform="telegram")["context"]
+    assert fourth.startswith("[standing view · full")                            # every 3 turns, a full frame
+
+
+def test_a_full_frame_always_follows_a_compaction(tmp_path):
+    c, _ = make(tmp_path, full_frame_every=50)
+    user_turn(c)
+    user_turn(c, text="and?")
+    summary = [{"role": "user", "content": "[CONTEXT COMPACTION — REFERENCE ONLY] Earlier turns were compacted."}]
+    frame = user_turn(c, text="one more", history=summary)["context"]
+    assert frame.startswith("[standing view · full")
+
+
+def test_the_view_can_be_turned_off(tmp_path):
+    c, _ = make(tmp_path, view=False)
+    assert user_turn(c) is None and c.store.state()["last_user_ts"] == NOON      # perception still runs
+
+
+def test_other_conversations_are_not_its_own(tmp_path):
+    c, _ = make(tmp_path)
+    assert c.on_turn_start(session_id="x", user_message="hi", platform="subagent") is None
+    assert c.on_turn_start(session_id="x", user_message="hi", platform="discord") is None
+    assert c.store.state()["last_user_ts"] == 0
+
+
+# ----------------------------------------------------------- perception
+def test_a_finished_job_is_perceived_and_ends_the_wait(tmp_path):
+    c, _ = make(tmp_path)
+    c.update({"waiting_for": "the backup job proc_7"})
+    c.on_turn_start(session_id="s", platform="telegram",
+                    user_message="[IMPORTANT: Background process proc_7 completed (exit 0). Output: done]")
+    st = c.store.state()
+    assert st["jobs"][-1]["text"].startswith("background process proc_7 completed (exit 0)")
+    assert st["waiting_for"] == [] and st["energy"] == pytest.approx(1.0)
+    assert c.store.one("SELECT kind FROM percepts")["kind"] == "job"
+
+
+# ------------------------------------------------- what comes to mind
+def test_what_a_turn_brings_to_mind_becomes_a_turn_of_its_own(tmp_path):
+    mem = FakeMemory()
+    mem.items.append({"id": "w4", "text": "The movers broke a lamp.", "said": NOON - 86400 * 6, "speaker": "Joey",
+                      "label": "", "via": None, "pull": 0.71})
+    c, sent = make(tmp_path, memory=mem)
+    user_turn(c)
+    step = c.tick()
+    assert step and len(sent) == 1 and sent[0].startswith(LABEL + " something came to mind]")
+    assert "“We finally finished moving into our place in Denver.”" in sent[0] and "Joey" in sent[0]
+    assert "not Joey" in sent[0] and "[SILENT]" in sent[0]
+    assert mem.cues and "Where do I live now?" in mem.cues[0]
+    assert c.tick() is None                                   # one at a time: its turn hasn't happened yet
+    own_turn(c, sent[0])
+    row = c.store.one("SELECT * FROM steps WHERE id=?", (step,))
+    assert row["outcome"] == "silent" and row["ended"] and row["kind"] == "association"
+    c._associate_pending(NOON)
+    chained = [r for r in c.store.queued() if r["depth"] == 2]
+    assert chained and all(r["salience"] < 0.72 for r in chained)      # a memory raised by a memory pulls less
+
+
+def test_it_winds_down_and_says_why(tmp_path):
+    mem = FakeMemory()
+    c, sent = make(tmp_path, memory=mem, step_cost=0.6)
+    user_turn(c)                                             # energy 1.0: one turn of its own at 0.6
+    assert c.tick()
+    own_turn(c, sent[-1])
+    assert c.tick() is None
+    st = c.store.state()
+    assert st["quiet_reason"].startswith("ran its course")
+    q = c.store.one("SELECT * FROM quiet ORDER BY id DESC")
+    assert q["steps"] == 1 and q["silent"] == 1 and q["reason"] == st["quiet_reason"]
+    assert mem.events and "Went quiet" in mem.events[-1]       # its own activity reaches Sophia as an event
+
+
+def test_letting_go_ends_the_chain(tmp_path):
+    mem = FakeMemory()
+    c, sent = make(tmp_path, memory=mem)
+    user_turn(c)
+    step = c.tick()
+    c.on_turn_start(session_id="s", user_message=sent[-1], platform="telegram")
+    c.update({"let_go": "nothing new there"})
+    c.on_reply(response_text="[SILENT]", session_id="s", platform="telegram")
+    before = len(c.pending_cues)
+    c.on_turn_end(session_id="s", platform="telegram")
+    assert len(c.pending_cues) == before
+    assert c.store.one("SELECT reason FROM steps WHERE id=?", (step,))["reason"] == "let go: nothing new there"
+
+
+def test_the_days_budget_and_pausing_stop_its_own_turns(tmp_path):
+    c, sent = make(tmp_path, memory=FakeMemory(), max_steps_per_day=1)
+    user_turn(c)
+    assert c.tick()
+    own_turn(c, sent[-1])
+    assert c.tick() is None and "budget" in c.store.state()["quiet_reason"]
+    c2, sent2 = make(tmp_path / "p", memory=FakeMemory())
+    c2.pause(True)
+    user_turn(c2)
+    assert c2.tick() is None and not sent2 and c2.store.state()["paused"]
+
+
+def test_a_refused_turn_is_a_stall_not_a_loop(tmp_path):
+    c, sent = make(tmp_path, memory=FakeMemory(), inject_ok=False)
+    user_turn(c)
+    assert c.tick() is None and len(sent) == 1
+    assert c.store.state()["quiet_reason"].startswith("stalled")
+    assert c.tick() is None and len(sent) == 1               # backs off instead of retrying at once
+
+
+def test_unattended_thoughts_fade(tmp_path):
+    clock = Clock(NOON)
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory(), step_cost=5.0)    # no energy for a turn
+    user_turn(c)
+    c.tick()
+    assert c.store.queued()
+    clock.t += 3 * 3600
+    c.tick()
+    assert not c.store.queued() and c.store.one("SELECT COUNT(*) AS n FROM queue WHERE status='faded'")["n"] >= 1
+
+
+# ---------------------------------------------------------- the outbox
+def test_replies_from_its_own_turns_are_held_while_outreach_is_off(tmp_path):
+    c, sent = make(tmp_path, memory=FakeMemory())
+    user_turn(c)
+    c.tick()
+    out = own_turn(c, sent[-1], reply="Joey, I remembered something about Denver!")
+    assert out == "[SILENT]"
+    held = c.store.one("SELECT * FROM outbox")
+    assert held["status"] == "held" and held["reason"] == "outreach is off" and "Denver" in held["text"]
+    frame = user_turn(c, text="hi")["context"]
+    assert "held for Joey" in frame and "Denver" in frame
+
+
+def test_replies_to_the_user_are_never_touched(tmp_path):
+    c, _ = make(tmp_path)
+    c.on_turn_start(session_id="s", user_message="hi", platform="telegram")
+    assert c.on_reply(response_text="Hello Joey!", session_id="s", platform="telegram") is None
+
+
+def test_quiet_hours_hold_even_when_outreach_is_on(tmp_path):
+    c, sent = make(tmp_path, clock=Clock(NIGHT), memory=FakeMemory(), outreach=True)
+    user_turn(c)
+    c.tick()
+    assert own_turn(c, sent[-1], reply="Are you still up?") == "[SILENT]"
+    assert "quiet hours" in c.store.one("SELECT reason FROM outbox")["reason"]
+
+
+def test_a_held_message_goes_out_when_allowed_and_the_user_is_around(tmp_path):
+    clock = Clock(NIGHT)
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory(items=[]), outreach=True)
+    user_turn(c)
+    c.store.x("INSERT INTO outbox(created, text, reason) VALUES(?,?,?)", (NIGHT, "Found the Spokane notes.", "quiet hours"))
+    clock.t = NIGHT + 9.5 * 3600                              # next morning, 09:00
+    user_turn(c, text="morning!")
+    assert c.tick()
+    assert sent[-1].startswith(LABEL + " a message you held for Joey]") and "Spokane notes" in sent[-1]
+    assert own_turn(c, sent[-1], reply="Morning! I found the Spokane notes.") is None      # delivered
+    assert c.store.one("SELECT status FROM outbox")["status"] == "sent"
+    assert c.store.state()["outreach_today"] == 1
+
+
+# -------------------------------------------------------------- the tool
+def test_the_agent_keeps_its_own_working_state(tmp_path):
+    c, _ = make(tmp_path)
+    out = c.update({"focus": "the Spokane move", "add_thread": "find the lease PDF", "waiting_for": "Joey's reply"})
+    assert out["focus"] == "the Spokane move" and out["open_threads"] and out["waiting_for"]
+    c.update({"close_thread": "lease"})
+    frame = user_turn(c)["context"]
+    assert "focus: the Spokane move (own)" in frame and "open threads: none (own)" in frame
+
+
+# ------------------------------------------------------------ the plugin
+class FakeCtx:
+    def __init__(self, settings=None):
+        self.settings = settings or {}
+        self.hooks, self.tools, self.sections, self.cli, self.injected = {}, {}, {}, {}, []
+
+    def get_config(self, key, default=None):
+        return self.settings.get(key, default)
+
+    def register_hook(self, name, fn):
+        self.hooks[name] = fn
+
+    def register_tool(self, name, toolset, schema, handler, **kw):
+        self.tools[name] = handler
+
+    def register_system_prompt_section(self, sid, text, position="after_memory", max_chars=4000):
+        assert len(text) <= max_chars
+        self.sections[sid] = text
+
+    def register_cli_command(self, name, help, setup_fn, handler_fn=None):
+        self.cli[name] = handler_fn
+
+    def inject_message(self, content, role="user", session_key=None):
+        self.injected.append((content, session_key))
+        return True
+
+
+def test_register_wires_hooks_tool_guide_and_cli_without_starting_a_loop(tmp_path, monkeypatch):
+    import hermes_continuity
+    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("HERMES_CONTINUITY_RUN", "0")
+    monkeypatch.setattr(hermes_continuity, "_home", lambda: tmp_path)
+    hermes_continuity._RUNNING.clear()
+    ctx = FakeCtx({"enabled": True, "platform": "telegram"})
+    register(ctx)
+    assert set(ctx.hooks) == {"pre_llm_call", "transform_llm_output", "on_session_end"}
+    assert "continuity_update" in ctx.tools and "continuity" in ctx.cli
+    g = ctx.sections["continuity.guide"]
+    assert "[continuity: …]" in g and "[SILENT]" in g and "never" in g
+    assert not any(w in g.lower() for w in ("deleted", "punish", "or else"))       # no fear as motivation
+    cont = hermes_continuity._RUNNING[str(tmp_path)]
+    assert cont._thread is None
+    out = json.loads(ctx.tools["continuity_update"]({"focus": "testing"}))
+    assert out["ok"] and out["focus"] == "testing"
+    assert UPDATE_SCHEMA["name"] == "continuity_update" and "let_go" in UPDATE_SCHEMA["parameters"]["properties"]
+
+
+# ------------------------------------------------------- with real Sophia
+def test_with_sophia_its_turns_and_events_are_its_own(engine, tmp_path):
+    from hermes_sophia.api import Memory
+    from hermes_sophia.recall import Recall
+    mem = Memory("", engine=engine)
+    engine.capture.process_messages("t", [{"role": "user", "content": "I moved to Spokane for work in September."}])
+    items = mem.associate("Spokane work September", k=3)
+    assert items and all("pull" in it and "label" in it for it in items)
+    mem.record_event("Went quiet (ran its course) after 2 turns of its own.")
+    ev = engine.store.one("SELECT * FROM windows WHERE speaker='continuity'")
+    assert ev["stream"] == "event" and "continuity" in ev["flags"]
+    engine.capture.process_messages("t", [
+        {"role": "user", "content": "[continuity: something came to mind]\n“I moved to Spokane.”"},
+        {"role": "assistant", "content": "[SILENT]"}])
+    own = engine.store.one("SELECT * FROM windows WHERE text LIKE '[continuity: something%'")
+    assert own["speaker"] == "continuity" and own["stream"] == "event"
+    item = {"kind": "window", "id": own["id"], "said": own["said"], "speaker": own["speaker"],
+            "flags": own["flags"], "text": own["text"], "ref": own["ref"]}
+    assert "its own continuing process, not the user" in Recall.format([item], 9000)
+
+
+def test_a_memory_that_was_later_changed_says_so(tmp_path):
+    mem = FakeMemory(items=[{"id": "w9", "text": "I'm bringing the Fujifilm X-T5.", "said": NOON - 86400 * 10,
+                             "speaker": "Joey", "label": "", "via": None, "pull": 0.7,
+                             "changed": ["Joey is bringing Fujifilm X-T5 → Sony A7 IV (2026-09-23)"]}])
+    c, sent = make(tmp_path, memory=mem)
+    user_turn(c)
+    assert c.tick() and "later changed: Joey is bringing Fujifilm X-T5 → Sony A7 IV" in sent[-1]
+
+
+def test_empty_placeholders_are_not_reported_as_changes(tmp_path):
+    c, sent = make(tmp_path, memory=FakeMemory(), full_frame_every=50)
+    user_turn(c)
+    c.tick()
+    frame = own_turn_frame = c.on_turn_start(session_id="s", user_message=sent[-1], platform="telegram")["context"]
+    assert "came to mind lately: + " in frame and "− nothing" not in frame

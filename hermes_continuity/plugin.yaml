@@ -1,0 +1,29 @@
+name: continuity
+version: 0.1.0
+manifest_version: 2
+api_version: 1
+license: MIT
+homepage: https://github.com/jbpayton/hermes-sophia
+description: "Continuity: lets the agent keep going between messages. What it perceives (your messages, finished jobs) and what comes to mind (Sophia's association) wake it; an energy budget winds it down; a standing view keeps it aware of its situation; its replies are held unless outreach is allowed. Companion to the Sophia memory plugin."
+tags: [agent, memory, continuity]
+requires_plugins:
+  - id: sophia
+config_schema:
+  enabled: {type: bool, default: false, description: "Let it take turns of its own (perception, the standing view and the journal work either way)"}
+  view: {type: bool, default: true, description: "Hand every turn a frame of the standing view"}
+  platform: {type: str, default: "", description: "The conversation it belongs to: telegram, cli, ... (empty = any primary conversation)"}
+  session_key: {type: str, default: "", description: "Gateway route its own turns go to, e.g. agent:main:telegram:dm:123456 (not needed in the CLI)"}
+  outreach: {type: bool, default: false, description: "Let replies from its own turns reach you; off holds them in the outbox"}
+  quiet_hours: {type: str, default: "22:00-08:00", description: "Outreach is never sent in these hours; held messages wait"}
+  max_outreach_per_day: {type: int, default: 3, description: "Most unprompted messages a day"}
+  max_steps_per_day: {type: int, default: 30, description: "Most turns of its own a day"}
+  energy_per_event: {type: float, default: 1.0, description: "Energy something it perceives gives the process"}
+  step_cost: {type: float, default: 0.34, description: "Energy one turn of its own spends"}
+  energy_max: {type: float, default: 3.0, description: "Most energy it can hold"}
+  min_pull: {type: float, default: 0.45, description: "A memory must pull at least this hard to be worth a turn"}
+  chain_decay: {type: float, default: 0.75, description: "A memory raised by a memory pulls this much less"}
+  associate_k: {type: int, default: 3, description: "Memories raised after each turn"}
+  item_ttl_minutes: {type: int, default: 120, description: "Something that came to mind and wasn't attended to fades after this long"}
+  settle_seconds: {type: int, default: 20, description: "After any turn ends, wait this long before a turn of its own"}
+  full_frame_every: {type: int, default: 6, description: "A full standing view every this many turns (and after each compaction); changes in between"}
+  sophia_path: {type: str, default: "", description: "Sophia's package directory (empty = next to this plugin, then HERMES_HOME/plugins/sophia)"}
