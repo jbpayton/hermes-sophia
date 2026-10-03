@@ -21,6 +21,9 @@ DEFAULTS: Dict[str, Any] = {
     "item_ttl_minutes": 120,
     "settle_seconds": 20,
     "full_frame_every": 6,
+    "sensors": True,                    # notice time passing: quiet for longer than usual, overdue, dates, morning
+    "morning": "auto",                  # when the day starts for the morning event ("auto" = the user's usual first message)
+    "noticed_pull": 1.0,                # something noticed ranks ahead of what merely comes to mind
     "sophia_path": "",
     "poll_seconds": 5,                  # how often the loop re-checks its conditions; never a reason to wake the model
 }

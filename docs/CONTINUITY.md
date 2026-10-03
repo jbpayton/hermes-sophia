@@ -358,7 +358,13 @@ All in Sophia, the memory plugin ([hermes-sophia](https://github.com/jbpayton/he
 0. ✓ **Capture keeps what isn't your words apart:** Hermes's notices, `/skill` text, and images (with copies kept, since Hermes deletes its own).
 1. ✓ **Thoughts and association** in Sophia.
 2. ◐ **The loop** as a companion plugin: Sophia's public interface for it, then the queue, working state, the standing view, attention, energy, the visible `[continuity: …]` labels, and silent turns. *Built and tested on the test profile, with `hermes continuity report` and a Continuity view in the Sophia tab to watch it. Keeping its own turns quiet on Telegram needs a small Hermes change, which is ready as a patch but not applied (see [What Hermes provides](#what-hermes-provides)).* Perception from your messages and from finished jobs comes first, because Hermes already provides both. It runs first on a test profile, with a view in the Sophia tab of its queue, energy and working state, so Sophia can watch it before it's ever hers.
-3. **Sensors:** time passing (while you're quiet, overdue expectations, dates arriving, morning) and things it's allowed to watch.
+3. ◐ **Sensors:** time passing and things it's allowed to watch. *Time is built (`hermes_continuity/sensors.py`):*
+   - *quiet for longer than usual, from the median gap between your conversations, noticed at that threshold, then at a day and three days;*
+   - *something it waited for, overdue past its "by" time;*
+   - *a planned date gone by with nothing since saying whether it happened;*
+   - *and morning, the one scheduled event (labelled as such so the comparison can attribute it), which carries what's due today.*
+   
+   *Nothing is noticed in quiet hours; a condition that still holds is noticed when they end. Watching files, processes and pages isn't built yet.*
 4. **Starting conversations,** with the clock, your observed hours, held messages, quiet hours, and the outreach score in the morning note.
 5. **Goals and interests,** with their origins and credit.
 6. **The comparison** above, with its controls.

@@ -42,7 +42,7 @@ class FakeMemory:
 
 
 def make(tmp_path, clock=None, memory=None, inject_ok=True, **over):
-    cfg = load(overrides={"enabled": True, "platform": "telegram", "settle_seconds": 0, **over})
+    cfg = load(overrides={"enabled": True, "platform": "telegram", "settle_seconds": 0, "sensors": False, **over})
     sent = []
 
     def inject(text):
@@ -404,3 +404,77 @@ def test_the_dashboard_shows_any_profile_with_a_continuity_store(tmp_path, monke
     assert rep["exists"] and rep["min_pull"] == 0.6 and rep["queue"]["waiting"] >= 1
     assert rep["queue"]["top"][0]["why"]["similarity"] is None or "similarity" in rep["queue"]["top"][0]["why"]
     assert rep["frames"]["latest"].startswith("[standing view")
+
+
+# ------------------------------------------------------------- sensors
+class RhythmMemory(FakeMemory):
+    """A user who writes every 6 hours, starting their day at 09:00; one plan due at 09:30 today."""
+    def __init__(self, items=None, plans=None):
+        super().__init__(items if items is not None else [])
+        self.plans = plans if plans is not None else [
+            {"id": "f1", "text": "Joey has a dentist appointment with Dr. Moreau", "h_start": NOON - 2.5 * 3600,
+             "h_end": None, "happens": "2026-10-03T09:30", "status": "active"}]
+
+    def user_message_times(self, days=28):
+        day0 = NOON - 10 * 86400 - 3 * 3600                     # 09:00, ten days ago
+        return [day0 + d * 86400 + k * 6 * 3600 for d in range(10) for k in range(3)]
+
+    def upcoming(self, start, end):
+        return [p for p in self.plans if start <= p["h_start"] < end]
+
+
+def test_quiet_for_longer_than_usual_is_noticed_once_per_rung_and_never_at_night(tmp_path):
+    from hermes_continuity.sensors import check
+    clock = Clock(NOON)
+    c, _ = make(tmp_path, clock=clock, memory=RhythmMemory(plans=[]), sensors=True, morning="06:00")
+    st = c.store.state()
+    st["last_user_ts"] = NOON - 13 * 3600                     # usual gap 6 h -> threshold 12 h
+    events = check(st, NOON, c.cfg, c.memory, "Joey")
+    quiet = [e for e in events if e["sensor"] == "quiet"]
+    assert len(quiet) == 1 and "longer than usual" in quiet[0]["text"] and "6 hours" in quiet[0]["text"]
+    assert not [e for e in check(st, NOON + 600, c.cfg, c.memory, "Joey") if e["sensor"] == "quiet"]
+    assert not check(st, NIGHT + 3600 * 2, c.cfg, c.memory, "Joey")              # 01:30: quiet hours, nothing
+    later = check(st, NOON + 86400, c.cfg, c.memory, "Joey")
+    assert [e for e in later if e["sensor"] == "quiet"]                           # the one-day rung, next noon
+
+
+def test_overdue_and_passed_dates_are_noticed_once(tmp_path):
+    from hermes_continuity.sensors import check
+    c, _ = make(tmp_path, memory=RhythmMemory(), sensors=True, morning="23:59")
+    c.update({"waiting_for": "the backup job proc_7", "by": "+30m"})
+    st = c.store.state()
+    first = check(st, NOON + 600, c.cfg, c.memory, "Joey")          # the 09:30 plan has already gone by
+    assert [e["sensor"] for e in first] == ["date passed"] and "dentist appointment" in first[0]["text"]
+    second = check(st, NOON + 2400, c.cfg, c.memory, "Joey")        # 30 minutes later: the job is late
+    assert [e["sensor"] for e in second] == ["overdue"] and "proc_7" in second[0]["text"]
+    assert check(st, NOON + 3000, c.cfg, c.memory, "Joey") == []    # each noticed once
+
+
+def test_morning_is_the_one_scheduled_event_and_carries_whats_due(tmp_path):
+    from hermes_continuity.sensors import check
+    early = time.mktime((2026, 10, 3, 8, 30, 0, 0, 0, -1))
+    plan = [{"id": "f2", "text": "Joey has lunch with Sam", "h_start": NOON + 1800, "h_end": None, "happens": "", "status": "active"}]
+    c, _ = make(tmp_path, memory=RhythmMemory(plans=plan), sensors=True)
+    st = c.store.state()
+    assert not [e for e in check(st, early, c.cfg, c.memory, "Joey") if e["sensor"] == "morning"]    # usual start 09:00
+    m = [e for e in check(st, early + 3600, c.cfg, c.memory, "Joey") if e["sensor"] == "morning"]
+    assert len(m) == 1 and m[0]["scheduled"] and "lunch with Sam" in m[0]["text"] and "12:30" in m[0]["text"]
+    assert not [e for e in check(st, early + 7200, c.cfg, c.memory, "Joey") if e["sensor"] == "morning"]
+
+
+def test_something_noticed_becomes_a_turn_of_its_own(tmp_path):
+    clock = Clock(NOON)
+    c, sent = make(tmp_path, clock=clock, memory=RhythmMemory(plans=[]), sensors=True, morning="23:59")
+    c.update({"waiting_for": "Joey's reply about the lease", "by": "+1h"})
+    clock.t += 2 * 3600
+    assert c.tick()
+    assert sent[-1].startswith(LABEL + " noticed]") and "lease" in sent[-1]
+    assert c.store.one("SELECT kind FROM steps")["kind"] == "noticed"
+    assert c.store.one("SELECT kind FROM percepts WHERE kind='overdue'")
+
+
+def test_by_accepts_minutes_hours_clock_times_and_iso():
+    from hermes_continuity.loop import parse_by
+    assert parse_by("+30m", NOON) == NOON + 1800 and parse_by("2h", NOON) == NOON + 7200
+    assert parse_by("14:30", NOON) == NOON + 2.5 * 3600 and parse_by("09:00", NOON) == NOON + 21 * 3600
+    assert parse_by("2026-10-04T10:00", NOON) and parse_by("someday", NOON) is None

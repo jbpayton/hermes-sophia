@@ -22,6 +22,7 @@ import threading
 import time
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
+from . import sensors as SENSE
 from . import view as V
 from .config import in_quiet_hours
 from .store import Store
@@ -53,6 +54,23 @@ def kind_of(message: str) -> str:
     if _NOTICE.match(m):
         return "notice"
     return "user"
+
+
+def parse_by(spec: str, now: float) -> Optional[float]:
+    """When something is expected: "+30m", "+2h", "14:30" (the next one), or an ISO date and time."""
+    spec = spec.strip()
+    m = re.fullmatch(r"\+?(\d+)\s*([mh])", spec)
+    if m:
+        return now + int(m.group(1)) * (60 if m.group(2) == "m" else 3600)
+    m = re.fullmatch(r"(\d{1,2}):(\d{2})", spec)
+    if m:
+        t = dt.datetime.fromtimestamp(now).replace(hour=int(m.group(1)), minute=int(m.group(2)), second=0, microsecond=0)
+        ts = t.timestamp()
+        return ts if ts > now else ts + 86400
+    try:
+        return dt.datetime.fromisoformat(spec).timestamp()
+    except ValueError:
+        return None
 
 
 def is_silent(text: str) -> bool:
@@ -249,7 +267,10 @@ class Continuity:
             for key, add, close in (("threads", "add_thread", "close_thread"),
                                     ("waiting_for", "waiting_for", "done_waiting")):
                 if args.get(add):
-                    st[key] = (st.get(key, []) + [{"id": st["next_id"], "text": str(args[add])[:200], "since": now}])[-12:]
+                    entry = {"id": st["next_id"], "text": str(args[add])[:200], "since": now}
+                    if key == "waiting_for" and args.get("by"):
+                        entry["by"] = parse_by(str(args["by"]), now)
+                    st[key] = (st.get(key, []) + [entry])[-12:]
                     st["next_id"] += 1
                     changed.append(add)
                 if args.get(close):
@@ -332,14 +353,19 @@ class Continuity:
         if energy < cost:
             return None, "ran its course: no energy left for turns of its own"
         d = json.loads(best["data"] or "{}")
-        return {"kind": "association", "queue_id": best["id"], "text": best["text"], "depth": best["depth"],
+        kind = "noticed" if best["kind"] == "noticed" else "association"
+        return {"kind": kind, "queue_id": best["id"], "text": best["text"], "depth": best["depth"],
                 "salience": best["salience"], **d}, ""
 
     def _render(self, item: Dict[str, Any]) -> str:
         u = self.user_name
+        if item["kind"] == "noticed":
+            return (f"{LABEL} noticed]\n{item['text']}\n(This is your own process noticing something, not {u}. "
+                    "Do what seems worthwhile, or let it go: reply [SILENT] to say nothing.)")
         if item["kind"] == "deliver":
             return (f"{LABEL} a message you held for {u}]\n“{item['text']}”\n({u} is around now. Send it as "
-                    "your reply, change it first, or let it go with [SILENT].)")
+                    f"your reply, change it first, or let it go with [SILENT]. Send only what is about {u}'s life or "
+                    "your shared work; a note about how your memory or process works belongs in a thought instead.)")
         said = dt.datetime.fromtimestamp(item["said"]).strftime("%Y-%m-%d") if item.get("said") else "undated"
         src = ", ".join(x for x in (f"{item.get('speaker') or 'memory'}{item.get('label') or ''}", said,
                                     item.get("via") or "") if x)
@@ -348,7 +374,8 @@ class Continuity:
             src += f"; later changed: {changed}"
         return (f"{LABEL} something came to mind]\n“{item['text']}” ({src})\n(This is your own process, not "
                 f"{u}. Think about it, act, keep a thought, update your working state, or let it go: reply [SILENT] "
-                "to say nothing.)")
+                f"to say nothing. A reply is a message to {u} about their life or your shared work; reflections on your "
+                "own memory go in a thought.)")
 
     def _go_quiet(self, st: Dict[str, Any], reason: str, now: float) -> None:
         if st.get("quiet_reason") == reason:
@@ -374,6 +401,11 @@ class Continuity:
         with self.lock:
             st = self.store.state()
             self._roll_day(st, now)
+            for ev in SENSE.check(st, now, self.cfg, self.memory, self.user_name):
+                self.store.enqueue("noticed", ev["sensor"], ev["text"], self.cfg["noticed_pull"], 1,
+                                   {"sensor": ev["sensor"], "scheduled": bool(ev.get("scheduled"))}, now)
+                self._energize(st, now)
+                self._percept(ev["sensor"], ev["text"], now)
             ttl = self.cfg["item_ttl_minutes"] * 60
             self.store.x("UPDATE queue SET status='faded' WHERE status='queued' AND created<?", (now - ttl,))
             if self.turn is not None:
@@ -407,8 +439,9 @@ class Continuity:
                 return None
             st["energy"], st["steps_today"] = after, st.get("steps_today", 0) + 1
             st["quiet_reason"] = ""
-            if item["kind"] == "association":
+            if item.get("queue_id"):
                 self.store.x("UPDATE queue SET status='taken', taken=? WHERE id=?", (now, item["queue_id"]))
+            if item["kind"] == "association":
                 st["came_to_mind"] = (st.get("came_to_mind", []) + [{"text": item["text"], "ts": now,
                                                                      "label": item.get("label", "")}])[-6:]
             self.expect_own = {"step_id": step_id, "item": item, "since": now}

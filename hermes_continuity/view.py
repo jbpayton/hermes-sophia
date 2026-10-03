@@ -56,7 +56,8 @@ def scene(st: Dict[str, Any], now: float, user: str, held: List[str], queued: in
         out["finished jobs"] = (jobs, PERCEIVED)
     out["focus"] = (st.get("focus") or "nothing in particular", OWN)
     out["open threads"] = ([t["text"] for t in st.get("threads", [])[-5:]] or ["none"], OWN)
-    out["waiting for"] = ([w["text"] for w in st.get("waiting_for", [])[-5:]] or ["nothing"], OWN)
+    out["waiting for"] = ([w["text"] + (f" (by {clock(w['by'])})" if w.get("by") else "")
+                           for w in st.get("waiting_for", [])[-5:]] or ["nothing"], OWN)
     minds = [f"“{c['text'][:120]}”{c.get('label', '')} ({ago(now - c['ts'])})"
              for c in st.get("came_to_mind", [])[-3:]]
     out["came to mind lately"] = (minds or ["nothing"], REMEMBERED)

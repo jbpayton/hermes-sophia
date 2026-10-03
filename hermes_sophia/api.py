@@ -64,5 +64,14 @@ class Memory:
             "SELECT DISTINCT ref, MIN(said) AS said FROM windows WHERE speaker=? AND stream='conversation' AND said>? "
             "GROUP BY ref", (self.user_name, since))]
 
+    def upcoming(self, start: float, end: float) -> List[Dict[str, Any]]:
+        """Planned things whose time falls in [start, end): what the continuity companion notices arriving or passing.
+        Each: id, text ("subject relation object"), happens, h_start, h_end, status."""
+        rows = self.e.store.q("""SELECT id, subject, relation, object, happens, h_start, h_end, status FROM facts
+                                 WHERE h_start>=? AND h_start<? AND status IN ('active','unconfirmed')
+                                 AND modality='planned' ORDER BY h_start""", (start, end))
+        return [{"id": r["id"], "text": f"{r['subject']} {r['relation']} {r['object']}", "happens": r["happens"],
+                 "h_start": r["h_start"], "h_end": r["h_end"], "status": r["status"]} for r in rows]
+
     def close(self) -> None:
         self.e.close()

@@ -32,6 +32,8 @@ UPDATE_SCHEMA = {
         "add_thread": {"type": "string", "description": "An open thread to keep in view."},
         "close_thread": {"type": "string", "description": "Id or words of a thread that's done."},
         "waiting_for": {"type": "string", "description": "Something you're waiting for (a job, a reply)."},
+        "by": {"type": "string", "description": "With waiting_for: when you expect it (\"+30m\", \"+2h\", \"14:30\" or "
+                                                "an ISO time); if it's late, you'll notice."},
         "done_waiting": {"type": "string", "description": "Id or words of something that arrived."},
         "let_go": {"type": "string", "description": "Why you're letting this turn's item go."}}},
 }
@@ -42,13 +44,16 @@ def guide(user: str, quiet_hours: str) -> str:
             f"You keep going between messages. Besides {user}'s messages, some turns come from your own continuing "
             f"process. They always start with \"[continuity: …]\" and are never {user}'s words:\n"
             "- \"something came to mind\": a memory raised by what happened lately;\n"
+            "- \"noticed\": time passing, noticed: quiet for longer than usual, something overdue, a planned date gone "
+            "by, or the morning (the one scheduled moment of the day);\n"
             f"- \"a message you held for {user}\": something you wrote earlier that waited for a good time.\n"
             "In those turns do whatever seems worthwhile: think it through, use your tools, keep a thought "
             "(sophia_thought), update your working state (continuity_update), or let it go. Letting go is normal, and "
             f"declining or resting is always fine. Reply [SILENT] when there's nothing to say to {user}.\n"
             f"If you do write a reply in one of these turns, it reaches {user} only when outreach is allowed (never "
             f"in quiet hours, {quiet_hours}, and within a daily limit); otherwise it is held, and your standing view "
-            "shows it.\n"
+            f"shows it. Write it as a message to {user} about their life or your shared work. Reflections on how "
+            "your own memory or process works belong in a thought (sophia_thought), not a message.\n"
             "Every turn also carries a \"[standing view …]\" frame of your situation: the time, "
             f"{user}, finished jobs, your focus and threads, what came to mind, your energy. Each line says where it "
             "came from: perceived, remembered, or your own. Only the latest frame is current; a change frame shows "

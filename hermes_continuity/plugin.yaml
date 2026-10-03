@@ -25,5 +25,8 @@ config_schema:
   associate_k: {type: int, default: 3, description: "Memories raised after each turn"}
   item_ttl_minutes: {type: int, default: 120, description: "Something that came to mind and wasn't attended to fades after this long"}
   settle_seconds: {type: int, default: 20, description: "After any turn ends, wait this long before a turn of its own"}
+  sensors: {type: bool, default: true, description: "Notice time passing: quiet for longer than usual, overdue, dates passing, morning"}
+  morning: {type: str, default: "auto", description: "When the day starts for the morning event: HH:MM, or auto (the user's usual first message)"}
+  noticed_pull: {type: float, default: 1.0, description: "How hard something noticed pulls (above what merely comes to mind)"}
   full_frame_every: {type: int, default: 6, description: "A full standing view every this many turns (and after each compaction); changes in between"}
   sophia_path: {type: str, default: "", description: "Sophia's package directory (empty = next to this plugin, then HERMES_HOME/plugins/sophia)"}
