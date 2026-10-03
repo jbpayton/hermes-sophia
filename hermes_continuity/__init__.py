@@ -118,8 +118,14 @@ def register(ctx) -> None:
     else:
         store = Store(home / "plugin-data" / "continuity" / "continuity.db")
 
-        def inject(text: str) -> bool:
-            return bool(ctx.inject_message(text, role="user", session_key=cfg["session_key"] or None))
+        def inject(text: str, display=None) -> bool:
+            key = cfg["session_key"] or None
+            if display:
+                try:                                  # Hermes with the plugin-turn display patch
+                    return bool(ctx.inject_message(text, role="user", session_key=key, display=display))
+                except TypeError:
+                    pass                              # an unpatched Hermes: the turn shows what its config allows
+            return bool(ctx.inject_message(text, role="user", session_key=key))
 
         cont = Continuity(store, cfg, inject, memory=None, user_name=_user_name(cfg))
         _RUNNING[key] = cont

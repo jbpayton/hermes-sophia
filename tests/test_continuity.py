@@ -43,12 +43,14 @@ class FakeMemory:
 
 def make(tmp_path, clock=None, memory=None, inject_ok=True, **over):
     cfg = load(overrides={"enabled": True, "platform": "telegram", "settle_seconds": 0, "sensors": False, **over})
-    sent = []
+    sent, displays = [], []
 
-    def inject(text):
+    def inject(text, display=None):
         sent.append(text)
+        displays.append(display)
         return inject_ok
     c = Continuity(Store(tmp_path / "c.db"), cfg, inject, memory=memory, user_name="Joey", clock=clock or Clock(NOON))
+    c.displays = displays
     return c, sent
 
 
@@ -668,3 +670,35 @@ def test_outcomes_are_read_through_the_deferred_tool_bridge(tmp_path):
     c.on_reply(response_text="[SILENT]", session_id="s", platform="telegram")
     c.on_turn_end(session_id="s", platform="telegram")
     assert json.loads(c.store.one("SELECT outcomes FROM steps WHERE id=?", (step,))["outcomes"]) == ["goal progress"]
+
+
+def test_its_turns_show_thoughts_by_day_and_nothing_in_quiet_hours(tmp_path):
+    c, sent = make(tmp_path, memory=FakeMemory())
+    user_turn(c)
+    c.tick()
+    assert c.displays[-1] is None                         # by day: the user's display.plugin_turns decides
+    night, _ = make(tmp_path / "n", clock=Clock(NIGHT), memory=FakeMemory())
+    user_turn(night)
+    night.tick()
+    assert night.displays[-1] == {"thinking": False, "interim": False, "tool_progress": False, "streaming": False,
+                                  "notices": False}
+    off, _ = make(tmp_path / "o", memory=FakeMemory(), show_thoughts=False)
+    user_turn(off)
+    off.tick()
+    assert off.displays[-1]["interim"] is False
+
+
+def test_the_plugin_falls_back_on_an_unpatched_hermes(tmp_path, monkeypatch):
+    import hermes_continuity
+    monkeypatch.setattr(hermes_continuity, "_home", lambda: tmp_path)
+    monkeypatch.setenv("HERMES_CONTINUITY_RUN", "0")
+    hermes_continuity._RUNNING.clear()
+
+    class OldCtx(FakeCtx):
+        def inject_message(self, content, role="user", session_key=None):     # no display parameter
+            self.injected.append((content, session_key))
+            return True
+    ctx = OldCtx({"enabled": True, "platform": "telegram"})
+    register(ctx)
+    cont = hermes_continuity._RUNNING[str(tmp_path)]
+    assert cont.inject("hello", {"interim": False}) and ctx.injected == [("hello", None)]

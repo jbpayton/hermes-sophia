@@ -1,0 +1,332 @@
+From 898463ba664f3c39c9650160ef50dc508f4d3d0c Mon Sep 17 00:00:00 2001
+From: Joey Payton <joey.payton@gmail.com>
+Date: Sat, 3 Oct 2026 16:03:02 -0400
+Subject: [PATCH] gateway: selective display for plugin-injected turns
+
+A turn a plugin starts with ctx.inject_message is proactive work. Its tool
+chrome, streaming and long-running notices would ping the user before its
+result is known, and the plugin decides what of the final reply reaches them
+(it may hold it). Its thoughts are another matter: users may want to read
+along.
+
+plugin_turn_display(event) gives such a turn a display policy:
+- defaults: thinking and in-between assistant text shown (delivered quietly
+  where the platform supports it: Telegram's "important" mode); tool
+  progress, streaming and long-running notices hidden;
+- display.plugin_turns in config.yaml overrides the defaults;
+- a plugin can narrow it per turn: inject_message(..., display={...}) can hide
+  a surface but never show one the user's config hides.
+Streaming stays off unless allowed explicitly, since a streamed reply would
+reach the chat before the plugin could hold it. Other turns, including
+heartbeats and background-process notices, are unchanged.
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+---
+ gateway/run_inbound.py                    |  7 +-
+ gateway/run_turn.py                       | 53 ++++++++++++++-
+ gateway/run_turn_runner.py                |  2 +-
+ gateway/turn_context.py                   |  3 +
+ hermes_cli/plugins.py                     | 13 ++--
+ tests/gateway/test_plugin_turn_display.py | 78 +++++++++++++++++++++++
+ 6 files changed, 145 insertions(+), 11 deletions(-)
+ create mode 100644 tests/gateway/test_plugin_turn_display.py
+
+diff --git a/gateway/run_inbound.py b/gateway/run_inbound.py
+index 4ca82c9..0ff8da8 100644
+--- a/gateway/run_inbound.py
++++ b/gateway/run_inbound.py
+@@ -1791,7 +1791,7 @@ class GatewayInboundMixin:
+         get_plugin_manager().clear_gateway_message_injector(self)
+ 
+     def _schedule_plugin_message_injection(
+-        self, *, session_key: str, content: str, plugin_id: str
++        self, *, session_key: str, content: str, plugin_id: str, display: Optional[dict] = None,
+     ) -> bool:
+         """Schedule a plugin-triggered turn on the live gateway loop (thread-safe)."""
+         from gateway.run import safe_schedule_threadsafe
+@@ -1800,7 +1800,7 @@ class GatewayInboundMixin:
+             return False
+ 
+         coro = self._dispatch_plugin_message_injection(
+-            session_key=session_key, content=content, plugin_id=plugin_id,
++            session_key=session_key, content=content, plugin_id=plugin_id, **({"display": display} if display else {}),
+         )
+         try:
+             current_loop = asyncio.get_running_loop()
+@@ -1841,7 +1841,7 @@ class GatewayInboundMixin:
+         return True
+ 
+     async def _dispatch_plugin_message_injection(
+-        self, *, session_key: str, content: str, plugin_id: str
++        self, *, session_key: str, content: str, plugin_id: str, display: Optional[dict] = None,
+     ) -> bool:
+         """Route a plugin-triggered turn through the session's live adapter."""
+         def _accepting() -> bool:
+@@ -1881,6 +1881,7 @@ class GatewayInboundMixin:
+                 "hermes_plugin_id": plugin_id, "hermes_plugin_injection": True,
+                 "gateway_session_key": session_key, "gateway_session_id": entry.session_id,
+                 "gateway_session_strict": True,
++                **({"hermes_display": dict(display)} if display else {}),
+             },
+         ))
+         logger.info(
+diff --git a/gateway/run_turn.py b/gateway/run_turn.py
+index 9db244f..0e86f81 100644
+--- a/gateway/run_turn.py
++++ b/gateway/run_turn.py
+@@ -163,6 +163,36 @@ def hygiene_no_commit_reason(agent) -> str:
+     return "in-place commit did not complete"
+ 
+ 
++
++# What a turn a plugin injected (ctx.inject_message) may show while it runs. Such a turn is proactive work: its
++# tool chrome, streaming and long-running notices would ping the user before its result is known, and the plugin
++# decides what of the final reply reaches them. Its thoughts (thinking progress, in-between assistant text) stay
++# visible by default; on platforms with quiet delivery (Telegram's default "important" mode) they arrive without a
++# notification. ``display.plugin_turns`` overrides these defaults; a plugin can narrow them per turn.
++PLUGIN_TURN_DISPLAY_DEFAULTS = {"thinking": True, "interim": True, "tool_progress": False, "streaming": False,
++                                "notices": False}
++
++
++def plugin_turn_display(event: Any, user_config: Optional[Dict[str, Any]] = None) -> Optional[Dict[str, bool]]:
++    """The display policy for a plugin-injected turn, or None for any other turn."""
++    meta = getattr(event, "metadata", None) or {}
++    if not meta.get("hermes_plugin_injection"):
++        return None
++    if user_config is None:
++        try:
++            from gateway.run import _load_gateway_config
++            user_config = _load_gateway_config() or {}
++        except Exception:
++            user_config = {}
++    policy = dict(PLUGIN_TURN_DISPLAY_DEFAULTS)
++    configured = ((user_config or {}).get("display") or {}).get("plugin_turns") or {}
++    if isinstance(configured, dict):
++        policy.update({k: bool(v) for k, v in configured.items() if k in policy})
++    per_turn = meta.get("hermes_display") or {}
++    if isinstance(per_turn, dict):                   # a plugin can hide a surface, never show one the user hid
++        policy.update({k: policy[k] and bool(v) for k, v in per_turn.items() if k in policy})
++    return policy
++
+ class GatewayTurnMixin:
+     """Agent-turn execution for GatewayRunner (see module docstring)."""
+ 
+@@ -2183,6 +2213,7 @@ class GatewayTurnMixin:
+                     "gateway_input_owner": prepared.persistence_owner, **diagnostic_metadata(event)},
+                 message_type=event.message_type,
+                 scheduled_heartbeat=bool(getattr(event, "_heartbeat_session_id", None)),
++                plugin_display=plugin_turn_display(event),
+             )
+             _turn_seconds = time.monotonic() - _turn_started_monotonic
+ 
+@@ -4185,6 +4216,7 @@ class GatewayTurnMixin:
+         persist_user_display_kind: Optional[str] = None, message_type: Optional[str] = None,
+         persist_user_display_metadata: Optional[dict] = None,
+         scheduled_heartbeat: bool = False,
++        plugin_display: Optional[Dict[str, bool]] = None,
+     ) -> Dict[str, Any]:
+         """Run the agent; returns the full run_conversation result dict.
+ 
+@@ -4193,7 +4225,8 @@ class GatewayTurnMixin:
+             return await self._run_agent_via_proxy(
+                 message=message, context_prompt=context_prompt, history=history, source=source,
+                 session_id=session_id, session_key=session_key, run_generation=run_generation,
+-                event_message_id=event_message_id, scheduled_heartbeat=scheduled_heartbeat,
++                event_message_id=event_message_id,
++                scheduled_heartbeat=scheduled_heartbeat or plugin_display is not None,
+             )
+ 
+         from run_agent import AIAgent
+@@ -4211,6 +4244,18 @@ class GatewayTurnMixin:
+                 _native_slack_task_cards=False,
+                 needs_progress_queue=False,
+             )
++        if plugin_display is not None:
++            disp = dataclasses.replace(
++                disp,
++                tool_progress_enabled=bool(disp.tool_progress_enabled) and plugin_display["tool_progress"],
++                interim_assistant_messages_enabled=(
++                    bool(disp.interim_assistant_messages_enabled) and plugin_display["interim"]),
++                _thinking_enabled=bool(disp._thinking_enabled) and plugin_display["thinking"],
++                _native_slack_task_cards=bool(disp._native_slack_task_cards) and plugin_display["tool_progress"],
++            )
++            disp = dataclasses.replace(
++                disp, needs_progress_queue=disp.tool_progress_enabled or disp._thinking_enabled
++                or disp._native_slack_task_cards)
+         turn_ctx, turn_runner, _cleanup_adapter = self._run_agent_build_turn_context(
+             disp, AIAgent, message=message, source=source, session_key=session_key,
+             run_generation=run_generation, context_prompt=context_prompt, history=history,
+@@ -4222,12 +4267,13 @@ class GatewayTurnMixin:
+             persist_user_display_kind=persist_user_display_kind,
+             persist_user_display_metadata=persist_user_display_metadata,
+             scheduled_heartbeat=scheduled_heartbeat,
++            stream_deltas_off=plugin_display is not None and not plugin_display["streaming"],
+         )
+         _status_thread_metadata = self._run_agent_bind_turn_wiring(
+             turn_ctx, turn_runner, source, event_message_id, disp._native_slack_task_cards,
+         )
+         # Two independent quiet reasons: a muted diagnostic wake (ours) and a scheduled heartbeat.
+-        if not (scheduled_heartbeat or turn_ctx.mute_notification_reply):
++        if not (scheduled_heartbeat or turn_ctx.mute_notification_reply or plugin_display is not None):
+             self._run_agent_start_streaming_tts(
+                 source, message_type, _status_thread_metadata, turn_ctx.streaming_tts_consumer_holder,
+             )
+@@ -4244,7 +4290,8 @@ class GatewayTurnMixin:
+         # Periodic "still working" notifications so the user knows the agent hasn't died.
+         _executor_task_holder: list = [None]  # bound once the executor future exists (see below)
+         _notify_task = (
+-            None if (scheduled_heartbeat or turn_ctx.mute_notification_reply)
++            None if (scheduled_heartbeat or turn_ctx.mute_notification_reply
++                     or (plugin_display is not None and not plugin_display["notices"]))
+             else spawn(self._run_agent_notify_long_running(disp, turn_ctx, _executor_task_holder))
+         )
+ 
+diff --git a/gateway/run_turn_runner.py b/gateway/run_turn_runner.py
+index 1b2e2c0..a6fa63e 100644
+--- a/gateway/run_turn_runner.py
++++ b/gateway/run_turn_runner.py
+@@ -921,7 +921,7 @@ class TurnRunner:
+             scfg = StreamingConfig()
+         # display.platforms.<plat>.streaming may disable streaming per platform; None = follow global.
+         plat_streaming = ctx.resolve_display_setting(ctx.user_config, platform_key, "streaming")
+-        want_stream_deltas = not ctx.scheduled_heartbeat and (
++        want_stream_deltas = not ctx.scheduled_heartbeat and not ctx.stream_deltas_off and (
+             scfg.enabled and scfg.transport != "off" if plat_streaming is None else bool(plat_streaming)
+         )
+         want_interim_messages = bool(ctx.interim_assistant_messages_enabled) and not ctx.scheduled_heartbeat
+diff --git a/gateway/turn_context.py b/gateway/turn_context.py
+index a85f203..12062a2 100644
+--- a/gateway/turn_context.py
++++ b/gateway/turn_context.py
+@@ -18,6 +18,9 @@ class TurnContext:
+     # Scheduled heartbeats are proactive work, not replies to the source message that
+     # registered the watch.  Their routine delivery surfaces stay quiet.
+     scheduled_heartbeat: bool = False
++    # A plugin-injected turn's policy can keep its reply from streaming (it would reach the chat before the
++    # plugin could hold it).
++    stream_deltas_off: bool = False
+     _run_still_current: Callable[[], bool] = None  # type: ignore[assignment]
+     _live_status_adapter: Any = None
+     _live_status_mode: str = "off"
+diff --git a/hermes_cli/plugins.py b/hermes_cli/plugins.py
+index 15fa39d..238f9c6 100644
+--- a/hermes_cli/plugins.py
++++ b/hermes_cli/plugins.py
+@@ -606,11 +606,15 @@ class PluginContext:
+     # manager's home, never the active profile's (#65593 constraint).
+     def inject_message(
+         self, content: str, role: str = "user", *, session_key: str | None = None,
++        display: dict | None = None,
+     ) -> bool:
+         """Inject a message into a CLI or gateway conversation (new turn if idle, interrupt if running).
+         Gateway injection needs an existing ``session_key`` plus
+         ``plugins.entries.<plugin_id>.allow_gateway_injection``; ``True`` means the gateway accepted the
+-        request for async dispatch, not that delivery completed."""
++        request for async dispatch, not that delivery completed. ``display`` (gateway only) narrows what the
++        injected turn shows while it runs (``thinking``, ``interim``, ``tool_progress``, ``streaming``,
++        ``notices``: booleans) below ``display.plugin_turns``; it can hide a surface, never show one the
++        user's config hides."""
+         cli = self._manager._cli_ref
+         msg = content if role == "user" else f"[{role}] {content}"
+         if cli is not None:
+@@ -629,9 +633,10 @@ class PluginContext:
+             logger.warning("inject_message: no live gateway is available")
+             return False
+         try:
+-            return bool(self._manager.inject_gateway_message(
+-                session_key=session_key, content=msg, plugin_id=self.plugin_id,
+-            ))
++            kwargs = {"session_key": session_key, "content": msg, "plugin_id": self.plugin_id}
++            if display:
++                kwargs["display"] = {str(k): bool(v) for k, v in dict(display).items()}
++            return bool(self._manager.inject_gateway_message(**kwargs))
+         except Exception:
+             logger.warning("inject_message: gateway scheduling failed for plugin %s", self.plugin_id,
+                            exc_info=True)
+diff --git a/tests/gateway/test_plugin_turn_display.py b/tests/gateway/test_plugin_turn_display.py
+new file mode 100644
+index 0000000..51f6d55
+--- /dev/null
++++ b/tests/gateway/test_plugin_turn_display.py
+@@ -0,0 +1,78 @@
++"""A plugin-injected turn shows its thoughts and hides tool chrome, streaming and notices, selectively."""
++import importlib
++import sys
++import types
++from types import SimpleNamespace
++
++import pytest
++
++from gateway.config import Platform
++from gateway.run_turn import PLUGIN_TURN_DISPLAY_DEFAULTS, plugin_turn_display
++from gateway.session import SessionSource
++
++from tests.gateway.test_run_progress_topics import FakeAgent, ProgressCaptureAdapter, _make_runner
++
++
++def _event(**meta):
++    return SimpleNamespace(metadata=meta)
++
++
++def test_only_plugin_injected_turns_get_a_policy():
++    assert plugin_turn_display(_event(), user_config={}) is None
++    assert plugin_turn_display(SimpleNamespace(metadata=None), user_config={}) is None
++    assert plugin_turn_display(_event(source="background_process"), user_config={}) is None
++
++
++def test_defaults_show_thoughts_and_hide_the_rest():
++    policy = plugin_turn_display(_event(hermes_plugin_injection=True), user_config={})
++    assert policy == PLUGIN_TURN_DISPLAY_DEFAULTS
++    assert policy["thinking"] and policy["interim"]
++    assert not (policy["tool_progress"] or policy["streaming"] or policy["notices"])
++
++
++def test_the_user_config_sets_the_policy_and_a_plugin_can_only_narrow_it():
++    cfg = {"display": {"plugin_turns": {"tool_progress": True, "interim": False}}}
++    policy = plugin_turn_display(_event(hermes_plugin_injection=True), user_config=cfg)
++    assert policy["tool_progress"] and not policy["interim"] and policy["thinking"]
++    narrowed = plugin_turn_display(_event(hermes_plugin_injection=True,
++                                          hermes_display={"thinking": False, "interim": True, "streaming": True}),
++                                   user_config=cfg)
++    assert not narrowed["thinking"]                       # hidden by the plugin for this turn
++    assert not narrowed["interim"] and not narrowed["streaming"]   # it can't show what the user's config hides
++
++
++@pytest.mark.asyncio
++@pytest.mark.parametrize("show_tools", [False, True])
++async def test_tool_progress_follows_the_policy(monkeypatch, tmp_path, show_tools):
++    monkeypatch.setenv("HERMES_TOOL_PROGRESS_MODE", "all")
++    fake_run_agent = types.ModuleType("run_agent")
++    fake_run_agent.AIAgent = FakeAgent
++    monkeypatch.setitem(sys.modules, "run_agent", fake_run_agent)
++    adapter = ProgressCaptureAdapter()
++    runner = _make_runner(adapter)
++    gateway_run = importlib.import_module("gateway.run")
++    monkeypatch.setattr(gateway_run, "_hermes_home", tmp_path)
++    monkeypatch.setattr(gateway_run, "_resolve_runtime_agent_kwargs", lambda: {"api_key": "***"})
++    source = SessionSource(platform=Platform.TELEGRAM, chat_id="123", chat_type="dm")
++    policy = dict(PLUGIN_TURN_DISPLAY_DEFAULTS, tool_progress=show_tools)
++    result = await runner._run_agent(message="[continuity: something came to mind]", context_prompt="", history=[],
++                                     source=source, session_id="s", session_key="agent:main:telegram:dm:123",
++                                     plugin_display=policy)
++    assert result["final_response"] == "done"
++    shown = " ".join(str(m["content"]) for m in adapter.sent) + " ".join(str(e["content"]) for e in adapter.edits)
++    assert ("Running pwd" in shown) is show_tools
++
++
++def test_inject_message_carries_the_policy_to_the_gateway(monkeypatch):
++    from hermes_cli import plugins as P
++    captured = {}
++    manager = SimpleNamespace(_cli_ref=None, has_gateway_message_injector=True,
++                              inject_gateway_message=lambda **kw: captured.update(kw) or True)
++    monkeypatch.setattr(P.PluginContext, "plugin_id", property(lambda self: "continuity"))
++    monkeypatch.setattr(P.PluginContext, "_gateway_injection_allowed", lambda self: True)
++    ctx = P.PluginContext(SimpleNamespace(name="continuity"), manager)
++    assert ctx.inject_message("hi", session_key="k", display={"thinking": 0})
++    assert captured["display"] == {"thinking": False} and captured["plugin_id"] == "continuity"
++    captured.clear()
++    assert ctx.inject_message("hi", session_key="k")
++    assert "display" not in captured
+-- 
+2.34.1
+

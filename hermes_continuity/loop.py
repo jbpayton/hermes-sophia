@@ -44,6 +44,9 @@ NOT_NOW = {"not now", "later", "stop", "no thanks", "not today", "busy", "no", "
 REPLY_WINDOW_S = 12 * 3600
 CALIBRATE_AFTER = 50                 # messages sent, not responses: silence must not hold calibration back forever
 NOT_OURS = {"subagent", "cron"}
+# What its own turns may show while they run (Hermes patch: display.plugin_turns, narrowed per turn). Fully quiet in
+# quiet hours or when show_thoughts is off; otherwise the user's display.plugin_turns decides.
+FULLY_QUIET = {"thinking": False, "interim": False, "tool_progress": False, "streaming": False, "notices": False}
 AROUND_S = 2 * 3600                # the user counts as around this long after they last wrote
 OWN_TURN_START_S = 180             # a turn it started that hasn't begun after this long didn't happen
 
@@ -462,6 +465,12 @@ class Continuity:
         return {"kind": kind, "queue_id": best["id"], "text": best["text"], "depth": best["depth"],
                 "salience": best["salience"], **d}, ""
 
+    def display_for_turn(self, now: float) -> Optional[Dict[str, bool]]:
+        if not self.cfg.get("show_thoughts", True) or in_quiet_hours(
+                self.cfg["quiet_hours"], dt.datetime.fromtimestamp(now).strftime("%H:%M")):
+            return dict(FULLY_QUIET)
+        return None
+
     def _render(self, item: Dict[str, Any]) -> str:
         u = self.user_name
         if item["kind"] == "goal":
@@ -551,7 +560,7 @@ class Continuity:
             step_id = self.store.x("""INSERT INTO steps(ts, kind, item_id, text, energy_before, energy_after)
                                       VALUES(?,?,?,?,?,?)""", (now, item["kind"], item.get("queue_id") or
                                                               item.get("deliver_id"), text, energy, after))
-            if not self.inject(text):
+            if not self.inject(text, self.display_for_turn(now)):
                 self.store.x("UPDATE steps SET outcome='not accepted' WHERE id=?", (step_id,))
                 self.backoff_until = now + 300
                 self._go_quiet(st, "stalled: Hermes didn't accept its turn", now)
