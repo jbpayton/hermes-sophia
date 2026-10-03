@@ -32,7 +32,7 @@ class FakeMemory:
              "label": "", "via": None, "pull": 0.70}]
         self.cues, self.events = [], []
 
-    def associate(self, cue, k=0, exclude=(), record=True, now=None):
+    def associate(self, cue, k=0, exclude=(), record=True, now=None, session_id=""):
         self.cues.append(cue)
         return [dict(it) for it in self.items if it["id"] not in exclude][:k or 3]
 
@@ -628,3 +628,27 @@ def test_what_a_turn_of_its_own_led_to_is_recorded(tmp_path):
     c.on_turn_end(session_id="s", platform="telegram")
     led = json.loads(c.store.one("SELECT outcomes FROM steps WHERE id=?", (step,))["outcomes"])
     assert led == ["thought kept", "goal progress", "used web_search"]
+
+
+def test_a_silence_marker_with_commentary_is_still_silence(tmp_path):
+    c, sent = make(tmp_path, memory=FakeMemory())
+    user_turn(c)
+    step = c.tick()
+    out = own_turn(c, sent[-1], reply="[SILENT]\n\nThis was Joey's original question; nothing new to do.")
+    assert out == "[SILENT]" and not c.store.q("SELECT 1 FROM outbox")
+    assert c.store.one("SELECT outcome FROM steps WHERE id=?", (step,))["outcome"] == "silent"
+
+
+def test_association_skips_the_live_conversation_and_logged_tool_calls(engine):
+    from hermes_sophia.api import Memory
+    mem = Memory("", engine=engine)
+    engine.capture.process_messages("live", [
+        {"role": "user", "content": "Could you keep working on finding a wide-angle lens for the Sony?"},
+        {"role": "assistant", "content": "", "tool_calls": [{"id": "t1", "function": {"name": "terminal",
+            "arguments": "{\"command\": \"echo wide-angle lens research\"}"}}]},
+        {"role": "tool", "tool_call_id": "t1", "content": "wide-angle lens research"},
+        {"role": "assistant", "content": "On it."}])
+    engine.capture.process_messages("old", [{"role": "user", "content": "The wide-angle lens I rented last year was too heavy."}])
+    items = mem.associate("wide-angle lens", k=8, record=False, session_id="live")
+    texts = " | ".join(it["text"] for it in items)
+    assert "rented last year" in texts and "keep working" not in texts and "terminal:" not in texts

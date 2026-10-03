@@ -480,6 +480,8 @@ class Recall:
                 continue
             if "continuity" in (it.get("flags") or ""):
                 continue        # the process's own turns and notes: raising them would loop it on itself
+            if "action" in (it.get("flags") or ""):
+                continue        # a logged tool call is a record of a step, not something that comes to mind
             if it["kind"] == "window" and not it.get("facts") and \
                     len(re.findall(r"\w+", it.get("text") or "")) < cfg["associate_min_words"]:
                 continue

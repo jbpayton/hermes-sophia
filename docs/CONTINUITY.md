@@ -291,6 +291,10 @@ plugins:
         platform: cli          # the conversation it belongs to
         max_steps_per_day: 6   # small while testing
         # outreach stays off: anything it writes in its own turns is held
+platform_toolsets:
+  cli:                         # the platform it runs on
+    - hermes-cli
+    - continuity               # its tools (continuity_update, continuity_goal) load directly
 ```
 
 Then open an interactive chat (`hermes -p <test> chat`) and talk to it. The Sophia tab's Continuity view shows every profile with a continuity store, so you can watch the test profile from your main dashboard. Its own turns start a few seconds after a turn ends, when something came to mind, and stop when its energy runs out.
@@ -303,6 +307,11 @@ hermes -p <test> continuity outbox     # what it wrote and held for you
 hermes -p <test> continuity view       # the standing view as it would look now
 hermes -p <test> continuity pause      # stop its own turns (state kept); resume undoes it
 ```
+
+**The goal run (2026-10-03).** Asked to "keep working on finding a good wide-angle lens… make it a goal", the agent set goal #1 (yours, with a first step) and then, in a turn of its own, searched the web, read a lens guide in the browser and recorded progress on it. That run also showed three fixes, now in:
+- association raised lines from the live conversation and a logged tool call;
+- a reply of `[SILENT]` followed by a line of commentary was held as a message instead of treated as silence;
+- the continuity tools weren't in the CLI's toolsets, so the agent had to search for them.
 
 **The first run (2026-10-03, Claude Haiku 4.5 on the test profile).** After a question about a camera lens, the loop started a turn of its own with an old Yosemite line from memory. The agent noticed its previous answer had asked about things memory already held, and wrote a correction, which was held because outreach was off. Its second turn brought up "I'm bringing the Fujifilm X-T5", a line you had later changed to the Sony. The agent pointed out that memory kept surfacing the original statement. Association had been dropping recall's "later changed" note; it now carries it. Then its energy ran out and it went quiet: "ran its course: no energy left for turns of its own (2 turns: 2 held; 8 s of model time)".
 

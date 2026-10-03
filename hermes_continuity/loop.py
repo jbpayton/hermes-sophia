@@ -89,7 +89,9 @@ def answer_kind(message: str) -> str:
 
 
 def is_silent(text: str) -> bool:
-    return (text or "").strip().upper() in _SILENT
+    """A reply that is, or opens with, a silence marker: models sometimes add a line of commentary after it."""
+    t = (text or "").strip().upper()
+    return t in _SILENT or any(t.startswith(m) for m in _SILENT)
 
 
 def _text(content: Any) -> str:
@@ -292,7 +294,8 @@ class Continuity:
                 return None
             if is_silent(response_text):
                 t["outcome"] = "silent"
-                return None
+                # a marker followed by commentary isn't bare, and Hermes only drops a bare one
+                return None if response_text.strip().upper() in _SILENT else "[SILENT]"
             now = self.clock()
             st = self.store.state()
             self._roll_day(st, now)
@@ -338,7 +341,7 @@ class Continuity:
             depth = int((t.get("item") or {}).get("depth", 0)) + 1 if t["kind"] == "continuity" else 1
             cue = f"{t.get('message', '')} {t.get('reply', '')}".replace(LABEL, " ").strip()
             if cue and not (t["kind"] == "continuity" and t.get("outcome") == "silent" and t.get("let_go")):
-                self.pending_cues.append({"cue": cue[:1500], "depth": depth})
+                self.pending_cues.append({"cue": cue[:1500], "depth": depth, "session_id": t.get("session_id", "")})
         self._wake.set()
 
     # ------------------------------------------------------------ tool
@@ -405,7 +408,7 @@ class Continuity:
         for c in cues:
             try:
                 items = self.memory.associate(c["cue"], k=self.cfg["associate_k"],
-                                              exclude=self.store.queued_memory_ids())
+                                              exclude=self.store.queued_memory_ids(), session_id=c.get("session_id", ""))
             except Exception as ex:
                 logger.warning("continuity: association failed: %s", ex)
                 continue

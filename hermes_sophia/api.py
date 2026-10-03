@@ -28,10 +28,11 @@ class Memory:
         return self.e.cfg["agent_name"]
 
     def associate(self, cue: str, k: int = 0, exclude: Sequence[str] = (), record: bool = True,
-                  now: Optional[float] = None) -> List[Dict[str, Any]]:
+                  now: Optional[float] = None, session_id: str = "") -> List[Dict[str, Any]]:
         """What a cue brings to mind (no gate), damped for what came up recently. Each item: id, kind, text, said,
-        speaker, label (how it must be shown), via, pull."""
-        items, _ = self.e.recall.associate(cue, k=k, exclude=exclude, record=record, now=now)
+        speaker, label (how it must be shown), via, pull. ``session_id``: the live conversation, whose lines are already
+        in context and so never come to mind (unless compaction has dropped them)."""
+        items, _ = self.e.recall.associate(cue, k=k, exclude=exclude, record=record, now=now, session_id=session_id)
         return [{"id": it["id"], "kind": it["kind"], "text": it["text"], "said": it.get("said"),
                  "speaker": it.get("speaker") or "", "label": own_label(it.get("flags", "")),
                  "via": it.get("via"), "changed": list(it.get("changed") or []),
