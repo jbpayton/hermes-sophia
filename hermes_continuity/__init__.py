@@ -125,6 +125,7 @@ def register(ctx) -> None:
     ctx.register_hook("pre_llm_call", cont.on_turn_start)
     ctx.register_hook("transform_llm_output", cont.on_reply)
     ctx.register_hook("on_session_end", cont.on_turn_end)
+    ctx.register_hook("post_api_request", cont.on_api)
     ctx.register_tool(name="continuity_update", toolset="continuity", schema=UPDATE_SCHEMA,
                       handler=lambda params, **kw: json.dumps(cont.update(params or {}), default=str))
     try:

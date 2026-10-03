@@ -460,6 +460,9 @@ class Recall:
         replaced by whatever is next. Neighbouring turns ("next to a match") help a question's context, not
         association, and are left out. At most associate_per_source items come from one message or page.
 
+        The continuing process's own events (its turns, its quiet notes) are never raised: association feeds that
+        process, and raising its own output would loop it on itself. Recall still finds them, labelled.
+
         Two kinds of line pull less. One that stated something later superseded keeps its "later changed" note and
         pulls associate_superseded_weight as hard, so the current version ranks first and an old one rarely starts
         a train of thought. A bare reply ("yes", "ok, thanks") under associate_min_words is skipped: it says nothing
@@ -475,6 +478,8 @@ class Recall:
         for it in ranked:
             if it["id"] in skip or it.get("bare_question") or it.get("via") == "next to a match":
                 continue
+            if "continuity" in (it.get("flags") or ""):
+                continue        # the process's own turns and notes: raising them would loop it on itself
             if it["kind"] == "window" and not it.get("facts") and \
                     len(re.findall(r"\w+", it.get("text") or "")) < cfg["associate_min_words"]:
                 continue

@@ -64,10 +64,14 @@ class Store:
         with self.lock:
             self.conn.execute("PRAGMA busy_timeout=30000")
             self.conn.executescript(SCHEMA)
-            have = {r[1] for r in self.conn.execute("PRAGMA table_info(frames)")}
-            for col, typ in (("turn_kind", "TEXT"), ("step_id", "INT"), ("context_chars", "INT")):
-                if col not in have:                    # files from the first version
-                    self.conn.execute(f"ALTER TABLE frames ADD COLUMN {col} {typ}")
+            for table, cols in (("frames", (("turn_kind", "TEXT"), ("step_id", "INT"), ("context_chars", "INT"),
+                                            ("prompt_tokens", "INT"))),
+                                ("steps", (("prompt_tokens", "INT"), ("tokens", "INT"))),
+                                ("quiet", (("tokens", "INT"),))):
+                have = {r[1] for r in self.conn.execute(f"PRAGMA table_info({table})")}
+                for col, typ in cols:
+                    if col not in have:                # files from earlier versions
+                        self.conn.execute(f"ALTER TABLE {table} ADD COLUMN {col} {typ}")
             self.conn.commit()
 
     def q(self, sql: str, args: Sequence[Any] = ()) -> List[sqlite3.Row]:

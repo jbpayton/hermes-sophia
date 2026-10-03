@@ -42,7 +42,7 @@ def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional
         paused = bool(meta.get("paused"))
         midnight = dt.datetime.fromtimestamp(now).replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
 
-        steps_today = c.execute("SELECT outcome, ms FROM steps WHERE ts>=?", (midnight,)).fetchall()
+        steps_today = c.execute("SELECT outcome, ms, tokens FROM steps WHERE ts>=?", (midnight,)).fetchall()
         outcomes = Counter((r["outcome"] or "running") for r in steps_today)
         quiet_reason = st.get("quiet_reason") or ""
         quiet = {"reason": quiet_reason or None, "since": _d(st.get("quiet_since")) if quiet_reason else None,
@@ -68,7 +68,7 @@ def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional
         journal: List[Dict[str, Any]] = []
         for r in c.execute("""SELECT 'turn' AS what, ts, kind, outcome, reason, ms, text, NULL AS steps, NULL AS silent,
                                      NULL AS held, context_chars, reply_chars FROM steps
-                              UNION ALL SELECT 'quiet', ts, NULL, NULL, reason, ms, NULL, steps, silent, held, NULL, NULL
+                              UNION ALL SELECT 'quiet', ts, NULL, NULL, reason, ms, NULL, steps, silent, held, tokens, NULL
                               FROM quiet ORDER BY ts DESC LIMIT 16"""):
             if r["what"] == "turn":
                 lines = (r["text"] or "").splitlines()
@@ -79,14 +79,16 @@ def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional
             else:
                 journal.append({"what": "quiet", "at": _d(r["ts"]), "reason": r["reason"], "turns": r["steps"],
                                 "silent": r["silent"] or 0, "held": r["held"] or 0,
-                                "model_seconds": round((r["ms"] or 0) / 1000, 1),
+                                "model_seconds": round((r["ms"] or 0) / 1000, 1), "tokens": r["context_chars"] or 0,
                                 "kind": "healthy" if (r["reason"] or "").startswith(HEALTHY) else "chase"})
 
         frames = c.execute("SELECT * FROM frames ORDER BY id DESC LIMIT 20").fetchall()
-        fills = [r["chars"] / r["context_chars"] for r in frames if r["context_chars"]]
+        # the frame's share of the real prompt: its characters at about 4 per token, against the prompt tokens the
+        # model reported for that turn's first call (system prompt and tools included)
+        fills = [(r["chars"] / 4) / r["prompt_tokens"] for r in frames if r["prompt_tokens"]]
         frame_rows = [{"at": _d(r["ts"]), "kind": r["kind"], "chars": r["chars"], "turn": r["turn_kind"],
-                       "context_chars": r["context_chars"],
-                       "fill": round(r["chars"] / r["context_chars"], 4) if r["context_chars"] else None}
+                       "prompt_tokens": r["prompt_tokens"],
+                       "fill": round((r["chars"] / 4) / r["prompt_tokens"], 4) if r["prompt_tokens"] else None}
                       for r in frames[:12]]
         kinds = Counter(r["kind"] for r in frames)
         last_full = c.execute("SELECT text, ts FROM frames WHERE kind='full' ORDER BY id DESC LIMIT 1").fetchone()
@@ -96,6 +98,7 @@ def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional
             "quiet": quiet,
             "today": {"turns": len(steps_today), "budget": cfg["max_steps_per_day"], "outcomes": dict(outcomes),
                       "model_seconds": round(sum((r["ms"] or 0) for r in steps_today) / 1000, 1),
+                      "tokens": sum((r["tokens"] or 0) for r in steps_today),
                       "outreach_sent": sent_today, "outreach_limit": cfg["max_outreach_per_day"],
                       "outreach": "on" if cfg["outreach"] else "off", "quiet_hours": cfg["quiet_hours"]},
             "user": {"name": user, "last_wrote": _d(last_user) if last_user else None,
@@ -130,7 +133,8 @@ def text(rep: Dict[str, Any]) -> str:
     out.append(f"energy {rep['energy']} (a turn costs {rep['step_cost']})"
                + (f" · quiet: {q['reason']} [{q['kind']}] since {q['since']}" if q["reason"] else " · active"))
     oc = ", ".join(f"{n} {k}" for k, n in sorted(t["outcomes"].items(), key=lambda kv: -kv[1])) or "none"
-    out.append(f"today: {t['turns']}/{t['budget']} turns of its own ({oc}); {t['model_seconds']}s of model time; "
+    out.append(f"today: {t['turns']}/{t['budget']} turns of its own ({oc}); {t['model_seconds']}s of model time, "
+               f"{t['tokens']} tokens; "
                f"outreach {t['outreach']}, {t['outreach_sent']}/{t['outreach_limit']} sent, quiet hours {t['quiet_hours']}")
     out.append(f"{u['name']}: " + (f"last wrote {u['ago']} ({u['last_wrote']}), {'around' if u['around'] else 'not around'}"
                                    if u["last_wrote"] else "hasn't written yet"))
@@ -158,8 +162,8 @@ def text(rep: Dict[str, Any]) -> str:
                        + (f"  [{j['reason']}]" if j["reason"] else ""))
         else:
             out.append(f"  {j['at']}  quiet [{j['kind']}] {j['reason']} ({j['turns']} turns: {j['silent']} silent, "
-                       f"{j['held']} held; {j['model_seconds']}s)")
+                       f"{j['held']} held; {j['model_seconds']}s, {j['tokens']} tokens)")
     f = rep["frames"]
     fill = f"mean {f['mean_fill']:.1%}, max {f['max_fill']:.1%}" if f["mean_fill"] is not None else "not measured yet"
-    out.append(f"\nframes: {f['kinds']} (full every {f['full_every']}); share of each turn's context: {fill}")
+    out.append(f"\nframes: {f['kinds']} (full every {f['full_every']}); share of each turn's prompt: {fill}")
     return "\n".join(out)

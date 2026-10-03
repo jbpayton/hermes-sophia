@@ -315,7 +315,7 @@ def test_register_wires_hooks_tool_guide_and_cli_without_starting_a_loop(tmp_pat
     hermes_continuity._RUNNING.clear()
     ctx = FakeCtx({"enabled": True, "platform": "telegram"})
     register(ctx)
-    assert set(ctx.hooks) == {"pre_llm_call", "transform_llm_output", "on_session_end"}
+    assert set(ctx.hooks) == {"pre_llm_call", "transform_llm_output", "on_session_end", "post_api_request"}
     assert "continuity_update" in ctx.tools and "continuity" in ctx.cli
     g = ctx.sections["continuity.guide"]
     assert "[continuity: …]" in g and "[SILENT]" in g and "never" in g
@@ -478,3 +478,32 @@ def test_by_accepts_minutes_hours_clock_times_and_iso():
     assert parse_by("+30m", NOON) == NOON + 1800 and parse_by("2h", NOON) == NOON + 7200
     assert parse_by("14:30", NOON) == NOON + 2.5 * 3600 and parse_by("09:00", NOON) == NOON + 21 * 3600
     assert parse_by("2026-10-04T10:00", NOON) and parse_by("someday", NOON) is None
+
+
+def test_its_own_events_never_come_to_mind_again(engine):
+    """Association feeds the loop; raising the loop's own turns and notes would make it think about itself."""
+    from hermes_sophia.api import Memory
+    mem = Memory("", engine=engine)
+    engine.capture.process_messages("t", [
+        {"role": "user", "content": "[continuity: something came to mind]\n“The movers broke a lamp in Spokane.” (Joey)\n"
+                                    "(For you: this is your own process, not Joey. Think about it, act, or let it go.)"},
+        {"role": "assistant", "content": "[SILENT]"}])
+    mem.record_event("Went quiet (ran its course) after 2 turns of its own about the Spokane lamp.")
+    stored = engine.store.q("SELECT text, flags FROM windows WHERE speaker='continuity'")
+    assert stored and not any("For you:" in r["text"] or "Think about it" in r["text"] for r in stored)
+    items = mem.associate("Spokane lamp movers", k=8, record=False)
+    assert not any("continuity" in it.get("label", "") or it["speaker"] == "continuity" for it in items)
+
+
+def test_fill_is_measured_against_the_real_prompt(tmp_path):
+    c, _ = make(tmp_path)
+    c.on_turn_start(session_id="s", user_message="hi", conversation_history=[], platform="telegram")
+    c.on_api(platform="telegram", usage={"prompt_tokens": 20000, "total_tokens": 20150})
+    c.on_api(platform="telegram", usage={"prompt_tokens": 20400, "total_tokens": 20500})     # a tool call's follow-up
+    c.on_reply(response_text="hello", session_id="s", platform="telegram")
+    c.on_turn_end(session_id="s", platform="telegram")
+    f = c.store.one("SELECT chars, prompt_tokens FROM frames")
+    assert f["prompt_tokens"] == 20000                               # the context the frame sat in: the first call
+    from hermes_continuity.report import build
+    rep = build(c.store.path, c.cfg, user="Joey", now=NOON)
+    assert rep["frames"]["mean_fill"] == pytest.approx((f["chars"] / 4) / 20000, abs=1e-4)

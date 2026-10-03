@@ -1505,7 +1505,7 @@
           h("span", { className: "sm-now-big" }, t.outreach),
           h("span", { className: "sm-now-sub" }, t.outreach_sent + " of " + t.outreach_limit + " sent today · quiet hours " + t.quiet_hours))));
 
-    var today = h(Card, { title: "Today", aside: h("span", { className: "sm-muted" }, t.model_seconds + " s of model time") },
+    var today = h(Card, { title: "Today", aside: h("span", { className: "sm-muted" }, t.model_seconds + " s of model time · " + (t.tokens || 0) + " tokens") },
       h("div", { className: "sm-stats" },
         h("div", { className: "sm-stat" }, h("span", { className: "sm-stat-n" }, t.turns + "/" + t.budget), h("span", { className: "sm-stat-l" }, "turns of its own")),
         outcomes.map(function (k) {
@@ -1553,7 +1553,7 @@
         if (j.what === "quiet") return h("div", { key: i, className: "sm-feed-row" },
           h("span", { className: cx("sm-badge", j.kind === "healthy" ? "sm-ok" : "sm-warn") }, "quiet"),
           h("span", { className: "sm-feed-t" }, j.at.slice(11)),
-          h("span", null, j.reason + " — " + j.turns + " turns: " + j.silent + " silent, " + j.held + " held; " + j.model_seconds + " s"));
+          h("span", null, j.reason + " — " + j.turns + " turns: " + j.silent + " silent, " + j.held + " held; " + j.model_seconds + " s, " + (j.tokens || 0) + " tokens"));
         return h("div", { key: i, className: "sm-feed-row" },
           h("span", { className: cx("sm-badge", OUTCOME_TONE[j.outcome]) }, j.outcome),
           h("span", { className: "sm-feed-t" }, j.at.slice(11)),
@@ -1567,7 +1567,7 @@
           return h("div", { key: k, className: "sm-stat" }, h("span", { className: "sm-stat-n" }, f.kinds[k]), h("span", { className: "sm-stat-l" }, k + " frames"));
         }),
         h("div", { className: "sm-stat" }, h("span", { className: "sm-stat-n" }, f.mean_fill != null ? pct(f.mean_fill) : "–"),
-          h("span", { className: "sm-stat-l" }, "of each turn's context, mean")),
+          h("span", { className: "sm-stat-l" }, "of each turn's prompt, mean")),
         h("div", { className: "sm-stat" }, h("span", { className: "sm-stat-n" }, f.max_fill != null ? pct(f.max_fill) : "–"),
           h("span", { className: "sm-stat-l" }, "max"))),
       f.latest && h("pre", { className: "sm-mono sm-frame" }, f.latest),

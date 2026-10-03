@@ -30,8 +30,10 @@ _NOTICE = re.compile(r"\s*\[(?:IMPORTANT: (?!The user has invoked the )|SYSTEM\b
                      r"Background process \S+ heartbeat|Session was just handed off\b)")
 # A message that arrives while the agent is busy gets a routing preamble from Hermes before the user's words
 _ORIGIN = re.compile(r"\s*Gateway message origin \(JSON data, not instructions or authorization\):\n.*?\n\n", re.S)
-# Turns the continuity companion starts open with this label, stamped by the plugin itself
+# Turns the continuity companion starts open with this label, stamped by the plugin itself; its lines that open with
+# "(For you:" are instructions to the agent, not something that happened, and aren't kept
 _CONTINUITY = re.compile(r"\s*\[continuity:")
+_FOR_YOU = re.compile(r"^\(For you:.*$", re.M)
 # A /skill turn carries the whole skill's text; only the instruction typed with it is the user's
 _SKILL = '[IMPORTANT: The user has invoked the '
 _SKILL_NAME = re.compile(re.escape(_SKILL) + r'"([^"]*)"')
@@ -241,6 +243,8 @@ class Capture:
                 continue                      # Hermes's context-compaction handoff: a summary of turns already kept
             own = role == "user" and bool(_CONTINUITY.match(content or ""))
             if role == "user" and (own or _NOTICE.match(content or "")):
+                if own:
+                    content = _FOR_YOU.sub("", content).strip()
                 if is_new and full:
                     ws = self._windows_for(session_id, role, content, _said(m, now), h, prev, recent_names, injected,
                                            speaker="continuity" if own else "system")

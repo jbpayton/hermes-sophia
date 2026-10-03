@@ -150,8 +150,8 @@ class Continuity:
             kind = "unchanged" if "unchanged since" in text.splitlines()[0] else "change"
         st["last_scene"], st["last_frame_ts"] = V.as_stored(sc), now
         st["turns_since_full"] = 0 if full else st.get("turns_since_full", 0) + 1
-        turn = turn or {}
-        self.store.x("""INSERT INTO frames(ts, kind, text, chars, turn_kind, step_id, context_chars)
+        turn = turn if turn is not None else {}
+        turn["frame_id"] = self.store.x("""INSERT INTO frames(ts, kind, text, chars, turn_kind, step_id, context_chars)
                         VALUES(?,?,?,?,?,?,?)""", (now, kind, text, len(text), turn.get("kind"), turn.get("step_id"),
                                                     turn.get("context_chars")))
         return text
@@ -197,6 +197,22 @@ class Continuity:
             text = self.frame(st, now, force_full=after_compaction, turn=turn) if self.cfg["view"] else ""
             self.store.save_state(st)
         return {"context": text} if text else None
+
+    def on_api(self, platform: str = "", usage: Optional[Dict[str, Any]] = None, **kw) -> None:
+        """post_api_request: the real size of the prompt the frame sat in (the first call of the turn), and what the
+        turn cost in tokens. The per-turn hook only sees the conversation, not the system prompt and tools."""
+        if not self.ours(platform) or not usage:
+            return
+        with self.lock:
+            t = self.turn
+            if t is None:
+                return
+            prompt = int(usage.get("prompt_tokens") or 0)
+            t["tokens"] = t.get("tokens", 0) + int(usage.get("total_tokens") or prompt)
+            if prompt and not t.get("prompt_tokens"):
+                t["prompt_tokens"] = prompt
+                if t.get("frame_id"):
+                    self.store.x("UPDATE frames SET prompt_tokens=? WHERE id=?", (prompt, t["frame_id"]))
 
     def on_reply(self, response_text: str = "", session_id: str = "", platform: str = "", **kw) -> Optional[str]:
         """transform_llm_output: a reply from one of its own turns is held unless outreach is allowed."""
@@ -245,9 +261,10 @@ class Continuity:
                 return
             if t["kind"] == "continuity" and t.get("step_id"):
                 outcome = t.get("outcome") or ("interrupted" if interrupted else "silent" if completed else "failed")
-                self.store.x("""UPDATE steps SET ended=?, ms=?, outcome=?, reason=COALESCE(?, reason), reply_chars=?
-                                WHERE id=?""", (now, int((now - t["started"]) * 1000), outcome, t.get("let_go"),
-                                                len(t.get("reply") or ""), t["step_id"]))
+                self.store.x("""UPDATE steps SET ended=?, ms=?, outcome=?, reason=COALESCE(?, reason), reply_chars=?,
+                                prompt_tokens=?, tokens=? WHERE id=?""",
+                             (now, int((now - t["started"]) * 1000), outcome, t.get("let_go"), len(t.get("reply") or ""),
+                              t.get("prompt_tokens"), t.get("tokens"), t["step_id"]))
             depth = int((t.get("item") or {}).get("depth", 0)) + 1 if t["kind"] == "continuity" else 1
             cue = f"{t.get('message', '')} {t.get('reply', '')}".replace(LABEL, " ").strip()
             if cue and not (t["kind"] == "continuity" and t.get("outcome") == "silent" and t.get("let_go")):
@@ -360,10 +377,10 @@ class Continuity:
     def _render(self, item: Dict[str, Any]) -> str:
         u = self.user_name
         if item["kind"] == "noticed":
-            return (f"{LABEL} noticed]\n{item['text']}\n(This is your own process noticing something, not {u}. "
-                    "Do what seems worthwhile, or let it go: reply [SILENT] to say nothing.)")
+            return (f"{LABEL} noticed]\n{item['text']}\n(For you: this is your own process noticing something, not "
+                    f"{u}. Do what seems worthwhile, or let it go: reply [SILENT] to say nothing.)")
         if item["kind"] == "deliver":
-            return (f"{LABEL} a message you held for {u}]\n“{item['text']}”\n({u} is around now. Send it as "
+            return (f"{LABEL} a message you held for {u}]\n“{item['text']}”\n(For you: {u} is around now. Send it as "
                     f"your reply, change it first, or let it go with [SILENT]. Send only what is about {u}'s life or "
                     "your shared work; a note about how your memory or process works belongs in a thought instead.)")
         said = dt.datetime.fromtimestamp(item["said"]).strftime("%Y-%m-%d") if item.get("said") else "undated"
@@ -372,7 +389,7 @@ class Continuity:
         changed = "; ".join(item.get("changed") or [])
         if changed:                                   # a memory that was later superseded says so, as recall does
             src += f"; later changed: {changed}"
-        return (f"{LABEL} something came to mind]\n“{item['text']}” ({src})\n(This is your own process, not "
+        return (f"{LABEL} something came to mind]\n“{item['text']}” ({src})\n(For you: this is your own process, not "
                 f"{u}. Think about it, act, keep a thought, update your working state, or let it go: reply [SILENT] "
                 f"to say nothing. A reply is a message to {u} about their life or your shared work; reflections on your "
                 "own memory go in a thought.)")
@@ -382,10 +399,12 @@ class Continuity:
             return
         since = st.get("episode_since") or now
         r = self.store.one("""SELECT COUNT(*) AS n, SUM(outcome='silent') AS silent, SUM(outcome='held') AS held,
-                              SUM(COALESCE(ms, 0)) AS ms FROM steps WHERE ts>=?""", (since,))
+                              SUM(COALESCE(ms, 0)) AS ms, SUM(COALESCE(tokens, 0)) AS tokens FROM steps WHERE ts>=?""",
+                           (since,))
         if (r["n"] or 0) > 0 or not reason.startswith("ran its course"):   # an idle start isn't a stretch
-            self.store.x("INSERT INTO quiet(ts, reason, since, steps, silent, held, ms) VALUES(?,?,?,?,?,?,?)",
-                         (now, reason, since, r["n"] or 0, r["silent"] or 0, r["held"] or 0, r["ms"] or 0))
+            self.store.x("INSERT INTO quiet(ts, reason, since, steps, silent, held, ms, tokens) VALUES(?,?,?,?,?,?,?,?)",
+                         (now, reason, since, r["n"] or 0, r["silent"] or 0, r["held"] or 0, r["ms"] or 0,
+                          r["tokens"] or 0))
         st["quiet_reason"], st["quiet_since"] = reason, now
         if self.memory is not None and (r["n"] or 0) > 0:
             try:
