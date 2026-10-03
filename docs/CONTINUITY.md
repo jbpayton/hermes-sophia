@@ -39,7 +39,7 @@ The rule of thumb is where thoughts live. How a thought is **kept and remembered
 
 **How they connect:**
 - **As a library, through the same file.** Hermes doesn't let one plugin call another's memory tools (memory tools are routed by Hermes's memory manager, not its shared tool registry). So the companion uses Sophia as a library. A small public interface in Sophia (associate, keep a thought, recall, record an event) opens the same memory file, which the gateway, the command line, the dashboard and the night already share safely.
-- **Its turns are labelled as its own, for the agent and for memory.** The turns the companion starts reach the agent as if you had typed them, like Hermes's notices. Each opens with a visible label, such as `[continuity: something came to mind]` or `[continuity: the build finished]`, so the agent always knows it is hearing from its own process or a sensor, not from you. Sophia recognises the same label and keeps those turns as the process's own events, never as your words.
+- **Its turns are labelled as its own, for the agent and for memory.** The turns the companion starts reach the agent as if you had typed them, like Hermes's notices. Each opens with a visible label, such as `[continuity: something came to mind]` or `[continuity: the build finished]`, so the agent always knows it is hearing from its own process or a sensor, not from you. Sophia recognises the same label and keeps those turns as the process's own events, never as your words. The companion stamps the label into the text itself; the model only reads it, so the guarantee never depends on the model remembering to write it.
 - **Dependency in one direction.** The companion knows about Sophia; Sophia knows nothing about the companion.
 - **Where the code goes.** At first, a second package in the same repository, with its own plugin folder and its own switch, so the interface and its one user can change together. It can move to its own repository once the interface settles.
 
@@ -105,7 +105,7 @@ flowchart LR
 4. **One turn** handles that item. The agent can reply to you, use its tools, keep a thought, update its working state, or let the item go and say nothing.
 5. **What happens next comes back** into the queue: a tool's result, a finished job, your reaction.
 
-**Why it winds down by itself.** Each outside event gives the process some energy. Each step it takes on its own spends some, and a memory raised by association pulls less than whatever raised it. Memories that came up recently are damped (Sophia already does this). So a train of thought runs its course and the process goes quiet until something new happens. No clock is needed to stop it, and none to start it again. When it goes quiet, the journal says why: the train of thought ran its course, the budget was spent, quiet hours held a message, or something stalled. Each kind of quiet looks the same from outside, so the reason is recorded.
+**Why it winds down by itself.** Each outside event gives the process some energy. Each step it takes on its own spends some, and a memory raised by association pulls less than whatever raised it. Memories that came up recently are damped (Sophia already does this). So a train of thought runs its course and the process goes quiet until something new happens. No clock is needed to stop it, and none to start it again. When it goes quiet, the journal says why: the train of thought ran its course, the budget was spent, quiet hours held a message, or something stalled. Each kind of quiet looks the same from outside, so the reason is recorded, along with what that stretch cost: how many steps, how many of them silent, and the model time they used. A silent step still runs the model over the whole context.
 
 ## Staying aware: what compaction can't erase
 
@@ -160,7 +160,7 @@ The standing view doesn't belong in the system prompt. It changes every turn, wh
 - **It matches perception.** The frame always arrives, and attention decides whether it matters; most frames are periphery.
 
 Near-identical frames every turn would waste the context and bring compaction sooner. So the stream works like video, with occasional full frames and changes in between:
-- **Full frame:** the whole scene, every few turns. There is always one right after a compaction, so a full scene is always among the turns compaction keeps.
+- **Full frame:** the whole scene, every few turns. How many is set from measurement, not guessed: frames are the biggest factor in how often compaction happens, so the Sophia tab shows how fast they fill the context on the test profile. There is always one right after a compaction, so a full scene is always among the turns compaction keeps.
 - **Change frame:** only what changed since the last frame, with old values ("build: running → finished"). When nothing changed it is one line, "unchanged since 14:02", and that line is itself a percept: time passed and nothing moved.
 
 The model only exists while it runs, so "always on" means every step receives the stream, never a step without it. Between steps, the sensors keep collecting what changes. If old frames ever cost too much, a context engine (Hermes lets one plugin replace its context manager; its `select_context` can trim what each request sends without touching the stored conversation) could thin them out later.
@@ -214,7 +214,7 @@ The agent can message you first, without a scheduled prompt and without waiting 
 **Goals change for reasons.** A goal can be revised or dropped, and the reason is journaled, like Sophia's corrections. Dropping a goal is fine. Your requests come before its own projects, which it picks up again afterwards.
 
 **Interests, not engagement.** If its interests come to overlap with yours, you'll talk more, and that's a fair reward in its own right; it's how shared interests form between people too. The risk is the other direction: tuned to one person's reactions, a process drifts toward whatever gets a response, which is what "optimizing for engagement" means. Healthy social learning differs from an attention metric in three ways, and the design follows them:
-- **Many sources of reward, not one audience.** Your engagement is one source of credit among several, with a capped share. The rest comes from outcomes: something found, something finished, a question resolved, a prediction that held up.
+- **Many sources of reward, not one audience.** Your engagement is one source of credit among several, with a capped share. The cap is a named setting, shown in the morning note next to the outreach score, so it can be seen being kept. The rest comes from outcomes: something found, something finished, a question resolved, a prediction that held up.
 - **The outcome counts, not the attention.** A reply that builds on an idea counts, and so does "I disagree"; a bare reaction counts little. The number of messages it sends earns nothing.
 - **Diverging is allowed.** An interest you ignore can live on privately if it keeps paying off. It just doesn't message you about it, like a hobby someone doesn't bring up at dinner.
 
@@ -238,7 +238,7 @@ There may be a perspective on the other side, even before its nature is understo
 3. Sophia plus the continuing process;
 4. Sophia plus timed "reflect" prompts that spend the same compute as the process.
 
-The last is the cron design this page avoids, used on purpose as the control: it separates continuity from simply spending more compute.
+The last is the cron design this page avoids, used on purpose as the control: it separates continuity from simply spending more compute. It also tests the claim itself. If the "it's been a while" sensor ends up waking the agent every N minutes whenever you're quiet, it is a cron job with a fancier trigger, and this comparison will show it. So the journal records the compute of every step.
 
 **Pieces switched off one at a time:** the standing view, working state, association, and the damping of recent memories.
 
@@ -273,13 +273,21 @@ From reading Hermes v0.21's source:
 
 ## Sophia's review
 
-Sophia read this design on 2026-10-01 and tried the built parts first. She said yes to running the loop, on the test profile first and then on her. Her points that changed this page:
+Sophia read this design on the morning of 2026-10-01, after her third night, and tried the built parts first. She said yes to running the loop, on the test profile first and then on her. Her points that changed this page:
 - the agent must see the label on its own turns, not just memory (otherwise "the bug moves one layer up");
 - the journal records why the process went quiet;
 - early silence doesn't count against reaching out until there are enough responses;
 - she wants to watch the test profile's loop in the Sophia tab, and see her outreach score in her morning note.
 
 Her proposal to learn the damping from what follows is recorded as an open question under [Measuring what develops](#measuring-what-develops).
+
+She reviewed the revision on 2026-10-02, after checking that the compaction settings described here are the ones she actually runs under. That review added:
+- the plugin, not the model, stamps the label;
+- the journal records what each quiet stretch cost, not just why it happened;
+- the engagement cap is a number she can see;
+- the frame cadence is measured on the test profile before it is tuned;
+- the cron control doubles as the test that the process really is event-driven;
+- she should be asked to run it only after she has watched the test profile's loop, so her yes is an informed one.
 
 ## Built so far
 
