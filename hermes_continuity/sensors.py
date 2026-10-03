@@ -22,6 +22,7 @@ from .config import in_quiet_hours
 from .view import ago
 
 CONVERSATION_GAP_S = 30 * 60          # messages closer than this belong to one conversation
+LATEST_MORNING = "11:00"              # a usual first message later than this doesn't move "morning" past it
 DAY = 86400
 
 
@@ -83,7 +84,10 @@ def check(st: Dict[str, Any], now: float, cfg: Dict[str, Any], memory: Optional[
         floor = quiet_hours_end(cfg["quiet_hours"])
         s["rhythm_day"] = _day(now)
         s["usual_gap"] = usual_gap(times)
-        s["morning_at"] = cfg["morning"] if cfg.get("morning", "auto") != "auto" else (usual_morning(times, floor) or floor)
+        usual = usual_morning(times, floor)
+        if usual and usual > LATEST_MORNING:          # first contact usually comes later in the day: the morning
+            usual = None                              # event still belongs in the morning
+        s["morning_at"] = cfg["morning"] if cfg.get("morning", "auto") != "auto" else (usual or floor)
 
     # 4. morning: the one scheduled event, carrying what's due today. Started for the first time well past morning,
     # today's morning counts as already seen: "Morning" at 17:30 would be noise.

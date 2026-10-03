@@ -719,3 +719,16 @@ def test_a_first_start_well_past_morning_doesnt_announce_morning(tmp_path):
     assert not [e for e in check(st, evening, c.cfg, c.memory, "Joey") if e["sensor"] == "morning"]
     tomorrow = evening + 15.6 * 3600                                               # 09:06 the next day
     assert [e for e in check(st, tomorrow, c.cfg, c.memory, "Joey") if e["sensor"] == "morning"]
+
+
+def test_morning_stays_in_the_morning_for_someone_who_writes_in_the_evening(tmp_path):
+    from hermes_continuity.sensors import check
+
+    class EveningWriter(RhythmMemory):
+        def user_message_times(self, days=28):
+            day0 = NOON - 10 * 86400 + 7.8 * 3600                     # 19:48, ten days ago
+            return [day0 + d * 86400 + k * 1800 for d in range(10) for k in range(3)]
+    c, _ = make(tmp_path, memory=EveningWriter(plans=[]), sensors=True)
+    st = c.store.state()
+    check(st, NOON, c.cfg, c.memory, "Joey")
+    assert st["sensors"]["morning_at"] == "08:00"
