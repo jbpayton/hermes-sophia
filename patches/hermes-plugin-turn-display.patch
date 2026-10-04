@@ -38,7 +38,7 @@ index 4ca82c9..0ff8da8 100644
          ))
          logger.info(
 diff --git a/gateway/run_turn.py b/gateway/run_turn.py
-index 9db244f..c50abed 100644
+index 9db244f..49d9054 100644
 --- a/gateway/run_turn.py
 +++ b/gateway/run_turn.py
 @@ -163,6 +163,40 @@ def hygiene_no_commit_reason(agent) -> str:
@@ -82,7 +82,7 @@ index 9db244f..c50abed 100644
  class GatewayTurnMixin:
      """Agent-turn execution for GatewayRunner (see module docstring)."""
  
-@@ -1584,6 +1618,32 @@ class GatewayTurnMixin:
+@@ -1584,6 +1618,34 @@ class GatewayTurnMixin:
      def _hmwa_prepend_reasoning(self, agent_result, response, source, _intentional_silence):
          """Prepend the last reasoning block when show_reasoning is on for this platform. Mattermost
          requires an explicit per-platform opt-in (scratch text, not final-answer content)."""
@@ -105,17 +105,19 @@ index 9db244f..c50abed 100644
 +        from gateway.run import _interim_metadata, _non_conversational_metadata
 +        label = policy.get("label")
 +        try:
-+            await adapter.send(source.chat_id, f"{label}\n{block}" if label else block,
-+                               metadata=_interim_metadata(_non_conversational_metadata(None, platform=source.platform)))
++            res = await adapter.send(source.chat_id, f"{label}\n{block}" if label else block,
++                                     metadata=_interim_metadata(_non_conversational_metadata(None, platform=source.platform)))
++            logger.info("plugin turn thoughts sent quietly: chat=%s label=%r ok=%s", source.chat_id, label,
++                        getattr(res, "success", None))
 +        except Exception as exc:
-+            logger.debug("plugin turn thoughts send failed: %s", exc)
++            logger.warning("plugin turn thoughts send failed: %s", exc)
 +
 +    def _hmwa_reasoning_block(self, agent_result, source) -> Optional[str]:
 +        """The turn's last reasoning, formatted for the platform, when show_reasoning is on for it."""
          from gateway.run import _load_gateway_config, _platform_config_key, _resolve_gateway_display_bool
          try:
              _show_reasoning_effective = _resolve_gateway_display_bool(
-@@ -1596,8 +1656,8 @@ class GatewayTurnMixin:
+@@ -1596,8 +1658,8 @@ class GatewayTurnMixin:
                  False if source.platform == Platform.MATTERMOST else getattr(self, "_show_reasoning", False)
              )
          last_reasoning = agent_result.get("last_reasoning")
@@ -126,7 +128,7 @@ index 9db244f..c50abed 100644
          from gateway.stream_consumer_fences import escape_code_fences_for_display
          # Collapse long reasoning to keep messages readable
          lines = last_reasoning.strip().splitlines()
-@@ -1617,10 +1677,10 @@ class GatewayTurnMixin:
+@@ -1617,10 +1679,10 @@ class GatewayTurnMixin:
          if _quote:
              header, prefix, empty = _quote
              _quoted = "\n".join(f"{prefix}{ln}" if ln else empty for ln in display_reasoning.splitlines())
@@ -139,7 +141,7 @@ index 9db244f..c50abed 100644
  
      def _hmwa_runtime_footer_line(self, agent_result, source, _turn_seconds):
          """Runtime-metadata footer for the FINAL message of the turn; off by default
-@@ -2183,6 +2243,7 @@ class GatewayTurnMixin:
+@@ -2183,6 +2245,7 @@ class GatewayTurnMixin:
                      "gateway_input_owner": prepared.persistence_owner, **diagnostic_metadata(event)},
                  message_type=event.message_type,
                  scheduled_heartbeat=bool(getattr(event, "_heartbeat_session_id", None)),
@@ -147,7 +149,7 @@ index 9db244f..c50abed 100644
              )
              _turn_seconds = time.monotonic() - _turn_started_monotonic
  
-@@ -2211,6 +2272,8 @@ class GatewayTurnMixin:
+@@ -2211,6 +2274,8 @@ class GatewayTurnMixin:
                  persist_user_display_kind=prepared.persist_user_display_kind,
              )
              response = self._hmwa_prepend_reasoning(agent_result, response, source, _intentional_silence)
@@ -156,7 +158,7 @@ index 9db244f..c50abed 100644
              _footer_line = self._hmwa_runtime_footer_line(agent_result, source, _turn_seconds)
              # Streaming already delivered the body: the footer goes out as a trailing send instead.
              if _footer_line and response and not agent_result.get("already_sent") and not _intentional_silence:
-@@ -4185,6 +4248,7 @@ class GatewayTurnMixin:
+@@ -4185,6 +4250,7 @@ class GatewayTurnMixin:
          persist_user_display_kind: Optional[str] = None, message_type: Optional[str] = None,
          persist_user_display_metadata: Optional[dict] = None,
          scheduled_heartbeat: bool = False,
@@ -164,7 +166,7 @@ index 9db244f..c50abed 100644
      ) -> Dict[str, Any]:
          """Run the agent; returns the full run_conversation result dict.
  
-@@ -4193,7 +4257,8 @@ class GatewayTurnMixin:
+@@ -4193,7 +4259,8 @@ class GatewayTurnMixin:
              return await self._run_agent_via_proxy(
                  message=message, context_prompt=context_prompt, history=history, source=source,
                  session_id=session_id, session_key=session_key, run_generation=run_generation,
@@ -174,7 +176,7 @@ index 9db244f..c50abed 100644
              )
  
          from run_agent import AIAgent
-@@ -4211,6 +4276,18 @@ class GatewayTurnMixin:
+@@ -4211,6 +4278,18 @@ class GatewayTurnMixin:
                  _native_slack_task_cards=False,
                  needs_progress_queue=False,
              )
@@ -193,7 +195,7 @@ index 9db244f..c50abed 100644
          turn_ctx, turn_runner, _cleanup_adapter = self._run_agent_build_turn_context(
              disp, AIAgent, message=message, source=source, session_key=session_key,
              run_generation=run_generation, context_prompt=context_prompt, history=history,
-@@ -4222,12 +4299,14 @@ class GatewayTurnMixin:
+@@ -4222,12 +4301,14 @@ class GatewayTurnMixin:
              persist_user_display_kind=persist_user_display_kind,
              persist_user_display_metadata=persist_user_display_metadata,
              scheduled_heartbeat=scheduled_heartbeat,
@@ -209,7 +211,7 @@ index 9db244f..c50abed 100644
              self._run_agent_start_streaming_tts(
                  source, message_type, _status_thread_metadata, turn_ctx.streaming_tts_consumer_holder,
              )
-@@ -4244,7 +4323,8 @@ class GatewayTurnMixin:
+@@ -4244,7 +4325,8 @@ class GatewayTurnMixin:
          # Periodic "still working" notifications so the user knows the agent hasn't died.
          _executor_task_holder: list = [None]  # bound once the executor future exists (see below)
          _notify_task = (
