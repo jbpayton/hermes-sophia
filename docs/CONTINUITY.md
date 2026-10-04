@@ -105,7 +105,19 @@ flowchart LR
 4. **One turn** handles that item. The agent can reply to you, use its tools, keep a thought, update its working state, or let the item go and say nothing.
 5. **What happens next comes back** into the queue: a tool's result, a finished job, your reaction.
 
-**Why it winds down by itself.** Each outside event gives the process some energy. Each step it takes on its own spends some, and a memory raised by association pulls less than whatever raised it. Memories that came up recently are damped (Sophia already does this). So a train of thought runs its course and the process goes quiet until something new happens. No clock is needed to stop it, and none to start it again. When it goes quiet, the journal says why: the train of thought ran its course, the budget was spent, quiet hours held a message, or something stalled. Each kind of quiet looks the same from outside, so the reason is recorded, along with what that stretch cost: how many steps, how many of them silent, and the model time they used. A silent step still runs the model over the whole context.
+**Continuous pacing (the default since 2026-10-04).** Joey's aim is a mind that keeps going, and an arbitrary limit works against that. So nothing caps its own turns, and no energy budget winds them down. What paces it is real:
+- one model runs one turn at a time;
+- your messages come first: one sent while its turn is running joins that turn and gets answered;
+- when nothing pulls (no message, nothing noticed, nothing that came to mind strongly enough, no goal due), it gets **free time**. It can follow a thread, work toward a goal, look into something, try or make something, set a goal, or rest. A memory raised by association still pulls less than whatever raised it, so a train of thought still runs its course, but it ends in free time rather than silence;
+- **rest is its own choice** (`continuity_update` with `rest`: a time, or "until something happens"), and anything perceived wakes it;
+- free time it does nothing with (no tool used, no thought kept, nothing said) is offered again after a minute, then two, four, up to an hour. Anything perceived resets that. This is pacing that follows what it does, not a cap;
+- quiet hours govern what's shown and sent (fully quiet at night, no outreach), not whether it thinks.
+
+The real cost is compaction. Its turns share your conversation, so they fill the context faster. Each compaction takes minutes on a local 27B model, and your messages wait while one runs. The journal and report show both: the turns, and what they cost.
+
+**Energy pacing (kept for comparison).** `pacing: energy` is the first design, kept for the comparison experiment.
+
+**Why it winds down by itself (energy pacing).** Each outside event gives the process some energy. Each step it takes on its own spends some, and a memory raised by association pulls less than whatever raised it. Memories that came up recently are damped (Sophia already does this). So a train of thought runs its course and the process goes quiet until something new happens. No clock is needed to stop it, and none to start it again. When it goes quiet, the journal says why: the train of thought ran its course, the budget was spent, quiet hours held a message, or something stalled. Each kind of quiet looks the same from outside, so the reason is recorded, along with what that stretch cost: how many steps, how many of them silent, and the model time they used. A silent step still runs the model over the whole context.
 
 ## Staying aware: what compaction can't erase
 
@@ -199,7 +211,7 @@ The agent can message you first, without a scheduled prompt and without waiting 
 - **Research.** An open question from a conversation, something it noted in a thought, or a gap the night's self-test found can become something it looks into: searching, reading pages (Sophia keeps them as sources), and keeping thoughts on what it found.
 - **Trying things out.** Experiments with its tools, including long jobs run in the background. Hermes already turns a finished background job into a new turn, so the result arrives as an event.
 - **Making things.** Writing, code, images, projects that build up across many sessions. What it makes is kept as its work, never as something it observed.
-- **The same limits as when you ask.** The same tools, permissions and approvals apply. What it did and what it cost show in the Sophia tab, and model time has a daily budget.
+- **The same limits as when you ask.** The same tools, permissions and approvals apply. What it did and what it cost show in the Sophia tab. There's no daily budget unless you set one (`max_steps_per_day`).
 
 ## Goals and motivation
 
@@ -269,7 +281,7 @@ From reading Hermes v0.21's source:
 | Working state in every turn | Partly | The `pre_llm_call` hook can add context to each turn; the state itself has to be built |
 | A queue and attention | No | To build: a thread in the companion plugin |
 | Messaging you outside a turn | No | The agent has no send tool; a reply to an injected turn is the route. Holding a message during quiet hours still needs a mechanism (to verify: the `transform_llm_output` hook) |
-| Keeping its own turns quiet, selectively | With a patch | Its final reply can be held (`transform_llm_output` swaps it for `[SILENT]` before delivery). Hermes otherwise shows an injected turn's tool progress, in-between text, thinking and streaming. With streaming on, the reply could even arrive before it's held. Hermes keeps only its own heartbeat turns quiet. [`patches/hermes-plugin-turn-display.patch`](https://github.com/jbpayton/hermes-sophia/blob/main/patches/README.md) gives injected turns a display policy: thoughts (thinking, in-between text) shown quietly; tool progress, streaming and notices hidden; changeable under `display.plugin_turns`; narrowed per turn by the plugin (fully quiet in quiet hours) |
+| Keeping its own turns quiet, selectively | With a patch | Its final reply can be held (`transform_llm_output` swaps it for `[SILENT]` before delivery). Hermes otherwise shows an injected turn's tool progress, in-between text, thinking and streaming. With streaming on, the reply could even arrive before it's held. Hermes keeps only its own heartbeat turns quiet. [`patches/hermes-plugin-turn-display.patch`](https://github.com/jbpayton/hermes-sophia/blob/main/patches/README.md) gives injected turns a display policy: thoughts (thinking, in-between text) shown quietly; tool progress, streaming and notices hidden; changeable under `display.plugin_turns`; narrowed per turn by the plugin (fully quiet in quiet hours). In-between text is marked 💭, and a turn that ends in silence still shows its reasoning as one message that doesn't notify, headed by the plugin's label ("Own turn · free time"). A message it chooses to send notifies as usual |
 | Timers that start turns | Yes | cron, `/heartbeat`, `/loop` and `/goal`: what this design avoids |
 
 ## Trying it
