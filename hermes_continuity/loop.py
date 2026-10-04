@@ -140,6 +140,7 @@ class Continuity:
         self.pending_cues: List[Dict[str, Any]] = []
         self.last_turn_end = 0.0
         self.backoff_until = 0.0
+        self.refusals = 0                                    # injections Hermes refused in a row
         self._wake = threading.Event()
         self._stop = threading.Event()
         self._thread: Optional[threading.Thread] = None
@@ -701,10 +702,13 @@ class Continuity:
                          ("fully quiet" if display == FULLY_QUIET else "thoughts shown (display.plugin_turns)", step_id))
             if not self.inject(text, display):
                 self.store.x("UPDATE steps SET outcome='not accepted' WHERE id=?", (step_id,))
-                self.backoff_until = now + 300
+                # 30 s, doubling to 5 min: a gateway that's still connecting at start is ready in seconds
+                self.backoff_until = now + min(30 * 2 ** self.refusals, 300)
+                self.refusals += 1
                 self._go_quiet(st, "stalled: Hermes didn't accept its turn", now)
                 self.store.save_state(st)
                 return None
+            self.refusals = 0
             st["energy"], st["steps_today"] = after, st.get("steps_today", 0) + 1
             st["quiet_reason"] = ""
             if item.get("queue_id"):

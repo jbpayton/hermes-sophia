@@ -225,6 +225,10 @@ def test_a_refused_turn_is_a_stall_not_a_loop(tmp_path):
     assert c.tick() is None and len(sent) == 1
     assert c.store.state()["quiet_reason"].startswith("stalled")
     assert c.tick() is None and len(sent) == 1               # backs off instead of retrying at once
+    assert c.backoff_until == c.clock() + 30                 # briefly first: a gateway still connecting is ready soon
+    c.clock.t += 31
+    c.tick()
+    assert len(sent) == 2 and c.backoff_until == c.clock() + 60     # then longer, up to five minutes
 
 
 def test_unattended_thoughts_fade(tmp_path):
