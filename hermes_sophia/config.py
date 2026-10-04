@@ -98,6 +98,8 @@ DEFAULTS: Dict[str, Any] = {
     "associate_superseded_weight": 0.5,  # a line that stated something later superseded pulls this much as hard
     "associate_min_words": 4,         # shorter lines ("yes", "ok") say nothing alone and aren't raised
     "associate_habituation_hours": 6.0,  # a memory raised recently is damped; it recovers over about this long
+    "associate_conversation_spread": 0.5,  # ...and so, this much, is the rest of its conversation
+    "associate_conversation_hours": 2.0,   # lines of one session this close in time count as one conversation
     # the agent's own thoughts (sophia_thought)
     "inject_thoughts": True,          # its kept thoughts can be injected, always labelled as its thoughts
     # capture
@@ -239,6 +241,11 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
      {"when": _ADVANCED}),
     ("associate_habituation_hours", "Association: a memory raised recently is damped, and recovers over about this "
                                     "many hours", {"when": _ADVANCED}),
+    ("associate_conversation_spread", "Association: when a line comes up, the rest of its conversation is damped "
+                                      "this much as well (0 = only the line), so a conversation doesn't come back "
+                                      "piece by piece", {"when": _ADVANCED, "minimum": 0, "maximum": 1}),
+    ("associate_conversation_hours", "Association: lines of one session within this many hours of each other count "
+                                     "as one conversation", {"when": _ADVANCED}),
     ("inject_thoughts", "The agent's own kept thoughts can be injected before a reply, labelled as its thoughts",
      {"when": _ADVANCED, "choices": ["on", "off"], "default": "on"}),
     ("keep_images", "Keep a copy of each image you send (Hermes deletes its own after a day), so it can be looked at "
@@ -304,6 +311,8 @@ LABELS: Dict[str, str] = {
     "associate_k": "Association size", "associate_hops": "Association hops",
     "associate_per_source": "Association per source", "associate_band": "Association band",
     "associate_superseded_weight": "Association weight for superseded lines", "associate_min_words": "Association minimum words", "associate_habituation_hours": "Association recovery (hours)",
+    "associate_conversation_spread": "Association conversation damping",
+    "associate_conversation_hours": "Association conversation span (hours)",
     "inject_thoughts": "Inject own thoughts", "keep_images": "Keep images",
 }
 

@@ -18,6 +18,12 @@ Small changes to Hermes itself that the continuity companion needs.
 
 On Telegram's default notification mode ("important"), what is shown arrives silently. Only final replies notify.
 
+Two more things make what's shown read as the agent's own process rather than messages to you:
+- its in-between text is prefixed with "💭 ";
+- a turn that ends in silence (`[SILENT]`, or a reply the plugin held) still shows its thinking, when `thinking` is on in the policy and `show_reasoning` is on in your display settings. Its reasoning arrives as one mid-turn message, so it never notifies, headed by the plugin's `label` for the turn if it gave one (the continuity companion uses e.g. "Own turn · something came to mind"). Without this, reasoning only ever reaches you attached to a final reply, so a silent turn showed nothing.
+
+A final reply that does go out (a message the agent chose to send you) is delivered as usual: it notifies, with its reasoning in front if you show reasoning.
+
 Change the defaults in `config.yaml`:
 
 ```yaml
@@ -28,7 +34,7 @@ display:
 
 A gateway running in proxy mode (`GATEWAY_PROXY_URL`) gives injected turns the full heartbeat treatment instead: fully quiet, no thoughts shown. That's expected, not a regression (noted by Sophia in review).
 
-A plugin can narrow the policy for one turn (`inject_message(..., display={"interim": False})`), never widen it past your settings. The continuity companion uses this to be fully quiet in quiet hours (or always, with its `show_thoughts: false`). Your own turns, heartbeats, background-process notices and delegation results are unchanged.
+A plugin can narrow the policy for one turn (`inject_message(..., display={"interim": False, "label": "Own turn"})`), never widen it past your settings; `label` is text, the rest are booleans. The continuity companion uses this to be fully quiet in quiet hours (or always, with its `show_thoughts: false`). Your own turns, heartbeats, background-process notices and delegation results are unchanged.
 
 **Tested** against Hermes v0.21.4 (`524041b`):
 - the patch's own tests (`tests/gateway/test_plugin_turn_display.py`), covering the policy, tool progress following it, and `inject_message` carrying it;

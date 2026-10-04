@@ -1,36 +1,3 @@
-From 898463ba664f3c39c9650160ef50dc508f4d3d0c Mon Sep 17 00:00:00 2001
-From: Joey Payton <joey.payton@gmail.com>
-Date: Sat, 3 Oct 2026 16:03:02 -0400
-Subject: [PATCH] gateway: selective display for plugin-injected turns
-
-A turn a plugin starts with ctx.inject_message is proactive work. Its tool
-chrome, streaming and long-running notices would ping the user before its
-result is known, and the plugin decides what of the final reply reaches them
-(it may hold it). Its thoughts are another matter: users may want to read
-along.
-
-plugin_turn_display(event) gives such a turn a display policy:
-- defaults: thinking and in-between assistant text shown (delivered quietly
-  where the platform supports it: Telegram's "important" mode); tool
-  progress, streaming and long-running notices hidden;
-- display.plugin_turns in config.yaml overrides the defaults;
-- a plugin can narrow it per turn: inject_message(..., display={...}) can hide
-  a surface but never show one the user's config hides.
-Streaming stays off unless allowed explicitly, since a streamed reply would
-reach the chat before the plugin could hold it. Other turns, including
-heartbeats and background-process notices, are unchanged.
-
-Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
----
- gateway/run_inbound.py                    |  7 +-
- gateway/run_turn.py                       | 53 ++++++++++++++-
- gateway/run_turn_runner.py                |  2 +-
- gateway/turn_context.py                   |  3 +
- hermes_cli/plugins.py                     | 13 ++--
- tests/gateway/test_plugin_turn_display.py | 78 +++++++++++++++++++++++
- 6 files changed, 145 insertions(+), 11 deletions(-)
- create mode 100644 tests/gateway/test_plugin_turn_display.py
-
 diff --git a/gateway/run_inbound.py b/gateway/run_inbound.py
 index 4ca82c9..0ff8da8 100644
 --- a/gateway/run_inbound.py
@@ -71,10 +38,10 @@ index 4ca82c9..0ff8da8 100644
          ))
          logger.info(
 diff --git a/gateway/run_turn.py b/gateway/run_turn.py
-index 9db244f..0e86f81 100644
+index 9db244f..c50abed 100644
 --- a/gateway/run_turn.py
 +++ b/gateway/run_turn.py
-@@ -163,6 +163,36 @@ def hygiene_no_commit_reason(agent) -> str:
+@@ -163,6 +163,40 @@ def hygiene_no_commit_reason(agent) -> str:
      return "in-place commit did not complete"
  
  
@@ -86,9 +53,11 @@ index 9db244f..0e86f81 100644
 +# notification. ``display.plugin_turns`` overrides these defaults; a plugin can narrow them per turn.
 +PLUGIN_TURN_DISPLAY_DEFAULTS = {"thinking": True, "interim": True, "tool_progress": False, "streaming": False,
 +                                "notices": False}
++# Its in-between text is the agent's own process, not a message to the user: marked so it reads that way.
++PLUGIN_TURN_INTERIM_PREFIX = "💭 "
 +
 +
-+def plugin_turn_display(event: Any, user_config: Optional[Dict[str, Any]] = None) -> Optional[Dict[str, bool]]:
++def plugin_turn_display(event: Any, user_config: Optional[Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
 +    """The display policy for a plugin-injected turn, or None for any other turn."""
 +    meta = getattr(event, "metadata", None) or {}
 +    if not meta.get("hermes_plugin_injection"):
@@ -105,13 +74,72 @@ index 9db244f..0e86f81 100644
 +        policy.update({k: bool(v) for k, v in configured.items() if k in policy})
 +    per_turn = meta.get("hermes_display") or {}
 +    if isinstance(per_turn, dict):                   # a plugin can hide a surface, never show one the user hid
-+        policy.update({k: policy[k] and bool(v) for k, v in per_turn.items() if k in policy})
++        policy.update({k: policy[k] and bool(v) for k, v in per_turn.items() if k in PLUGIN_TURN_DISPLAY_DEFAULTS})
++        if isinstance(per_turn.get("label"), str) and per_turn["label"].strip():
++            policy["label"] = per_turn["label"].strip()[:200]
 +    return policy
 +
  class GatewayTurnMixin:
      """Agent-turn execution for GatewayRunner (see module docstring)."""
  
-@@ -2183,6 +2213,7 @@ class GatewayTurnMixin:
+@@ -1584,6 +1618,32 @@ class GatewayTurnMixin:
+     def _hmwa_prepend_reasoning(self, agent_result, response, source, _intentional_silence):
+         """Prepend the last reasoning block when show_reasoning is on for this platform. Mattermost
+         requires an explicit per-platform opt-in (scratch text, not final-answer content)."""
++        if not (response and not _intentional_silence):
++            return response
++        block = self._hmwa_reasoning_block(agent_result, source)
++        return f"{block}\n\n{response}" if block else response
++
++    async def _hmwa_send_plugin_turn_thoughts(self, event, agent_result, source) -> None:
++        """A plugin-injected turn that ends in silence still shows its thinking when its display policy and
++        the user's show_reasoning allow: the reasoning under the plugin's label, as a mid-turn (non-final)
++        send, so platforms with quiet delivery (Telegram's "important" mode) deliver it without a notification."""
++        policy = plugin_turn_display(event)
++        if not policy or not policy.get("thinking"):
++            return
++        block = self._hmwa_reasoning_block(agent_result, source)
++        adapter = self._delivery_adapter_for(source) if block else None
++        if not adapter:
++            return
++        from gateway.run import _interim_metadata, _non_conversational_metadata
++        label = policy.get("label")
++        try:
++            await adapter.send(source.chat_id, f"{label}\n{block}" if label else block,
++                               metadata=_interim_metadata(_non_conversational_metadata(None, platform=source.platform)))
++        except Exception as exc:
++            logger.debug("plugin turn thoughts send failed: %s", exc)
++
++    def _hmwa_reasoning_block(self, agent_result, source) -> Optional[str]:
++        """The turn's last reasoning, formatted for the platform, when show_reasoning is on for it."""
+         from gateway.run import _load_gateway_config, _platform_config_key, _resolve_gateway_display_bool
+         try:
+             _show_reasoning_effective = _resolve_gateway_display_bool(
+@@ -1596,8 +1656,8 @@ class GatewayTurnMixin:
+                 False if source.platform == Platform.MATTERMOST else getattr(self, "_show_reasoning", False)
+             )
+         last_reasoning = agent_result.get("last_reasoning")
+-        if not (_show_reasoning_effective and response and not _intentional_silence and last_reasoning):
+-            return response
++        if not (_show_reasoning_effective and last_reasoning):
++            return None
+         from gateway.stream_consumer_fences import escape_code_fences_for_display
+         # Collapse long reasoning to keep messages readable
+         lines = last_reasoning.strip().splitlines()
+@@ -1617,10 +1677,10 @@ class GatewayTurnMixin:
+         if _quote:
+             header, prefix, empty = _quote
+             _quoted = "\n".join(f"{prefix}{ln}" if ln else empty for ln in display_reasoning.splitlines())
+-            return f"{header}\n{_quoted}\n\n{response}"
++            return f"{header}\n{_quoted}"
+         # Escape ``` inside reasoning so inner fences don't break the outer code block.
+         display_reasoning = escape_code_fences_for_display(display_reasoning)
+-        return f"💭 **Reasoning:**\n```\n{display_reasoning}\n```\n\n{response}"
++        return f"💭 **Reasoning:**\n```\n{display_reasoning}\n```"
+ 
+     def _hmwa_runtime_footer_line(self, agent_result, source, _turn_seconds):
+         """Runtime-metadata footer for the FINAL message of the turn; off by default
+@@ -2183,6 +2243,7 @@ class GatewayTurnMixin:
                      "gateway_input_owner": prepared.persistence_owner, **diagnostic_metadata(event)},
                  message_type=event.message_type,
                  scheduled_heartbeat=bool(getattr(event, "_heartbeat_session_id", None)),
@@ -119,7 +147,16 @@ index 9db244f..0e86f81 100644
              )
              _turn_seconds = time.monotonic() - _turn_started_monotonic
  
-@@ -4185,6 +4216,7 @@ class GatewayTurnMixin:
+@@ -2211,6 +2272,8 @@ class GatewayTurnMixin:
+                 persist_user_display_kind=prepared.persist_user_display_kind,
+             )
+             response = self._hmwa_prepend_reasoning(agent_result, response, source, _intentional_silence)
++            if _intentional_silence:
++                await self._hmwa_send_plugin_turn_thoughts(event, agent_result, source)
+             _footer_line = self._hmwa_runtime_footer_line(agent_result, source, _turn_seconds)
+             # Streaming already delivered the body: the footer goes out as a trailing send instead.
+             if _footer_line and response and not agent_result.get("already_sent") and not _intentional_silence:
+@@ -4185,6 +4248,7 @@ class GatewayTurnMixin:
          persist_user_display_kind: Optional[str] = None, message_type: Optional[str] = None,
          persist_user_display_metadata: Optional[dict] = None,
          scheduled_heartbeat: bool = False,
@@ -127,7 +164,7 @@ index 9db244f..0e86f81 100644
      ) -> Dict[str, Any]:
          """Run the agent; returns the full run_conversation result dict.
  
-@@ -4193,7 +4225,8 @@ class GatewayTurnMixin:
+@@ -4193,7 +4257,8 @@ class GatewayTurnMixin:
              return await self._run_agent_via_proxy(
                  message=message, context_prompt=context_prompt, history=history, source=source,
                  session_id=session_id, session_key=session_key, run_generation=run_generation,
@@ -137,7 +174,7 @@ index 9db244f..0e86f81 100644
              )
  
          from run_agent import AIAgent
-@@ -4211,6 +4244,18 @@ class GatewayTurnMixin:
+@@ -4211,6 +4276,18 @@ class GatewayTurnMixin:
                  _native_slack_task_cards=False,
                  needs_progress_queue=False,
              )
@@ -156,11 +193,12 @@ index 9db244f..0e86f81 100644
          turn_ctx, turn_runner, _cleanup_adapter = self._run_agent_build_turn_context(
              disp, AIAgent, message=message, source=source, session_key=session_key,
              run_generation=run_generation, context_prompt=context_prompt, history=history,
-@@ -4222,12 +4267,13 @@ class GatewayTurnMixin:
+@@ -4222,12 +4299,14 @@ class GatewayTurnMixin:
              persist_user_display_kind=persist_user_display_kind,
              persist_user_display_metadata=persist_user_display_metadata,
              scheduled_heartbeat=scheduled_heartbeat,
 +            stream_deltas_off=plugin_display is not None and not plugin_display["streaming"],
++            interim_prefix=PLUGIN_TURN_INTERIM_PREFIX if plugin_display is not None else "",
          )
          _status_thread_metadata = self._run_agent_bind_turn_wiring(
              turn_ctx, turn_runner, source, event_message_id, disp._native_slack_task_cards,
@@ -171,7 +209,7 @@ index 9db244f..0e86f81 100644
              self._run_agent_start_streaming_tts(
                  source, message_type, _status_thread_metadata, turn_ctx.streaming_tts_consumer_holder,
              )
-@@ -4244,7 +4290,8 @@ class GatewayTurnMixin:
+@@ -4244,7 +4323,8 @@ class GatewayTurnMixin:
          # Periodic "still working" notifications so the user knows the agent hasn't died.
          _executor_task_holder: list = [None]  # bound once the executor future exists (see below)
          _notify_task = (
@@ -182,7 +220,7 @@ index 9db244f..0e86f81 100644
          )
  
 diff --git a/gateway/run_turn_runner.py b/gateway/run_turn_runner.py
-index 1b2e2c0..a6fa63e 100644
+index 1b2e2c0..5117ffe 100644
 --- a/gateway/run_turn_runner.py
 +++ b/gateway/run_turn_runner.py
 @@ -921,7 +921,7 @@ class TurnRunner:
@@ -194,22 +232,33 @@ index 1b2e2c0..a6fa63e 100644
              scfg.enabled and scfg.transport != "off" if plat_streaming is None else bool(plat_streaming)
          )
          want_interim_messages = bool(ctx.interim_assistant_messages_enabled) and not ctx.scheduled_heartbeat
+@@ -975,6 +975,8 @@ class TurnRunner:
+         def interim_assistant_cb(text: str, *, already_streamed: bool = False) -> None:
+             if not ctx._run_still_current():
+                 return
++            if ctx.interim_prefix and not already_streamed and str(text or "").strip():
++                text = f"{ctx.interim_prefix}{text}"
+             if stts is not None:
+                 # Flush accepted deltas; completed commentary is a separate speech segment.
+                 stts.on_delta(None)
 diff --git a/gateway/turn_context.py b/gateway/turn_context.py
-index a85f203..12062a2 100644
+index a85f203..1e0eb20 100644
 --- a/gateway/turn_context.py
 +++ b/gateway/turn_context.py
-@@ -18,6 +18,9 @@ class TurnContext:
+@@ -18,6 +18,11 @@ class TurnContext:
      # Scheduled heartbeats are proactive work, not replies to the source message that
      # registered the watch.  Their routine delivery surfaces stay quiet.
      scheduled_heartbeat: bool = False
 +    # A plugin-injected turn's policy can keep its reply from streaming (it would reach the chat before the
 +    # plugin could hold it).
 +    stream_deltas_off: bool = False
++    # Prefixed to a plugin-injected turn's in-between text, so it reads as the agent's own process.
++    interim_prefix: str = ""
      _run_still_current: Callable[[], bool] = None  # type: ignore[assignment]
      _live_status_adapter: Any = None
      _live_status_mode: str = "off"
 diff --git a/hermes_cli/plugins.py b/hermes_cli/plugins.py
-index 15fa39d..238f9c6 100644
+index 15fa39d..62afc6b 100644
 --- a/hermes_cli/plugins.py
 +++ b/hermes_cli/plugins.py
 @@ -606,11 +606,15 @@ class PluginContext:
@@ -225,11 +274,11 @@ index 15fa39d..238f9c6 100644
 +        request for async dispatch, not that delivery completed. ``display`` (gateway only) narrows what the
 +        injected turn shows while it runs (``thinking``, ``interim``, ``tool_progress``, ``streaming``,
 +        ``notices``: booleans) below ``display.plugin_turns``; it can hide a surface, never show one the
-+        user's config hides."""
++        user's config hides. ``label`` (text) heads the turn's thoughts when it ends in silence."""
          cli = self._manager._cli_ref
          msg = content if role == "user" else f"[{role}] {content}"
          if cli is not None:
-@@ -629,9 +633,10 @@ class PluginContext:
+@@ -629,9 +633,11 @@ class PluginContext:
              logger.warning("inject_message: no live gateway is available")
              return False
          try:
@@ -238,20 +287,22 @@ index 15fa39d..238f9c6 100644
 -            ))
 +            kwargs = {"session_key": session_key, "content": msg, "plugin_id": self.plugin_id}
 +            if display:
-+                kwargs["display"] = {str(k): bool(v) for k, v in dict(display).items()}
++                kwargs["display"] = {str(k): (str(v)[:200] if k == "label" else bool(v))
++                                     for k, v in dict(display).items()}
 +            return bool(self._manager.inject_gateway_message(**kwargs))
          except Exception:
              logger.warning("inject_message: gateway scheduling failed for plugin %s", self.plugin_id,
                             exc_info=True)
 diff --git a/tests/gateway/test_plugin_turn_display.py b/tests/gateway/test_plugin_turn_display.py
 new file mode 100644
-index 0000000..51f6d55
+index 0000000..8fe067c
 --- /dev/null
 +++ b/tests/gateway/test_plugin_turn_display.py
-@@ -0,0 +1,78 @@
+@@ -0,0 +1,153 @@
 +"""A plugin-injected turn shows its thoughts and hides tool chrome, streaming and notices, selectively."""
 +import importlib
 +import sys
++import time
 +import types
 +from types import SimpleNamespace
 +
@@ -327,6 +378,77 @@ index 0000000..51f6d55
 +    captured.clear()
 +    assert ctx.inject_message("hi", session_key="k")
 +    assert "display" not in captured
--- 
-2.34.1
-
++
++
++def test_a_plugin_can_label_its_turn_without_widening_anything():
++    policy = plugin_turn_display(_event(hermes_plugin_injection=True,
++                                        hermes_display={"label": " Own turn · noticed ", "thinking": True}),
++                                 user_config={"display": {"plugin_turns": {"thinking": False}}})
++    assert policy["label"] == "Own turn · noticed" and not policy["thinking"]
++    assert "label" not in plugin_turn_display(_event(hermes_plugin_injection=True, hermes_display={"label": 3}),
++                                              user_config={})
++
++
++def test_inject_message_keeps_the_label_as_text(monkeypatch):
++    from hermes_cli import plugins as P
++    captured = {}
++    manager = SimpleNamespace(_cli_ref=None, has_gateway_message_injector=True,
++                              inject_gateway_message=lambda **kw: captured.update(kw) or True)
++    monkeypatch.setattr(P.PluginContext, "plugin_id", property(lambda self: "continuity"))
++    monkeypatch.setattr(P.PluginContext, "_gateway_injection_allowed", lambda self: True)
++    ctx = P.PluginContext(SimpleNamespace(name="continuity"), manager)
++    assert ctx.inject_message("hi", session_key="k", display={"interim": 1, "label": "Own turn"})
++    assert captured["display"] == {"interim": True, "label": "Own turn"}
++
++
++class _ThinkingAloudAgent(FakeAgent):
++    def run_conversation(self, message, conversation_history=None, task_id=None, **kwargs):
++        cb = getattr(self, "interim_assistant_callback", None)
++        if cb is not None:
++            cb("This one I'll let go.")
++            time.sleep(0.35)
++        return {"final_response": "[SILENT]", "messages": [], "api_calls": 1}
++
++
++@pytest.mark.asyncio
++@pytest.mark.parametrize("injected", [True, False])
++async def test_in_between_text_of_a_plugin_turn_reads_as_its_own_process(monkeypatch, tmp_path, injected):
++    import time as _time  # noqa: F401  (the fake agent sleeps so the consumer can flush)
++    fake_run_agent = types.ModuleType("run_agent")
++    fake_run_agent.AIAgent = _ThinkingAloudAgent
++    monkeypatch.setitem(sys.modules, "run_agent", fake_run_agent)
++    adapter = ProgressCaptureAdapter()
++    runner = _make_runner(adapter)
++    gateway_run = importlib.import_module("gateway.run")
++    monkeypatch.setattr(gateway_run, "_hermes_home", tmp_path)
++    monkeypatch.setattr(gateway_run, "_resolve_runtime_agent_kwargs", lambda: {"api_key": "***"})
++    source = SessionSource(platform=Platform.TELEGRAM, chat_id="123", chat_type="dm")
++    await runner._run_agent(message="[continuity: something came to mind]", context_prompt="", history=[],
++                            source=source, session_id="s", session_key="agent:main:telegram:dm:123",
++                            plugin_display=dict(PLUGIN_TURN_DISPLAY_DEFAULTS) if injected else None)
++    shown = [str(m["content"]) for m in adapter.sent] + [str(e["content"]) for e in adapter.edits]
++    assert any("This one I'll let go." in s for s in shown)
++    assert any(s.startswith("💭 This one I'll let go.") for s in shown) is injected
++
++
++@pytest.mark.asyncio
++@pytest.mark.parametrize("meta,expect_sent", [
++    ({"hermes_plugin_injection": True, "hermes_display": {"label": "Own turn · something came to mind"}}, True),
++    ({"hermes_plugin_injection": True, "hermes_display": {"thinking": False}}, False),
++    ({}, False),                                                     # the user's own turn: reasoning rides the reply
++])
++async def test_a_silent_plugin_turn_still_shows_its_thinking_quietly(monkeypatch, meta, expect_sent):
++    gateway_run = importlib.import_module("gateway.run")
++    monkeypatch.setattr(gateway_run, "_resolve_gateway_display_bool",
++                        lambda cfg, key, setting, **kw: setting == "show_reasoning")     # the user shows reasoning
++    adapter = ProgressCaptureAdapter()
++    runner = _make_runner(adapter)
++    source = SessionSource(platform=Platform.TELEGRAM, chat_id="123", chat_type="dm")
++    await runner._hmwa_send_plugin_turn_thoughts(SimpleNamespace(metadata=meta),
++                                                 {"last_reasoning": "It's an echo of my own line; let it go."}, source)
++    assert bool(adapter.sent) is expect_sent
++    if expect_sent:
++        sent = adapter.sent[0]
++        assert sent["content"].startswith("Own turn · something came to mind\n")
++        assert "It's an echo of my own line" in sent["content"]
++        assert sent["metadata"].get("_interim_send") and not sent["metadata"].get("notify")   # never notifies

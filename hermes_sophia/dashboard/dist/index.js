@@ -1475,7 +1475,7 @@
     if (!d) return h(Card, { title: "Continuity" }, h(Empty, null, api.error ? "Couldn't load: " + api.error : "Loading…"));
     if (!d.report || !d.report.exists) return h(Card, { title: "Continuity" },
       h("p", { className: "sm-lede" }, "The continuity companion hasn't run on any profile yet."),
-      h("p", { className: "sm-hint" }, "It lets the agent keep going between messages: what it perceives and what comes to mind start turns of its own, and an energy budget winds them down. Try it on a test profile first (docs/CONTINUITY.md, “Trying it”)."));
+      h("p", { className: "sm-hint" }, "It lets the agent keep going between messages: what it perceives and what comes to mind start turns of its own, and when nothing pulls it has free time; it rests when it chooses to. Try it on a test profile first (docs/CONTINUITY.md, “Trying it”)."));
     var r = d.report, t = r.today, q = r.quiet, u = r.user;
     var picker = d.profiles.length > 1 ? h(Seg, { label: "Profile", caption: "Profile", value: d.profile,
       options: d.profiles.map(function (n) { return [n, n]; }), onChange: profS[1] }) :
@@ -1485,6 +1485,13 @@
 
     var now = h(Card, { title: "Right now", aside: picker },
       h("div", { className: "sm-now-grid" },
+        r.pacing && r.pacing !== "energy" ?
+          h("div", { className: "sm-now-cell" }, h("span", { className: "sm-now-label" }, "Pace"),
+            h("span", { className: "sm-now-big" }, r.rest ? "resting" : "continuous"),
+            h("span", { className: "sm-now-sub" }, r.rest ? "its own choice, until " +
+              (r.rest.until ? new Date(r.rest.until * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                : "something happens") + (r.rest.why ? ": " + r.rest.why : "")
+              : "one turn after another; free time when nothing pulls")) :
         h("div", { className: "sm-now-cell" }, h("span", { className: "sm-now-label" }, "Energy"),
           h("span", { className: "sm-now-big" }, r.energy.toFixed(2)),
           h("div", { className: "sm-gate-bar", title: "a turn of its own costs " + r.step_cost },
@@ -1536,8 +1543,8 @@
 
     var today = h(Card, { title: "Today", aside: h("span", { className: "sm-muted" }, t.model_seconds + " s of model time · " + (t.tokens || 0) + " tokens") },
       h("div", { className: "sm-stats" },
-        h("div", { className: "sm-stat" }, h("span", { className: "sm-stat-n" }, t.turns + "/" + t.budget),
-          h("span", { className: "sm-stat-l" }, "turns of its own, against the budget" + (t.rows != null && t.rows !== t.turns ? " (" + t.rows + " in the journal)" : ""))),
+        h("div", { className: "sm-stat" }, h("span", { className: "sm-stat-n" }, t.budget ? t.turns + "/" + t.budget : String(t.turns)),
+          h("span", { className: "sm-stat-l" }, (t.budget ? "turns of its own, against the budget" : "turns of its own") + (t.rows != null && t.rows !== t.turns ? " (" + t.rows + " in the journal)" : ""))),
         outcomes.map(function (k) {
           return h("div", { key: k, className: "sm-stat" }, h("span", { className: cx("sm-stat-n", OUTCOME_TONE[k]) }, t.outcomes[k]),
             h("span", { className: "sm-stat-l" }, k));

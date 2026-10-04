@@ -49,6 +49,12 @@ NOT_OURS = {"subagent", "cron"}
 FULLY_QUIET = {"thinking": False, "interim": False, "tool_progress": False, "streaming": False, "notices": False}
 AROUND_S = 2 * 3600                # the user counts as around this long after they last wrote
 OWN_TURN_START_S = 180             # a turn it started that hasn't begun after this long didn't happen
+# Free time it did nothing with (no tool, no thought, nothing said) is offered again later: after this long, doubling
+# with each such turn up to FREE_IDLE_MAX_S. Anything perceived resets it. Pacing that follows what it does, not a cap.
+FREE_IDLE_FIRST_S = 60
+FREE_IDLE_MAX_S = 3600
+KIND_LABEL = {"noticed": "noticed", "association": "something came to mind", "goal": "a goal",
+              "deliver": "a held message", "free": "free time"}
 
 
 def strip_origin(text: str) -> str:
@@ -99,6 +105,21 @@ def is_silent(text: str) -> bool:
     return t in _SILENT or any(t.startswith(m) for m in _SILENT) or last in _SILENT
 
 
+def cue_text(text: str) -> str:
+    """What a turn was about, for association: without the labels, instructions and silence markers the loop itself
+    wrote. Those read like talk about the loop, and searching memory with them raised exactly that."""
+    keep = [ln for ln in (text or "").splitlines()
+            if not ln.lstrip().startswith((LABEL, "(For you:", "Nothing in particular is pulling"))]
+    out = " ".join(keep)
+    for m in _SILENT:
+        out = out.replace(m, " ")
+    return re.sub(r"\s+", " ", out).strip()
+
+
+def _hm(ts: float) -> str:
+    return dt.datetime.fromtimestamp(ts).strftime("%H:%M")
+
+
 def _text(content: Any) -> str:
     if isinstance(content, str):
         return content
@@ -140,9 +161,17 @@ class Continuity:
             st["day"], st["steps_today"], st["outreach_today"] = day, 0, 0
 
     def _energize(self, st: Dict[str, Any], now: float) -> None:
+        """Something perceived: energy (in energy pacing), an end to resting, and free time on offer again."""
         st["energy"] = min(self.cfg["energy_max"], float(st.get("energy") or 0) + self.cfg["energy_per_event"])
+        if st.get("rest"):
+            st["rest"] = None
+        st["free_idle"], st["free_after"] = 0, 0
         if st.get("quiet_reason") or not st.get("episode_since"):
             st["quiet_reason"], st["episode_since"] = "", now
+
+    @property
+    def continuous(self) -> bool:
+        return str(self.cfg.get("pacing", "continuous")).lower() != "energy"
 
     def _percept(self, kind: str, text: str, now: float) -> None:
         self.store.x("INSERT INTO percepts(ts, kind, text) VALUES(?,?,?)", (now, kind, text[:300]))
@@ -180,7 +209,7 @@ class Continuity:
         queued = len(self.store.queued())
         sc = V.scene(st, now, self.user_name, held, queued, self.outreach_score(), self.goals.store.q(
             "SELECT * FROM goals WHERE status IN ('active','declined') ORDER BY (status='active') DESC, (origin='user') "
-            "DESC, COALESCE(last_progress, created) DESC LIMIT 5"))
+            "DESC, COALESCE(last_progress, created) DESC LIMIT 5"), pacing="continuous" if self.continuous else "energy")
         full = force_full or not st.get("last_scene") or st.get("turns_since_full", 0) >= self.cfg["full_frame_every"] - 1
         if full:
             text, kind = V.render_full(sc, now), "full"
@@ -381,8 +410,19 @@ class Continuity:
                              (now, int((now - t["started"]) * 1000), outcome, t.get("let_go"), len(t.get("reply") or ""),
                               t.get("prompt_tokens"), t.get("tokens"), json.dumps(t.get("outcomes") or []),
                               t["step_id"]))
+            item_kind = (t.get("item") or {}).get("kind") if t["kind"] == "continuity" else None
+            if item_kind == "free" and not t.get("joined_by_user"):
+                st = self.store.state()
+                did = bool(t.get("outcomes")) or t.get("outcome") in ("held", "sent")
+                if did or st.get("rest"):
+                    st["free_idle"], st["free_after"] = 0, 0
+                else:
+                    n = int(st.get("free_idle") or 0) + 1
+                    st["free_idle"], st["free_after"] = n, now + min(FREE_IDLE_FIRST_S * 2 ** (n - 1), FREE_IDLE_MAX_S)
+                self.store.save_state(st)
             depth = int((t.get("item") or {}).get("depth", 0)) + 1 if t["kind"] == "continuity" else 1
-            cue = f"{t.get('message', '')} {t.get('reply', '')}".replace(LABEL, " ").strip()
+            message = "" if item_kind == "free" and not t.get("joined_by_user") else t.get("message", "")
+            cue = f"{cue_text(message)} {cue_text(t.get('reply', ''))}".strip()
             if cue and not (t["kind"] == "continuity" and t.get("outcome") == "silent" and t.get("let_go")):
                 self.pending_cues.append({"cue": cue[:1500], "depth": depth, "session_id": t.get("session_id", "")})
         self._wake.set()
@@ -412,12 +452,30 @@ class Continuity:
                     st[key] = [x for x in st.get(key, []) if str(x["id"]) != c and c not in x["text"].lower()]
                     if len(st[key]) < before:
                         changed.append(close)
+            if args.get("rest") is not None:
+                spec = str(args["rest"]).strip()
+                low = spec.lower()
+                if low in ("", "off", "no", "none", "wake", "awake", "done"):
+                    if st.get("rest"):
+                        st["rest"] = None
+                        changed.append("rest ended")
+                else:
+                    open_ended = low.startswith("until something") or low in ("until woken", "indefinitely", "open")
+                    until = None if open_ended else parse_by(re.sub(r"^until\s+", "", spec, flags=re.I), now)
+                    if until is None and not open_ended:
+                        return {"error": "rest takes \"+30m\", \"+2h\", \"14:30\", an ISO time, or \"until something "
+                                         "happens\"; \"off\" ends it"}
+                    st["rest"] = {"since": now, "until": until, "why": str(args.get("reason") or "")[:200]}
+                    changed.append("rest")
             if args.get("let_go"):
                 if self.turn is not None and self.turn["kind"] == "continuity":
                     self.turn["let_go"] = f"let go: {str(args['let_go'])[:200]}"
                 changed.append("let_go")
             self.store.save_state(st)
+        rest = st.get("rest")
         return {"ok": True, "changed": changed, "focus": st["focus"],
+                **({"resting": "until " + (_hm(rest["until"]) if rest.get("until") else "something happens")}
+                   if rest else {}),
                 "open_threads": [f"{t['id']}: {t['text']}" for t in st["threads"]],
                 "waiting_for": [f"{w['id']}: {w['text']}" for w in st["waiting_for"]]}
 
@@ -472,38 +530,65 @@ class Continuity:
 
     def _attend(self, st: Dict[str, Any], now: float) -> Tuple[Optional[Dict[str, Any]], str]:
         """What to take next, or why nothing: the order is held messages (when they may go), then what came to mind."""
-        if st.get("steps_today", 0) >= self.cfg["max_steps_per_day"]:
+        cap = self.cfg["max_steps_per_day"]
+        if cap and st.get("steps_today", 0) >= cap:
             return None, "today's budget of its own turns is spent"
+        rest = st.get("rest")
+        if rest and rest.get("until") and now >= rest["until"]:
+            st["rest"] = rest = None
+        if rest:
+            return None, ("resting, its own choice, until " + (_hm(rest["until"]) if rest.get("until") else
+                                                               "something happens") + (f": {rest['why']}" if rest.get("why") else ""))
+        continuous = self.continuous
         cost = self.cfg["step_cost"]
         energy = float(st.get("energy") or 0)
+        enough = continuous or energy >= cost              # continuous pacing spends no energy
         held = self.store.one("SELECT * FROM outbox WHERE status='held' ORDER BY id LIMIT 1")
         ok, _ = self.outreach_allowed(st, now)
-        if held and ok and now - (st.get("last_user_ts") or 0) < AROUND_S and energy >= cost:
+        if held and ok and now - (st.get("last_user_ts") or 0) < AROUND_S and enough:
             return {"kind": "deliver", "text": held["text"], "deliver_id": held["id"], "depth": 0}, ""
-        best = next((r for r in self.store.queued() if r["salience"] >= self.cfg["min_pull"]), None)
+        queued = self.store.queued()
+        best = next((r for r in queued if r["salience"] >= self.cfg["min_pull"]), None)
         if best is None:
-            # last resort: a goal, with energy something real provided (goals never add energy)
+            # a goal, when nothing perceived, noticed or remembered is waiting (goals never add energy)
             goal = self.goals.next_for_turn(now, self.cfg["min_pull"]) if self.cfg.get("goals", True) else None
-            if goal is None:
-                return None, "ran its course: nothing came to mind strongly enough"
-            if energy < cost:
-                return None, "ran its course: no energy left for turns of its own"
-            return goal, ""
-        if energy < cost:
+            if goal is not None and enough:
+                return goal, ""
+            if not continuous:
+                return None, ("ran its course: nothing came to mind strongly enough" if goal is None else
+                              "ran its course: no energy left for turns of its own")
+            if now < float(st.get("free_after") or 0):
+                return None, (f"nothing pulling; free time on offer again at {_hm(st['free_after'])} (the last "
+                              f"{st.get('free_idle', 1)} came to nothing)")
+            return {"kind": "free", "depth": 0, "faint": [r["text"] for r in queued[:2]]}, ""
+        if not enough:
             return None, "ran its course: no energy left for turns of its own"
         d = json.loads(best["data"] or "{}")
         kind = "noticed" if best["kind"] == "noticed" else "association"
         return {"kind": kind, "queue_id": best["id"], "text": best["text"], "depth": best["depth"],
                 "salience": best["salience"], **d}, ""
 
-    def display_for_turn(self, now: float) -> Optional[Dict[str, bool]]:
+    def display_for_turn(self, now: float, item: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Fully quiet in quiet hours (or with show_thoughts off); otherwise what the user's display.plugin_turns allows,
+        with a label heading the thinking of a turn that ends silent."""
         if not self.cfg.get("show_thoughts", True) or in_quiet_hours(
                 self.cfg["quiet_hours"], dt.datetime.fromtimestamp(now).strftime("%H:%M")):
             return dict(FULLY_QUIET)
-        return None
+        kind = KIND_LABEL.get((item or {}).get("kind"), "")
+        return {"label": " · ".join(x for x in (self.cfg.get("thoughts_label") or "Own turn", kind) if x)}
 
     def _render(self, item: Dict[str, Any]) -> str:
         u = self.user_name
+        if item["kind"] == "free":
+            lines = [f"{LABEL} free time]", "Nothing in particular is pulling at you right now."]
+            if item.get("faint"):
+                lines.append("Faintly on your mind: " + "; ".join(f"\u201c{t[:140]}\u201d" for t in item["faint"]))
+            lines.append(f"(For you: this time is yours, not {u}'s. Follow one of your threads, work toward a goal, look "
+                         "into something you're curious about, try or make something, or set a goal if an interest has "
+                         "grown. If you'd rather rest, continuity_update with rest (\"+30m\", \"18:00\" or \"until "
+                         "something happens\"); anything that happens wakes you. Reply [SILENT] to say nothing; a reply "
+                         f"is a message to {u}.)")
+            return "\n".join(lines)
         if item["kind"] == "goal":
             who = u if item["origin"] == "user" else "you"
             last = V.ago(self.clock() - item["last_progress"]) if item.get("last_progress") else "none yet"
@@ -587,13 +672,13 @@ class Continuity:
                 return None
             text = self._render(item)
             energy = float(st.get("energy") or 0)
-            after = max(0.0, energy - self.cfg["step_cost"])
+            after = energy if self.continuous else max(0.0, energy - self.cfg["step_cost"])
             step_id = self.store.x("""INSERT INTO steps(ts, kind, item_id, text, energy_before, energy_after)
                                       VALUES(?,?,?,?,?,?)""", (now, item["kind"], item.get("queue_id") or
                                                               item.get("deliver_id"), text, energy, after))
-            display = self.display_for_turn(now)
+            display = self.display_for_turn(now, item)
             self.store.x("UPDATE steps SET display=? WHERE id=?",
-                         ("fully quiet" if display else "thoughts shown (display.plugin_turns)", step_id))
+                         ("fully quiet" if display == FULLY_QUIET else "thoughts shown (display.plugin_turns)", step_id))
             if not self.inject(text, display):
                 self.store.x("UPDATE steps SET outcome='not accepted' WHERE id=?", (step_id,))
                 self.backoff_until = now + 300

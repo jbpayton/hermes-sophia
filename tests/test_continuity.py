@@ -6,7 +6,7 @@ import pytest
 
 from hermes_continuity import UPDATE_SCHEMA, guide, register, should_run
 from hermes_continuity.config import DEFAULTS, in_quiet_hours, load
-from hermes_continuity.loop import LABEL, Continuity, is_silent, kind_of
+from hermes_continuity.loop import FREE_IDLE_FIRST_S, LABEL, Continuity, cue_text, is_silent, kind_of
 from hermes_continuity.store import Store
 
 NOON = time.mktime((2026, 10, 3, 12, 0, 0, 0, 0, -1))
@@ -181,7 +181,7 @@ def test_what_a_turn_brings_to_mind_becomes_a_turn_of_its_own(tmp_path):
 
 def test_it_winds_down_and_says_why(tmp_path):
     mem = FakeMemory()
-    c, sent = make(tmp_path, memory=mem, step_cost=0.6)
+    c, sent = make(tmp_path, memory=mem, step_cost=0.6, pacing="energy")
     user_turn(c)                                             # energy 1.0: one turn of its own at 0.6
     assert c.tick()
     own_turn(c, sent[-1])
@@ -597,7 +597,7 @@ def test_a_goal_of_its_own_must_point_at_what_it_grew_from(tmp_path):
 
 def test_goals_spend_energy_but_never_add_it(tmp_path):
     clock = Clock(NOON)
-    c, sent = make(tmp_path, clock=clock, memory=FakeMemory(items=[]))
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory(items=[]), pacing="energy")
     gid = c.goals.handle({"action": "add", "text": "Find Spokane dog parks", "origin": "user", "next_step": "search the city site"})["id"]
     assert c.tick() is None and not sent and c.store.state()["energy"] == 0      # no energy: the goal waits
     user_turn(c)                                                                 # perception provides energy
@@ -709,7 +709,7 @@ def test_its_turns_show_thoughts_by_day_and_nothing_in_quiet_hours(tmp_path):
     c, sent = make(tmp_path, memory=FakeMemory())
     user_turn(c)
     c.tick()
-    assert c.displays[-1] is None                         # by day: the user's display.plugin_turns decides
+    assert c.displays[-1] == {"label": "Own turn · something came to mind"}   # by day: display.plugin_turns decides
     night, _ = make(tmp_path / "n", clock=Clock(NIGHT), memory=FakeMemory())
     user_turn(night)
     night.tick()
@@ -765,3 +765,79 @@ def test_morning_stays_in_the_morning_for_someone_who_writes_in_the_evening(tmp_
     st = c.store.state()
     check(st, NOON, c.cfg, c.memory, "Joey")
     assert st["sensors"]["morning_at"] == "08:00"
+
+
+# ------------------------------------------------------------ continuous pacing
+def test_continuous_pacing_keeps_going_with_free_time_when_nothing_pulls(tmp_path):
+    clock = Clock(NOON)
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory())
+    user_turn(c)
+    kinds = []
+    while "free" not in kinds and len(kinds) < 12:      # no energy is spent: it goes on through what came to mind
+        assert c.tick()
+        own_turn(c, sent[-1])
+        clock.t += 30
+        kinds = [r["kind"] for r in c.store.q("SELECT kind FROM steps ORDER BY id")]
+    assert kinds[-1] == "free" and kinds.count("association") >= 3      # energy pacing would have stopped at 2
+    assert c.store.state()["energy"] == 1.0
+    free = next(r["text"] for r in c.store.q("SELECT text FROM steps WHERE kind='free'"))
+    assert free.startswith(f"{LABEL} free time]") and "rest" in free and "Joey's" in free
+
+
+def test_free_time_it_does_nothing_with_comes_round_less_often_until_something_happens(tmp_path):
+    clock = Clock(NOON)
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory(items=[]))
+    assert c.tick() and sent[-1].startswith(f"{LABEL} free time]")
+    own_turn(c, sent[-1])                               # silent, no tool, no thought: it came to nothing
+    st = c.store.state()
+    assert st["free_idle"] == 1 and st["free_after"] == clock.t + FREE_IDLE_FIRST_S
+    assert c.tick() is None and "free time on offer again" in c.store.state()["quiet_reason"]
+    clock.t += FREE_IDLE_FIRST_S
+    assert c.tick()
+    own_turn(c, sent[-1])
+    assert c.store.state()["free_after"] == clock.t + 2 * FREE_IDLE_FIRST_S          # doubling
+    user_turn(c, text="Morning!")                       # anything perceived offers free time again at once
+    assert c.store.state()["free_idle"] == 0
+    c.on_turn_start(session_id="s", user_message=sent[-1], platform="telegram")
+    c.turn["outcomes"] = ["used web_search"]            # free time it used
+    c.on_reply(response_text="[SILENT]", session_id="s", platform="telegram")
+    c.on_turn_end(session_id="s", platform="telegram")
+    assert c.store.state()["free_idle"] == 0
+
+
+def test_rest_is_its_own_choice_and_anything_that_happens_wakes_it(tmp_path):
+    clock = Clock(NOON)
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory(items=[]))
+    assert "error" in c.update({"rest": "after lunch"})
+    out = c.update({"rest": "+30m", "reason": "reading later"})
+    assert out["ok"] and out["resting"] == "until 12:30"
+    assert c.tick() is None and c.store.state()["quiet_reason"].startswith("resting, its own choice, until 12:30")
+    assert "resting" in c.frame(c.store.state(), clock.t)
+    clock.t += 31 * 60
+    assert c.tick()                                     # the time it chose has passed
+    own_turn(c, sent[-1])
+    c.update({"rest": "until something happens"})
+    clock.t += 6 * 3600
+    assert c.tick() is None and "until something happens" in c.store.state()["quiet_reason"]
+    user_turn(c, text="You there?")
+    assert c.store.state().get("rest") is None
+    c.update({"rest": "+2h"})
+    assert c.update({"rest": "off"})["changed"] == ["rest ended"]
+
+
+def test_a_cap_is_optional_and_off_by_default(tmp_path):
+    assert DEFAULTS["max_steps_per_day"] == 0 and DEFAULTS["pacing"] == "continuous"
+
+
+def test_association_isnt_cued_by_the_loops_own_words(tmp_path):
+    msg = (f"{LABEL} something came to mind]\n“The balcony gets the morning sun.” (Joey, 2026-10-01)\n(For you: this "
+           "is your own process, not Joey. Think about it, keep a thought, update your working state, or let it go: "
+           "reply [SILENT] to say nothing.)")
+    assert cue_text(msg) == "“The balcony gets the morning sun.” (Joey, 2026-10-01)"
+    mem = FakeMemory()
+    c, sent = make(tmp_path, memory=mem)
+    user_turn(c)
+    c.tick()
+    own_turn(c, sent[-1], reply="Noted.\n\n[SILENT]")
+    c.tick()
+    assert mem.cues and not any("For you" in q or "[SILENT]" in q or LABEL in q for q in mem.cues)

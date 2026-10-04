@@ -455,7 +455,9 @@ class Recall:
         reach what is two steps away; every step weakens the pull (graph_decay). Each memory raised is recorded,
         and a memory raised recently is damped: its pull is divided by 1 + the sum of exp(-age / τ) over its
         recent raisings (τ = associate_habituation_hours). The same things don't keep coming back, and they recover
-        as time passes. Damping only reorders what the cue is about: everything raised scores within associate_band
+        as time passes. The rest of a raised line's conversation (its session, within associate_conversation_hours)
+        is damped too, at associate_conversation_spread, so a long conversation doesn't come back one piece at a
+        time. Damping only reorders what the cue is about: everything raised scores within associate_band
         of the best match, so when what's relevant has all come up lately, it comes back weaker rather than being
         replaced by whatever is next. Neighbouring turns ("next to a match") help a question's context, not
         association, and are left out. At most associate_per_source items come from one message or page.
@@ -473,6 +475,7 @@ class Recall:
         ranked, info = self.candidates(cue, max(20, k * 4), use_scope=False, session_id=session_id, now=now,
                                        hops=cfg["associate_hops"] if hops is None else hops)
         hab = self.habituation([it["id"] for it in ranked], now)
+        conv = self.conversation_habituation(ranked, now) if cfg["associate_conversation_spread"] > 0 else {}
         skip, per_source, out = set(exclude), Counter(), []
         top = max((it["score"] for it in ranked if it.get("via") != "next to a match"), default=0.0)
         for it in ranked:
@@ -491,7 +494,7 @@ class Recall:
             if per_source[src] >= cfg["associate_per_source"]:
                 continue
             per_source[src] += 1
-            h = hab.get(it["id"], 0.0)
+            h = hab.get(it["id"], 0.0) + cfg["associate_conversation_spread"] * conv.get(it["id"], 0.0)
             weight = cfg["associate_superseded_weight"] if it.get("changed") else 1.0
             out.append({**it, "activation": it["score"] * weight / (1.0 + h), "habituation": h})
         out.sort(key=lambda it: it["activation"], reverse=True)
@@ -512,6 +515,38 @@ class Recall:
             for r in self.e.store.q(f"SELECT item_id, ts FROM activations WHERE ts>? AND ts<=? AND item_id IN "
                                     f"({','.join('?' * len(part))})", [now - 5 * tau, now, *part]):
                 out[r["item_id"]] = out.get(r["item_id"], 0.0) + math.exp(-(now - r["ts"]) / tau)
+        return out
+
+    def conversation_habituation(self, items: Sequence[Dict[str, Any]], now: float) -> Dict[str, float]:
+        """Per line: the sum of exp(-age / τ) over raisings, in the last 5 τ, of other lines of its conversation (its
+        session, said within associate_conversation_hours of it). A long-running chat is one session, so time keeps
+        it from counting as a single conversation."""
+        st = self.e.store
+        tau = max(1.0, float(self.e.cfg["associate_habituation_hours"]) * 3600)
+        span = float(self.e.cfg["associate_conversation_hours"]) * 3600
+        ids = [it["id"] for it in items if it.get("kind") == "window"]
+        if not ids:
+            return {}
+        where = {}
+        for i in range(0, len(ids), 400):
+            part = ids[i:i + 400]
+            for r in st.q(f"SELECT id, session_id, said FROM windows WHERE id IN ({','.join('?' * len(part))})", part):
+                if r["session_id"] and r["said"]:
+                    where[r["id"]] = (r["session_id"], r["said"])
+        sessions = sorted({s for s, _ in where.values()})
+        if not sessions:
+            return {}
+        raised: Dict[str, List[Tuple[str, float, float]]] = {}
+        for r in st.q(f"""SELECT a.item_id, a.ts, w.session_id, w.said FROM activations a JOIN windows w ON w.id = a.item_id
+                          WHERE a.ts > ? AND a.ts <= ? AND w.session_id IN ({','.join('?' * len(sessions))})""",
+                      [now - 5 * tau, now, *sessions]):
+            raised.setdefault(r["session_id"], []).append((r["item_id"], r["ts"], r["said"] or 0.0))
+        out: Dict[str, float] = {}
+        for i, (s, said) in where.items():
+            h = sum(math.exp(-(now - ts) / tau) for j, ts, other in raised.get(s, ())
+                    if j != i and abs(other - said) <= span)
+            if h:
+                out[i] = h
         return out
 
     # ---------------------------------------------------------------- prefetch

@@ -16,7 +16,7 @@ from typing import Any, Dict, List, Optional
 
 from . import view as V
 
-HEALTHY = ("ran its course", "today's budget")          # quiet for the right reasons; anything "stalled" is to chase
+HEALTHY = ("ran its course", "today's budget", "resting", "nothing pulling")          # quiet for the right reasons; anything "stalled" is to chase
 AROUND_S = 2 * 3600
 
 
@@ -122,6 +122,7 @@ def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional
         return {
             "exists": True, "path": str(path), "now": _d(now), "paused": paused,
             "energy": round(float(st.get("energy") or 0), 2), "step_cost": cfg["step_cost"], "min_pull": cfg["min_pull"],
+            "pacing": cfg.get("pacing", "continuous"), "rest": st.get("rest"),
             "quiet": quiet,
             # the number the budget gate uses (the state's counter), and every turn row since midnight
             "today": {"turns": st.get("steps_today", 0) if st.get("day") == dt.datetime.fromtimestamp(now).strftime("%Y-%m-%d")
@@ -147,7 +148,8 @@ def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional
                        "max_fill": round(max(fills), 4) if fills else None,
                        "latest": frames[0]["text"] if frames else None,
                        "latest_full": last_full["text"] if last_full else None},
-            "settings": {k: cfg[k] for k in ("enabled", "view", "platform", "outreach", "quiet_hours", "max_steps_per_day",
+            "settings": {k: cfg[k] for k in ("enabled", "view", "platform", "outreach", "quiet_hours", "pacing",
+                                             "max_steps_per_day",
                                              "energy_per_event", "step_cost", "energy_max", "min_pull", "chain_decay",
                                              "item_ttl_minutes", "settle_seconds", "full_frame_every")},
         }
@@ -161,11 +163,14 @@ def text(rep: Dict[str, Any]) -> str:
         return f"No continuity store at {rep.get('path')}: the companion hasn't run on this profile."
     t, q, u = rep["today"], rep["quiet"], rep["user"]
     out = [f"Continuity report · {rep['now']}" + (" · PAUSED" if rep["paused"] else "")]
-    out.append(f"energy {rep['energy']} (a turn costs {rep['step_cost']})"
-               + (f" · quiet: {q['reason']} [{q['kind']}] since {q['since']}" if q["reason"] else " · active"))
+    pace = ("pacing continuous" if rep.get("pacing", "energy") != "energy"
+            else f"energy {rep['energy']} (a turn costs {rep['step_cost']})")
+    out.append(pace + (f" · quiet: {q['reason']} [{q['kind']}] since {q['since']}" if q["reason"] else " · active"))
     oc = ", ".join(f"{n} {k}" for k, n in sorted(t["outcomes"].items(), key=lambda kv: -kv[1])) or "none"
     rows = f", {t['rows']} turn rows in the journal" if t.get("rows", t["turns"]) != t["turns"] else ""
-    out.append(f"today: {t['turns']}/{t['budget']} turns of its own counted against the budget{rows} ({oc}); "
+    counted = (f"{t['turns']}/{t['budget']} turns of its own counted against the budget" if t["budget"]
+               else f"{t['turns']} turns of its own")
+    out.append(f"today: {counted}{rows} ({oc}); "
                f"{t['model_seconds']}s of model time, "
                f"{t['tokens']} tokens; "
                f"outreach {t['outreach']}, {t['outreach_sent']}/{t['outreach_limit']} sent, quiet hours {t['quiet_hours']}")

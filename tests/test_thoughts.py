@@ -147,6 +147,30 @@ def test_association_damps_what_came_up_recently_and_it_recovers(engine):
     assert back["habituation"] < 0.01 and abs(back["activation"] - top["activation"]) < 1e-6
 
 
+def test_a_conversation_doesnt_come_back_one_piece_at_a_time(engine):
+    # live, 2026-10-04: Sophia noticed association raising yesterday's design conversation fragment by fragment
+    t = time.time() - 86400
+    engine.capture.process_messages("design", [
+        {"role": "user", "content": "The outreach score counts a reply within twelve hours.", "timestamp": t},
+        {"role": "user", "content": "A held message is about Joey's life, not about memory.", "timestamp": t + 60},
+        {"role": "user", "content": "Every goal change needs a reason in the journal.", "timestamp": t + 120},
+        {"role": "user", "content": "Much later the outreach journal got a new column.", "timestamp": t + 6 * 3600}])
+    engine.capture.process_messages("other", [
+        {"role": "user", "content": "The garden journal needs a reason for every change too.", "timestamp": t + 90}])
+    lines = {r["text"][:12]: r["id"] for r in engine.store.q("SELECT id, text FROM windows")}
+    now = time.time()
+    engine.store.xmany("INSERT INTO activations(item_id,item_kind,ts,cue) VALUES(?,?,?,?)",
+                       [(lines["The outreach"], "window", now - 60, "c")])
+    items = [{"kind": "window", "id": i} for i in lines.values()]
+    h = engine.recall.conversation_habituation(items, now)
+    assert h.get(lines["A held messa"], 0) > 0.9 and h.get(lines["Every goal c"], 0) > 0.9   # same conversation
+    assert lines["The outreach"] not in h                      # its own raising is ordinary habituation
+    assert lines["Much later t"] not in h and lines["The garden j"] not in h   # later in the session; another one
+    out, _ = engine.recall.associate("a reason for every goal change in the journal", k=5, now=now, record=False)
+    damped = {it["id"]: it["habituation"] for it in out}
+    assert damped.get(lines["Every goal c"], 0) > 0.4 and damped.get(lines["The garden j"], 1) == 0
+
+
 def test_association_skips_what_the_caller_already_holds(engine):
     _seed(engine)
     first, _ = engine.recall.associate("Yosemite", k=5, record=False)

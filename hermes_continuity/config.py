@@ -11,7 +11,10 @@ DEFAULTS: Dict[str, Any] = {
     "outreach": False,
     "quiet_hours": "22:00-08:00",
     "max_outreach_per_day": 3,
-    "max_steps_per_day": 30,
+    "pacing": "continuous",             # "continuous": one turn after another while it's awake, free time when nothing
+                                        # pulls, rest only by its own choice. "energy": each event gives energy for a few
+                                        # turns, then it goes quiet (kept for comparison)
+    "max_steps_per_day": 0,             # an optional cap on its own turns per day (0 = none)
     "energy_per_event": 1.0,
     "step_cost": 0.34,
     "energy_max": 3.0,
@@ -25,7 +28,8 @@ DEFAULTS: Dict[str, Any] = {
     "morning": "auto",                  # when the day starts for the morning event ("auto" = the user's usual first message)
     "noticed_pull": 1.0,                # something noticed ranks ahead of what merely comes to mind
     "goals": True,
-    "show_thoughts": True,              # its own turns show their thinking and in-between text (quietly); off = nothing                      # an active goal can take a turn when nothing else is waiting (never adds energy)
+    "show_thoughts": True,              # its own turns show their thinking and in-between text (quietly); off = nothing
+    "thoughts_label": "Own turn",       # heads the thinking a turn of its own shows when it ends silent
     "sophia_path": "",
     "poll_seconds": 5,                  # how often the loop re-checks its conditions; never a reason to wake the model
 }

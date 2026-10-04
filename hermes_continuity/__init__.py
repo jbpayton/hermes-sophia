@@ -26,7 +26,8 @@ UPDATE_SCHEMA = {
     "name": "continuity_update",
     "description": ("Keep your own working state, which the standing view shows you every turn: what you're focused on, "
                     "your open threads, what you're waiting for. In a turn of your own ([continuity: …]), 'let_go' "
-                    "records why you're letting something go; letting go is a normal outcome."),
+                    "records why you're letting something go; letting go is a normal outcome. 'rest' pauses your own "
+                    "turns until a time or until something happens."),
     "parameters": {"type": "object", "properties": {
         "focus": {"type": "string", "description": "What you're focused on now (empty string clears it)."},
         "add_thread": {"type": "string", "description": "An open thread to keep in view."},
@@ -35,7 +36,11 @@ UPDATE_SCHEMA = {
         "by": {"type": "string", "description": "With waiting_for: when you expect it (\"+30m\", \"+2h\", \"14:30\" or "
                                                 "an ISO time); if it's late, you'll notice."},
         "done_waiting": {"type": "string", "description": "Id or words of something that arrived."},
-        "let_go": {"type": "string", "description": "Why you're letting this turn's item go."}}},
+        "let_go": {"type": "string", "description": "Why you're letting this turn's item go."},
+        "rest": {"type": "string", "description": "Rest, your choice: \"+30m\", \"+2h\", \"18:00\", an ISO time, or "
+                                                  "\"until something happens\". Anything that happens wakes you; "
+                                                  "\"off\" ends it."},
+        "reason": {"type": "string", "description": "With rest: why, if you like."}}},
 }
 
 
@@ -47,17 +52,22 @@ def guide(user: str, quiet_hours: str) -> str:
             "- \"a goal of yours\": one of your goals, when nothing else is waiting (continuity_goal keeps them);\n"
             "- \"noticed\": time passing, noticed: quiet for longer than usual, something overdue, a planned date gone "
             "by, or the morning (the one scheduled moment of the day);\n"
+            f"- \"free time\": nothing in particular is pulling at you. The time is yours, not {user}'s: follow a thread, "
+            "work toward a goal, look into something, try or make something, or rest;\n"
             f"- \"a message you held for {user}\": something you wrote earlier that waited for a good time.\n"
             "In those turns do whatever seems worthwhile: think it through, use your tools, keep a thought "
             "(sophia_thought), update your working state (continuity_update), or let it go. (continuity_update and "
             "continuity_goal may be in your tool_search catalog rather than your tool list.) Letting go is normal, and "
-            f"declining or resting is always fine. Reply [SILENT] when there's nothing to say to {user}.\n"
+            "declining is always fine. Your own turns follow one another while you're awake; to rest, use "
+            "continuity_update with rest, for a while or until something happens, and anything that happens wakes you. "
+            f"Reply [SILENT] when there's nothing to say to {user}.\n"
             f"If you do write a reply in one of these turns, it reaches {user} only when outreach is allowed (never "
             f"in quiet hours, {quiet_hours}, and within a daily limit); otherwise it is held, and your standing view "
             f"shows it. Write it as a message to {user} about their life or your shared work. Reflections on how "
             "your own memory or process works belong in a thought (sophia_thought), not a message.\n"
             "Every turn also carries a \"[standing view …]\" frame of your situation: the time, "
-            f"{user}, finished jobs, your focus and threads, what came to mind, your energy. Each line says where it "
+            f"{user}, finished jobs, your focus and threads, what came to mind, what's on your mind. Each line says "
+            "where it "
             "came from: perceived, remembered, or your own. Only the latest frame is current; a change frame shows "
             "old → new.")
 
