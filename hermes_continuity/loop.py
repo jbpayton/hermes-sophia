@@ -53,6 +53,7 @@ OWN_TURN_START_S = 180             # a turn it started that hasn't begun after t
 # with each such turn up to FREE_IDLE_MAX_S. Anything perceived resets it. Pacing that follows what it does, not a cap.
 FREE_IDLE_FIRST_S = 60
 FREE_IDLE_MAX_S = 3600
+NOTE_WORDS = 8                      # a note this long beside [SILENT] is free time used: thinking counts, not just tools
 KIND_LABEL = {"noticed": "noticed", "association": "something came to mind", "goal": "a goal",
               "deliver": "a held message", "free": "free time"}
 
@@ -168,6 +169,14 @@ class Continuity:
         st["free_idle"], st["free_after"] = 0, 0
         if st.get("quiet_reason") or not st.get("episode_since"):
             st["quiet_reason"], st["episode_since"] = "", now
+
+    def _night(self, now: float) -> str:
+        """The night it is (the date the evening began), during quiet hours; "" otherwise."""
+        t = dt.datetime.fromtimestamp(now)
+        if not in_quiet_hours(self.cfg["quiet_hours"], t.strftime("%H:%M")):
+            return ""
+        start = (self.cfg["quiet_hours"].split("-", 1)[0] or "22:00").strip()
+        return (t if t.strftime("%H:%M") >= start else t - dt.timedelta(days=1)).strftime("%Y-%m-%d")
 
     @property
     def continuous(self) -> bool:
@@ -413,7 +422,10 @@ class Continuity:
             item_kind = (t.get("item") or {}).get("kind") if t["kind"] == "continuity" else None
             if item_kind == "free" and not t.get("joined_by_user"):
                 st = self.store.state()
-                did = bool(t.get("outcomes")) or t.get("outcome") in ("held", "sent")
+                # used: a tool, a thought kept, a message written, or a note beside [SILENT]. Reasoning alone can't
+                # be the sign: the model reasons at length even to decide there's nothing to do
+                did = (bool(t.get("outcomes")) or t.get("outcome") in ("held", "sent")
+                       or len(re.findall(r"\w+", cue_text(t.get("reply") or ""))) >= NOTE_WORDS)
                 if did or st.get("rest"):
                     st["free_idle"], st["free_after"] = 0, 0
                 else:
@@ -459,6 +471,9 @@ class Continuity:
                     if st.get("rest"):
                         st["rest"] = None
                         changed.append("rest ended")
+                    if self._night(now) and st.get("awake_night") != self._night(now):
+                        st["awake_night"] = self._night(now)       # staying up tonight: free time instead of rest
+                        changed.append("staying up tonight")
                 else:
                     open_ended = low.startswith("until something") or low in ("until woken", "indefinitely", "open")
                     until = None if open_ended else parse_by(re.sub(r"^until\s+", "", spec, flags=re.I), now)
@@ -557,6 +572,9 @@ class Continuity:
             if not continuous:
                 return None, ("ran its course: nothing came to mind strongly enough" if goal is None else
                               "ran its course: no energy left for turns of its own")
+            if self.cfg.get("night_rest", True) and self._night(now) and st.get("awake_night") != self._night(now):
+                return None, ("resting: night, the default (anything that happens wakes you; to stay up, "
+                              "continuity_update rest \"off\")")
             if now < float(st.get("free_after") or 0):
                 return None, (f"nothing pulling; free time on offer again at {_hm(st['free_after'])} (the last "
                               f"{st.get('free_idle', 1)} came to nothing)")
@@ -586,7 +604,9 @@ class Continuity:
             lines.append(f"(For you: this time is yours, not {u}'s. Follow one of your threads, work toward a goal, look "
                          "into something you're curious about, try or make something, or set a goal if an interest has "
                          "grown. If you'd rather rest, continuity_update with rest (\"+30m\", \"18:00\" or \"until "
-                         "something happens\"); anything that happens wakes you. Reply [SILENT] to say nothing; a reply "
+                         "something happens\"); anything that happens wakes you. Free time you use (a tool, a thought "
+                         "kept, or a line of what you thought beside [SILENT]) keeps it coming; free time you do nothing "
+                         "with comes round less often until something happens. Reply [SILENT] to say nothing; a reply "
                          f"is a message to {u}.)")
             return "\n".join(lines)
         if item["kind"] == "goal":

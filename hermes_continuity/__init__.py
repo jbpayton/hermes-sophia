@@ -60,6 +60,7 @@ def guide(user: str, quiet_hours: str) -> str:
             "continuity_goal may be in your tool_search catalog rather than your tool list.) Letting go is normal, and "
             "declining is always fine. Your own turns follow one another while you're awake; to rest, use "
             "continuity_update with rest, for a while or until something happens, and anything that happens wakes you. "
+            f"At night ({quiet_hours}) free time is rest by default; rest \"off\" means you're staying up. "
             f"Reply [SILENT] when there's nothing to say to {user}.\n"
             f"If you do write a reply in one of these turns, it reaches {user} only when outreach is allowed (never "
             f"in quiet hours, {quiet_hours}, and within a daily limit); otherwise it is held, and your standing view "

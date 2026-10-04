@@ -841,3 +841,28 @@ def test_association_isnt_cued_by_the_loops_own_words(tmp_path):
     own_turn(c, sent[-1], reply="Noted.\n\n[SILENT]")
     c.tick()
     assert mem.cues and not any("For you" in q or "[SILENT]" in q or LABEL in q for q in mem.cues)
+
+
+def test_thinking_counts_as_using_free_time_not_just_tools(tmp_path):
+    # Sophia's review, 2026-10-04: a turn spent thinking, with no tool, mustn't count as idle
+    clock = Clock(NOON)
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory(items=[]))
+    assert c.tick()
+    own_turn(c, sent[-1], reply="Thinking about why the balcony line keeps coming back: it's tied to the move, not "
+                                 "the balcony.\n\n[SILENT]")
+    assert c.store.state()["free_idle"] == 0 and c.tick()
+    own_turn(c, sent[-1], reply="Nothing.\n[SILENT]")              # a word or two isn't a note
+    assert c.store.state()["free_idle"] == 1
+
+
+def test_at_night_free_time_is_rest_unless_it_stays_up(tmp_path):
+    clock = Clock(NIGHT)
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory(items=[]))
+    assert c.tick() is None and c.store.state()["quiet_reason"].startswith("resting: night")
+    assert "staying up tonight" in c.update({"rest": "off"})["changed"]
+    assert c.tick() and sent[-1].startswith(f"{LABEL} free time]")
+    own_turn(c, sent[-1], reply="A long note on what I looked into tonight, kept as a line beside silence.\n[SILENT]")
+    clock.t += 9 * 3600                                     # the next night: rest again by default
+    c2, sent2 = make(tmp_path / "b", clock=Clock(NIGHT + 86400), memory=FakeMemory())
+    user_turn(c2)                                           # what's perceived still starts turns at night
+    assert c2.tick() and sent2[-1].startswith(f"{LABEL} something came to mind]")

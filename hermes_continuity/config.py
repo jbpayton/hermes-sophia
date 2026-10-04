@@ -15,6 +15,8 @@ DEFAULTS: Dict[str, Any] = {
                                         # pulls, rest only by its own choice. "energy": each event gives energy for a few
                                         # turns, then it goes quiet (kept for comparison)
     "max_steps_per_day": 0,             # an optional cap on its own turns per day (0 = none)
+    "night_rest": True,                 # in quiet hours, free time becomes rest unless it chooses to stay up; anything
+                                        # perceived still starts turns (Sophia's choice, 2026-10-04)
     "energy_per_event": 1.0,
     "step_cost": 0.34,
     "energy_max": 3.0,
