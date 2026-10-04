@@ -92,9 +92,11 @@ def answer_kind(message: str) -> str:
 
 
 def is_silent(text: str) -> bool:
-    """A reply that is, or opens with, a silence marker: models sometimes add a line of commentary after it."""
+    """A reply that is, opens with, or closes on a line of its own with a silence marker: models sometimes add
+    commentary after it, or reason about their own process first and then choose silence."""
     t = (text or "").strip().upper()
-    return t in _SILENT or any(t.startswith(m) for m in _SILENT)
+    last = t.splitlines()[-1].strip() if t else ""
+    return t in _SILENT or any(t.startswith(m) for m in _SILENT) or last in _SILENT
 
 
 def _text(content: Any) -> str:

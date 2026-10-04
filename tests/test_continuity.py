@@ -78,6 +78,9 @@ def test_who_a_turn_is_from():
     assert kind_of('[IMPORTANT: The user has invoked the "work" skill, ...') == "user"
     assert kind_of("hey, how are you?") == "user"
     assert is_silent(" [SILENT] ") and is_silent("NO_REPLY") and not is_silent("Hi Joey")
+    # live, 2026-10-04: a paragraph about its own process, then the marker on a line of its own
+    assert is_silent("I let the item go with a reason, and I'm letting the turn go quiet too. 🧙‍♀️\n\n[SILENT]")
+    assert not is_silent("Should I reply [SILENT] when there's nothing to say?")
 
 
 def test_quiet_hours_wrap_past_midnight():
