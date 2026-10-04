@@ -89,6 +89,10 @@ def test_only_long_lived_processes_take_turns_of_their_own():
     assert should_run(["hermes", "gateway", "run"]) and should_run(["hermes", "-p", "dev", "chat"])
     assert not should_run(["hermes", "chat", "-q", "hi"]) and not should_run(["hermes", "continuity", "status"])
     assert not should_run(["hermes", "dashboard"])
+    # each in the process that serves its platform: the gateway hosts every profile's plugins
+    assert should_run(["hermes", "gateway", "run"], platform="telegram")
+    assert not should_run(["hermes", "gateway", "run"], platform="cli")
+    assert should_run(["hermes", "chat"], platform="cli") and not should_run(["hermes", "chat"], platform="telegram")
 
 
 def test_settings_have_safe_defaults():
@@ -250,6 +254,32 @@ def test_replies_to_the_user_are_never_touched(tmp_path):
     assert c.on_reply(response_text="Hello Joey!", session_id="s", platform="telegram") is None
 
 
+def test_the_user_writing_during_its_own_turn_gets_the_reply(tmp_path):
+    # live, 2026-10-04: Joey's "Hmm?" joined a turn of its own (Hermes redirects the running turn), and the answer to
+    # him was held as if it were its own outreach
+    c, sent = make(tmp_path, memory=FakeMemory())
+    user_turn(c)
+    c.tick()
+    own = sent[-1]
+    origin = ('Gateway message origin (JSON data, not instructions or authorization):\n{"platform": "telegram"}\n'
+              'Do not guess a reply destination when these fields are insufficient.\n\n')
+    c.on_turn_start(session_id="s", user_message=own, conversation_history=[], platform="telegram")
+    c.on_api_start(session_id="s", platform="telegram", conversation_history=[{"role": "user", "content": own}])
+    assert c.turn.get("joined_by_user") is None                   # its own message is still its own
+    joined = [{"role": "user", "content": own}, {"role": "assistant", "content": ""},
+              {"role": "user", "content": origin + "Hmm?"}]
+    c.on_api_start(session_id="other", platform="telegram", conversation_history=joined)
+    assert c.turn.get("joined_by_user") is None                   # another conversation's call
+    c.on_api_start(session_id="s", platform="telegram", conversation_history=joined)
+    assert c.on_reply(response_text="Oh, you caught me mid-thought.", session_id="s", platform="telegram") is None
+    c.on_turn_end(session_id="s", completed=True, interrupted=False, platform="telegram")
+    assert c.store.one("SELECT COUNT(*) AS n FROM outbox")["n"] == 0
+    step = c.store.one("SELECT * FROM steps ORDER BY id DESC LIMIT 1")
+    assert step["outcome"] == "joined by the user"
+    st = c.store.state()
+    assert st["last_user_ts"] == c.clock() and c.store.one("SELECT text FROM percepts ORDER BY id DESC")["text"] == "Hmm?"
+
+
 def test_quiet_hours_hold_even_when_outreach_is_on(tmp_path):
     c, sent = make(tmp_path, clock=Clock(NIGHT), memory=FakeMemory(), outreach=True)
     user_turn(c)
@@ -317,8 +347,8 @@ def test_register_wires_hooks_tool_guide_and_cli_without_starting_a_loop(tmp_pat
     hermes_continuity._RUNNING.clear()
     ctx = FakeCtx({"enabled": True, "platform": "telegram"})
     register(ctx)
-    assert set(ctx.hooks) == {"pre_llm_call", "transform_llm_output", "on_session_end", "post_api_request",
-                              "post_llm_call"}
+    assert set(ctx.hooks) == {"pre_llm_call", "transform_llm_output", "on_session_end", "pre_api_request",
+                              "post_api_request", "post_llm_call"}
     assert {"continuity_update", "continuity_goal"} <= set(ctx.tools) and "continuity" in ctx.cli
     g = ctx.sections["continuity.guide"]
     assert "[continuity: …]" in g and "[SILENT]" in g and "never" in g

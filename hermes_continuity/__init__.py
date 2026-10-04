@@ -94,15 +94,18 @@ def _user_name(cfg: dict) -> str:
         return "the user"
 
 
-def should_run(argv=None) -> bool:
-    """Only a long-lived process takes turns of its own: the gateway, or an interactive chat. Never a one-shot query,
-    a CLI subcommand or the dashboard."""
+def should_run(argv=None, platform: str = "") -> bool:
+    """Only the long-lived process that serves the loop's platform takes turns of its own: the gateway for a messaging
+    platform, an interactive chat for the CLI. Never a one-shot query, a CLI subcommand or the dashboard. (The gateway
+    loads every profile's plugins, so without the platform check a CLI profile's loop would run there too, injecting
+    into a conversation that doesn't exist.)"""
     if os.environ.get("HERMES_CONTINUITY_RUN") in ("1", "0"):
         return os.environ["HERMES_CONTINUITY_RUN"] == "1"
     a = list(argv if argv is not None else sys.argv)
+    cli = (platform or "").lower() == "cli"
     if "gateway" in a and "run" in a:
-        return True
-    return "chat" in a and not any(x in a for x in ("-q", "--query", "--query-file", "-Q"))
+        return not cli
+    return "chat" in a and not any(x in a for x in ("-q", "--query", "--query-file", "-Q")) and (cli or not platform)
 
 
 def register(ctx) -> None:
@@ -133,6 +136,7 @@ def register(ctx) -> None:
     ctx.register_hook("pre_llm_call", cont.on_turn_start)
     ctx.register_hook("transform_llm_output", cont.on_reply)
     ctx.register_hook("on_session_end", cont.on_turn_end)
+    ctx.register_hook("pre_api_request", cont.on_api_start)
     ctx.register_hook("post_api_request", cont.on_api)
     ctx.register_hook("post_llm_call", cont.on_turn_done)
     from .goals import SCHEMA_TOOL as GOAL_SCHEMA
@@ -152,7 +156,7 @@ def register(ctx) -> None:
     except Exception as ex:
         logger.warning("continuity: CLI not registered: %s", ex)
 
-    if cfg["enabled"] and should_run() and cont._thread is None:
+    if cfg["enabled"] and should_run(platform=cfg.get("platform", "")) and cont._thread is None:
         def boot():
             try:
                 cont.set_memory(sophia_module("api", cfg["sophia_path"]).Memory(str(home)))

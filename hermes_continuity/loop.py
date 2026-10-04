@@ -214,13 +214,7 @@ class Continuity:
                              (now, turn["context_chars"], self.expect_own["step_id"]))
                 self.expect_own = None
             elif kind == "user":
-                st["last_user_ts"] = now
-                self._energize(st, now)
-                self._percept("message", msg, now)
-                for o in self.store.q("SELECT id, sent FROM outreach WHERE response IS NULL AND sent>?",
-                                      (now - REPLY_WINDOW_S,)):          # this message answers what it sent
-                    self.store.x("UPDATE outreach SET response=?, gap_s=?, response_text=?, settled=? WHERE id=?",
-                                 (answer_kind(msg), now - o["sent"], msg[:200], now, o["id"]))
+                self._user_wrote(st, msg, now)
             elif kind == "notice":
                 m = _JOB.search(msg)
                 what = f"background process {m.group(1)} {m.group(2).strip()}" if m else msg.strip()[:100]
@@ -238,6 +232,38 @@ class Continuity:
             text = self.frame(st, now, force_full=after_compaction, turn=turn) if self.cfg["view"] else ""
             self.store.save_state(st)
         return {"context": text} if text else None
+
+    def _user_wrote(self, st: Dict[str, Any], msg: str, now: float) -> None:
+        st["last_user_ts"] = now
+        self._energize(st, now)
+        self._percept("message", msg, now)
+        for o in self.store.q("SELECT id, sent FROM outreach WHERE response IS NULL AND sent>?",
+                              (now - REPLY_WINDOW_S,)):          # this message answers what it sent
+            self.store.x("UPDATE outreach SET response=?, gap_s=?, response_text=?, settled=? WHERE id=?",
+                         (answer_kind(msg), now - o["sent"], msg[:200], now, o["id"]))
+
+    def on_api_start(self, platform: str = "", session_id: str = "", conversation_history=None, **kw) -> None:
+        """pre_api_request: the user writing during a turn of its own. Hermes adds a text message that arrives mid-turn
+        to the running turn (a redirect) instead of starting a new one, so no turn-start hook sees it. Spotted here,
+        before the next model call, the turn becomes the user's to answer: its reply goes to them, never the outbox."""
+        if not self.ours(platform):
+            return
+        with self.lock:
+            t = self.turn
+            if t is None or t["kind"] != "continuity" or t.get("joined_by_user"):
+                return
+            if session_id and t.get("session_id") and session_id != t["session_id"]:
+                return
+            last = next((m for m in reversed(conversation_history or []) if m.get("role") == "user"), None)
+            msg = strip_origin(_text((last or {}).get("content")))
+            if not last or kind_of(msg) != "user":
+                return
+            now = self.clock()
+            t["joined_by_user"] = now
+            t["message"] = f"{t.get('message', '')}\n{msg}"[:2000]
+            st = self.store.state()
+            self._user_wrote(st, msg, now)
+            self.store.save_state(st)
 
     def on_api(self, platform: str = "", usage: Optional[Dict[str, Any]] = None, **kw) -> None:
         """post_api_request: the real size of the prompt the frame sat in (the first call of the turn), and what the
@@ -303,6 +329,9 @@ class Continuity:
                 return None
             t["reply"] = response_text or ""
             if t["kind"] != "continuity":
+                return None
+            if t.get("joined_by_user"):                   # the user wrote during it: the reply is theirs
+                t["outcome"] = "joined by the user"
                 return None
             if is_silent(response_text):
                 t["outcome"] = "silent"
