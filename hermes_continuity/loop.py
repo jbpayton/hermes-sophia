@@ -48,7 +48,8 @@ NOT_OURS = {"subagent", "cron"}
 # quiet hours or when show_thoughts is off; otherwise the user's display.plugin_turns decides.
 FULLY_QUIET = {"thinking": False, "interim": False, "tool_progress": False, "streaming": False, "notices": False}
 AROUND_S = 2 * 3600                # the user counts as around this long after they last wrote
-OWN_TURN_START_S = 180             # a turn it started that hasn't begun after this long didn't happen
+OWN_TURN_START_S = 900             # a turn it started that hasn't begun after this long didn't happen (Hermes compacts
+                                   # before a turn begins, sometimes twice: up to ~8 minutes seen on a local 27B)
 # Free time it did nothing with (no tool, no thought, nothing said) is offered again later: after this long, doubling
 # with each such turn up to FREE_IDLE_MAX_S. Anything perceived resets it. Pacing that follows what it does, not a cap.
 FREE_IDLE_FIRST_S = 60

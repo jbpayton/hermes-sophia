@@ -462,6 +462,10 @@ class Recall:
         replaced by whatever is next. Neighbouring turns ("next to a match") help a question's context, not
         association, and are left out. At most associate_per_source items come from one message or page.
 
+        The live conversation's last associate_recent_hours are never raised either, even once compaction has taken
+        them out of the context: with frequent compaction, a line said minutes ago would otherwise come back as if
+        remembered (live, 2026-10-05: Joey's message "came to mind" three minutes after he sent it).
+
         The continuing process's own events (its turns, its quiet notes) are never raised: association feeds that
         process, and raising its own output would loop it on itself. Recall still finds them, labelled.
 
@@ -478,9 +482,12 @@ class Recall:
         conv = self.conversation_habituation(ranked, now) if cfg["associate_conversation_spread"] > 0 else {}
         skip, per_source, out = set(exclude), Counter(), []
         top = max((it["score"] for it in ranked if it.get("via") != "next to a match"), default=0.0)
+        recent = self._live_recent(ranked, session_id, now)
         for it in ranked:
             if it["id"] in skip or it.get("bare_question") or it.get("via") == "next to a match":
                 continue
+            if it["id"] in recent:
+                continue        # just said in this conversation: working memory, not something that comes to mind
             if "continuity" in (it.get("flags") or ""):
                 continue        # the process's own turns and notes: raising them would loop it on itself
             if "action" in (it.get("flags") or ""):
@@ -515,6 +522,20 @@ class Recall:
             for r in self.e.store.q(f"SELECT item_id, ts FROM activations WHERE ts>? AND ts<=? AND item_id IN "
                                     f"({','.join('?' * len(part))})", [now - 5 * tau, now, *part]):
                 out[r["item_id"]] = out.get(r["item_id"], 0.0) + math.exp(-(now - r["ts"]) / tau)
+        return out
+
+    def _live_recent(self, items: Sequence[Dict[str, Any]], session_id: str, now: float) -> set:
+        """Ids of windows the live conversation said within associate_recent_hours."""
+        hours = float(self.e.cfg.get("associate_recent_hours") or 0)
+        ids = [it["id"] for it in items if it.get("kind") == "window"]
+        if not session_id or hours <= 0 or not ids:
+            return set()
+        out = set()
+        for i in range(0, len(ids), 400):
+            part = ids[i:i + 400]
+            out |= {r["id"] for r in self.e.store.q(
+                f"SELECT id FROM windows WHERE session_id=? AND said>=? AND id IN ({','.join('?' * len(part))})",
+                [session_id, now - hours * 3600, *part])}
         return out
 
     def conversation_habituation(self, items: Sequence[Dict[str, Any]], now: float) -> Dict[str, float]:

@@ -171,6 +171,21 @@ def test_a_conversation_doesnt_come_back_one_piece_at_a_time(engine):
     assert damped.get(lines["Every goal c"], 0) > 0.4 and damped.get(lines["The garden j"], 1) == 0
 
 
+def test_what_the_live_conversation_just_said_never_comes_to_mind_even_once_compacted(engine):
+    # live, 2026-10-05: compaction flagged Joey's 09:53 message as compacted, and it came to mind at 10:00
+    now = time.time()
+    engine.capture.process_messages("live", [
+        {"role": "user", "content": "The Quest 3 is a client of a shared server room.", "timestamp": now - 300},
+        {"role": "user", "content": "Last month the Quest 3 arrived in the mail.", "timestamp": now - 30 * 86400}])
+    engine.store.x("UPDATE windows SET flags = COALESCE(flags,'') || ' compacted' WHERE session_id='live'")
+    out, _ = engine.recall.associate("Quest 3 headset", k=5, session_id="live", now=now, record=False)
+    texts = [it["text"] for it in out]
+    assert not any("shared server room" in t for t in texts)          # minutes old: still working memory
+    assert any("arrived in the mail" in t for t in texts)             # a month old: that can come to mind
+    other, _ = engine.recall.associate("Quest 3 headset", k=5, session_id="elsewhere", now=now, record=False)
+    assert any("shared server room" in it["text"] for it in other)    # from another conversation it can
+
+
 def test_association_skips_what_the_caller_already_holds(engine):
     _seed(engine)
     first, _ = engine.recall.associate("Yosemite", k=5, record=False)
