@@ -469,6 +469,10 @@ class Recall:
         The continuing process's own events (its turns, its quiet notes) are never raised: association feeds that
         process, and raising its own output would loop it on itself. Recall still finds them, labelled.
 
+        The agent's own replies pull associate_own_weight as hard (live, 2026-10-04 to 10-09: 86% of those that
+        came to mind were let go as echoes); its kept thoughts are unaffected, coming back is what they're for. Task
+        cards (records of finished work) are left out unless associate_tasks; recall still finds them.
+
         Two kinds of line pull less. One that stated something later superseded keeps its "later changed" note and
         pulls associate_superseded_weight as hard, so the current version ranks first and an old one rarely starts
         a train of thought. A bare reply ("yes", "ok, thanks") under associate_min_words is skipped: it says nothing
@@ -492,6 +496,8 @@ class Recall:
                 continue        # the process's own turns and notes: raising them would loop it on itself
             if "action" in (it.get("flags") or ""):
                 continue        # a logged tool call is a record of a step, not something that comes to mind
+            if it["kind"] == "task" and not cfg.get("associate_tasks", False):
+                continue        # a record of finished work: recall needs it ("what did I do?"); association replays it
             if it["kind"] == "window" and not it.get("facts") and \
                     len(re.findall(r"\w+", it.get("text") or "")) < cfg["associate_min_words"]:
                 continue
@@ -503,6 +509,8 @@ class Recall:
             per_source[src] += 1
             h = hab.get(it["id"], 0.0) + cfg["associate_conversation_spread"] * conv.get(it["id"], 0.0)
             weight = cfg["associate_superseded_weight"] if it.get("changed") else 1.0
+            if "assistant" in (it.get("flags") or "") and "thought" not in (it.get("flags") or ""):
+                weight *= float(cfg.get("associate_own_weight", 1.0))   # its own words, re-read, rarely come to mind
             out.append({**it, "activation": it["score"] * weight / (1.0 + h), "habituation": h})
         out.sort(key=lambda it: it["activation"], reverse=True)
         out = out[:k]

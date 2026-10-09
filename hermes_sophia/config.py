@@ -101,6 +101,8 @@ DEFAULTS: Dict[str, Any] = {
     "associate_conversation_spread": 0.5,  # ...and so, this much, is the rest of its conversation
     "associate_conversation_hours": 2.0,   # lines of one session this close in time count as one conversation
     "associate_recent_hours": 3.0,      # the live conversation's last hours never "come to mind", compacted or not
+    "associate_own_weight": 0.5,        # a line the agent itself said pulls this much as hard (its kept thoughts: 1)
+    "associate_tasks": False,           # records of finished work (task cards) come to mind; recall keeps them either way
     # the agent's own thoughts (sophia_thought)
     "inject_thoughts": True,          # its kept thoughts can be injected, always labelled as its thoughts
     # capture
@@ -247,6 +249,11 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
                                       "piece by piece", {"when": _ADVANCED, "minimum": 0, "maximum": 1}),
     ("associate_conversation_hours", "Association: lines of one session within this many hours of each other count "
                                      "as one conversation", {"when": _ADVANCED}),
+    ("associate_own_weight", "Association: a line the agent itself said pulls this much as hard as one it heard or "
+                             "saw (its kept thoughts are unaffected; recall is unaffected)",
+     {"when": _ADVANCED, "minimum": 0, "maximum": 1}),
+    ("associate_tasks", "Association: records of finished work (task cards) can come to mind (recall finds them either "
+                        "way)", {"when": _ADVANCED, "choices": ["on", "off"], "default": "off"}),
     ("associate_recent_hours", "Association: what the live conversation said in this many hours never comes to mind "
                                "as a memory, even once compacted out of the context (it's still working memory)",
      {"when": _ADVANCED}),
@@ -318,6 +325,8 @@ LABELS: Dict[str, str] = {
     "associate_conversation_spread": "Association conversation damping",
     "associate_conversation_hours": "Association conversation span (hours)",
     "associate_recent_hours": "Association: live conversation skipped (hours)",
+    "associate_own_weight": "Association weight for the agent's own lines",
+    "associate_tasks": "Association includes task cards",
     "inject_thoughts": "Inject own thoughts", "keep_images": "Keep images",
 }
 

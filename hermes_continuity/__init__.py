@@ -30,7 +30,9 @@ UPDATE_SCHEMA = {
                     "turns until a time or until something happens."),
     "parameters": {"type": "object", "properties": {
         "focus": {"type": "string", "description": "What you're focused on now (empty string clears it)."},
-        "add_thread": {"type": "string", "description": "An open thread to keep in view."},
+        "add_thread": {"type": "string", "description": "An open thread to keep in view. When you commit to "
+                                                      "something (you'll tell the user something, check something "
+                                                      "later), add it here in the same turn."},
         "close_thread": {"type": "string", "description": "Id or words of a thread that's done."},
         "waiting_for": {"type": "string", "description": "Something you're waiting for (a job, a reply)."},
         "by": {"type": "string", "description": "With waiting_for: when you expect it (\"+30m\", \"+2h\", \"14:30\" or "
@@ -66,6 +68,9 @@ def guide(user: str, quiet_hours: str) -> str:
             f"in quiet hours, {quiet_hours}, and within a daily limit); otherwise it is held, and your standing view "
             f"shows it. Write it as a message to {user} about their life or your shared work. Reflections on how "
             "your own memory or process works belong in a thought (sophia_thought), not a message.\n"
+            "Your own past words come back to mind only faintly; your kept thoughts and your threads don't fade that "
+            "way. So when you commit to something (you'll tell " + user + " something, check something later), add it "
+            "as a thread in the same turn (continuity_update add_thread), and close it when it's done.\n"
             "Every turn also carries a \"[standing view …]\" frame of your situation: the time, "
             f"{user}, finished jobs, your focus and threads, what came to mind, what's on your mind. Each line says "
             "where it "

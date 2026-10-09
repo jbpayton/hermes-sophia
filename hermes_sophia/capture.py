@@ -506,6 +506,10 @@ class Capture:
                "spans": _spans(w, now)}
               for i, (w, wf) in enumerate(T.make_windows(text, 3, 480, 800))]
         self._persist(ws)
+        # keeping a thought is having it on your mind: it counts as raised now, so association's habituation damps it
+        # for a while instead of handing it straight back (live, 2026-10: a kept thought came back six minutes later)
+        self.e.store.xmany("INSERT INTO activations(item_id,item_kind,ts,cue) VALUES(?,?,?,?)",
+                           [(w["id"], "window", now, "kept as a thought") for w in ws])
         if about and self.e.store.one("SELECT 1 FROM windows WHERE id=?", (about,)):
             self.e.store.xmany("INSERT OR IGNORE INTO links(src,dst,kind,night_id) VALUES(?,?,'about','')",
                                [(w["id"], about) for w in ws])

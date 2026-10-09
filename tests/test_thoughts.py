@@ -201,6 +201,42 @@ def test_a_compaction_summary_is_never_kept_in_either_role(engine):
     assert not any("COMPACTION" in t or "Treat ONLY" in t for t in texts)
 
 
+def test_its_own_replies_pull_less_and_finished_work_stays_out_of_association(engine):
+    # live, 2026-10-04 to 10-09: 86% of its own replies that came to mind were let go as echoes; task cards replayed
+    t = time.time() - 86400
+    engine.capture.process_messages("own", [
+        {"role": "user", "content": "The lantern festival is on Saturday by the river.", "timestamp": t},
+        {"role": "assistant", "content": "The lantern festival on Saturday by the river sounds lovely.", "timestamp": t + 5}])
+    engine.cfg["associate_band"] = 1.0                 # this test is about the weight, not which lines are in band
+    engine.cfg["associate_own_weight"] = 1.0
+    even, _ = engine.recall.associate("lantern festival by the river", k=4, record=False)
+    engine.cfg["associate_own_weight"] = 0.5
+    weighed, _ = engine.recall.associate("lantern festival by the river", k=4, record=False)
+    own = lambda items: next(it for it in items if "sounds lovely" in it["text"])
+    heard = lambda items: next(it for it in items if "is on Saturday" in it["text"])
+    assert abs(own(weighed)["activation"] - 0.5 * own(even)["activation"]) < 1e-6
+    assert heard(weighed)["activation"] == heard(even)["activation"]
+    assert weighed[0]["text"].startswith("The lantern festival is on Saturday")
+    card = {"kind": "task", "id": "t1", "score": 0.9, "sim": 0.9, "text": "Plan the lantern festival — succeeded",
+            "ref": "t1"}
+    orig = engine.recall.candidates
+    engine.recall.candidates = lambda *a, **kw: ([card] + orig(*a, **kw)[0], {})
+    assert not any(it["kind"] == "task" for it in engine.recall.associate("lantern festival", k=4, record=False)[0])
+    engine.cfg["associate_tasks"] = True
+    assert any(it["kind"] == "task" for it in engine.recall.associate("lantern festival", k=4, record=False)[0])
+
+
+def test_a_thought_just_kept_doesnt_come_straight_back(engine):
+    # Sophia's review, 2026-10-09: a kept thought came back six minutes after she kept it, recently_raised 0.0
+    now = time.time()
+    ids = engine.capture.think("The lantern festival might be worth a visit with Sam.", now=now - 360)
+    out, _ = engine.recall.associate("lantern festival visit", k=4, now=now, record=False)
+    it = next(x for x in out if x["id"] in ids)
+    assert it["habituation"] > 0.9                    # kept six minutes ago: damped like anything just raised
+    later, _ = engine.recall.associate("lantern festival visit", k=4, now=now + 3 * 86400, record=False)
+    assert next(x for x in later if x["id"] in ids)["habituation"] < 0.01      # and it recovers
+
+
 def test_association_skips_what_the_caller_already_holds(engine):
     _seed(engine)
     first, _ = engine.recall.associate("Yosemite", k=5, record=False)
