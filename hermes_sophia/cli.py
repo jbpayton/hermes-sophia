@@ -124,7 +124,8 @@ def cmd(args):
         elif sub == "drop-compaction":
             refs = [r["ref"] for r in e.store.q("SELECT DISTINCT ref FROM windows WHERE text LIKE '[CONTEXT COMPACTION%'")]
             ids = [r["id"] for ref in refs for r in e.store.q("SELECT id FROM windows WHERE ref=?", (ref,))]
-            n = e.store.drop_windows(ids, "Hermes context-compaction summary, stored as if the user wrote it")
+            n = e.store.drop_windows(ids, "Hermes context-compaction summary, stored as if someone said it (the user "
+                                          "or the agent)")
             print(f"kept {n} lines from {len(refs)} compaction summaries out of recall (journaled, undoable)")
         elif sub == "relabel":
             rows = e.store.q("SELECT id FROM windows WHERE session_id=? AND speaker=? AND flags NOT LIKE '%assistant%'",

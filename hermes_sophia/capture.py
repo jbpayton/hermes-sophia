@@ -239,8 +239,10 @@ class Capture:
             is_new = h not in seen
             if role == "user" and content and content.lstrip().startswith("Gateway message origin"):
                 content = _ORIGIN.sub("", content, count=1)    # Hermes's routing note, not the user's words
-            if role == "user" and _COMPACTION.match(content or ""):
-                continue                      # Hermes's context-compaction handoff: a summary of turns already kept
+            if role in ("user", "assistant") and _COMPACTION.match(content or ""):
+                continue                      # Hermes's context-compaction handoff: a summary of turns already kept.
+                                              # Hermes may place it in either role; as an assistant line it would be
+                                              # kept as the agent's own words (live, 2026-10-08)
             own = role == "user" and bool(_CONTINUITY.match(content or ""))
             if role == "user" and (own or _NOTICE.match(content or "")):
                 if own:

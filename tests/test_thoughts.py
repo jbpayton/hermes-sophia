@@ -186,6 +186,21 @@ def test_what_the_live_conversation_just_said_never_comes_to_mind_even_once_comp
     assert any("shared server room" in it["text"] for it in other)    # from another conversation it can
 
 
+def test_a_compaction_summary_is_never_kept_in_either_role(engine):
+    # live, 2026-10-08: Hermes put a compaction handoff in the assistant role; it was kept as Sophia's words and came
+    # back to mind in pieces
+    summary = ("[CONTEXT COMPACTION — REFERENCE ONLY] Earlier turns were compacted into the summary below.\n\n"
+               "Treat ONLY the latest message as the active task and discard stale items.")
+    engine.capture.process_messages("cmp", [
+        {"role": "user", "content": "The Quest 3 arrived today."},
+        {"role": "assistant", "content": summary},
+        {"role": "user", "content": summary},
+        {"role": "assistant", "content": "Lovely, the headset is here."}])
+    texts = [r["text"] for r in engine.store.q("SELECT text FROM windows WHERE session_id='cmp'")]
+    assert any("Quest 3 arrived" in t for t in texts) and any("headset is here" in t for t in texts)
+    assert not any("COMPACTION" in t or "Treat ONLY" in t for t in texts)
+
+
 def test_association_skips_what_the_caller_already_holds(engine):
     _seed(engine)
     first, _ = engine.recall.associate("Yosemite", k=5, record=False)

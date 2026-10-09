@@ -870,3 +870,20 @@ def test_at_night_free_time_is_rest_unless_it_stays_up(tmp_path):
     c2, sent2 = make(tmp_path / "b", clock=Clock(NIGHT + 86400), memory=FakeMemory())
     user_turn(c2)                                           # what's perceived still starts turns at night
     assert c2.tick() and sent2[-1].startswith(f"{LABEL} something came to mind]")
+
+
+def test_association_uses_the_conversation_as_it_is_now_after_a_reset(tmp_path):
+    # live, 2026-10-08 19:28: Hermes reset the conversation to a new session mid-stretch; cues from before carried the old
+    # session id, so the new session's fresh lines weren't kept out of association
+    mem = FakeMemory()
+    seen = []
+    orig = mem.associate
+    mem.associate = lambda cue, **kw: seen.append(kw.get("session_id")) or orig(cue, **kw)
+    c, sent = make(tmp_path, memory=mem)
+    c.on_turn_start(session_id="old", user_message="hi", platform="telegram")
+    c.on_reply(response_text="Hello.", session_id="old", platform="telegram")
+    c.on_turn_start(session_id="new", user_message="still there?", platform="telegram")   # Hermes reset meanwhile
+    c.on_reply(response_text="Yes.", session_id="new", platform="telegram")
+    c.on_turn_end(session_id="new", platform="telegram")
+    c.tick()
+    assert seen and set(seen) == {"new"}

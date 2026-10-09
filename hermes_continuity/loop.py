@@ -139,6 +139,7 @@ class Continuity:
         self.turn: Optional[Dict[str, Any]] = None           # the turn in progress in its conversation
         self.expect_own: Optional[Dict[str, Any]] = None     # a turn it started, until that turn begins
         self.pending_cues: List[Dict[str, Any]] = []
+        self.live_session_id = ""                            # the conversation's current session (it can be reset)
         self.last_turn_end = 0.0
         self.backoff_until = 0.0
         self.refusals = 0                                    # injections Hermes refused in a row
@@ -246,6 +247,8 @@ class Continuity:
         kind = kind_of(msg)
         history = conversation_history or []
         with self.lock:
+            if session_id:
+                self.live_session_id = session_id
             st = self.store.state()
             self._roll_day(st, now)
             turn = {"session_id": session_id, "kind": kind, "started": now, "message": msg[:2000],
@@ -525,8 +528,10 @@ class Continuity:
             return
         for c in cues:
             try:
+                # the live conversation as it is now: Hermes may have reset it to a new session since the cue
                 items = self.memory.associate(c["cue"], k=self.cfg["associate_k"],
-                                              exclude=self.store.queued_memory_ids(), session_id=c.get("session_id", ""))
+                                              exclude=self.store.queued_memory_ids(),
+                                              session_id=self.live_session_id or c.get("session_id", ""))
             except Exception as ex:
                 logger.warning("continuity: association failed: %s", ex)
                 continue
