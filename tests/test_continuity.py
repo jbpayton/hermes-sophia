@@ -355,7 +355,7 @@ def test_register_wires_hooks_tool_guide_and_cli_without_starting_a_loop(tmp_pat
     ctx = FakeCtx({"enabled": True, "platform": "telegram"})
     register(ctx)
     assert set(ctx.hooks) == {"pre_llm_call", "transform_llm_output", "on_session_end", "pre_api_request",
-                              "post_api_request", "post_llm_call"}
+                              "post_api_request", "post_llm_call", "pre_gateway_dispatch"}
     assert {"continuity_update", "continuity_goal"} <= set(ctx.tools) and "continuity" in ctx.cli
     g = ctx.sections["continuity.guide"]
     assert "[continuity: …]" in g and "[SILENT]" in g and "never" in g
@@ -887,3 +887,26 @@ def test_association_uses_the_conversation_as_it_is_now_after_a_reset(tmp_path):
     c.on_turn_end(session_id="new", platform="telegram")
     c.tick()
     assert seen and set(seen) == {"new"}
+
+
+def test_the_users_message_is_perceived_when_it_arrives_not_when_its_turn_starts(tmp_path):
+    # live, 2026-10-12: Joey's message waited behind compaction, and the quiet sensor noticed "Joey hasn't written for
+    # about 3 days" 40 seconds after he wrote
+    from types import SimpleNamespace
+    clock = Clock(NOON)
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory(items=[]), sensors=True)
+    user_turn(c, text="See you in a few days.")
+    c.update({"rest": "until something happens"})
+    c.store.enqueue("noticed", "quiet", "Joey hasn't written for about 3 days.", 1.0, 1, {"sensor": "quiet"}, clock.t)
+    clock.t += 3 * 86400
+    msg = SimpleNamespace(internal=False, source=SimpleNamespace(platform=SimpleNamespace(value="telegram")))
+    assert c.on_inbound(event=msg) is None                     # never blocks or rewrites the message
+    st = c.store.state()
+    assert st["last_user_ts"] == clock.t and st.get("rest") is None
+    assert not [r for r in c.store.queued() if r["source"] == "quiet"]
+    c.tick()
+    assert not any("hasn't written" in t for t in sent)
+    other = SimpleNamespace(internal=False, source=SimpleNamespace(platform=SimpleNamespace(value="discord")))
+    clock.t += 60
+    c.on_inbound(event=other)
+    assert c.store.state()["last_user_ts"] == clock.t - 60     # another platform isn't this conversation

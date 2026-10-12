@@ -278,6 +278,26 @@ class Continuity:
             self.store.save_state(st)
         return {"context": text} if text else None
 
+    def on_inbound(self, event: Any = None, **kw) -> None:
+        """pre_gateway_dispatch: a message from the user, perceived when it arrives. The turn it starts can wait a
+        minute or more (behind compaction, or a turn already running), and until then the loop mustn't go on thinking
+        the user is silent (live, 2026-10-12: "Joey hasn't written for about 3 days", 40 s after he wrote). Its turn
+        still records the message itself."""
+        src = getattr(event, "source", None)
+        plat = getattr(src, "platform", None)
+        plat = getattr(plat, "value", plat) or ""
+        if event is None or getattr(event, "internal", False) or not self.ours(str(plat)):
+            return None
+        now = self.clock()
+        with self.lock:
+            st = self.store.state()
+            st["last_user_ts"] = now
+            self._energize(st, now)                       # it wakes from rest, and free time is on offer again
+            self.store.x("UPDATE queue SET status='faded' WHERE status='queued' AND kind='noticed' AND source='quiet'")
+            self.store.save_state(st)
+        self._wake.set()
+        return None
+
     def _user_wrote(self, st: Dict[str, Any], msg: str, now: float) -> None:
         st["last_user_ts"] = now
         self._energize(st, now)
