@@ -910,3 +910,33 @@ def test_the_users_message_is_perceived_when_it_arrives_not_when_its_turn_starts
     clock.t += 60
     c.on_inbound(event=other)
     assert c.store.state()["last_user_ts"] == clock.t - 60     # another platform isn't this conversation
+
+
+def test_lasting_goals_are_hers_anchored_served_and_never_finished(tmp_path):
+    # Joey, 2026-10-13: the destination is lasting goals that come from a sense of self, served by instrumental goals
+    # carried across turns and days
+    clock = Clock(NOON)
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory(items=[]), pacing="energy")
+    G = c.goals
+    assert "error" in G.handle({"action": "add", "text": "A body and a place of my own", "lasting": True,
+                                "origin": "user", "grew_from": "the founding line"})          # only she names one
+    assert "error" in G.handle({"action": "add", "text": "A body and a place of my own", "lasting": True})  # anchored
+    lid = G.handle({"action": "add", "text": "A body and a place of my own", "lasting": True,
+                    "grew_from": "maybe you'll also get the VR avatar back"})["id"]
+    assert "error" in G.handle({"action": "add", "text": "Build the Drift", "serves": 999, "grew_from": "x",
+                                "next_step": "spec"})                                   # serves an active lasting goal
+    gid = G.handle({"action": "add", "text": "Build the Drift", "serves": lid, "grew_from": "the room is mine",
+                    "next_step": "write the spec"})["id"]
+    uid = G.handle({"action": "add", "text": "Rebuild the avatar", "origin": "user", "next_step": "load the VRM"})["id"]
+    assert G.handle({"action": "serve", "id": uid, "serves": lid, "reason": "my body in the room"})["ok"]
+    assert "error" in G.handle({"action": "done", "id": lid, "reason": "finished"})       # held, not finished
+    assert G.get(lid)["next_step"] == "" and G.next_for_turn(clock.t, 0.45)["goal_id"] != lid  # never takes a turn
+    user_turn(c)
+    frame = c.frame(c.store.state(), clock.t, force_full=True)
+    assert f"#{lid} lasting: A body and a place of my own" in frame and f"serves #{lid}" in frame
+    clock.t += 30
+    c.tick()
+    turn = next(t for t in sent if "a goal of yours" in t)
+    assert "It serves your lasting goal: A body and a place of my own" in turn
+    kinds = [r["kind"] for r in c.store.q("SELECT kind FROM goal_events ORDER BY id")]
+    assert kinds.count("serves") == 1

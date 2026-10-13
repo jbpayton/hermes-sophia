@@ -220,8 +220,8 @@ class Continuity:
         held = [r["text"] for r in self.store.q("SELECT text FROM outbox WHERE status='held' ORDER BY id")]
         queued = len(self.store.queued())
         sc = V.scene(st, now, self.user_name, held, queued, self.outreach_score(), self.goals.store.q(
-            "SELECT * FROM goals WHERE status IN ('active','declined') ORDER BY (status='active') DESC, (origin='user') "
-            "DESC, COALESCE(last_progress, created) DESC LIMIT 5"), pacing="continuous" if self.continuous else "energy")
+            "SELECT * FROM goals WHERE status IN ('active','declined') ORDER BY (status='active') DESC, "
+            "COALESCE(lasting, 0) DESC, (origin='user') DESC, COALESCE(last_progress, created) DESC LIMIT 8"), pacing="continuous" if self.continuous else "energy")
         full = force_full or not st.get("last_scene") or st.get("turns_since_full", 0) >= self.cfg["full_frame_every"] - 1
         if full:
             text, kind = V.render_full(sc, now), "full"
@@ -628,9 +628,9 @@ class Continuity:
             lines = [f"{LABEL} free time]", "Nothing in particular is pulling at you right now."]
             if item.get("faint"):
                 lines.append("Faintly on your mind: " + "; ".join(f"\u201c{t[:140]}\u201d" for t in item["faint"]))
-            lines.append(f"(For you: this time is yours, not {u}'s. Follow one of your threads, work toward a goal, look "
-                         "into something you're curious about, try or make something, or set a goal if an interest has "
-                         "grown. If you'd rather rest, continuity_update with rest (\"+30m\", \"18:00\" or \"until "
+            lines.append(f"(For you: this time is yours, not {u}'s. Follow one of your threads, work toward a goal (or "
+                         "start one that serves a lasting goal of yours), look into something you're curious about, try "
+                         "or make something, or set a goal if an interest has grown. If you'd rather rest, continuity_update with rest (\"+30m\", \"18:00\" or \"until "
                          "something happens\"); anything that happens wakes you. Free time you use (a tool, a thought "
                          "kept, or a line of what you thought beside [SILENT]) keeps it coming; free time you do nothing "
                          "with comes round less often until something happens. Reply [SILENT] to say nothing; a reply "
@@ -642,6 +642,8 @@ class Continuity:
             lines = [f"{LABEL} a goal of yours]", f"Goal #{item['goal_id']}: {item['text']} (set by {who}"
                      + (f"; grew from \u201c{item['grew_from_text'][:120]}\u201d" if item.get("grew_from_text") else "") + ")",
                      f"Next step: {item['next_step']}", f"Last progress: {last}"]
+            if item.get("serves_text"):
+                lines.insert(2, f"It serves your lasting goal: {item['serves_text']}")
             if item.get("pushback"):
                 lines.append(f"Your concern about it: {item['pushback']}")
             lines.append("(For you: work on the next step, record progress with continuity_goal, revise or drop it with "

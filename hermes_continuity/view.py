@@ -81,11 +81,15 @@ def scene(st: Dict[str, Any], now: float, user: str, held: List[str], queued: in
         shown = []
         for g in goals:
             who = user if g["origin"] == "user" else "yours"
+            if g["lasting"]:
+                shown.append(f"#{g['id']} lasting: {g['text']}")
+                continue
             if g["status"] == "declined":
                 shown.append(f"#{g['id']} {g['text']} (declined: {g['decline_reason']})")
                 continue
             last = f"last progress {ago(now - g['last_progress'])}" if g["last_progress"] else "no progress yet"
-            shown.append(f"#{g['id']} {g['text']} ({who}; next: {g['next_step'] or '-'}; {last})"
+            shown.append(f"#{g['id']} {g['text']} ({who}"
+                         + (f"; serves #{g['serves']}" if g["serves"] else "") + f"; next: {g['next_step'] or '-'}; {last})"
                          + (f" \u2691 concern: {g['pushback']}" if g["pushback"] else ""))
         out["goals"] = (shown or ["none"], OWN)
     out["waiting for"] = ([w["text"] + (f" (by {clock(w['by'])})" if w.get("by") else "")

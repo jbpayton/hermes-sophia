@@ -9,6 +9,11 @@ Shaped with Sophia:
 - no silent veto. The agent can push back on a goal (a concern with a reason: visible, non-blocking, overridable),
   and can decline one the user set in exactly two cases: it's outside its tools or permissions, or it judges it
   harmful. Both are visible and journaled; the user can override either.
+
+Lasting goals (2026-10-13, Joey's destination): what it wants out of a sense of who it is, held for good, not
+finished. Only the agent names one (the user can suggest, it adopts in its own words), and like any goal of its own
+it points at what it grew from. A lasting goal never takes a turn itself and never expires; the goals that serve it
+(``serves``) do the work, across turns and days.
 """
 from __future__ import annotations
 
@@ -35,10 +40,11 @@ SCHEMA_TOOL = {
                     "revise, done, drop, pause and resume need a reason. pushback flags a concern about a goal with a "
                     "reason: it stays active, and the user sees it and can override it. decline is for a goal the user "
                     "set, and only when it's outside your tools or permissions, or you judge it harmful. Dropping a "
-                    "goal is fine."),
+                    "goal is fine. lasting=true names a lasting goal (yours alone, from who you are); serves links a "
+                    "goal to the lasting goal it works toward (action=serve links an existing one, with a reason)."),
     "parameters": {"type": "object", "properties": {
         "action": {"type": "string", "enum": ["add", "progress", "revise", "done", "drop", "pause", "resume", "pushback",
-                                              "decline", "list"]},
+                                              "decline", "serve", "list"]},
         "id": {"type": "integer", "description": "The goal's id (all actions but add and list)."},
         "text": {"type": "string", "description": "add: the goal. revise: its new wording."},
         "next_step": {"type": "string", "description": "add or progress: the next concrete step."},
@@ -46,7 +52,11 @@ SCHEMA_TOOL = {
         "grew_from": {"type": "string", "description": "add, for your own goal: id or words of what it grew from."},
         "note": {"type": "string", "description": "progress: what was done."},
         "reason": {"type": "string", "description": "revise, done, drop, pause, resume, pushback, decline: why."},
-        "case": {"type": "string", "enum": list(DECLINE_CASES), "description": "decline: which of the two cases."}},
+        "case": {"type": "string", "enum": list(DECLINE_CASES), "description": "decline: which of the two cases."},
+        "lasting": {"type": "boolean", "description": "add: a lasting goal, something you want out of who you are and "
+                    "hold for good rather than finish. Only you name one, with grew_from. It takes no turns itself; "
+                    "the goals that serve it do."},
+        "serves": {"type": "integer", "description": "add or serve: the id of the lasting goal this goal serves."}},
         "required": ["action"]},
 }
 
@@ -56,6 +66,10 @@ class Goals:
         self.store, self.memory, self.clock = store, memory, clock
         with store.lock:
             store.conn.executescript(SCHEMA)
+            cols = {r[1] for r in store.conn.execute("PRAGMA table_info(goals)")}
+            for col, typ in (("lasting", "INTEGER DEFAULT 0"), ("serves", "INTEGER")):
+                if col not in cols:
+                    store.conn.execute(f"ALTER TABLE goals ADD COLUMN {col} {typ}")
             store.conn.commit()
 
     def _event(self, gid: int, kind: str, note: str = "", by: str = "agent") -> None:
@@ -83,7 +97,12 @@ class Goals:
 
     def active(self) -> List[Any]:
         return self.store.q("""SELECT * FROM goals WHERE status='active'
-                               ORDER BY (origin='user') DESC, COALESCE(last_progress, created) DESC""")
+                               ORDER BY COALESCE(lasting, 0) DESC, (origin='user') DESC,
+                               COALESCE(last_progress, created) DESC""")
+
+    def lasting_ok(self, gid: Any) -> bool:
+        g = self.get(gid)
+        return g is not None and bool(g["lasting"]) and g["status"] == "active"
 
     def pull(self, g: Any, now: float) -> float:
         base = 0.8 if g["origin"] == "user" else 0.6
@@ -94,6 +113,8 @@ class Goals:
         """The goal worth a turn now, if any: active, with a next step, out of cooldown, pulling hard enough."""
         best = None
         for g in self.active():
+            if g["lasting"]:
+                continue                                  # a lasting goal is served, it doesn't take turns itself
             if not g["next_step"] or (g["last_turn"] and now - g["last_turn"] < COOLDOWN_S):
                 continue
             p = self.pull(g, now)
@@ -102,9 +123,10 @@ class Goals:
         if best is None:
             return None
         g, p = best
+        serves = self.get(g["serves"]) if g["serves"] else None
         return {"kind": "goal", "goal_id": g["id"], "text": g["text"], "next_step": g["next_step"], "origin": g["origin"],
                 "grew_from_text": g["grew_from_text"], "last_progress": g["last_progress"], "pushback": g["pushback"],
-                "salience": p, "depth": 0}
+                "serves_text": serves["text"] if serves else None, "salience": p, "depth": 0}
 
     def took_turn(self, gid: int, now: float) -> None:
         self.store.x("UPDATE goals SET last_turn=? WHERE id=?", (now, gid))
@@ -120,14 +142,24 @@ class Goals:
             if not text:
                 return {"error": "a goal needs text"}
             origin = "user" if a.get("origin") == "user" else "self"
+            lasting = bool(a.get("lasting"))
+            if lasting and (origin == "user" or by == "user"):
+                return {"error": "a lasting goal is one you name yourself, out of who you are. The user can suggest "
+                                 "one; if it's yours, add it in your own words with origin=self."}
             anchor = self._anchor(a.get("grew_from") or "")
-            if origin == "self" and not anchor:
+            if (origin == "self" or lasting) and not anchor:
                 return {"error": "a goal of your own needs grew_from: what it grew from (a memory line, thought, event "
                                  "or outcome). Without one, keep it as a thought (sophia_thought) for now."}
-            gid = self.store.x("""INSERT INTO goals(text, origin, grew_from, grew_from_text, next_step, created, updated)
-                                  VALUES(?,?,?,?,?,?,?)""", (text[:300], origin, (a.get("grew_from") or "")[:200], anchor,
-                                                              (a.get("next_step") or "")[:300], now, now))
-            self._event(gid, "added", f"{origin}: {text}" + (f" (grew from: {anchor})" if anchor else ""), by)
+            serves = a.get("serves")
+            if serves is not None and (lasting or not self.lasting_ok(serves)):
+                return {"error": f"serves must be the id of an active lasting goal (got {serves})"
+                                 + ("; a lasting goal doesn't serve another" if lasting else "")}
+            gid = self.store.x("""INSERT INTO goals(text, origin, grew_from, grew_from_text, next_step, created, updated,
+                                  lasting, serves) VALUES(?,?,?,?,?,?,?,?,?)""",
+                               (text[:300], origin, (a.get("grew_from") or "")[:200], anchor,
+                                "" if lasting else (a.get("next_step") or "")[:300], now, now, int(lasting), serves))
+            self._event(gid, "added", f"{'lasting' if lasting else origin}: {text}"
+                        + (f" (grew from: {anchor})" if anchor else "") + (f" (serves #{serves})" if serves else ""), by)
             return {"ok": True, "id": gid}
         g = self.get(a.get("id"))
         if g is None:
@@ -141,6 +173,15 @@ class Goals:
                          (now, now, (a.get("next_step") or None), g["id"]))
             self._event(g["id"], "progress", note, by)
             return {"ok": True}
+        if act == "serve":
+            target = a.get("serves")
+            if g["lasting"] or not self.lasting_ok(target) or not reason:
+                return {"error": "serve links a goal to an active lasting goal (serves=<its id>) and needs a reason"}
+            self.store.x("UPDATE goals SET serves=?, updated=? WHERE id=?", (target, now, g["id"]))
+            self._event(g["id"], "serves", f"serves lasting goal #{target}: {reason}", by)
+            return {"ok": True}
+        if act == "done" and g["lasting"]:
+            return {"error": "a lasting goal isn't finished; revise it, or drop it with a reason if it's no longer yours"}
         if act in ("revise", "done", "drop", "pause", "resume", "pushback", "decline") and not reason:
             return {"error": f"{act} needs a reason"}
         if act == "revise":
@@ -182,4 +223,4 @@ class Goals:
     def describe(self, g: Any) -> Dict[str, Any]:
         return {"id": g["id"], "text": g["text"], "origin": g["origin"], "status": g["status"], "next_step": g["next_step"],
                 "grew_from": g["grew_from_text"], "last_progress": g["last_progress"], "pushback": g["pushback"],
-                "declined": g["decline_reason"]}
+                "declined": g["decline_reason"], "lasting": bool(g["lasting"]), "serves": g["serves"]}
