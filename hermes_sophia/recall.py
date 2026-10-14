@@ -76,6 +76,19 @@ def _date(ts: Optional[float]) -> str:
     return dt.datetime.fromtimestamp(ts).strftime("%Y-%m-%d") if ts else "?"
 
 
+_OWN_TURN_LINES = re.compile(r"^\s*(\[continuity:[^\]]*\]|\(For you:.*|Nothing in particular is pulling.*)$", re.M)
+
+
+def own_turn_content(query: str) -> str:
+    """For a turn of the continuing process's own, what it's about: the memory that came to mind, what was noticed,
+    the goal, what's faintly on its mind. Its label and instructions read the same every time, and searching with
+    them found past turns of its own. Anything else is returned unchanged."""
+    if not (query or "").lstrip().startswith("[continuity:"):
+        return query
+    text = _OWN_TURN_LINES.sub("", query).replace("Faintly on your mind:", "")
+    return re.sub(r"\s+", " ", text).strip()
+
+
 class Recall:
     def __init__(self, engine):
         self.e = engine
@@ -83,10 +96,14 @@ class Recall:
     # ------------------------------------------------------------- candidates
     def candidates(self, query: str, k: int = 20, history: bool = False, use_scope: bool = True,
                    session_id: str = "", now: Optional[float] = None, hops: Optional[int] = None,
-                   thoughts: bool = True) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+                   thoughts: bool = True, scaffolding: bool = False) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
         """``now``: the moment the question is asked (defaults to the clock; benchmarks replay other dates).
         ``hops``: how far the graph walk goes (default graph_hops). ``thoughts``: include the agent's own kept
-        thoughts."""
+        thoughts. ``scaffolding``: include the continuing process's own turn prompts, and logged tool steps that the
+        night has already folded into task cards. Left out by default: they're near-identical and numerous and crowded
+        out what was said (live, 2026-10-13: 86% of what recall injected into its own turns, 51% into the user's).
+        Today's tool steps stay searchable ("what failed when we rotated the logs?"). An explicit search can ask for
+        all of them."""
         e, cfg, store = self.e, self.e.cfg, self.e.store
         info: Dict[str, Any] = {}
         qv = None
@@ -110,6 +127,9 @@ class Recall:
         in_scope: set = set()
         if allowed is not None and cfg["time_scope"] == "boost":
             in_scope, allowed = allowed, None     # a parsed date range ranks things up; it doesn't hide the rest
+        if not scaffolding:                       # kept out at the search itself, so they can't crowd the pool
+            keep = self._non_scaffolding_ids()
+            allowed = keep if allowed is None else (set(allowed) & keep)
         asks_agent = bool(_ASKS_AGENT.search(query))
         info["asks_agent"] = asks_agent
         info["asks_advice"] = asks_advice = bool(_ASKS_ADVICE.search(query)) and not asks_agent
@@ -222,6 +242,14 @@ class Recall:
                         it["changed"].append(note)
         if not thoughts:                                  # the graph walk and links can bring them in too
             items = {i: it for i, it in items.items() if "thought" not in (it.get("flags") or "")}
+        if not scaffolding:
+            keep = self._non_scaffolding_ids()
+            items = {i: it for i, it in items.items() if it.get("kind") != "window" or it["id"] in keep}
+            # today's tool steps stay findable, but a day of busy work logs a thousand of them: only the best few
+            steps = sorted((i for i, it in items.items() if "action" in (it.get("flags") or "")),
+                           key=lambda i: items[i]["score"], reverse=True)
+            for i in steps[int(cfg.get("recall_max_steps", 3)):]:
+                items.pop(i)
         ranked = sorted(items.values(), key=lambda it: it["score"], reverse=True)[:k]
         self._attach_times(ranked, now)
         credit = store.credit([it["id"] for it in ranked])
@@ -446,6 +474,18 @@ class Recall:
         return {"entities": walked, "raised_or_added": added}
 
     # --------------------------------------------------------------- associate
+    def _non_scaffolding_ids(self) -> set:
+        """Window ids recall may raise on its own: not the process's own turn prompts, and no tool step from before the
+        last night (the night folds those into task cards). Cached until the store grows or a night runs."""
+        last_sleep = self.e.store.get_meta("last_sleep_ts", 0) or 0
+        n = self.e.store.one("SELECT COUNT(*) AS n, MAX(rowid) AS m FROM windows")
+        sig = (n["n"], n["m"], last_sleep) if n else (0, 0, last_sleep)
+        if getattr(self, "_nsi_sig", None) != sig:
+            self._nsi = {r["id"] for r in self.e.store.q("""SELECT id FROM windows WHERE flags NOT LIKE '%continuity%'
+                                                           AND (flags NOT LIKE '%action%' OR said >= ?)""", (last_sleep,))}
+            self._nsi_sig = sig
+        return self._nsi
+
     def associate(self, cue: str, k: int = 0, hops: Optional[int] = None, session_id: str = "",
                   record: bool = True, exclude: Sequence[str] = (),
                   now: Optional[float] = None) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
@@ -588,6 +628,9 @@ class Recall:
     def prefetch(self, query: str, session_id: str, now: Optional[float] = None) -> Tuple[str, Dict[str, Any]]:
         e, cfg = self.e, self.e.cfg
         t0 = time.perf_counter()
+        query = own_turn_content(query)
+        if not query:                                     # a turn of its own with nothing in it to recall for
+            return "", {"skipped": "a turn of its own with no content to recall for", "ms": 0}
         referential = len(query) < 100 and bool(_REFERENTIAL.search(query))
         search, prev = query, ""
         if referential:                                   # resolve the follow-up with the previous message

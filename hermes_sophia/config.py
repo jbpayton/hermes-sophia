@@ -100,6 +100,7 @@ DEFAULTS: Dict[str, Any] = {
     "associate_habituation_hours": 6.0,  # a memory raised recently is damped; it recovers over about this long
     "associate_conversation_spread": 0.5,  # ...and so, this much, is the rest of its conversation
     "associate_conversation_hours": 2.0,   # lines of one session this close in time count as one conversation
+    "recall_max_steps": 3,              # at most this many logged tool steps in one recall (today's; older ones are task cards)
     "associate_recent_hours": 3.0,      # the live conversation's last hours never "come to mind", compacted or not
     "associate_own_weight": 0.5,        # a line the agent itself said pulls this much as hard (its kept thoughts: 1)
     "associate_tasks": False,           # records of finished work (task cards) come to mind; recall keeps them either way
@@ -249,6 +250,8 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
                                       "piece by piece", {"when": _ADVANCED, "minimum": 0, "maximum": 1}),
     ("associate_conversation_hours", "Association: lines of one session within this many hours of each other count "
                                      "as one conversation", {"when": _ADVANCED}),
+    ("recall_max_steps", "Recall: at most this many logged tool steps in one recall (today's; the night folds older "
+                         "ones into task cards)", {"when": _ADVANCED, "minimum": 0, "maximum": 20}),
     ("associate_own_weight", "Association: a line the agent itself said pulls this much as hard as one it heard or "
                              "saw (its kept thoughts are unaffected; recall is unaffected)",
      {"when": _ADVANCED, "minimum": 0, "maximum": 1}),
@@ -325,6 +328,7 @@ LABELS: Dict[str, str] = {
     "associate_conversation_spread": "Association conversation damping",
     "associate_conversation_hours": "Association conversation span (hours)",
     "associate_recent_hours": "Association: live conversation skipped (hours)",
+    "recall_max_steps": "Recall: most tool steps",
     "associate_own_weight": "Association weight for the agent's own lines",
     "associate_tasks": "Association includes task cards",
     "inject_thoughts": "Inject own thoughts", "keep_images": "Keep images",

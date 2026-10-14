@@ -19,7 +19,8 @@ RECALL = {
     "parameters": {"type": "object", "properties": {
         "query": {"type": "string", "description": "What to look for, in natural language. Time words like "
                                                    "'last Tuesday' or 'in March' narrow the search."},
-        "history": {"type": "boolean", "description": "Include superseded/past facts (default false)."},
+        "history": {"type": "boolean", "description": "Include superseded/past facts, and your continuing process's own "
+                                                      "turn records and logged tool steps (default false)."},
         "limit": {"type": "integer", "description": "Max items (default 10, max 30)."}},
         "required": ["query"]},
 }
@@ -167,7 +168,8 @@ class Tools:
     # ------------------------------------------------------------------ tools
     def _sophia_recall(self, a):
         k = max(1, min(30, int(a.get("limit") or 10)))
-        items, info = self.e.recall.candidates(a["query"], k=k, history=bool(a.get("history")))
+        items, info = self.e.recall.candidates(a["query"], k=k, history=bool(a.get("history")),
+                                               scaffolding=bool(a.get("history")))   # her loop's own records too
         return {"scope": info.get("scope"), "degraded": info.get("degraded"), "items": [
             {"id": it["id"], "kind": it["kind"], "score": round(it["sim"], 3), "date": _d(it["said"]),
              "speaker": it["speaker"], "fact": it.get("fact"), "modality": it.get("modality"),

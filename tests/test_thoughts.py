@@ -237,6 +237,38 @@ def test_a_thought_just_kept_doesnt_come_straight_back(engine):
     assert next(x for x in later if x["id"] in ids)["habituation"] < 0.01      # and it recovers
 
 
+def test_recall_isnt_flooded_by_its_own_turns_and_tool_steps(engine):
+    # live, 2026-10-13: 86% of what recall injected into its own turns (51% into Joey's) was the continuing process's
+    # own turn prompts and logged tool steps, found by searching with the turn's own boilerplate
+    from hermes_sophia.recall import own_turn_content
+    free = ("[continuity: free time]\nNothing in particular is pulling at you right now.\n"
+            "(For you: this time is yours, not Joey's. Reply [SILENT] to say nothing.)")
+    came = ("[continuity: something came to mind]\n\u201cThe Quest 3 is a client of the shared room.\u201d (Joey, 2026-10-05)\n"
+            "(For you: this is your own process, not Joey.)")
+    assert own_turn_content(free) == ""
+    assert own_turn_content(came) == "\u201cThe Quest 3 is a client of the shared room.\u201d (Joey, 2026-10-05)"
+    assert own_turn_content("Where does Lily live?") == "Where does Lily live?"
+    t = time.time() - 86400
+    engine.capture.process_messages("loop", [
+        {"role": "user", "content": "The Quest 3 headset is how I visit the room.", "timestamp": t},
+        {"role": "assistant", "content": "Then the room should load on the Quest 3 browser.", "timestamp": t + 5},
+        {"role": "user", "content": came, "timestamp": t + 60},
+        {"role": "assistant", "content": "", "timestamp": t + 61,
+         "tool_calls": [{"id": "c1", "function": {"name": "terminal", "arguments": '{"command": "ls quest3-room"}'}}]},
+        {"role": "tool", "tool_call_id": "c1", "content": "quest3-room/index.html", "timestamp": t + 62},
+        {"role": "assistant", "content": "[SILENT]", "timestamp": t + 63}])
+    flags = lambda items: " ".join(it.get("flags") or "" for it in items)
+    items, _ = engine.recall.candidates("Quest 3 room", k=10, use_scope=False)
+    assert items and "continuity" not in flags(items)
+    engine.store.set_meta("last_sleep_ts", time.time())     # after a night, the tool step lives on in a task card
+    items, _ = engine.recall.candidates("Quest 3 room ls", k=10, use_scope=False)
+    assert "continuity" not in flags(items) and "action" not in flags(items)
+    every, _ = engine.recall.candidates("Quest 3 room", k=10, use_scope=False, scaffolding=True)
+    assert "continuity" in flags(every)
+    text, info = engine.recall.prefetch(free, "elsewhere")
+    assert text == "" and "skipped" in info
+
+
 def test_association_skips_what_the_caller_already_holds(engine):
     _seed(engine)
     first, _ = engine.recall.associate("Yosemite", k=5, record=False)
