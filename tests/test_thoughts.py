@@ -269,6 +269,19 @@ def test_recall_isnt_flooded_by_its_own_turns_and_tool_steps(engine):
     assert text == "" and "skipped" in info
 
 
+def test_hermes_job_notices_dont_come_to_mind_days_later(engine):
+    # live, 2026-10-10 to 10-14: ten "Background process ... completed" notices came back as something on her mind
+    t = time.time() - 2 * 86400
+    engine.capture.process_messages("jobs", [
+        {"role": "user", "content": "[IMPORTANT: Background process proc_9 completed (exit 0). Output: avatar build ok]",
+         "timestamp": t},
+        {"role": "assistant", "content": "The avatar build finished cleanly.", "timestamp": t + 5}])
+    out, _ = engine.recall.associate("avatar build", k=5, record=False)
+    assert out and not any("Background process" in it["text"] for it in out)
+    found, _ = engine.recall.candidates("avatar build background process", k=5, use_scope=False)
+    assert any("Background process" in it["text"] for it in found)        # recall still finds it
+
+
 def test_association_skips_what_the_caller_already_holds(engine):
     _seed(engine)
     first, _ = engine.recall.associate("Yosemite", k=5, record=False)

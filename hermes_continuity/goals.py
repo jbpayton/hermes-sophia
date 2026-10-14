@@ -47,7 +47,10 @@ SCHEMA_TOOL = {
                                               "decline", "serve", "list"]},
         "id": {"type": "integer", "description": "The goal's id (all actions but add and list)."},
         "text": {"type": "string", "description": "add: the goal. revise: its new wording."},
-        "next_step": {"type": "string", "description": "add or progress: the next concrete step."},
+        "next_step": {"type": "string", "description": "add or progress: the next concrete step, one you can take "
+                      "yourself. If the goal is waiting on someone (a decision, a go-ahead), that belongs in your "
+                      "working state's waiting_for; the next step is then yours: ask them, or prepare what they'll need "
+                      "to decide."},
         "origin": {"type": "string", "enum": ["self", "user"], "description": "add: who set it (default self)."},
         "grew_from": {"type": "string", "description": "add, for your own goal: id or words of what it grew from."},
         "note": {"type": "string", "description": "progress: what was done."},

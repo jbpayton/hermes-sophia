@@ -111,6 +111,20 @@ class Store:
         r = self.one("SELECT value FROM meta WHERE key='paused'")
         return bool(r and json.loads(r["value"]))
 
+    def review_outbox(self, msg_id: int, action: str, note: str = "") -> bool:
+        """The user, in the Sophia tab: 'read' a held message (it reached them; it won't be sent by chat) or
+        'dismiss' it. Also a percept, so the record shows when they saw it."""
+        status = {"read": "read", "dismiss": "dismissed"}.get(action)
+        row = self.one("SELECT * FROM outbox WHERE id=?", (msg_id,))
+        if status is None or row is None or row["status"] not in ("held", "review"):
+            return False
+        now = time.time()
+        self.x("UPDATE outbox SET status=?, settled=?, reason=? WHERE id=?",
+               (status, now, f"{status} in the Sophia tab" + (f": {note}" if note else ""), msg_id))
+        self.x("INSERT INTO percepts(ts, kind, text) VALUES(?,?,?)",
+               (now, status, f"{status} held message #{msg_id}: {row['text'][:200]}"))
+        return True
+
     def set_paused(self, paused: bool) -> None:
         self.x("INSERT OR REPLACE INTO meta(key, value) VALUES('paused', ?)", (json.dumps(bool(paused)),))
 

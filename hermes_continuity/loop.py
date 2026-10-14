@@ -201,7 +201,8 @@ class Continuity:
             return False, "outreach is off"
         if in_quiet_hours(self.cfg["quiet_hours"], dt.datetime.fromtimestamp(now).strftime("%H:%M")):
             return False, f"quiet hours ({self.cfg['quiet_hours']})"
-        if st.get("outreach_today", 0) >= self.cfg["max_outreach_per_day"]:
+        cap = int(self.cfg["max_outreach_per_day"] or 0)
+        if cap and st.get("outreach_today", 0) >= cap:
             return False, "today's outreach is used up"
         return True, ""
 
@@ -218,10 +219,13 @@ class Continuity:
 
     def frame(self, st: Dict[str, Any], now: float, force_full: bool = False, turn: Optional[Dict[str, Any]] = None) -> str:
         held = [r["text"] for r in self.store.q("SELECT text FROM outbox WHERE status='held' ORDER BY id")]
+        read = [(r["text"], r["settled"]) for r in self.store.q(
+            "SELECT text, settled FROM outbox WHERE status='read' AND settled>? ORDER BY settled DESC", (now - 86400,))]
         queued = len(self.store.queued())
         sc = V.scene(st, now, self.user_name, held, queued, self.outreach_score(), self.goals.store.q(
             "SELECT * FROM goals WHERE status IN ('active','declined') ORDER BY (status='active') DESC, "
-            "COALESCE(lasting, 0) DESC, (origin='user') DESC, COALESCE(last_progress, created) DESC LIMIT 8"), pacing="continuous" if self.continuous else "energy")
+            "COALESCE(lasting, 0) DESC, (origin='user') DESC, COALESCE(last_progress, created) DESC LIMIT 8"),
+            pacing="continuous" if self.continuous else "energy", read=read)
         full = force_full or not st.get("last_scene") or st.get("turns_since_full", 0) >= self.cfg["full_frame_every"] - 1
         if full:
             text, kind = V.render_full(sc, now), "full"
@@ -702,6 +706,10 @@ class Continuity:
                             AND sent<=?""", (REPLY_WINDOW_S, now, now - REPLY_WINDOW_S))
             ttl = self.cfg["item_ttl_minutes"] * 60
             self.store.x("UPDATE queue SET status='faded' WHERE status='queued' AND created<?", (now - ttl,))
+            # what the sensors noticed (and that they noticed it) is kept before any early return: a turn running for
+            # twenty minutes once meant an overdue item was noticed again every five seconds, ~230 times (found and
+            # cleaned up by Sophia, 2026-10-12)
+            self.store.save_state(st)
             if self.turn is not None:
                 return None
             if self.expect_own is not None:

@@ -536,6 +536,9 @@ class Recall:
                 continue        # the process's own turns and notes: raising them would loop it on itself
             if "action" in (it.get("flags") or ""):
                 continue        # a logged tool call is a record of a step, not something that comes to mind
+            if it.get("speaker") == "system" and "event" in (it.get("flags") or ""):
+                continue        # Hermes's own notices (a background job finished): perceived when they happened;
+                                # days later they came back as stale "something came to mind" (10 in 4 days)
             if it["kind"] == "task" and not cfg.get("associate_tasks", False):
                 continue        # a record of finished work: recall needs it ("what did I do?"); association replays it
             if it["kind"] == "window" and not it.get("facts") and \

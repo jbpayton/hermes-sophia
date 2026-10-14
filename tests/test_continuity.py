@@ -940,3 +940,46 @@ def test_lasting_goals_are_hers_anchored_served_and_never_finished(tmp_path):
     assert "It serves your lasting goal: A body and a place of my own" in turn
     kinds = [r["kind"] for r in c.store.q("SELECT kind FROM goal_events ORDER BY id")]
     assert kinds.count("serves") == 1
+
+
+def test_the_user_can_read_or_dismiss_held_messages_in_the_tab_and_she_sees_it(tmp_path):
+    # Joey, 2026-10-14: eleven messages from her own turns sat held with outreach off; read in the Sophia tab, a message
+    # counts as delivered (never also sent by chat) and her standing view says he read it
+    clock = Clock(NOON)
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory(items=[]))
+    a = c.store.x("INSERT INTO outbox(created, text, reason, status) VALUES(?,?,?,?)", (clock.t, "Gaze is done: merge?", "outreach is off", "held"))
+    b = c.store.x("INSERT INTO outbox(created, text, reason, status) VALUES(?,?,?,?)", (clock.t, "Old news", "outreach is off", "review"))
+    assert c.store.review_outbox(a, "read") and c.store.review_outbox(b, "dismiss")
+    assert not c.store.review_outbox(a, "read")                    # already handled
+    assert c.store.one("SELECT status FROM outbox WHERE id=?", (a,))["status"] == "read"
+    assert "read held message" in c.store.one("SELECT text FROM percepts ORDER BY id DESC LIMIT 1 OFFSET 1")["text"]
+    frame = user_turn(c, text="morning")["context"]
+    assert "Joey read" in frame and "Gaze is done" in frame and "Old news" not in frame
+    assert c.store.one("SELECT COUNT(*) AS n FROM outbox WHERE status='held'")["n"] == 0
+
+
+def test_no_daily_cap_on_reaching_out_when_it_is_zero(tmp_path):
+    c, _ = make(tmp_path, outreach=True, max_outreach_per_day=0)
+    st = c.store.state()
+    st["outreach_today"] = 50
+    assert c.outreach_allowed(st, NOON) == (True, "")
+    c2, _ = make(tmp_path / "b", outreach=True, max_outreach_per_day=2)
+    st2 = c2.store.state()
+    st2["outreach_today"] = 2
+    assert c2.outreach_allowed(st2, NOON)[0] is False
+
+
+def test_what_the_sensors_noticed_is_kept_while_a_turn_runs(tmp_path):
+    # Sophia found it (2026-10-12): an overdue item was noticed again every 5 s for 20 minutes during a long turn,
+    # because the tick returned early without saving that it had been noticed
+    clock = Clock(NOON)
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory(items=[]), sensors=True)
+    user_turn(c)
+    c.update({"waiting_for": "the presence build", "by": "+1m"})
+    clock.t += 120
+    c.on_turn_start(session_id="s", user_message="a long request", platform="telegram")   # a turn keeps running
+    for _ in range(5):
+        c.tick()
+        clock.t += 5
+    overdue = [r for r in c.store.q("SELECT * FROM queue WHERE source='overdue'")]
+    assert len(overdue) == 1

@@ -62,7 +62,8 @@ def outreach_line(score: Dict[str, Any]) -> str:
 
 
 def scene(st: Dict[str, Any], now: float, user: str, held: List[str], queued: int,
-          outreach: Dict[str, Any] = None, goals: List[Any] = None, pacing: str = "energy") -> Dict[str, Tuple[Any, str]]:
+          outreach: Dict[str, Any] = None, goals: List[Any] = None, pacing: str = "energy",
+          read: List[Any] = None) -> Dict[str, Tuple[Any, str]]:
     """field -> (value, source). Values are short strings or lists of short strings."""
     out: Dict[str, Tuple[Any, str]] = {}
     out[user] = (f"last wrote {ago(now - st['last_user_ts'])}" if st.get("last_user_ts") else "hasn't written yet",
@@ -98,6 +99,8 @@ def scene(st: Dict[str, Any], now: float, user: str, held: List[str], queued: in
              for c in st.get("came_to_mind", [])[-3:]]
     out["came to mind lately"] = (minds or ["nothing"], REMEMBERED)
     out[f"held for {user}"] = ([f"“{h[:100]}”" for h in held[:3]] or ["nothing"], OWN)
+    if read:                                    # read in the Sophia tab: it reached them, even before any reply
+        out[f"{user} read"] = ([f"“{t[:80]}” ({ago(now - ts)})" for t, ts in read[:4]], PERCEIVED)
     if outreach is not None:
         out["your reaching out"] = (outreach_line(outreach), PERCEIVED)
     waiting = f"{queued} thing{'s' if queued != 1 else ''} waiting to come to mind"

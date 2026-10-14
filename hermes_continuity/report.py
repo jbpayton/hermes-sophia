@@ -63,6 +63,12 @@ def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional
         last_user = st.get("last_user_ts") or 0
         held = [{"id": r["id"], "created": _d(r["created"]), "reason": r["reason"], "text": r["text"]}
                 for r in c.execute("SELECT * FROM outbox WHERE status='held' ORDER BY id")]
+        review = [{"id": r["id"], "created": _d(r["created"]), "reason": r["reason"], "text": r["text"]}
+                  for r in c.execute("SELECT * FROM outbox WHERE status='review' ORDER BY id")]
+        handled = [{"id": r["id"], "created": _d(r["created"]), "status": r["status"], "settled": _d(r["settled"]),
+                    "text": r["text"]}
+                   for r in c.execute("""SELECT * FROM outbox WHERE status IN ('read','dismissed') AND settled>?
+                                         ORDER BY settled DESC""", (now - 7 * 86400,))]
         sent_today = c.execute("SELECT COUNT(*) AS n FROM outbox WHERE status='sent' AND settled>=?", (midnight,)).fetchone()["n"]
 
         journal: List[Dict[str, Any]] = []
@@ -139,7 +145,7 @@ def build(path: Path, cfg: Dict[str, Any], user: str = "the user", now: Optional
                               "waiting_for": [w["text"] for w in st.get("waiting_for", [])],
                               "came_to_mind": [{"text": m["text"], "at": _d(m["ts"])} for m in st.get("came_to_mind", [])[-5:]]},
             "queue": {"waiting": len(queued), "top": queue},
-            "outbox": {"held": held},
+            "outbox": {"held": held, "review": review, "handled": handled},
             "outreach": outreach,
             "goals": {"list": goals, "events": goal_events},
             "journal": journal,

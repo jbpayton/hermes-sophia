@@ -1468,6 +1468,29 @@
   // be chosen (try it on a test profile first).
   var OUTCOME_TONE = { silent: "", held: "sm-amber", sent: "sm-ok", "not accepted": "sm-warn", "not started": "sm-warn",
                        interrupted: "", failed: "sm-warn", running: "" };
+  // A message she wrote you from a turn of her own and couldn't send (outreach off, quiet hours). Reading it here
+  // counts as delivered: it won't also arrive in chat, and her standing view shows that you read it. Reply in chat.
+  function HeldMessage(p) {
+    var m = p.m, ctx = useContext(Ctx), busy = useState(false), open = useState(m.text.length < 600);
+    function act(action) {
+      busy[1](true);
+      post("/continuity/outbox", { id: m.id, action: action, profile: p.profile || "" }).then(function () {
+        busy[1](false);
+        ctx.notify(action === "read" ? "Marked read: she'll see you read it" : "Dismissed");
+        if (p.onDone) p.onDone();
+      }, function (e) { busy[1](false); ctx.notify("Couldn't do that: " + errText(e)); });
+    }
+    return h("div", { className: "sm-line-item" },
+      h("div", { className: "sm-ch-meta" }, "#" + m.id + " · " + m.created + (m.reason ? " · " + m.reason : "")),
+      h("div", { className: "sm-quote", style: { whiteSpace: "pre-wrap" } },
+        open[0] ? m.text : m.text.slice(0, 600) + "…"),
+      h("div", { style: { display: "flex", gap: "8px", marginTop: "6px" } },
+        m.text.length >= 600 ? h("button", { className: "sm-btn", onClick: function () { open[1](!open[0]); } },
+          open[0] ? "Less" : "Read all") : null,
+        h("button", { className: "sm-btn", disabled: busy[0], onClick: function () { act("read"); } }, "Read"),
+        h("button", { className: "sm-btn", disabled: busy[0], onClick: function () { act("dismiss"); } }, "Dismiss")));
+  }
+
   function ContinuityView() {
     var profS = useState(""), prof = profS[0];
     var api = useApi("/continuity" + (prof ? "?profile=" + encodeURIComponent(prof) : ""), 10000);
@@ -1579,11 +1602,15 @@
         h("div", null, h("span", { className: "sm-muted" }, "Came to mind lately: "),
           ws.came_to_mind.length ? ws.came_to_mind.map(function (m) { return "“" + trunc(m.text, 80) + "”"; }).join(" · ") : "nothing")));
 
-    var outbox = h(Card, { title: "Held for " + u.name, count: r.outbox.held.length, plainCount: true },
-      r.outbox.held.length ? h("div", { className: "sm-lines" }, r.outbox.held.map(function (m) {
-        return h("div", { key: m.id, className: "sm-line-item" },
-          h("div", { className: "sm-ch-meta" }, m.created + " · " + m.reason), h("div", { className: "sm-quote" }, m.text));
-      })) : h(Empty, null, "Nothing held."));
+    var waiting = (r.outbox.review || []).concat(r.outbox.held);
+    var outbox = h(Card, { title: "Held for " + u.name, count: waiting.length, plainCount: true },
+      waiting.length ? h("div", { className: "sm-lines" }, waiting.map(function (m) {
+        return h(HeldMessage, { key: m.id, m: m, profile: d.profile, onDone: api.reload });
+      })) : h(Empty, null, "Nothing held."),
+      (r.outbox.handled || []).length ? h("div", { className: "sm-ch-meta", style: { marginTop: "10px" } },
+        "Handled this week: " + r.outbox.handled.map(function (m) {
+          return "#" + m.id + " " + m.status + " " + m.settled.slice(5, 16);
+        }).join(" · ")) : null);
 
     var journal = h(Card, { title: "Journal" },
       r.journal.length ? h("div", { className: "sm-feed-list" }, r.journal.map(function (j, i) {

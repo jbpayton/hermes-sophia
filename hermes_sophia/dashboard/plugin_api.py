@@ -251,6 +251,29 @@ def _continuity_settings(home: Path):
     return lambda key, default=None: settings.get(key, default)
 
 
+class OutboxAction(BaseModel):
+    id: int
+    action: str                        # read | dismiss
+    profile: str = ""
+    note: str = ""
+
+
+@router.post("/continuity/outbox")
+def continuity_outbox(body: OutboxAction) -> Dict[str, Any]:
+    """A held message, handled in the tab: read (it reached you; it won't be sent by chat, and she sees that you read
+    it) or dismissed."""
+    if body.action not in ("read", "dismiss"):
+        raise HTTPException(400, "action is read or dismiss")
+    homes = _continuity_homes()
+    home = homes.get(body.profile or "default") or next(iter(homes.values()), None)
+    if home is None:
+        raise HTTPException(404, "no continuity store")
+    store = _continuity("store").Store(home / "plugin-data" / "continuity" / "continuity.db")
+    if not store.review_outbox(body.id, body.action, body.note):
+        raise HTTPException(409, "that message isn't waiting any more")
+    return {"ok": True, "id": body.id, "status": "read" if body.action == "read" else "dismissed"}
+
+
 @router.get("/continuity")
 def continuity(profile: str = "") -> Dict[str, Any]:
     homes = _continuity_homes()
