@@ -156,3 +156,35 @@ def test_a_long_action_log_is_cut_to_its_start_and_end_for_the_judge():
     assert cut[:2] == lines[:2] and cut[-1] == lines[-1] and "left out" in cut[2]
     assert sum(len(l) for l in cut) <= 1700 and len(cut) < len(lines)
     assert fit_actions(lines[:5], 1500) == lines[:5]              # a short log is untouched
+
+
+def test_a_huge_task_is_carded_from_its_start_and_end_and_a_failing_one_doesnt_stop_the_night(engine, monkeypatch):
+    # live, 2026-10-14/15: one busy day made a task of 1,245 steps; its card prompt (89k tokens) exceeded the context and
+    # failed the whole step two nights running
+    from hermes_sophia.sleep.tasks import TaskPass
+    seen = []
+
+    class R:
+        night, limit, s, e, cfg = "n", 0, engine.store, engine, dict(engine.cfg, task_card_chars=2000)
+        teacher = type("T", (), {"choice": staticmethod(lambda *a, **k: type("A", (), {"choice": "succeeded",
+                                                                                       "confidence": 0.9})())})()
+        def _guard(self): pass
+        def llm(self, prompt, max_tokens=0):
+            seen.append(len(prompt))
+            if "boom" in prompt:
+                raise RuntimeError("request exceeds the available context size")
+            return "GOAL: build the room\nWHERE: -\nWORKED: 1\nFAILED: -\nLESSON: -"
+    tp = TaskPass(R())
+    big = [{"id": f"a{i}", "session_id": "s", "said": i, "tool": "terminal", "args": '{"command": "make step %d"}' % i,
+            "ok": 1, "result": "ok", "request_text": "build the room", "request_ref": "r"} for i in range(400)]
+    bad = [dict(a, id="b" + a["id"][1:], session_id="t", args='{"command": "boom"}', request_text="boom") for a in big[:3]]
+    monkeypatch.setattr(TaskPass, "groups", lambda self: [big, bad])
+    monkeypatch.setattr(TaskPass, "merge", lambda self, g: (g, 0))
+    monkeypatch.setattr(TaskPass, "evidence", lambda self, task: {
+        "request": task[0]["request_text"], "reply": "-", "reaction": "-",
+        "actions": [f"a{i} terminal: {json.loads(a['args'])['command']} -> ok: fine" for i, a in enumerate(task)]})
+    monkeypatch.setattr(TaskPass, "_one", TaskPass._one)
+    out = tp.run()
+    assert len(seen) == 2                       # the second task was still tried after the first one failed
+    assert seen[0] < 2000 + 3000                # the 400-step log reached the writer cut to its start and end
+    assert out.get("errors", 0) >= 1            # and a failure is counted, not raised

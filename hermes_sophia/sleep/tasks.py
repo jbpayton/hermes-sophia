@@ -214,38 +214,17 @@ class TaskPass:
         for task in tasks:
             if self.r.limit and made["tasks"] >= self.r.limit:
                 break
-            ev = self.evidence(task)
-            self.r._guard()
-            # the judge reads a one-token answer on a small context: a long log keeps its start and its end
-            judged = {**ev, "actions": fit_actions(ev["actions"], self.cfg["task_judge_chars"])}
-            ans = self.r.teacher.choice(judged, "How did the task turn out?", OUTCOMES, permutations=2)
-            outcome = ans.choice
-            parsed = self.parse_card(self.r.llm(CARD_PROMPT.format(
-                request=ev["request"], outcome=outcome, actions="\n".join(ev["actions"]), reply=ev["reply"],
-                reaction=ev["reaction"]), max_tokens=400), len(task))
-            card = self.build_card(task, parsed, outcome, ev)
-            first, last = task[0]["said"], task[-1]["said"]
-            tid = sha("task", task[0]["session_id"], task[0]["id"])
-            date = time.strftime("%Y-%m-%d", time.localtime(last))
-            text = self.card_text(card, date)
-            card["text"] = text
-            self.s.x("""INSERT OR REPLACE INTO tasks(id,session_id,request_ref,goal,outcome,confidence,card,first_said,
-                        last_said,n_actions,night_id,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)""",
-                     (tid, task[0]["session_id"], task[0]["request_ref"], card["goal"], outcome,
-                      round(ans.confidence, 3), json.dumps(card, ensure_ascii=False), first, last, len(task),
-                      self.r.night, time.time()))
-            self.s.xmany("UPDATE actions SET task_id=? WHERE id=?", [(tid, a["id"]) for a in task])
-            links = [(tid, "request", task[0]["request_ref"])] + [(tid, "source", s["source"]) for s in card["sources"]]
-            for name in T.names_in(" ".join([card["goal"], card["where"]])):
-                links.append((tid, "entity", T.norm_entity(name)))
-            self.s.xmany("INSERT OR IGNORE INTO task_links(task_id,kind,target) VALUES(?,?,?)", links)
-            self.s.journal(self.r.night, "tasks", f"task_{outcome}", {"task": tid, "goal": card["goal"],
-                                                                     "steps": len(card["worked"])})
-            made["reused"] += self.credit_reuse(tid, task, card, outcome)
+            try:
+                tid, text = self._one(task, made)
+            except Exception as ex:                       # one task that can't be carded mustn't stop the night
+                if type(ex).__name__ == "Yielded":        # ...but stepping aside for a busy model still must
+                    raise
+                made["errors"] = made.get("errors", 0) + 1
+                self.s.journal(self.r.night, "tasks", "task_not_carded",
+                               {"session": task[0]["session_id"], "actions": len(task), "error": str(ex)[:300]})
+                continue
             texts.append(text)
             ids.append(tid)
-            made["tasks"] += 1
-            made[outcome] = made.get(outcome, 0) + 1
         if ids:
             vecs = self.e.embed(texts, "document")
             self.s.set_vectors("task", ids, vecs, self.cfg["embed_model"])
@@ -253,6 +232,42 @@ class TaskPass:
                 self.s.fts_put(tid, "task", text)
             self.link_attempts(ids, vecs)
         return made
+
+    def _one(self, task: List[Any], made: Dict[str, Any]) -> Tuple[str, str]:
+        ev = self.evidence(task)
+        self.r._guard()
+        # the judge reads a one-token answer on a small context: a long log keeps its start and its end
+        judged = {**ev, "actions": fit_actions(ev["actions"], self.cfg["task_judge_chars"])}
+        ans = self.r.teacher.choice(judged, "How did the task turn out?", OUTCOMES, permutations=2)
+        outcome = ans.choice
+        # the card's writer reads more of the log than the judge, but never more than fits its context: a day of
+        # busy work once made one task 1,245 steps, an 89k-token prompt, and failed two nights (2026-10-14/15)
+        shown = fit_actions(ev["actions"], self.cfg["task_card_chars"])
+        parsed = self.parse_card(self.r.llm(CARD_PROMPT.format(
+            request=ev["request"], outcome=outcome, actions="\n".join(shown), reply=ev["reply"],
+            reaction=ev["reaction"]), max_tokens=400), len(task))
+        card = self.build_card(task, parsed, outcome, ev)
+        first, last = task[0]["said"], task[-1]["said"]
+        tid = sha("task", task[0]["session_id"], task[0]["id"])
+        date = time.strftime("%Y-%m-%d", time.localtime(last))
+        text = self.card_text(card, date)
+        card["text"] = text
+        self.s.x("""INSERT OR REPLACE INTO tasks(id,session_id,request_ref,goal,outcome,confidence,card,first_said,
+                    last_said,n_actions,night_id,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)""",
+                 (tid, task[0]["session_id"], task[0]["request_ref"], card["goal"], outcome,
+                  round(ans.confidence, 3), json.dumps(card, ensure_ascii=False), first, last, len(task),
+                  self.r.night, time.time()))
+        self.s.xmany("UPDATE actions SET task_id=? WHERE id=?", [(tid, a["id"]) for a in task])
+        links = [(tid, "request", task[0]["request_ref"])] + [(tid, "source", s["source"]) for s in card["sources"]]
+        for name in T.names_in(" ".join([card["goal"], card["where"]])):
+            links.append((tid, "entity", T.norm_entity(name)))
+        self.s.xmany("INSERT OR IGNORE INTO task_links(task_id,kind,target) VALUES(?,?,?)", links)
+        self.s.journal(self.r.night, "tasks", f"task_{outcome}", {"task": tid, "goal": card["goal"],
+                                                                 "steps": len(card["worked"])})
+        made["reused"] += self.credit_reuse(tid, task, card, outcome)
+        made["tasks"] += 1
+        made[outcome] = made.get(outcome, 0) + 1
+        return tid, text
 
     # ------------------------------------------------------------- graph
     def link_attempts(self, ids: List[str], vecs) -> None:

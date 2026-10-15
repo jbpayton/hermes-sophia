@@ -124,6 +124,7 @@ DEFAULTS: Dict[str, Any] = {
     "sleep_max_wait_s": 900,
     "sleep_poll_s": 10,
     "sleep_session_windows": 40,
+    "task_card_chars": 40000,          # ...and the card's writer (about 10k tokens; start and end kept)
     "task_judge_chars": 6000,         # a task's action log as the night's judge reads it (start and end kept)
     "night_judge": "decider",         # one-token night judgments on the decider (fast; thresholds measured there) or "night"
     "header_roles": "all",            # "user": model headers only for the user's lines (cheaper on chat-heavy memories)
@@ -290,6 +291,8 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
     ("sleep_session_windows", "Windows per contextualize call", {"when": _ADVANCED}),
     ("supersede_prescreen", "One reading below this settles 'no change' before the careful two-order reading",
      {"when": _ADVANCED}),
+    ("task_card_chars", "How much of a long task's action log the night reads when writing its card (start and end "
+                        "kept; must fit the night model's context)", {"when": _ADVANCED}),
     ("task_judge_chars", "How much of a long task's action log the night's judge reads when deciding how it turned "
                          "out (its first actions and as many of its last as fit)", {"when": _ADVANCED}),
     ("night_judge", "Which model makes the night's one-token judgments (supersession, task outcomes, replay): the "
