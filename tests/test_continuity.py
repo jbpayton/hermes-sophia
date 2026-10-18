@@ -1029,3 +1029,14 @@ def test_a_turn_nearing_the_end_of_its_context_is_asked_to_wrap_up_and_continue(
     c.on_turn_start(session_id="s", user_message="hi", platform="telegram")                           # a user turn
     c.on_api(platform="telegram", usage={"prompt_tokens": 56000, "total_tokens": 56500})
     assert "tell Joey where things stand" in c.on_tool_result(tool_name="terminal", result="ok", session_id="s")
+
+
+def test_a_turn_left_running_by_a_previous_process_is_settled_at_start(tmp_path):
+    c, sent = make(tmp_path, memory=FakeMemory())
+    user_turn(c)
+    c.tick()                                                     # a turn of its own starts... and the process dies
+    c2, _ = make(tmp_path, memory=FakeMemory())                  # the same store, a new process
+    c2.start()
+    c2.stop()
+    row = c2.store.one("SELECT outcome, reason FROM steps ORDER BY id DESC LIMIT 1")
+    assert row["outcome"] == "lost" and "process stopped" in row["reason"]

@@ -572,6 +572,11 @@ class Continuity:
 
     # ------------------------------------------------------------ the loop
     def start(self) -> None:
+        # a turn left running by a previous process (a restart, a reset mid-turn) can't end now: settle it
+        n = self.store.one("SELECT COUNT(*) AS n FROM steps WHERE outcome IS NULL")["n"]
+        self.store.x("UPDATE steps SET outcome='lost', reason='left running when the process stopped' WHERE outcome IS NULL")
+        if n:
+            logger.info("continuity: settled %s turn(s) left running by the previous process", n)
         if self._thread is None:
             self._thread = threading.Thread(target=self._run, name="continuity", daemon=True)
             self._thread.start()
