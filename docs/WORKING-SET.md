@@ -1,6 +1,6 @@
 # Working set: a small context, memory for the rest, and motivation that doesn't stall
 
-*Draft 2, 2026-10-18. Claude, from Joey's direction, revised with Sophia's review (section 7).*
+*Draft 2, 2026-10-18. Claude, from Joey's direction, revised with Sophia's review (section 8).*
 
 Joey's direction:
 
@@ -56,7 +56,7 @@ These come down to three places where she stops:
 
 Think of a person at a desk. On the desk are the few things in use now. Everything else is in the filing cabinet, and things come out when needed and go back when done. Nobody rewrites the cabinet's contents into shorter and shorter summaries to fit them on the desk.
 
-**Context is the desk: assembled fresh for every request, small, and holding only what's in use.** Memory is the cabinet: everything, verbatim, retrievable by association, by asking, or because the task needs it.
+**Context is the desk: assembled fresh for each turn, small, and holding only what's in use.** Memory is the cabinet: everything, verbatim, retrievable by association, by asking, or because the task needs it.
 
 The principles:
 
@@ -67,7 +67,7 @@ The principles:
 5. **Recalled memories serve one request.** They come in for the request that needs them and then leave. Sophia's injection table keeps the record of what was recalled and why.
 6. **Keep a table of contents of what's out of view.** Every entry carries a pull handle she can act on in one retrieval, such as "gaze lane: recall 'gaze 7ea1f3c' / commit 7ea1f3c on lane/gaze", not just a name. The table is scoped to her current focus (about 10–15 lines) and changes with it; a list of everything would be noise. It also names what's explicitly done or closed, so finished work isn't reopened. A small context then costs a lookup rather than forgetting.
 7. **Bring in tools when they're needed.** Load the few she always uses up front, and fetch the rest through a lookup. Hermes already does this for plugin tools.
-8. **There's no session to overflow.** If every request is rebuilt from her current state plus memory, there's nothing to compact and nothing to reset.
+8. **There's no session to overflow.** If every turn is assembled from her current state plus memory, there's nothing to compact and nothing to reset.
 
 ### What a request would hold
 
@@ -76,12 +76,12 @@ A rough budget of 16–24k tokens, against today's 35–65k:
 | Part | Size | Lifetime |
 |---|---|---|
 | **Stable prefix**, byte-identical on every call so the prompt cache always covers it: who she is (identity, voice, the few standing instructions) and the core tool definitions | ~5–6k | stable |
-| Current situation: one standing-view frame (time, who's around, goals, threads, what she's waiting for, what came to mind) | ~0.5–1k | rebuilt every call |
-| Table of contents of what's out of view | ~0.5k | rebuilt every call |
+| Current situation: one standing-view frame (time, who's around, goals, threads, what she's waiting for, what came to mind) | ~0.5–1k | rebuilt each turn |
+| Table of contents of what's out of view | ~0.5k | rebuilt each turn |
 | Her commitments, verbatim: what she's waiting for (who and why), what she owes, her open threads, her focus in her own words, and each active goal's next step in one line. Never summarized: a rephrased commitment can quietly change meaning | ~0.5–1k | rebuilt each turn |
 | The live exchange: the last few messages, verbatim | ~3–6k | rolling |
 | The current turn's work: pointers to earlier steps (gist plus handle), the last few in full | ~2–5k | this turn only |
-| What this step needs: recalled memories, a file, a result | ~2–6k | this request only |
+| What this step needs: recalled memories, a file, a result | ~2–6k | this step only |
 
 ## 3. Motivation that doesn't stall
 
