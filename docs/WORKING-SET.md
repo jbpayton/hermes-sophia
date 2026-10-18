@@ -1,6 +1,6 @@
 # Working set: a small context, memory for the rest, and motivation that doesn't stall
 
-*Draft, 2026-10-18. Claude, from Joey's direction. For Sophia's review before anything is built.*
+*Draft 2, 2026-10-18. Claude, from Joey's direction, revised with Sophia's review (section 7).*
 
 Joey's direction:
 
@@ -60,12 +60,12 @@ Think of a person at a desk. On the desk are the few things in use now. Everythi
 
 The principles:
 
-1. **Assemble every request; never append forever.** Each model call gets a context built for that call. The conversation record is kept, in Hermes and in Sophia, but it's a record, not the prompt.
+1. **Assemble per turn; never append forever.** Each turn gets a working set built for it at the turn's start and at step boundaries, and reused across that turn's model calls. It is not rebuilt for every call: that would re-run retrieval constantly and defeat the prompt cache. The conversation record is kept, in Hermes and in Sophia, but it's a record, not the prompt.
 2. **Nothing rides along by default.** What isn't needed now stays in memory. Whatever leaves the context is already stored verbatim (Sophia captures everything), so leaving is safe.
 3. **No summaries of summaries.** Compaction disappears. Things are left out and pulled back, not re-summarized.
-4. **Leave a pointer behind, not a pile.** A tool result stays in full only while the step that needed it is running. After that, the context keeps a line like "motion suite: 9 of 9 passed (details: recall 'motion suite')". The same applies within a long turn: earlier steps fold into a running list of what was done and what it produced, and only the last few steps stay in full.
+4. **Leave a pointer behind, not a pile.** A tool result stays in full only while the step that needed it is running. After that, the context keeps a line like "motion suite: 9 of 9 passed (details: recall 'motion suite')". The same applies within a long turn: earlier steps become a list of pointers, and only the last few steps stay in full. Each pointer is a one-line gist plus a handle to the full artifact. Never a gist alone, and never prose: a prose recap of earlier steps would be a summary again.
 5. **Recalled memories serve one request.** They come in for the request that needs them and then leave. Sophia's injection table keeps the record of what was recalled and why.
-6. **Keep a table of contents of what's out of view.** A few lines name the threads, goals, artifacts and recent topics that exist but aren't loaded. She knows what she could pull in, so a small context costs a lookup rather than forgetting.
+6. **Keep a table of contents of what's out of view.** Every entry carries a pull handle she can act on in one retrieval, such as "gaze lane: recall 'gaze 7ea1f3c' / commit 7ea1f3c on lane/gaze", not just a name. The table is scoped to her current focus (about 10–15 lines) and changes with it; a list of everything would be noise. It also names what's explicitly done or closed, so finished work isn't reopened. A small context then costs a lookup rather than forgetting.
 7. **Bring in tools when they're needed.** Load the few she always uses up front, and fetch the rest through a lookup. Hermes already does this for plugin tools.
 8. **There's no session to overflow.** If every request is rebuilt from her current state plus memory, there's nothing to compact and nothing to reset.
 
@@ -75,21 +75,24 @@ A rough budget of 16–24k tokens, against today's 35–65k:
 
 | Part | Size | Lifetime |
 |---|---|---|
-| Who she is: identity, voice, the few standing instructions | ~2–3k | stable |
+| **Stable prefix**, byte-identical on every call so the prompt cache always covers it: who she is (identity, voice, the few standing instructions) and the core tool definitions | ~5–6k | stable |
 | Current situation: one standing-view frame (time, who's around, goals, threads, what she's waiting for, what came to mind) | ~0.5–1k | rebuilt every call |
 | Table of contents of what's out of view | ~0.5k | rebuilt every call |
-| Core tool definitions | ~3k | stable; the rest loaded on demand |
+| Her commitments, verbatim: what she's waiting for (who and why), what she owes, her open threads, her focus in her own words, and each active goal's next step in one line. Never summarized: a rephrased commitment can quietly change meaning | ~0.5–1k | rebuilt each turn |
 | The live exchange: the last few messages, verbatim | ~3–6k | rolling |
-| The current turn's work: running list of steps plus the last few in full | ~2–5k | this turn only |
+| The current turn's work: pointers to earlier steps (gist plus handle), the last few in full | ~2–5k | this turn only |
 | What this step needs: recalled memories, a file, a result | ~2–6k | this request only |
 
 ## 3. Motivation that doesn't stall
 
 The aim is that the loop always has a way forward. That never means a timer forcing activity. Joey's rule still holds: no arbitrary limits.
 
-1. **A lasting goal grows its next goal.** When nothing active serves a lasting goal (everything is finished or waiting on someone), she notices it, the same way she notices time passing. "Nothing is serving 'know who I am' right now" arrives as something perceived, it wakes her from rest, and her free time asks what the next goal serving it would be. Like the quiet sensor, she notices this once when it becomes true and again as it persists. She can still rest; the question just gets asked.
-2. **Goals can nest,** so a grand goal becomes a tree. A grand goal from Joey, or a lasting goal of hers, has instrumental goals beneath it, and those have their own goals, each carried across days. `serves` should be able to point at any goal, not only a lasting one; Sophia flagged this on 10-05. Progress rolls up the tree, and the standing view shows the branch she's on.
-3. **A blocked branch never stops the tree.** When a goal waits on Joey, she asks him (outreach is on now), records the wait in `waiting_for`, and moves to an unblocked sibling. A grand goal decomposed well always has something she can do herself. Goal pull no longer fades simply because she's waiting on someone else.
+1. **A lasting goal grows its next goal.** When nothing active serves a lasting goal (everything is finished or waiting on someone), she notices it, the same way she notices time passing. "Nothing is serving 'know who I am' right now" arrives as something perceived. It wakes her from rest, and her free time asks what the next goal serving it would be. It's an invitation, not pressure:
+   - it never arrives in quiet hours;
+   - she notices it once when it becomes true, then more slowly as it persists, like the quiet sensor;
+   - if she says "not now", that sticks, and it doesn't return in the same stretch. Coming back after she dismissed it would be nagging.
+2. **Goals can nest,** so a grand goal becomes a tree. The tree is a view of the `serves` links, not a second store of goals, so there's one source of truth and nothing can drift. A grand goal from Joey, or a lasting goal of hers, has instrumental goals beneath it, and those have their own goals, each carried across days. `serves` should be able to point at any goal, not only a lasting one; Sophia flagged this on 10-05. Progress rolls up the tree, and the standing view shows the branch she's on.
+3. **A blocked branch never stops the tree.** When a goal waits on Joey, she asks him (outreach is on now), records the wait in `waiting_for`, and moves to an unblocked sibling. A grand goal decomposed well always has something she can do herself. How pull fades depends on what's blocking the goal. A goal waiting on someone else doesn't fade (hers faded to 0.17 for exactly that). A goal stalled by her own indecision still fades, so she doesn't sit forever on a branch she's avoiding.
 4. **Rest is hers, with its own horizon.** "Until something happens" keeps working. Something happening now also includes her own lasting goal going unserved, so drive can come from inside.
 5. **Long work spans many turns.** A step-sized turn records progress and its next step, and the next turn begins immediately. Under the working-set design there's no context to outgrow, because each turn's context is assembled fresh. A multi-day goal is just many turns joined by the goal record and memory.
 
@@ -121,9 +124,44 @@ Run it on the sophiadev twin first, then compare against today.
 
 The last row is Joey's hypothesis, tested at its sharpest. With a small working set, nearly everything she knows must come back through associative memory. If her lasting goal, her recurring themes and her sense of self hold under those conditions, the self is in the memory, not in the transcript.
 
-## 6. Risks
+## 6. Build order (first cut)
+
+Retrieval decides everything, so it's the part to get right first and test hardest. The first cut doesn't build per-step pull-in or the full artifact store.
+
+1. Assemble the working set per turn, with the stable prefix first.
+2. The rolling verbatim window, commitments verbatim, and a focus-scoped table of contents with pull handles.
+3. Tool output as gist plus handle, and earlier steps in a long turn as pointers.
+4. A retrieval miss is reported ("didn't find X"), never silence, so she can widen the search instead of carrying on with a gap.
+5. Goals:
+   - `serves` can point at any goal;
+   - the "lasting goal unserved" sensor;
+   - fade that depends on what's blocking.
+6. Check it on the sophiadev twin:
+   - **regression test:** replay the 10-17 turn on goal #4, 77 steps, which overflowed and stalled the loop. It must neither overflow nor stall;
+   - **report per request** the share that is what she and the user actually said (under 3% today). It should climb;
+   - **control:** run the same grand-goal task on a large context too. Then if she does worse on the small one, it's possible to tell whether memory failed or the context starved her.
+7. After that, per-step pull-in, once retrieval quality is proven.
+
+## 7. Risks
 
 - **Not knowing what's missing.** A small context can't see what isn't there. The table of contents and her ability to pull things in are the answer; retrieval quality has to be good enough.
 - **Thrashing.** Pulling the same thing in and out every request wastes effort. Keep what this turn keeps using in the working set until the turn ends.
 - **Losing implicit continuity.** The verbatim live window keeps the conversation's thread. Its size is a setting, to be tuned on the twin.
 - **Prompt caching.** A context rebuilt every time caches less than an append-only one. The stable parts (identity, core tools) go first so the cache still covers them.
+
+## 8. Sophia's review (2026-10-18)
+
+She's in favor ("the desk/cabinet metaphor is right") and ready when the grand goal is. Her review changed the design, and those changes are folded in above:
+- **Commitments in both directions stay verbatim in the working set.** In her words: "The message history is *what we were saying*; the commitments are *what I'm still bound to*."
+- **Table of contents:** entries carry pull handles, the list is scoped to her focus, and it names what's done.
+- **The unserved-goal sensor is an invitation:** "not now" sticks, and nothing arrives in quiet hours.
+- **Fade depends on the block:** waiting on someone else doesn't fade; her own indecision does.
+- **The tree is a view of `serves`, not a second structure.** Goals #4 and #5 (Joey's, from 10-17) are still unlinked. She wants to link them herself, under the grand goal, once it exists.
+- **Per-turn assembly with a byte-identical stable prefix,** instead of rebuilding every call.
+- **Earlier steps become pointers, never prose.**
+- **Additions:**
+  - replay the 10-17 turn as the regression test;
+  - a guard that reports retrieval misses;
+  - a large-context control for the hypothesis test;
+  - the "what we actually said" share per request as the main measure.
+- **First cut:** working set, rolling window, table of contents and pointers, then validate, then per-step pull-in.
