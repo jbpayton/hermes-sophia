@@ -983,3 +983,26 @@ def test_what_the_sensors_noticed_is_kept_while_a_turn_runs(tmp_path):
         clock.t += 5
     overdue = [r for r in c.store.q("SELECT * FROM queue WHERE source='overdue'")]
     assert len(overdue) == 1
+
+
+def test_a_turn_that_ends_without_a_signal_is_let_go_and_the_loop_goes_on(tmp_path):
+    # live, 2026-10-17 10:03: Hermes reset the session after compression exhaustion with no plugin hook; the loop waited
+    # 27 hours on a turn that no longer existed, neither taking turns nor going quiet
+    from hermes_continuity.loop import TURN_LOST_S
+    clock = Clock(NOON)
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory())
+    user_turn(c)
+    assert c.tick()
+    c.on_turn_start(session_id="s", user_message=sent[-1], platform="telegram")      # its own turn begins...
+    for _ in range(3):                                                                # ...and works for a while
+        clock.t += 600
+        c.on_api(platform="telegram", usage={"prompt_tokens": 40000, "total_tokens": 41000})
+        assert c.tick() is None                                                       # alive: wait
+    clock.t += TURN_LOST_S - 60
+    assert c.tick() is None                                                           # still within the grace
+    clock.t += 120                                                                    # ...then the reset, unseen
+    started = c.tick()
+    step = c.store.one("SELECT * FROM steps ORDER BY id LIMIT 1")
+    assert step["outcome"] == "lost" and "no end signal" in step["reason"]
+    assert c.turn is None and started                                                 # and it goes on
+    assert "ended without an end signal" in c.store.one("SELECT reason FROM quiet ORDER BY id DESC")["reason"]

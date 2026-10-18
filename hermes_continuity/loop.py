@@ -48,6 +48,10 @@ NOT_OURS = {"subagent", "cron"}
 # quiet hours or when show_thoughts is off; otherwise the user's display.plugin_turns decides.
 FULLY_QUIET = {"thinking": False, "interim": False, "tool_progress": False, "streaming": False, "notices": False}
 AROUND_S = 2 * 3600                # the user counts as around this long after they last wrote
+# A turn it believes is running, with no model call for this long, has ended without telling it: Hermes resets a
+# session after compression exhaustion without any plugin hook (live, 2026-10-17 10:03: the loop then waited 27 hours
+# on a turn that no longer existed, neither taking turns nor going quiet).
+TURN_LOST_S = 45 * 60
 OWN_TURN_START_S = 900             # a turn it started that hasn't begun after this long didn't happen (Hermes compacts
                                    # before a turn begins, sometimes twice: up to ~8 minutes seen on a local 27B)
 # Free time it did nothing with (no tool, no thought, nothing said) is offered again later: after this long, doubling
@@ -255,7 +259,7 @@ class Continuity:
                 self.live_session_id = session_id
             st = self.store.state()
             self._roll_day(st, now)
-            turn = {"session_id": session_id, "kind": kind, "started": now, "message": msg[:2000],
+            turn = {"session_id": session_id, "kind": kind, "started": now, "seen": now, "message": msg[:2000],
                     "context_chars": sum(len(_text(m.get("content"))) for m in history)}
             if kind == "continuity" and self.expect_own:
                 turn.update(step_id=self.expect_own["step_id"], item=self.expect_own["item"])
@@ -319,6 +323,8 @@ class Continuity:
             return
         with self.lock:
             t = self.turn
+            if t is not None:
+                t["seen"] = self.clock()                  # the turn is alive: a model call is about to be made
             if t is None or t["kind"] != "continuity" or t.get("joined_by_user"):
                 return
             if session_id and t.get("session_id") and session_id != t["session_id"]:
@@ -343,6 +349,7 @@ class Continuity:
             t = self.turn
             if t is None:
                 return
+            t["seen"] = self.clock()
             prompt = int(usage.get("prompt_tokens") or 0)
             t["tokens"] = t.get("tokens", 0) + int(usage.get("total_tokens") or prompt)
             if prompt and not t.get("prompt_tokens"):
@@ -671,6 +678,21 @@ class Continuity:
                 f"to say nothing. A reply is a message to {u} about their life or your shared work; reflections on your "
                 "own memory go in a thought.)")
 
+    def _lose_turn(self, st: Dict[str, Any], now: float) -> None:
+        """Settle a turn that ended without an end signal (a session reset, a crash): record it and let go of it."""
+        t, self.turn = self.turn, None
+        self.last_turn_end = now
+        quiet = int((now - float(t.get("seen") or t.get("started") or now)) / 60)
+        if t["kind"] == "continuity" and t.get("step_id"):
+            self.store.x("UPDATE steps SET ended=?, ms=?, outcome='lost', reason=? WHERE id=? AND outcome IS NULL",
+                         (now, int((now - t["started"]) * 1000), f"no end signal; no model call for {quiet} min",
+                          t["step_id"]))
+        self.store.x("INSERT INTO quiet(ts, reason, since, steps, silent, held, ms, tokens) VALUES(?,?,?,?,?,?,?,?)",
+                     (now, f"stalled: a {t['kind']} turn ended without an end signal (no model call for {quiet} min); "
+                           "let go of it", t.get("started") or now, 0, 0, 0, 0, 0))
+        logger.warning("continuity: a %s turn ended without an end signal (%d min without a model call); let go of it",
+                       t["kind"], quiet)
+
     def _go_quiet(self, st: Dict[str, Any], reason: str, now: float) -> None:
         if st.get("quiet_reason") == reason:
             return
@@ -711,7 +733,9 @@ class Continuity:
             # cleaned up by Sophia, 2026-10-12)
             self.store.save_state(st)
             if self.turn is not None:
-                return None
+                if now - float(self.turn.get("seen") or self.turn.get("started") or now) < TURN_LOST_S:
+                    return None
+                self._lose_turn(st, now)                  # it ended without telling us; carry on
             if self.expect_own is not None:
                 if now - self.expect_own["since"] < OWN_TURN_START_S:
                     return None
