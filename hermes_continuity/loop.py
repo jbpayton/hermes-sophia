@@ -351,11 +351,48 @@ class Continuity:
                 return
             t["seen"] = self.clock()
             prompt = int(usage.get("prompt_tokens") or 0)
+            t["last_prompt"] = prompt or t.get("last_prompt", 0)
             t["tokens"] = t.get("tokens", 0) + int(usage.get("total_tokens") or prompt)
             if prompt and not t.get("prompt_tokens"):
                 t["prompt_tokens"] = prompt
                 if t.get("frame_id"):
                     self.store.x("UPDATE frames SET prompt_tokens=? WHERE id=?", (prompt, t["frame_id"]))
+
+    def on_tool_result(self, tool_name: str = "", result: Any = None, session_id: str = "", **kw) -> Optional[str]:
+        """transform_tool_result: a turn growing toward the context's end gets a note, in the one place a running turn
+        can be reached, to record where it is and continue in the next turn. Compaction can shrink the turns before
+        this one but never the turn in progress; past the window Hermes resets the whole conversation (live,
+        2026-10-17: a 77-call goal turn reached ~77k of 65k tokens, and the session was reset)."""
+        with self.lock:
+            t = self.turn
+            if t is None or not isinstance(result, str) or (session_id and session_id != t.get("session_id")):
+                return None
+            window = int(self.cfg.get("context_window") or 0)
+            used = int(t.get("last_prompt") or 0)
+            if not window or used < float(self.cfg.get("wrap_up_at") or 0.8) * window:
+                return None
+            share = used / window
+            level = 2 if share >= 0.92 else 1
+            if t.get("wrap_up_level", 0) >= level:          # once, and once more if it keeps growing
+                return None
+            t["wrap_up_level"] = level
+        u = self.user_name
+        if t["kind"] == "continuity":
+            ask = ("record your progress and next step now (continuity_goal progress, or continuity_update), then end "
+                   "this turn; your next turn comes straight away and picks up from there")
+        else:
+            ask = (f"tell {u} where things stand and what's next, and end this turn; you can carry on in your next "
+                   "turn")
+        note = (f"[continuity: this turn has filled {share:.0%} of your context. Past the window the whole "
+                f"conversation is reset, so {ask}.]")
+        try:
+            data = json.loads(result)
+            if isinstance(data, dict):
+                data["continuity_note"] = note
+                return json.dumps(data, ensure_ascii=False)
+        except ValueError:
+            pass
+        return f"{result}\n\n{note}"
 
     def on_turn_done(self, platform: str = "", conversation_history=None, **kw) -> None:
         """post_llm_call: what the turn led to, read from its tool calls (a thought kept, goal progress, ...). Recorded

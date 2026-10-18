@@ -355,7 +355,7 @@ def test_register_wires_hooks_tool_guide_and_cli_without_starting_a_loop(tmp_pat
     ctx = FakeCtx({"enabled": True, "platform": "telegram"})
     register(ctx)
     assert set(ctx.hooks) == {"pre_llm_call", "transform_llm_output", "on_session_end", "pre_api_request",
-                              "post_api_request", "post_llm_call", "pre_gateway_dispatch"}
+                              "post_api_request", "post_llm_call", "pre_gateway_dispatch", "transform_tool_result"}
     assert {"continuity_update", "continuity_goal"} <= set(ctx.tools) and "continuity" in ctx.cli
     g = ctx.sections["continuity.guide"]
     assert "[continuity: …]" in g and "[SILENT]" in g and "never" in g
@@ -1006,3 +1006,26 @@ def test_a_turn_that_ends_without_a_signal_is_let_go_and_the_loop_goes_on(tmp_pa
     assert step["outcome"] == "lost" and "no end signal" in step["reason"]
     assert c.turn is None and started                                                 # and it goes on
     assert "ended without an end signal" in c.store.one("SELECT reason FROM quiet ORDER BY id DESC")["reason"]
+
+
+def test_a_turn_nearing_the_end_of_its_context_is_asked_to_wrap_up_and_continue(tmp_path):
+    # live, 2026-10-17: a goal turn of 77 model calls outgrew the context inside itself and Hermes reset the session
+    clock = Clock(NOON)
+    c, sent = make(tmp_path, clock=clock, memory=FakeMemory(), context_window=65536)
+    user_turn(c)
+    c.tick()
+    c.on_turn_start(session_id="s", user_message=sent[-1], platform="telegram")
+    c.on_api(platform="telegram", usage={"prompt_tokens": 30000, "total_tokens": 30500})
+    assert c.on_tool_result(tool_name="terminal", result='{"output": "ok"}', session_id="s") is None   # plenty of room
+    c.on_api(platform="telegram", usage={"prompt_tokens": 54000, "total_tokens": 54500})
+    out = json.loads(c.on_tool_result(tool_name="terminal", result='{"output": "ok"}', session_id="s"))
+    assert out["output"] == "ok" and "82%" in out["continuity_note"] and "next turn" in out["continuity_note"]
+    assert c.on_tool_result(tool_name="terminal", result='{"output": "ok"}', session_id="s") is None   # once...
+    c.on_api(platform="telegram", usage={"prompt_tokens": 61000, "total_tokens": 61500})
+    assert "93%" in c.on_tool_result(tool_name="read_file", result="plain text", session_id="s")       # ...and once more
+    assert c.on_tool_result(tool_name="read_file", result="x", session_id="other") is None            # not this turn's
+    c.on_reply(response_text="[SILENT]", session_id="s", platform="telegram")
+    c.on_turn_end(session_id="s", platform="telegram")
+    c.on_turn_start(session_id="s", user_message="hi", platform="telegram")                           # a user turn
+    c.on_api(platform="telegram", usage={"prompt_tokens": 56000, "total_tokens": 56500})
+    assert "tell Joey where things stand" in c.on_tool_result(tool_name="terminal", result="ok", session_id="s")

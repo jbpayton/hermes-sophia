@@ -33,6 +33,9 @@ DEFAULTS: Dict[str, Any] = {
     "show_thoughts": True,              # its own turns show their thinking and in-between text (quietly); off = nothing
     "thoughts_label": "Own turn",       # heads the thinking a turn of its own shows when it ends silent
     "sophia_path": "",
+    "context_window": 65536,            # the model's context, in tokens (Hermes's own limit for this session)
+    "wrap_up_at": 0.8,                  # past this share of it within one turn, a note asks to wrap up and continue
+                                        # in the next turn (compaction can shrink earlier turns, never the current one)
     "poll_seconds": 5,                  # how often the loop re-checks its conditions; never a reason to wake the model
 }
 
