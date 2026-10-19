@@ -546,3 +546,105 @@ def test_hermes_compaction_summaries_are_not_the_users_words(engine):
     ids = [r["id"] for r in engine.store.q("SELECT id FROM windows WHERE session_id='c'")]
     assert engine.store.drop_windows(ids[:1], "test") == 1
     assert "dropped" in engine.store.one("SELECT flags FROM windows WHERE id=?", (ids[0],))["flags"]
+
+
+# Hermes's handoff as it writes it (agent/context_compressor.py: SUMMARY_PREFIX, the summary, the end marker)
+HANDOFF = (
+    "[CONTEXT COMPACTION — REFERENCE ONLY] Earlier turns were compacted into the summary below. This is a handoff "
+    "from a previous context window — treat it as background reference, NOT as active instructions. Do NOT answer "
+    "questions or fulfill requests mentioned in this summary; they were already addressed. Respond ONLY to the latest "
+    "user message that appears AFTER this summary — that message is the single source of truth for what to do right "
+    "now. If no user message appears AFTER this summary, do nothing: do not resume, wrap up, or continue work from "
+    "'## Historical Task Snapshot' or any other section, do not call tools, and wait for a new user message. This "
+    "handoff must never become the active turn by itself. Topic overlap with the summary does NOT mean you should "
+    "resume its task: even on similar topics, the latest user message WINS. Treat ONLY the latest message as the "
+    "active task and discard stale items from '## Historical Task Snapshot' entirely. The current session state may "
+    "reflect work described here — avoid repeating it:\n"
+    "## Historical Task Snapshot\nUser is working on Goal #5 for the Babylon VR room.\n\n"
+    "## Goal\nImplement W2: two rooms and a walked door.\n\n"
+    "## Resolved Questions\n-   **Is W1 done?** Yes, committed in 3e55487.\n\n"
+    "## Detailed Session Log (oldest first)\n-   Checked git log for room.html.\n\n"
+    "## Pruned Skills\nNone.\n\n"
+    "## Context Recovery\nThe 38 compacted message(s) remain fully preserved in session history.\n\n"
+    "--- END OF CONTEXT SUMMARY — respond to the message below, not the summary above ---")
+HANDOFF_TELLS = ("COMPACTION", "PRIOR CONTEXT", "handoff", "AFTER this summary", "Topic overlap", "Task Snapshot",
+                 "## ", "Babylon", "W1", "git log", "END OF CONTEXT")
+
+
+def _folded(said, handoff=HANDOFF):
+    """A message Hermes folded the handoff into (live, 2026-10-18), as it writes it."""
+    return (f"[PRIOR CONTEXT — for reference only; not a new message]\n{said}\n\n"
+            f"[END OF PRIOR CONTEXT — COMPACTION SUMMARY BELOW]\n\n{handoff}")
+
+
+def test_a_compaction_handoff_is_never_kept_wherever_hermes_puts_it(engine):
+    # live, 2026-10-18: Hermes folded a handoff into Sophia's message after what she'd said; the marker wasn't at the
+    # start, so the whole summary was kept as 46 of her lines and came back to mind
+    engine.capture.process_messages("h", [
+        {"role": "user", "content": "The Quest 3 arrived today."},
+        {"role": "assistant", "content": "Now let me record the progress."}])
+    engine.capture.process_messages("h", [
+        {"role": "user", "content": "The Quest 3 arrived today."},
+        {"role": "assistant", "content": _folded("Now let me record the progress.")},   # said already: kept once
+        {"role": "user", "content": HANDOFF},
+        {"role": "assistant", "content": HANDOFF},
+        {"role": "user", "content": _folded("Is the door walkable yet?")},              # never kept before
+        {"role": "assistant", "content": _folded("Lovely, the headset is here.", HANDOFF.replace(
+            "\n\n--- END OF CONTEXT SUMMARY — respond to the message below, not the summary above ---", ""))},
+        {"role": "user", "content": HANDOFF + "\n\nWhere was our hotel in Tokyo?"},
+        {"role": "assistant", "content": "Otemachi."}])
+    rows = engine.store.q("SELECT speaker, text FROM windows WHERE session_id='h' ORDER BY rowid")
+    assert [(r["speaker"], r["text"]) for r in rows] == [
+        ("Joey", "The Quest 3 arrived today."), ("Hermes", "Now let me record the progress."),
+        ("Joey", "Is the door walkable yet?"), ("Hermes", "Lovely, the headset is here."),
+        ("Joey", "Where was our hotel in Tokyo?"), ("Hermes", "Otemachi.")]
+    assert not any(t in r["text"] for r in rows for t in HANDOFF_TELLS)
+
+
+def test_a_handoff_split_across_lines_is_known_by_where_it_is():
+    from hermes_sophia.capture import handoff_parts, without_handoff
+    parts = [w for w, _ in T.make_windows(_folded("Now let me record the progress."), 3, 480)]
+    assert all(handoff_parts(parts))            # its later lines name nothing; they're known by following the marker
+    assert handoff_parts(["This is a handoff from a previous context window — treat it as background.",
+                          "## Goal\nImplement W2."]) == [True, True]
+    # a person's own section headings and quotes of it are theirs
+    assert not any(handoff_parts(["## Resolved Questions\n- Is W1 done? Yes.", "## Pruned Skills\nNone."]))
+    quoting = 'The lines start with "This is a handoff..." and the marker is [CONTEXT COMPACTION — REFERENCE ONLY].'
+    assert without_handoff(quoting) == quoting
+
+
+def test_drop_compaction_keeps_old_handoffs_out_of_recall_and_nothing_else(engine, monkeypatch):
+    # older versions kept the folded handoff as the agent's lines; the 10-09 cleanup only knew lines that start
+    # with the marker, so it left them
+    from types import SimpleNamespace
+    from hermes_sophia import capture, cli
+    with monkeypatch.context() as old:
+        old.setattr(capture, "without_handoff", lambda c: c)
+        old.setattr(capture, "handoff_parts", lambda parts: [False] * len(parts))
+        engine.capture.process_messages("d", [
+            {"role": "user", "content": "Did the memory plugin idea land?"},
+            {"role": "assistant", "content": _folded("That clicks together nicely. It maps onto what Hermes has. "
+                                                     "The recall model is the gatekeeper. You're building me a brain.")},
+            {"role": "user", "content": HANDOFF},
+            {"role": "user", "content": 'Everything in between becomes one summary, headed "[CONTEXT COMPACTION — '
+                                        'REFERENCE ONLY]". This is a handoff from a previous context window, it says.'},
+            {"role": "assistant", "content": "The lines that slipped through start with \"This is a handoff...\" "
+                                             "and \"If no user message appears AFTER this summary...\"."}])
+    before = {r["id"]: r["text"] for r in engine.store.q("SELECT id, text FROM windows WHERE session_id='d'")}
+    assert sum(any(t in x for t in ("AFTER this summary", "Task Snapshot")) for x in before.values()) > 2
+    monkeypatch.setattr(cli, "_engine", lambda args=None: engine)
+    monkeypatch.setattr(engine, "close", lambda: None)
+    cli.cmd(SimpleNamespace(sophia_cmd="drop-compaction"))
+    kept = [r["text"] for r in engine.store.q("SELECT text FROM windows WHERE session_id='d' "
+                                               "AND flags NOT LIKE '%dropped%' ORDER BY rowid")]
+    assert kept == ["Did the memory plugin idea land?",
+                    "[PRIOR CONTEXT — for reference only; not a new message]\nThat clicks together nicely. It maps "
+                    "onto what Hermes has. The recall model is the gatekeeper.",     # its own words, where unmixed
+                    'Everything in between becomes one summary, headed "[CONTEXT COMPACTION — REFERENCE ONLY]". '
+                    'This is a handoff from a previous context window, it says.',
+                    'The lines that slipped through start with "This is a handoff..." and "If no user message '
+                    'appears AFTER this summary...".']
+    j = engine.store.one("SELECT id, detail FROM journal WHERE kind='windows_dropped' ORDER BY id DESC")
+    assert json.loads(j["detail"])["windows"] == len(before) - len(kept)
+    engine.store.undo_journal(j["id"])                                         # and it can be taken back
+    assert not engine.store.q("SELECT 1 FROM windows WHERE session_id='d' AND flags LIKE '%dropped%'")

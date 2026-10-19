@@ -22,8 +22,21 @@ from . import text as T
 from .spans import extract_spans
 from .store import sha
 
-# Hermes hands a compacted conversation back as a user-role summary; it restates earlier turns, in the model's words
-_COMPACTION = re.compile(r"\s*\[CONTEXT COMPACTION\b")
+# Hermes's context-compaction handoff: a summary of turns already kept, in the model's words. Hermes sends it on its
+# own in either role, puts it before a message (which follows its end marker), or folds it into a message after what
+# that message said, which it heads "[PRIOR CONTEXT …]" (live, 2026-09-27 and 10-18: the marker wasn't at the start
+# there, and the whole summary was kept as Sophia's own lines). It runs from its marker, or a line that opens with one
+# of its own sentences, to its end marker or the end of the message.
+_HANDOFF = re.compile(r"\s*(?:\[(?:CONTEXT COMPACTION\b|CONTEXT SUMMARY\]|END OF PRIOR CONTEXT\b)|"
+                      r"Earlier turns were compacted into the summary below|"
+                      r"This is a handoff from a previous context window|"
+                      r"If no user message appears AFTER this summary|"
+                      r"Topic overlap with the summary does NOT mean|## Historical Task Snapshot)")
+# its section headings could be anyone's ("## Resolved Questions"): they open it only when its end marker follows
+_HANDOFF_SECTION = re.compile(r"\s*## (?:Resolved Questions|Detailed Session Log|Pruned Skills)\b")
+_HANDOFF_END = "--- END OF CONTEXT SUMMARY"
+_PRIOR = re.compile(r"\s*\[PRIOR CONTEXT\b[^\]\n]*\]")
+_PRIOR_END = "[END OF PRIOR CONTEXT"
 # Hermes's own notices also arrive as user-role turns: a finished background job, a delegation's result, a budget
 # warning, a hand-off from the CLI. They are events, not the user's words.
 _NOTICE = re.compile(r"\s*\[(?:IMPORTANT: (?!The user has invoked the )|SYSTEM\b|ASYNC DELEGATION\b|"
@@ -65,6 +78,27 @@ def skill_typed(content: str) -> str:
     name = (m.group(1) if m else "skill").strip()
     label = name if name.startswith("/") else "/" + name
     return f"{label} {said}" if said and said is not content else label
+
+
+def handoff_parts(parts: Sequence[str]) -> List[bool]:
+    """Which of a message's parts, in order (its lines, or the lines kept from it), belong to a compaction handoff.
+    Read in order: once it opens, its parts are known by where they are, not by what they say. In a message it was
+    folded into, what the message said is kept, without the "[PRIOR CONTEXT …]" heading; stored lines only part at
+    sentences, so the line it opens in goes with it."""
+    folded = bool(parts) and bool(_PRIOR.match(parts[0]))
+    out, inside = [], False
+    for i, p in enumerate(parts):
+        inside = inside or bool(_HANDOFF.match(p)) or (folded and _PRIOR_END in p) or (
+            bool(_HANDOFF_SECTION.match(p)) and any(_HANDOFF_END in q for q in parts[i:]))
+        out.append(inside or (i == 0 and bool(_PRIOR.fullmatch(p.strip()))))
+        inside = inside and _HANDOFF_END not in p
+    return out
+
+
+def without_handoff(content: str) -> str:
+    """The message without the compaction handoff in it; what follows the handoff's end marker is kept."""
+    lines = (content or "").split("\n")
+    return "\n".join(l for l, cut in zip(lines, handoff_parts(lines)) if not cut)
 
 logger = logging.getLogger(__name__)
 
@@ -237,12 +271,14 @@ class Capture:
             for tc in tcs:
                 tool_map[tc.get("id") or ""] = _args(tc)
             is_new = h not in seen
+            if role in ("user", "assistant"):
+                kept = without_handoff(content)
+                if kept != content:           # what's left is the message Hermes folded it into, as that message
+                    content = kept            # was before, so usually kept already
+                    h = message_hash(session_id, dict(m, content=kept))
+                    is_new = h not in seen
             if role == "user" and content and content.lstrip().startswith("Gateway message origin"):
                 content = _ORIGIN.sub("", content, count=1)    # Hermes's routing note, not the user's words
-            if role in ("user", "assistant") and _COMPACTION.match(content or ""):
-                continue                      # Hermes's context-compaction handoff: a summary of turns already kept.
-                                              # Hermes may place it in either role; as an assistant line it would be
-                                              # kept as the agent's own words (live, 2026-10-08)
             own = role == "user" and bool(_CONTINUITY.match(content or ""))
             if role == "user" and (own or _NOTICE.match(content or "")):
                 if own:
@@ -270,6 +306,7 @@ class Capture:
                         ws = self._windows_for(session_id, role, content, _said(m, now), h, prev, recent_names, injected,
                                                speaker=(m.get("name") or self.prefixed_speaker(content))
                                                if role == "user" else None)
+                        ws = [w for w, cut in zip(ws, handoff_parts([w["text"] for w in ws])) if not cut]
                         if role == "assistant" and ground and ws and not self._grounded(session_id, turn_user,
                                                                                        turn_tools, content):
                             for w in ws:

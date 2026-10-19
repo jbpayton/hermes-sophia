@@ -122,8 +122,16 @@ def cmd(args):
             print(f"{found} facts fail the participant check" + (" and were retracted (journaled; `sophia undo <id>` reverts)"
                                                                 if args.apply and found else ""))
         elif sub == "drop-compaction":
-            refs = [r["ref"] for r in e.store.q("SELECT DISTINCT ref FROM windows WHERE text LIKE '[CONTEXT COMPACTION%'")]
-            ids = [r["id"] for ref in refs for r in e.store.q("SELECT id FROM windows WHERE ref=?", (ref,))]
+            from itertools import groupby
+            from .capture import handoff_parts
+            ids, refs = [], set()
+            rows = e.store.q("SELECT id, ref, text FROM windows WHERE stream='conversation' ORDER BY ref, rowid")
+            for ref, ws in groupby(rows, key=lambda r: r["ref"]):      # a message's lines, in the order it had them
+                ws = list(ws)
+                cut = [w["id"] for w, h in zip(ws, handoff_parts([w["text"] for w in ws])) if h]
+                if cut:
+                    ids += cut
+                    refs.add(ref)
             n = e.store.drop_windows(ids, "Hermes context-compaction summary, stored as if someone said it (the user "
                                           "or the agent)")
             print(f"kept {n} lines from {len(refs)} compaction summaries out of recall (journaled, undoable)")
@@ -194,8 +202,9 @@ def register_cli(subparser) -> None:
     p = subs.add_parser("audit-facts", help="List facts whose people aren't grounded in the lines they came from "
                                             "(e.g. a relayed 'your' read as the user); --apply retracts them, journaled")
     p.add_argument("--apply", action="store_true")
-    subs.add_parser("drop-compaction", help="Keep Hermes's context-compaction summaries (stored as user lines by older "
-                                             "versions) out of recall; journaled and undoable")
+    subs.add_parser("drop-compaction", help="Keep Hermes's context-compaction summaries (stored as the user's or "
+                                             "the agent's lines by older versions) out of recall; journaled and "
+                                             "undoable")
     p = subs.add_parser("relabel", help="Correct who a session's lines are attributed to (journaled, undoable; the "
                                         "text itself is never changed)")
     p.add_argument("--session", required=True)
