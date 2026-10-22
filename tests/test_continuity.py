@@ -174,9 +174,30 @@ def test_what_a_turn_brings_to_mind_becomes_a_turn_of_its_own(tmp_path):
     own_turn(c, sent[0])
     row = c.store.one("SELECT * FROM steps WHERE id=?", (step,))
     assert row["outcome"] == "silent" and row["ended"] and row["kind"] == "association"
+    # a quiet association turn must not cue the next search on the memory it just raised: that self-feed
+    # re-searched the same cluster every round and re-maximized the pull the habituation could never outrun
+    assert c.pending_cues == []
+    c._associate_pending(NOON)
+    assert [r for r in c.store.queued() if r["depth"] == 2] == []
+
+
+def test_an_association_turn_cues_the_next_search_on_its_own_reply(tmp_path):
+    mem = FakeMemory()
+    c, sent = make(tmp_path, memory=mem)
+    user_turn(c)
+    step = c.tick()
+    assert step and len(sent) == 1
+    raised = "We finally finished moving into our place in Denver."
+    assert f"\u201c{raised}\u201d" in sent[0]
+    # the turn follows its own thread instead of echoing the raised memory back into the search
+    own_turn(c, sent[0], reply="Let me see if that balcony faces east.")
+    assert len(c.pending_cues) == 1
+    cue = c.pending_cues[0]["cue"]
+    assert "balcony faces east" in cue
+    assert raised not in cue                                    # the raised memory's text is not re-searched
     c._associate_pending(NOON)
     chained = [r for r in c.store.queued() if r["depth"] == 2]
-    assert chained and all(r["salience"] < 0.72 for r in chained)      # a memory raised by a memory pulls less
+    assert chained and all(r["salience"] < 0.72 for r in chained)   # a memory raised by a memory pulls less
 
 
 def test_it_winds_down_and_says_why(tmp_path):

@@ -506,7 +506,11 @@ class Continuity:
                     st["free_idle"], st["free_after"] = n, now + min(FREE_IDLE_FIRST_S * 2 ** (n - 1), FREE_IDLE_MAX_S)
                 self.store.save_state(st)
             depth = int((t.get("item") or {}).get("depth", 0)) + 1 if t["kind"] == "continuity" else 1
-            message = "" if item_kind == "free" and not t.get("joined_by_user") else t.get("message", "")
+            # an association turn's prompt carries the raised memory's verbatim text; cueing the next search on it
+            # re-searches the same cluster every round and re-maximizes the pull the habituation can never outrun.
+            # Cue on the reply alone (its own angle, or nothing when the turn went quiet) instead.
+            message = "" if item_kind in ("free", "association") and not t.get("joined_by_user") \
+                else t.get("message", "")
             cue = f"{cue_text(message)} {cue_text(t.get('reply', ''))}".strip()
             if cue and not (t["kind"] == "continuity" and t.get("outcome") == "silent" and t.get("let_go")):
                 self.pending_cues.append({"cue": cue[:1500], "depth": depth, "session_id": t.get("session_id", "")})
