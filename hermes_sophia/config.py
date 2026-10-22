@@ -103,6 +103,7 @@ DEFAULTS: Dict[str, Any] = {
     "recall_max_steps": 3,              # at most this many logged tool steps in one recall (today's; older ones are task cards)
     "associate_recent_hours": 3.0,      # the live conversation's last hours never "come to mind", compacted or not
     "associate_own_weight": 0.5,        # a line the agent itself said pulls this much as hard (its kept thoughts: 1)
+    "associate_credit_weight": 0.6,     # each unit of negative real credit ("wrong") multiplies a line's pull by this
     "associate_tasks": False,           # records of finished work (task cards) come to mind; recall keeps them either way
     # the agent's own thoughts (sophia_thought)
     "inject_thoughts": True,          # its kept thoughts can be injected, always labelled as its thoughts
@@ -258,6 +259,9 @@ FIELDS: List[Tuple[str, str, Dict[str, Any]]] = [
      {"when": _ADVANCED, "minimum": 0, "maximum": 1}),
     ("associate_tasks", "Association: records of finished work (task cards) can come to mind (recall finds them either "
                         "way)", {"when": _ADVANCED, "choices": ["on", "off"], "default": "off"}),
+    ("associate_credit_weight", "Association: a line judged wrong (credit) has its pull multiplied by this for each "
+                                "unit of negative credit, so it stops coming back (0 = judged-wrong lines never come "
+                                "up)", {"when": _ADVANCED, "minimum": 0, "maximum": 1}),
     ("associate_recent_hours", "Association: what the live conversation said in this many hours never comes to mind "
                                "as a memory, even once compacted out of the context (it's still working memory)",
      {"when": _ADVANCED}),
@@ -333,6 +337,7 @@ LABELS: Dict[str, str] = {
     "associate_recent_hours": "Association: live conversation skipped (hours)",
     "recall_max_steps": "Recall: most tool steps",
     "associate_own_weight": "Association weight for the agent's own lines",
+    "associate_credit_weight": "Association weight for judged-wrong lines",
     "associate_tasks": "Association includes task cards",
     "inject_thoughts": "Inject own thoughts", "keep_images": "Keep images",
 }
