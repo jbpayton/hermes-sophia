@@ -554,7 +554,13 @@ class Recall:
             weight = cfg["associate_superseded_weight"] if it.get("changed") else 1.0
             if "assistant" in (it.get("flags") or "") and "thought" not in (it.get("flags") or ""):
                 weight *= float(cfg.get("associate_own_weight", 1.0))   # its own words, re-read, rarely come to mind
+            credit = float((it.get("credit") or {}).get("real", 0.0))   # candidates() already attached real credit
+            if credit < 0:
+                # judged wrong: each unit of negative credit multiplies the pull, so a line I marked wrong
+                # stops coming back (recall still finds it, ranked last)
+                weight *= float(cfg.get("associate_credit_weight", 0.6)) ** min(-credit, 5.0)
             out.append({**it, "activation": it["score"] * weight / (1.0 + h), "habituation": h})
+        out = [it for it in out if it["activation"] > 0]   # fully damped (credit 0, or fully habituated) comes to no mind
         out.sort(key=lambda it: it["activation"], reverse=True)
         out = out[:k]
         if record and out:

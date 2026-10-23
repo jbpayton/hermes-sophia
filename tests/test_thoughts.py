@@ -237,6 +237,28 @@ def test_a_thought_just_kept_doesnt_come_straight_back(engine):
     assert next(x for x in later if x["id"] in ids)["habituation"] < 0.01      # and it recovers
 
 
+def test_a_line_judged_wrong_stops_coming_back(engine):
+    # live, 2026-10-20 to 10-22: a line I marked wrong (credit -2) kept coming back every ~9 min; the credit
+    # was recorded but association never read it, so the demotion was cosmetic
+    engine.cfg["associate_band"] = 1.0                 # this test is about the weight, not which lines are in band
+    engine.capture.process_messages("cw", [
+        {"role": "user", "content": "The old Drift gateway box sits in the garage corner."},
+        {"role": "assistant", "content": "The gateway box is in the garage corner."}])
+    before, _ = engine.recall.associate("gateway box garage", k=4, record=False)
+    heard = next(it for it in before if "sits in the garage corner" in it["text"])
+    own = next(it for it in before if "is in the garage corner" in it["text"])
+    engine.store.add_credit(heard["id"], "window", "real", "wrong", -2.0)       # what sophia_remember verdict does
+    after, _ = engine.recall.associate("gateway box garage", k=4, record=False)
+    assert after and after[-1]["id"] == heard["id"]       # it still comes up (recall needs it), ranked last
+    w = float(engine.cfg["associate_credit_weight"])
+    demoted = next(it for it in after if it["id"] == heard["id"])
+    assert demoted["activation"] == pytest.approx(heard["activation"] * w ** 2)
+    assert next(it for it in after if it["id"] == own["id"])["activation"] == pytest.approx(own["activation"])
+    engine.cfg["associate_credit_weight"] = 0.0        # and 0 = judged-wrong lines never come up at all
+    never, _ = engine.recall.associate("gateway box garage", k=4, record=False)
+    assert not any(it["id"] == heard["id"] for it in never)
+
+
 def test_recall_isnt_flooded_by_its_own_turns_and_tool_steps(engine):
     # live, 2026-10-13: 86% of what recall injected into its own turns (51% into Joey's) was the continuing process's
     # own turn prompts and logged tool steps, found by searching with the turn's own boilerplate
